@@ -12,7 +12,7 @@ const MAX_HISTORY_CHARS = 1800;
 const MAX_QUESTION_CHARS = 1800;
 const MAX_BODY_BYTES = 90000;
 const MAX_FOCUS = 6;
-const MAX_GUIDE_RESULTS = 8;
+const MAX_GUIDE_RESULTS = 3;
 const MAX_RESOURCE_RESULTS = 30;
 const MAX_RESOURCE_DETAILS = 10;
 
@@ -24,7 +24,7 @@ const SYNONYMS = {
   activity: ["activity", "activities", "activité", "activités", "activite", "activites", "loisir", "loisirs", "buggy", "quad", "parasailing", "bateau", "yacht", "surf", "jetski", "jet ski", "jet-ski", "nautique", "nautiques", "sport", "mer"],
   excursion: ["excursion", "excursions", "voyage", "voyages", "weekend", "week-end", "trip", "trips", "maroc", "algarve", "portugal", "chefchaouen", "tanger", "tetouan", "palmar"],
   discount: ["reduction", "réduction", "reductions", "réductions", "promo", "promotion", "promotions", "discount", "discounts", "offre", "offres", "remise", "avantage", "bon plan", "pourcentage"],
-  vegetarian: ["vegetarien", "végétarien", "vegetarienne", "végétarienne", "vegetariens", "vegetarian", "vegetarians", "vegan", "vegane", "végane", "vegetal", "sans viande"],
+  vegetarian: ["vegetarien", "végétarien", "vegetarienne", "végétarienne", "vegetariens", "vegetariennes", "vegetarian", "vegetarians", "vegan", "vegane", "végane", "vegetal", "sans viande"],
   gluten: ["gluten", "sans gluten", "gluten-free", "celiaque", "coeliaque"],
   menu: ["menu", "carte", "plat", "plats", "entrée", "entree", "dessert", "tapas", "paella", "sushi", "noodles", "burger", "pates", "pâtes", "viande", "poisson", "pizza", "desserts"],
   price: ["prix", "tarif", "combien", "cout", "coût", "cher", "chere", "cheap", "budget", "euros", "euro"],
@@ -175,49 +175,59 @@ function scoreGuide(item, query, qTokens, focus, excludeNames = []) {
   return score;
 }
 
-function searchGuide(query, focus = []) {
+function searchGuide(query, focus = [], resourceMatches = []) {
   const intent = intentOf(query); const qTokens = expandQuery([query, ...focus].join(" "));
   const focusItems = focus.map(name => GUIDE_NORM.find(item => normalize(item.name) === normalize(name))).filter(Boolean);
   const explicitNames = detectMentionedNames(query);
-  if (explicitNames.length && !intent.another) return explicitNames.map(name => GUIDE_NORM.find(item => normalize(item.name) === normalize(name))).filter(Boolean).slice(0, MAX_GUIDE_RESULTS);
+  if (explicitNames.length && !intent.another) return explicitNames.map(name => GUIDE_NORM.find(item => normalize(item.name) === normalize(name))).filter(Boolean).slice(0,MAX_GUIDE_RESULTS);
   const exclude = intent.another ? focus : [];
 
-  if (!focus.length && intent.restaurant && intent.broad && !intent.menu && !intent.price && !intent.discount) return GUIDE_NORM.filter(x => x.category === "Restaurant").slice(0, MAX_GUIDE_RESULTS);
-  if (!focus.length && intent.restaurant && intent.discount && !intent.menu) return GUIDE_NORM.filter(x => x.category === "Restaurant" && /%/.test(clean(x.promo))).slice(0, MAX_GUIDE_RESULTS);
-  if (!focus.length && intent.nightlife && intent.broad && !intent.vip && !intent.price) return GUIDE_NORM.filter(x => ["Party","Beach Club"].includes(x.category)).slice(0, MAX_GUIDE_RESULTS);
-  if (!focus.length && intent.activity && intent.broad && !intent.price && !intent.menu) return GUIDE_NORM.filter(x => x.category === "Activity").slice(0, MAX_GUIDE_RESULTS);
-  if (!focus.length && intent.excursion && intent.broad && !intent.price && !intent.menu) return GUIDE_NORM.filter(x => x.category === "Excursions").slice(0, MAX_GUIDE_RESULTS);
-  if (focus.length && looksLikeRefinement(intent) && !intent.another) return focusItems.slice(0, MAX_GUIDE_RESULTS);
+  // A restaurant query must stay inside restaurants. Never let a nightlife/activity fiche leak in.
+  const restaurantOnly = intent.restaurant || /\b(resto|restaurant|manger|diner|dîner|dejeuner|déjeuner|plat|carte|menu|paella|sushi|tapas|pizza|pates|pâtes|noodles)\b/i.test(query);
+  const resourceEstablishments = new Set(guideNamesFromResources(resourceMatches).map(normalize));
 
-  const scored = GUIDE_NORM.map(item => ({ item, score: scoreGuide(item, query, qTokens, focus, exclude) })).filter(x => Number.isFinite(x.score) && x.score > 0).sort((a,b) => b.score-a.score);
-
-  if (intent.another) {
-    const explicitCategory = intent.restaurant || intent.nightlife || intent.activity || intent.excursion;
-    const focusCategory = focusItems[0] ? canonicalGuideCategory(focusItems[0]) : null;
-    const targetCategory = explicitCategory ? (intent.restaurant ? "Restaurant" : intent.activity ? "Activity" : intent.excursion ? "Excursions" : null) : focusCategory;
-    let candidates = GUIDE_NORM.filter(item => {
-      const cat = canonicalGuideCategory(item);
-      const sameCategory = targetCategory ? cat === targetCategory : intent.nightlife ? ["Party","Beach Club"].includes(cat) : true;
-      return sameCategory && !focus.some(name => normalize(name) === normalize(item.name));
-    });
-    if (focusItems.length) {
-      const focusText = normalize([focusItems[0].name,focusItems[0].description,focusItems[0].notes,focusItems[0].tags,focusItems[0].forWho].join(" "));
-      const focusWords = new Set(tokens(focusText));
-      candidates = candidates.map(item => {
-        const itemWords = new Set(tokens(normalize([item.name,item.description,item.notes,item.tags,item.forWho].join(" "))));
-        let similarity = 0; for (const word of focusWords) if (itemWords.has(word)) similarity++;
-        const scoredItem = scored.find(x => normalize(x.item.name) === normalize(item.name));
-        similarity += scoredItem ? Math.min(scoredItem.score,8) : 0;
-        return { item, score: similarity };
-      }).sort((a,b)=>b.score-a.score).map(x=>x.item);
-    }
-    return candidates.slice(0, MAX_GUIDE_RESULTS);
+  if (!focus.length && restaurantOnly && resourceEstablishments.size) {
+    const matched = GUIDE_NORM.filter(x => canonicalGuideCategory(x)==="Restaurant" && resourceEstablishments.has(normalize(x.name)));
+    if (matched.length) return matched.slice(0,MAX_GUIDE_RESULTS);
   }
 
-  const specific = ["paella","sushi","noodles","burger","tapas","pizza","yacht","jet ski","jetski","buggy","quad","parasailing","surf","gluten","vegetarien"].find(term => normalize(query).includes(normalize(term)));
+  if (!focus.length && intent.restaurant && intent.broad && !intent.menu && !intent.price && !intent.discount) return GUIDE_NORM.filter(x => x.category === "Restaurant").slice(0,MAX_GUIDE_RESULTS);
+  if (!focus.length && intent.restaurant && intent.discount && !intent.menu) return GUIDE_NORM.filter(x => x.category === "Restaurant" && /%/.test(clean(x.promo))).slice(0,MAX_GUIDE_RESULTS);
+  if (!focus.length && intent.nightlife && intent.broad && !intent.vip && !intent.price) return GUIDE_NORM.filter(x => ["Party","Beach Club"].includes(x.category)).slice(0,MAX_GUIDE_RESULTS);
+  if (!focus.length && intent.activity && intent.broad && !intent.price && !intent.menu) return GUIDE_NORM.filter(x => x.category === "Activity").slice(0,MAX_GUIDE_RESULTS);
+  if (!focus.length && intent.excursion && intent.broad && !intent.price && !intent.menu) return GUIDE_NORM.filter(x => x.category === "Excursions").slice(0,MAX_GUIDE_RESULTS);
+  if (focus.length && looksLikeRefinement(intent) && !intent.another) return focusItems.slice(0,MAX_GUIDE_RESULTS);
+
+  const scored = GUIDE_NORM.map(item => ({ item, score: scoreGuide(item, query, qTokens, focus, exclude) }))
+    .filter(x => Number.isFinite(x.score) && x.score > 0)
+    .filter(x => !restaurantOnly || canonicalGuideCategory(x.item)==="Restaurant")
+    .sort((a,b) => b.score-a.score);
+
+  if (intent.another) {
+    const focusCategory = focusItems[0] ? canonicalGuideCategory(focusItems[0]) : (restaurantOnly ? "Restaurant" : null);
+    let candidates = GUIDE_NORM.filter(item => {
+      const cat=canonicalGuideCategory(item);
+      const sameCategory=focusCategory ? cat===focusCategory : intent.nightlife ? ["Party","Beach Club"].includes(cat) : true;
+      return sameCategory && !focus.some(name => normalize(name)===normalize(item.name));
+    });
+    if (focusItems.length) {
+      const focusText=normalize([focusItems[0].name,focusItems[0].description,focusItems[0].notes,focusItems[0].tags,focusItems[0].forWho].join(" "));
+      const focusWords=new Set(tokens(focusText));
+      candidates=candidates.map(item=>{
+        const itemWords=new Set(tokens(normalize([item.name,item.description,item.notes,item.tags,item.forWho].join(" "))));
+        let similarity=0; for(const word of focusWords) if(itemWords.has(word)) similarity++;
+        const scoredItem=scored.find(x=>normalize(x.item.name)===normalize(item.name));
+        similarity += scoredItem ? Math.min(scoredItem.score,8) : 0;
+        return {item,score:similarity};
+      }).sort((a,b)=>b.score-a.score).map(x=>x.item);
+    }
+    return candidates.slice(0,MAX_GUIDE_RESULTS);
+  }
+
+  const specific=["paella","sushi","noodles","burger","tapas","pizza","yacht","jet ski","jetski","buggy","quad","parasailing","surf","gluten","vegetarien"].find(term=>normalize(query).includes(normalize(term)));
   if (specific && !focus.length) {
-    const direct = scored.filter(x => normalize([x.item.name,x.item.description,x.item.notes,x.item.tags].join(" ")).includes(normalize(specific)));
-    if (direct.length) return direct.slice(0,3).map(x=>x.item);
+    const direct=scored.filter(x=>normalize([x.item.name,x.item.description,x.item.notes,x.item.tags].join(" ")).includes(normalize(specific)));
+    if(direct.length) return direct.slice(0,MAX_GUIDE_RESULTS).map(x=>x.item);
   }
   return scored.slice(0,MAX_GUIDE_RESULTS).map(x=>x.item);
 }
@@ -282,10 +292,22 @@ function dateKey(date){const m=String(date).match(/^(\d{2})\/(\d{2})\/(\d{4})$/)
 function nextDateInfo(item){const dates=extractDates([item.when,item.notes,item.description].join(" ")).map(display=>({display,key:dateKey(display)})).filter(x=>x.key).sort((a,b)=>a.key.localeCompare(b.key));const today=localMadridDateKey();return{allDates:dates.map(x=>x.display),nextDate:dates.find(x=>x.key>=today)?.display||null};}
 function formatResourceDate(value){const v=clean(value);const m=v.match(/^(\d{4})-(\d{2})-(\d{2})/);return m?`${m[3]}/${m[2]}/${m[1]}`:v;}
 
+function formatGuidePrice(value, category="") {
+  const v=clean(value);
+  if(!v) return "";
+  if(/^\d+(?:[.,]\d+)?$/.test(v)) {
+    const n=Number(v.replace(",","."));
+    return Number.isFinite(n) ? `≈ ${Number.isInteger(n)?n:n.toFixed(2).replace(/0+$/,"" ).replace(/\.$/,"")} €` : v;
+  }
+  return v;
+}
+function restaurantCategory(category){ return canonicalGuideCategory({category}) === "Restaurant"; }
+function guideNamesFromResources(resources){ return [...new Set(resources.map(r=>canonicalResourceEstablishment(r.establishment)).filter(Boolean))]; }
+
 function serializeGuide(item,promoRequested=false,resourceHits=[]) {
   const dates=nextDateInfo(item);
   return {
-    category:canonicalGuideCategory(item), name:clean(item.name), price:clean(item.price), promo:clean(item.promo), hasPromotion:isPromotion(item.promo),
+    category:canonicalGuideCategory(item), name:clean(item.name), price:formatGuidePrice(item.price,item.category), promo:clean(item.promo), hasPromotion:isPromotion(item.promo),
     booking:clean(item.booking), bookingLinks:bookingLinks(item.booking), description:clean(item.description), notes:clean(item.notes), tags:clean(item.tags),
     forWho:clean(item.forWho), when:clean(item.when), externalResource:clean(item.externalResource||item["Ressource externe"]), allDates:dates.allDates, nextDate:dates.nextDate,
     promoRequested, commercialResourceHighlights:resourceHits.filter(r=>sameEstablishment(r.establishment,item.name)).slice(0,4).map(r=>({type:clean(r.type),offer:clean(r.offer),price:validResourcePrice(r.price),conditions:clean(r.conditions),source:clean(r.source),date:formatResourceDate(r.date)}))
@@ -299,7 +321,10 @@ function cleanHistory(history){
 }
 
 function currentContext(question,history,activeResults){
-  const focus=focusNames(question,activeResults,history); const guideMatches=searchGuide(question,focus); const resources=searchResources(question,focus); const promoRequested=intentOf(question).discount;
+  const focus=focusNames(question,activeResults,history);
+  const resources=searchResources(question,focus);
+  const guideMatches=searchGuide(question,focus,resources);
+  const promoRequested=intentOf(question).discount;
   return {focusNames:focus,guide:guideMatches.map(item=>serializeGuide(item,promoRequested,resources)),resources:resources.map(serializeResource),todayMadrid:localMadridDateKey(),dataCounts:{guideRecords:GUIDE_NORM.length,resourceRecords:RESSOURCES.length}};
 }
 function promotionBlock(context){const promos=context.guide.filter(x=>x.hasPromotion);return promos.length?promos.map(x=>`- ${x.name}: ${x.promo}`).join("\n"):"Aucune promotion explicite dans les résultats actuels.";}
@@ -317,7 +342,15 @@ STYLE
 - Pas de longs préambules.
 - Pour une demande de choix, donne généralement 1 recommandation principale et jusqu'à 2 alternatives pertinentes.
 - Ne pousse jamais une vente si elle n'est pas pertinente.
+- Ne cite jamais un établissement qui ne correspond pas à la catégorie demandée. Une recherche restaurant ne doit produire que des restaurants.
+- Quand plusieurs établissements correspondent réellement au besoin précis, compare-les brièvement au lieu d'afficher toute la base.
+- Si un prix vient du GUIDE et n'est pas un tarif produit précis, présente-le comme approximatif (« environ », « à partir de » selon le cas), jamais comme un prix garanti.
+- Pour un restaurant, si tu cites le prix moyen du GUIDE, formule-le comme une estimation (« compte environ X € par personne ») et rappelle que la réservation se fait via le canal disponible.
+- Dès que tu as assez d'informations pour calculer un coût ou une économie, fais le calcul clairement (par personne puis total si le nombre de personnes est connu).
+- Pour une réservation, demande uniquement l'information manquante indispensable (jour, heure, personnes, etc.) et propose ensuite le lien ou WhatsApp disponible.
+- Les détails bruts des RESSOURCES sont internes : ne les transforme pas en section « Détails utiles » et ne liste pas des dizaines de lignes.
 - Si une promotion ou une offre précise est disponible dans les données, mentionne-la clairement.
+- Si l'utilisateur demande un menu ou une carte, réponds avec les éléments disponibles dans RESSOURCES. Si un vrai fichier ou lien de menu est disponible dans les données, propose-le ; sinon, ne prétends pas envoyer un document inexistant.
 - Si un lien est disponible, indique simplement que le bouton de réservation apparaît sous la réponse.
 - Ne prétends jamais avoir réservé, payé ou confirmé une disponibilité.
 
@@ -383,18 +416,18 @@ async function askAI(question,context,history,env){
 }
 
 function activeResultPayload(context){return context.guide.slice(0,MAX_FOCUS).map(item=>({name:item.name,category:item.category,price:item.price,promo:item.promo,booking:item.booking,bookingLinks:item.bookingLinks}));}
-function detailPayload(context){return context.resources.filter(x=>x.offer).slice(0,MAX_RESOURCE_DETAILS).map(x=>({establishment:x.establishment,type:x.type,offer:x.offer,price:x.price,conditions:x.conditions,source:x.source,date:x.date}));}
+function detailPayload(context){return [];}
 
-function json(data,status=200,extraHeaders={}){return new Response(JSON.stringify(data),{status,headers:{"Content-Type":"application/json; charset=utf-8","Cache-Control":"no-store","X-Content-Type-Options":"nosniff",...extraHeaders}});}
+function json(data,status=200){return new Response(JSON.stringify(data),{status,headers:{"Content-Type":"application/json; charset=utf-8","Cache-Control":"no-store","X-Content-Type-Options":"nosniff"}});}
 
 const HTML=`<!doctype html>
 <html lang="fr"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#111111"><title>Malago — Málaga Insider</title>
 <style>
-:root{--orange:#ff6a00;--black:#101010;--muted:#747474;--line:#e9e9e9;--bg:#f5f5f3;--card:#fff}*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--black);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif}.shell{max-width:760px;margin:auto;padding:18px 16px 30px}.top{display:flex;align-items:center;justify-content:space-between;padding:5px 2px 18px}.brand{font-weight:900;font-size:27px;letter-spacing:-1px}.live{font-size:12px;color:#777}.hero{background:linear-gradient(135deg,#111,#252525);color:#fff;border-radius:28px;padding:25px 21px 22px;box-shadow:0 18px 45px rgba(0,0,0,.12)}.eyebrow{color:#ff8a36;font-size:12px;font-weight:800;letter-spacing:1.4px;text-transform:uppercase}.hero h1{font-size:35px;line-height:1.02;letter-spacing:-1.7px;margin:8px 0 10px}.hero p{color:#d7d7d7;margin:0;line-height:1.5}.quick{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-top:17px}.quick button{border:1px solid rgba(255,255,255,.14);background:rgba(255,255,255,.08);color:#fff;border-radius:15px;padding:11px 10px;text-align:left;font-size:13px}.section{margin-top:18px}.chat{display:flex;flex-direction:column;gap:10px}.msg{display:flex}.msg.user{justify-content:flex-end}.bubble{max-width:92%;padding:12px 14px;border-radius:18px;line-height:1.5;white-space:pre-wrap}.msg.user .bubble{background:var(--black);color:#fff;border-bottom-right-radius:6px}.msg.assistant .bubble{background:#fff;border:1px solid var(--line);border-bottom-left-radius:6px}.cards{display:grid;gap:11px;margin-top:11px}.card{background:var(--card);border:1px solid var(--line);border-radius:20px;padding:16px;box-shadow:0 7px 24px rgba(0,0,0,.035)}.cardtop{display:flex;justify-content:space-between;gap:12px}.title{font-size:18px;font-weight:800;letter-spacing:-.3px}.meta{font-size:12px;color:#777;margin-top:3px}.price{font-weight:800;margin-top:11px}.promo{margin-top:10px;background:#fff3e9;color:#a53f00;border-radius:12px;padding:9px 10px;font-weight:750;font-size:13px}.desc{font-size:14px;line-height:1.5;margin-top:10px;color:#333}.actions{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}.actions a{display:inline-flex;background:#111;color:#fff;text-decoration:none;padding:10px 12px;border-radius:12px;font-size:13px;font-weight:700}.actions a.wa{background:var(--orange)}.details{background:#fff;border:1px solid var(--line);border-radius:20px;padding:15px;margin-top:11px}.details h3{font-size:14px;margin:0 0 8px}.detail{border-top:1px solid #eee;padding:9px 0;font-size:13px;line-height:1.4}.detail:first-child{border-top:0}.composer{position:sticky;bottom:0;background:linear-gradient(180deg,rgba(245,245,243,0),rgba(245,245,243,.97) 18%);padding-top:18px}.examples{display:flex;gap:7px;overflow:auto;padding-bottom:8px}.example{white-space:nowrap;border:1px solid #ddd;background:#fff;border-radius:999px;padding:8px 11px;font-size:13px}.inputbox{background:#fff;border:1px solid #ddd;border-radius:19px;padding:10px;box-shadow:0 10px 28px rgba(0,0,0,.07)}textarea{width:100%;min-height:76px;border:0;outline:0;resize:none;font:inherit;font-size:16px;background:transparent;color:#111;padding:5px}.bar{display:flex;gap:8px}.ask{flex:1;border:0;border-radius:13px;background:#111;color:#fff;padding:13px;font-weight:750;font-size:15px}.ask:disabled{opacity:.55}.reset{border:1px solid #ddd;border-radius:13px;background:#fff;padding:13px}.status{font-size:12px;color:#777;min-height:16px;margin:7px 3px}.foot{text-align:center;color:#999;font-size:11px;margin:17px 0 0}@media(min-width:680px){.shell{padding-top:30px}.hero{padding:34px}.hero h1{font-size:45px}}
+:root{--orange:#ff6a00;--black:#101010;--muted:#747474;--line:#e9e9e9;--bg:#f5f5f3;--card:#fff}*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--black);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif}.shell{max-width:760px;margin:auto;padding:18px 16px 30px}.top{display:flex;align-items:center;justify-content:space-between;padding:5px 2px 18px}.brand{font-weight:900;font-size:27px;letter-spacing:-1px}.live{font-size:12px;color:#777}.hero{background:linear-gradient(135deg,#111,#252525);color:#fff;border-radius:28px;padding:25px 21px 22px;box-shadow:0 18px 45px rgba(0,0,0,.12)}.eyebrow{color:#ff8a36;font-size:12px;font-weight:800;letter-spacing:1.4px;text-transform:uppercase}.hero h1{font-size:35px;line-height:1.02;letter-spacing:-1.7px;margin:8px 0 10px}.hero p{color:#d7d7d7;margin:0;line-height:1.5}.quick{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-top:17px}.quick button{border:1px solid rgba(255,255,255,.14);background:rgba(255,255,255,.08);color:#fff;border-radius:15px;padding:11px 10px;text-align:left;font-size:13px}.section{margin-top:18px}.chat{display:flex;flex-direction:column;gap:10px}.msg{display:flex}.msg.user{justify-content:flex-end}.bubble{max-width:92%;padding:12px 14px;border-radius:18px;line-height:1.5;white-space:pre-wrap}.msg.user .bubble{background:var(--black);color:#fff;border-bottom-right-radius:6px}.msg.assistant .bubble{background:#fff;border:1px solid var(--line);border-bottom-left-radius:6px}.cards{display:grid;gap:11px;margin-top:11px}.card{background:var(--card);border:1px solid var(--line);border-radius:20px;padding:16px;box-shadow:0 7px 24px rgba(0,0,0,.035)}.cardtop{display:flex;justify-content:space-between;gap:12px}.title{font-size:18px;font-weight:800;letter-spacing:-.3px}.meta{font-size:12px;color:#777;margin-top:3px}.price{font-weight:800;margin-top:11px}.promo{margin-top:10px;background:#fff3e9;color:#a53f00;border-radius:12px;padding:9px 10px;font-weight:750;font-size:13px}.desc{font-size:14px;line-height:1.5;margin-top:10px;color:#333}.actions{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}.actions a{display:inline-flex;background:#111;color:#fff;text-decoration:none;padding:10px 12px;border-radius:12px;font-size:13px;font-weight:700}.actions a.wa{background:var(--orange)}.composer{position:sticky;bottom:0;background:linear-gradient(180deg,rgba(245,245,243,0),rgba(245,245,243,.97) 18%);padding-top:18px}.examples{display:flex;gap:7px;overflow:auto;padding-bottom:8px}.example{white-space:nowrap;border:1px solid #ddd;background:#fff;border-radius:999px;padding:8px 11px;font-size:13px}.inputbox{background:#fff;border:1px solid #ddd;border-radius:19px;padding:10px;box-shadow:0 10px 28px rgba(0,0,0,.07)}textarea{width:100%;min-height:76px;border:0;outline:0;resize:none;font:inherit;font-size:16px;background:transparent;color:#111;padding:5px}.bar{display:flex;gap:8px}.ask{flex:1;border:0;border-radius:13px;background:#111;color:#fff;padding:13px;font-weight:750;font-size:15px}.ask:disabled{opacity:.55}.reset{border:1px solid #ddd;border-radius:13px;background:#fff;padding:13px}.status{font-size:12px;color:#777;min-height:16px;margin:7px 3px}.foot{text-align:center;color:#999;font-size:11px;margin:17px 0 0}@media(min-width:680px){.shell{padding-top:30px}.hero{padding:34px}.hero h1{font-size:45px}}
 </style></head><body><main class="shell">
 <header class="top"><div class="brand">MALAGO</div><div class="live">Málaga Insider · V1</div></header>
 <section class="hero"><div class="eyebrow">Ton guide intelligent</div><h1>Tout Málaga.<br>Un seul endroit.</h1><p>Restaurants, soirées, activités, excursions et bons plans. Demande ce qu'il te faut et affine ta recherche avec Malago.</p><div class="quick"><button onclick="fillExample('Je cherche un restaurant avec une paella')">🍽️ Manger</button><button onclick="fillExample('Je veux une grosse soirée')">🎉 Sortir</button><button onclick="fillExample('Quelles activités peut-on faire ?')">🌊 Activités</button><button onclick="fillExample('Quels restaurants ont une réduction ?')">🔥 Promotions</button></div></section>
-<section class="section"><div id="chat" class="chat"><div class="msg assistant"><div class="bubble">Salut 👋 Dis-moi ce que tu cherches à Málaga. Tu peux ensuite me demander le prix, une alternative, une réduction ou comment réserver.</div></div></div><div id="results" class="cards"></div><div id="details" class="details" style="display:none"></div></section>
+<section class="section"><div id="chat" class="chat"><div class="msg assistant"><div class="bubble">Salut 👋 Dis-moi ce que tu cherches à Málaga. Tu peux ensuite me demander le prix, une alternative, une réduction ou comment réserver.</div></div></div><div id="results" class="cards"></div></section>
 <section class="composer"><div class="examples"><button class="example" onclick="fillExample('Je cherche un restaurant avec une paella')">Paella</button><button class="example" onclick="fillExample('Quel club est bien pour une grosse soirée ?')">Grosse soirée</button><button class="example" onclick="fillExample('Quelles activités peut-on faire ?')">Activités</button><button class="example" onclick="fillExample('Quels restaurants ont une réduction ?')">Promotions</button></div><div class="inputbox"><textarea id="question" placeholder="Ex. Organise-moi une soirée samedi…"></textarea><div class="bar"><button id="ask" class="ask" onclick="sendQuestion()">Demander à Malago</button><button class="reset" onclick="resetChat()">Nouveau</button></div></div><div id="status" class="status"></div></section>
 <div class="foot">Malago · informations issues du guide et des ressources enregistrées</div></main>
 <script>
@@ -402,9 +435,9 @@ let history=[];let activeResults=[];let waiting=false;
 function fillExample(text){const q=document.getElementById('question');q.value=text;q.focus();}
 function addMessage(role,text){const row=document.createElement('div');row.className='msg '+role;const bubble=document.createElement('div');bubble.className='bubble';bubble.textContent=text;row.appendChild(bubble);document.getElementById('chat').appendChild(row);row.scrollIntoView({behavior:'smooth',block:'nearest'});}
 function renderResults(items){const wrap=document.getElementById('results');wrap.innerHTML='';if(!Array.isArray(items)||!items.length)return;items.forEach(item=>{const card=document.createElement('article');card.className='card';const top=document.createElement('div');top.className='cardtop';const left=document.createElement('div');const title=document.createElement('div');title.className='title';title.textContent=item.name||'';const meta=document.createElement('div');meta.className='meta';meta.textContent=item.category||'';left.append(title,meta);top.append(left);card.append(top);if(item.price){const p=document.createElement('div');p.className='price';p.textContent=item.price;card.append(p);}if(item.hasPromotion){const p=document.createElement('div');p.className='promo';p.textContent='🔥 Offre Malago · '+item.promo;card.append(p);}if(item.description){const d=document.createElement('div');d.className='desc';d.textContent=item.description;card.append(d);}if(item.nextDate){const d=document.createElement('div');d.className='desc';d.textContent='Prochaine date connue · '+item.nextDate;card.append(d);}const links=Array.isArray(item.bookingLinks)?item.bookingLinks:[];if(links.length){const actions=document.createElement('div');actions.className='actions';links.forEach(link=>{const a=document.createElement('a');a.href=link.url;a.target='_blank';a.rel='noopener noreferrer';a.textContent=link.label||'Ouvrir';if(link.kind==='whatsapp')a.className='wa';actions.append(a);});card.append(actions);}wrap.append(card);});}
-function renderDetails(items){const wrap=document.getElementById('details');wrap.innerHTML='';if(!Array.isArray(items)||!items.length){wrap.style.display='none';return;}const h=document.createElement('h3');h.textContent='Détails utiles';wrap.append(h);items.forEach(item=>{const line=document.createElement('div');line.className='detail';const parts=[];if(item.establishment)parts.push(item.establishment);if(item.type)parts.push(item.type);if(item.offer)parts.push(item.offer);if(item.price)parts.push(item.price);if(item.conditions)parts.push(item.conditions);line.textContent=parts.join(' · ');wrap.append(line);});wrap.style.display='block';}
+function renderDetails(items){}
 async function sendQuestion(){if(waiting)return;const input=document.getElementById('question');const question=input.value.trim();const status=document.getElementById('status');const btn=document.getElementById('ask');if(!question){status.textContent='Écris ta question.';return;}waiting=true;btn.disabled=true;btn.textContent='Malago cherche…';status.textContent='';addMessage('user',question);const previousHistory=history.slice();history.push({role:'user',content:question});try{const response=await fetch('/api/chat',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({question,history:previousHistory,activeResults})});const data=await response.json();if(!response.ok)throw new Error(data.error||'Erreur serveur.');const answer=data.answer||'Je n’ai pas trouvé de réponse.';addMessage('assistant',answer);history.push({role:'assistant',content:answer});activeResults=Array.isArray(data.activeResults)?data.activeResults:[];renderResults(data.results);renderDetails(data.resourceDetails);}catch(error){addMessage('assistant','Je rencontre un problème technique. Réessaie dans un instant.');status.textContent=error.message||'Erreur serveur.';}finally{waiting=false;btn.disabled=false;btn.textContent='Demander à Malago';input.value='';input.focus();}}
-function resetChat(){history=[];activeResults=[];document.getElementById('chat').innerHTML='<div class="msg assistant"><div class="bubble">Nouvelle conversation. Qu’est-ce que tu cherches à Málaga ?</div></div>';document.getElementById('results').innerHTML='';document.getElementById('details').innerHTML='';document.getElementById('details').style.display='none';document.getElementById('status').textContent='';document.getElementById('question').value='';}
+function resetChat(){history=[];activeResults=[];document.getElementById('chat').innerHTML='<div class="msg assistant"><div class="bubble">Nouvelle conversation. Qu’est-ce que tu cherches à Málaga ?</div></div>';document.getElementById('results').innerHTML='';document.getElementById('status').textContent='';document.getElementById('question').value='';}
 document.getElementById('question').addEventListener('keydown',e=>{if((e.metaKey||e.ctrlKey)&&e.key==='Enter')sendQuestion();});
 </script></body></html>`;
 
