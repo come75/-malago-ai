@@ -138,18 +138,33 @@ function closeModal(){document.getElementById("modal").classList.remove("open")}
 function esc(s){return String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]))}
 
 function clearMarkers(){markers.forEach(m=>m.setMap(null));markers=[]}
-function renderMapMarkers(){
-  if(!mapInstance)return;
+async function renderMapMarkers(){
+  if(!mapInstance||!window.google?.maps)return;
   clearMarkers();
-  const visible=PARTNERS.filter(p=>(activeCategory==="All"||p.category===activeCategory)&&Array.isArray(p.coordinates));
+  const wanted=PARTNERS.filter(p=>activeCategory==="All"||p.category===activeCategory);
   const bounds=new google.maps.LatLngBounds();
-  visible.forEach(p=>{
-    const pos={lat:Number(p.coordinates[0]),lng:Number(p.coordinates[1])};bounds.extend(pos);
+  let plotted=0;
+  const geocoder=new google.maps.Geocoder();
+  for(const p of wanted){
+    let pos=null;
+    if(Array.isArray(p.coordinates)) pos={lat:Number(p.coordinates[0]),lng:Number(p.coordinates[1])};
+    else if(p.address){
+      try{
+        const result=await geocoder.geocode({address:p.address});
+        const loc=result?.results?.[0]?.geometry?.location;
+        if(loc) pos={lat:loc.lat(),lng:loc.lng()};
+      }catch{}
+    }
+    if(!pos) continue;
+    bounds.extend(pos); plotted++;
     const marker=new google.maps.Marker({map:mapInstance,position:pos,title:p.name});
-    marker.addListener("click",()=>{openPartner(p.name)});
+    marker.addListener("click",()=>openPartner(p.name));
     markers.push(marker);
-  });
-  if(visible.length)mapInstance.fitBounds(bounds,{top:70,right:70,bottom:70,left:70});else mapInstance.setCenter({lat:36.7219,lng:-4.4214}),mapInstance.setZoom(13);
+  }
+  document.getElementById("mapStatus").textContent=plotted+" partenaire(s) affiché(s) sur Google Maps";
+  if(plotted>1)mapInstance.fitBounds(bounds,{top:70,right:70,bottom:70,left:70});
+  else if(plotted===1){mapInstance.setCenter(bounds.getCenter());mapInstance.setZoom(15)}
+  else {mapInstance.setCenter({lat:36.7219,lng:-4.4214});mapInstance.setZoom(13)}
 }
 async function initGoogleMap(){
   const cfg=await fetch("/api/config",{cache:"no-store"}).then(r=>r.json()).catch(()=>({}));
@@ -165,9 +180,11 @@ async function bootGoogleMap(key){
   s.async=true;s.defer=true;
   s.onload=async()=>{
     const {Map}=await google.maps.importLibrary("maps");
-    mapInstance=new Map(document.getElementById("mapBox"),{center:{lat:36.7219,lng:-4.4214},zoom:13,mapTypeControl:false,streetViewControl:false,fullscreenControl:true,gestureHandling:"greedy"});
     document.getElementById("mapBox").innerHTML="";
-    const holder=document.createElement("div");holder.className="gmaps";holder.style.cssText="width:100%;height:100%";document.getElementById("mapBox").appendChild(holder);
+    const holder=document.createElement("div");
+    holder.className="gmaps";
+    holder.style.cssText="width:100%;height:100%";
+    document.getElementById("mapBox").appendChild(holder);
     mapInstance=new Map(holder,{center:{lat:36.7219,lng:-4.4214},zoom:13,mapTypeControl:false,streetViewControl:false,fullscreenControl:true,gestureHandling:"greedy"});
     document.getElementById("mapStatus").textContent="Google Maps · "+PARTNERS.filter(p=>Array.isArray(p.coordinates)).length+" partenaire(s) avec coordonnées confirmées";
     renderMapMarkers();
@@ -177,10 +194,17 @@ async function bootGoogleMap(key){
 }
 async function loadPartners(){
   try{
-    const r=await fetch("/api/partners",{cache:"no-store"});const d=await r.json();if(!r.ok)throw new Error(d.error||"API");
-    PARTNERS=d.partners||[];document.getElementById("mapStatus").textContent=PARTNERS.length+" partenaires chargés depuis le Guide Master";
-    renderAll();renderFeatured();
-    const cfg=await fetch("/api/config",{cache:"no-store"}).then(x=>x.json()).then(cfg=>{if(cfg.googleMapsKey)bootGoogleMap(cfg.googleMapsKey)})catch(e){
+    const r=await fetch("/api/partners",{cache:"no-store"});
+    const d=await r.json();
+    if(!r.ok)throw new Error(d.error||"API");
+    PARTNERS=d.partners||[];
+    document.getElementById("mapStatus").textContent=PARTNERS.length+" partenaires chargés depuis le Guide Master";
+    renderAll();
+    renderFeatured();
+    const cfg=await fetch("/api/config",{cache:"no-store"}).then(x=>x.json()).catch(()=>({}));
+    if(cfg.googleMapsKey) await bootGoogleMap(cfg.googleMapsKey);
+  }catch(e){
+    console.error(e);
     document.getElementById("grid").innerHTML='<div class="empty">Impossible de charger les partenaires.</div>';
     document.getElementById("mapStatus").textContent="Impossible de charger les partenaires.";
   }
