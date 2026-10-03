@@ -87,7 +87,7 @@ function mapNotionRow(row) {
   const menu = notionText(p["Carte / Formules"]);
   const lat = Number(p["Latitude"]?.number);
   const lon = Number(p["Longitude"]?.number);
-  const photo = notionFileUrl(p["Photo"]?.files || p["Photo"]?.file || p["Photo"]?.external ? [p["Photo"]] : []);
+  const photo = notionFileUrl(p["Photo"]?.files || []);
   return {
     name,
     category,
