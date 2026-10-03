@@ -1,0 +1,204 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#111111">
+<title>Malago — Málaga Insider</title>
+<style>
+:root{--ink:#111;--muted:#6f6a62;--paper:#f6f3ed;--paper2:#ece7dd;--card:#fff;--line:#ded8cd;--accent:#ff5a1f;--dark:#121212;--soft:#f0ece4}
+*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:var(--paper);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif}button,input{font:inherit}button{cursor:pointer}a{text-decoration:none;color:inherit}
+.shell{max-width:1280px;margin:auto;padding:18px 18px 80px}.nav{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:4px 0 18px}.brand{height:42px;width:112px;object-fit:contain;object-position:center;background:#111;border-radius:12px;padding:8px}.navBtn{border:0;background:#111;color:#fff;border-radius:999px;padding:12px 16px;font-weight:850}
+.hero{min-height:620px;border-radius:32px;overflow:hidden;position:relative;background:#111 url('/img/malaga-cover.webp') center/cover no-repeat;color:#fff;display:flex;align-items:flex-end;box-shadow:0 24px 70px #0002}.hero:after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,#0003 20%,#000c 84%)}.heroInner{position:relative;z-index:1;display:grid;grid-template-columns:1.08fr .92fr;gap:28px;width:100%;padding:42px}.eyebrow{color:#ff9c6d;text-transform:uppercase;letter-spacing:2.2px;font-size:11px;font-weight:900}.hero h1{font-size:clamp(48px,7vw,86px);line-height:.92;letter-spacing:-5px;margin:12px 0 18px;max-width:760px}.hero p{font-size:17px;line-height:1.55;color:#ece7df;max-width:680px}.heroBtns{display:flex;gap:10px;flex-wrap:wrap;margin-top:24px}.btn{border-radius:14px;padding:13px 17px;font-weight:850;border:1px solid transparent}.btn.primary{background:var(--accent);color:#fff}.btn.dark{background:#ffffff10;color:#fff;border-color:#ffffff28}.heroLogoWrap{display:flex;justify-content:flex-end;align-items:flex-end}.heroLogo{width:min(360px,100%);max-height:190px;object-fit:contain;background:#000a;border-radius:20px;padding:24px}
+.section{padding-top:70px}.kicker{font-size:11px;letter-spacing:2px;text-transform:uppercase;color:#79746c;font-weight:900}.section h2{font-size:40px;line-height:1;margin:8px 0 12px;letter-spacing:-2.4px}.sectionSub{color:var(--muted);font-size:16px;margin:0 0 22px}
+.universes{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}.universe{background:var(--card);border:1px solid var(--line);border-radius:22px;padding:18px;text-align:left;min-height:150px;transition:transform .2s,box-shadow .2s}.universe:hover{transform:translateY(-2px);box-shadow:0 16px 40px #0000000b}.uniIcon{font-size:28px}.uniTitle{display:block;color:#1681d5;font-weight:900;margin-top:20px}.uniCount{display:block;color:var(--muted);margin-top:5px}
+
+.featureGrid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}.featureCard{background:#111;color:#fff;border-radius:24px;overflow:hidden;min-height:340px;position:relative}.featureCard img{width:100%;height:220px;object-fit:cover;display:block}.featureCard .fcBody{padding:18px}.featureCard h3{margin:0 0 7px;font-size:22px}.featureCard p{margin:0;color:#cfcac2;line-height:1.45}.featureAction{margin-top:14px;display:inline-flex;background:#fff;color:#111;padding:10px 13px;border-radius:12px;font-weight:850}
+
+.mapShell{background:#fff;border:1px solid var(--line);border-radius:26px;overflow:hidden}.mapTop{display:flex;justify-content:space-between;align-items:center;padding:14px 14px 12px;gap:12px;flex-wrap:wrap}.filterRow{display:flex;gap:8px;flex-wrap:wrap}.filter{border:1px solid var(--line);background:#fff;color:#1780d1;border-radius:999px;padding:9px 13px;font-weight:850}.filter.active{background:#111;color:#fff;border-color:#111}.mapBox{height:500px;background:linear-gradient(145deg,#e9f1ee,#f4eee7);display:grid;place-items:center;position:relative}.mapMsg{text-align:center;max-width:460px;padding:24px}.mapMsg h3{margin:0 0 8px;font-size:24px}.mapMsg p{color:var(--muted);line-height:1.5}.mapMsg a{display:inline-flex;background:#111;color:#fff;border-radius:12px;padding:11px 14px;font-weight:850}.gmaps{width:100%;height:100%}.gmaps img{width:100%;height:100%;object-fit:cover}.mapStatus{padding:10px 14px;color:var(--muted);font-size:13px;border-top:1px solid var(--line);background:#faf8f4}
+
+.guideWrap{background:var(--paper2);border-radius:26px;padding:14px}.toolbar{display:grid;grid-template-columns:1fr auto;gap:12px;align-items:center}.search{background:#fff;border:1px solid var(--line);border-radius:14px;padding:14px 16px;width:100%;outline:none}.search:focus{border-color:#bbb}.guideCount{color:var(--muted);font-weight:700}.chips{display:flex;gap:8px;flex-wrap:wrap;margin:12px 0 18px}.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}.card{background:#fff;border:1px solid var(--line);border-radius:22px;overflow:hidden;display:flex;flex-direction:column;min-width:0}.cover{height:220px;background:#151515;position:relative;overflow:hidden}.coverSprite{width:100%;height:100%;background-image:url("/img/sprite.webp");background-size:400% 400%;background-repeat:no-repeat;background-position:var(--sx) var(--sy);background-color:#111}.featureSprite{height:220px;overflow:hidden}.featureSprite .coverSprite{height:220px}.modalSprite{height:100%}.coverFallback{height:100%;display:grid;place-items:center;background:radial-gradient(circle at 20% 15%,#ff6b2d 0,#171717 40%,#050505 100%);color:#fff}.coverFallback b{font-size:28px;letter-spacing:-1px}.cardBody{padding:16px 16px 18px;display:flex;flex-direction:column;gap:9px;flex:1}.cardTop{display:flex;justify-content:space-between;gap:10px}.card h3{margin:0;font-size:23px;line-height:1.05}.meta{color:#1880d0;font-weight:850}.promo{background:#fff0e8;color:#a23e16;padding:9px 11px;border-radius:12px;font-weight:850}.desc{color:#4e4a44;line-height:1.5}.address{color:#6a645c;font-size:14px;line-height:1.45}.menuHint{font-size:14px;color:#625d56;background:#f7f4ef;border:1px solid #e8e2d7;border-radius:12px;padding:10px}.actions{display:flex;flex-wrap:wrap;gap:8px;margin-top:auto;padding-top:5px}.actions button,.actions a{border:1px solid var(--line);background:#fff;padding:10px 12px;border-radius:12px;font-weight:850}.actions .dark{background:#111;color:#fff;border-color:#111}.empty{padding:35px;text-align:center;color:var(--muted)}
+
+.modal{position:fixed;inset:0;background:#0009;display:none;z-index:1000;align-items:flex-end;justify-content:center;padding:16px}.modal.open{display:flex}.modalPanel{width:min(820px,100%);max-height:min(88vh,920px);overflow:auto;background:#fff;border-radius:28px;box-shadow:0 30px 100px #0004}.modalCover{height:260px;background:#111;position:relative}.modalCover img{width:100%;height:100%;object-fit:cover}.modalClose{position:absolute;top:14px;right:14px;border:0;background:#fff;color:#111;border-radius:999px;width:42px;height:42px;font-size:20px;font-weight:800}.modalBody{padding:24px}.modalTitle{font-size:40px;letter-spacing:-2px;line-height:1;margin:0 0 5px}.modalMeta{color:#1680d4;font-weight:850}.modalBlock{margin-top:22px}.modalBlock h4{margin:0 0 8px;font-size:15px;text-transform:uppercase;letter-spacing:1.4px;color:#767168}.modalBlock p{white-space:pre-wrap;line-height:1.55;color:#393631;margin:0}.menuPanel{background:#f8f5ef;border:1px solid #e6dfd4;border-radius:16px;padding:14px;white-space:pre-wrap;line-height:1.5;font-size:14px}.modalActions{display:flex;flex-wrap:wrap;gap:8px;margin-top:24px}.modalActions a{padding:12px 14px;background:#111;color:#fff;border-radius:12px;font-weight:850}.modalActions a.alt{background:#fff;color:#111;border:1px solid var(--line)}
+
+.chatFab{position:fixed;right:18px;bottom:18px;z-index:950;border:0;background:var(--accent);color:#fff;border-radius:999px;padding:14px 17px;font-weight:900;box-shadow:0 16px 40px #ff5a1f33}.chatOverlay{position:fixed;inset:0;background:#0008;display:none;z-index:1100}.chatOverlay.open{display:block}.chatSheet{position:absolute;right:0;top:0;bottom:0;width:min(460px,100vw);background:#f7f5f0;display:flex;flex-direction:column}.chatHead{padding:18px 18px 14px;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;background:#fff}.chatHead button{border:0;background:#f0ece4;border-radius:999px;width:38px;height:38px}.messages{flex:1;overflow:auto;padding:18px}.msg{display:flex;margin:8px 0}.msg.user{justify-content:flex-end}.bubble{max-width:85%;padding:11px 13px;border-radius:16px;background:#fff;border:1px solid var(--line);white-space:pre-wrap;line-height:1.45}.user .bubble{background:#111;color:#fff;border-color:#111}.chatResults{padding:0 18px 10px;display:grid;gap:8px;max-height:180px;overflow:auto}.chatCard{background:#fff;border:1px solid var(--line);border-radius:14px;padding:12px}.chatCard small{display:block;color:var(--muted);margin:3px 0 8px}.chatCard button{border:0;background:#111;color:#fff;border-radius:10px;padding:8px 10px;font-weight:800}.chatInputRow{display:flex;gap:8px;padding:12px 14px;border-top:1px solid var(--line);background:#fff}.chatInput{flex:1;border:1px solid var(--line);border-radius:14px;padding:12px 14px;outline:none}.chatSend{border:0;background:#111;color:#fff;border-radius:14px;padding:0 16px;font-weight:850}
+
+footer{margin-top:60px;padding:28px 0;border-top:1px solid var(--line);color:#746e65;display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap}
+@media(max-width:950px){.heroInner{grid-template-columns:1fr}.heroLogoWrap{justify-content:flex-start}.universes{grid-template-columns:repeat(2,1fr)}.featureGrid,.grid{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:640px){.shell{padding:12px 12px 60px}.nav{padding-bottom:12px}.hero{min-height:660px;border-radius:24px}.heroInner{padding:28px 22px}.hero h1{font-size:51px;letter-spacing:-3px}.hero p{font-size:15px}.heroLogo{width:210px;max-height:110px;padding:14px}.section{padding-top:52px}.section h2{font-size:32px}.universes,.featureGrid,.grid{grid-template-columns:1fr}.cover{height:210px}.mapBox{height:430px}.toolbar{grid-template-columns:1fr}.modal{padding:0}.modalPanel{max-height:92vh;border-radius:24px 24px 0 0}.modalCover{height:220px}.modalTitle{font-size:33px}}
+</style>
+</head>
+<body>
+<div class="shell">
+<header class="nav">
+  <img class="brand" src="/img/malago-logo.webp" alt="Malago">
+  <button class="navBtn" onclick="openChat()">Ask Malago</button>
+</header>
+
+<section class="hero">
+  <div class="heroInner">
+    <div>
+      <div class="eyebrow">Málaga insider</div>
+      <h1>Tout Málaga.<br>Au même endroit.</h1>
+      <p>Restaurants, nightlife, activités, excursions et services partenaires. Explore la ville, regarde ce qui te correspond et réserve quand tu es prêt.</p>
+      <div class="heroBtns">
+        <button class="btn primary" onclick="scrollToGuide()">Explorer les partenaires</button>
+        <button class="btn dark" onclick="openChat()">Parler à Malago</button>
+      </div>
+    </div>
+    <div class="heroLogoWrap"><img class="heroLogo" src="/img/malago-logo.webp" alt="Malago"></div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="kicker">Découvrir</div>
+  <h2>Choisis ton univers</h2>
+  <p class="sectionSub">Passe directement à ce que tu cherches à Málaga.</p>
+  <div id="universes" class="universes"></div>
+</section>
+
+<section class="section">
+  <div class="kicker">À découvrir</div>
+  <h2>Quelques adresses Malago</h2>
+  <p class="sectionSub">Des partenaires mis en avant directement depuis ton Guide Master.</p>
+  <div id="featured" class="featureGrid"></div>
+</section>
+
+<section id="mapSection" class="section">
+  <div class="kicker">Carte</div>
+  <h2>Les partenaires autour de Málaga</h2>
+  <p class="sectionSub">Les adresses avec des coordonnées confirmées apparaissent sur la carte.</p>
+  <div class="mapShell">
+    <div class="mapTop"><div id="mapFilters" class="filterRow"></div><a id="mapOpenAll" class="filter" href="https://www.google.com/maps/search/Málaga,+Spain" target="_blank" rel="noopener">Ouvrir Google Maps</a></div>
+    <div id="mapBox" class="mapBox"><div class="mapMsg"><h3>Google Maps</h3><p>La carte interactive est prête. Elle sera activée dès que la clé Google Maps sera ajoutée au Preview.</p><a href="https://www.google.com/maps/search/Málaga,+Spain" target="_blank" rel="noopener">Voir Málaga sur Google Maps</a></div></div>
+    <div id="mapStatus" class="mapStatus">Chargement des partenaires…</div>
+  </div>
+</section>
+
+<section id="guide" class="section">
+  <div class="kicker">Guide</div>
+  <h2>Partenaires Malago</h2>
+  <p class="sectionSub">Le contenu est alimenté par le Guide Master Notion.</p>
+  <div class="guideWrap">
+    <div class="toolbar"><input id="search" class="search" placeholder="Rechercher un partenaire, une activité, un mot-clé…"><div id="count" class="guideCount"></div></div>
+    <div id="filters" class="chips"></div>
+    <div id="grid" class="grid"><div class="empty">Chargement…</div></div>
+  </div>
+</section>
+
+<footer>
+  <div><b>Malago</b> — Málaga Insider</div>
+  <div>Guide vivant · contenu piloté par Notion</div>
+</footer>
+</div>
+
+<div id="modal" class="modal" onclick="if(event.target===this)closeModal()"><div id="modalPanel" class="modalPanel"><div id="modalCover" class="modalCover"></div><div id="modalBody" class="modalBody"></div></div></div>
+
+<button class="chatFab" onclick="openChat()">💬 Malago</button>
+<div id="chatOverlay" class="chatOverlay">
+  <div class="chatSheet">
+    <div class="chatHead"><b>Malago AI</b><button onclick="closeChat()">×</button></div>
+    <div id="messages" class="messages"></div>
+    <div id="chatResults" class="chatResults"></div>
+    <div class="chatInputRow"><input id="chatInput" class="chatInput" placeholder="Ex. un jet ski, une table, une soirée…"><button class="chatSend" onclick="sendChat()">Envoyer</button></div>
+  </div>
+</div>
+
+<script>
+let PARTNERS=[],activeCategory="All",mapInstance=null,markers=[],chatHistory=[],waiting=false;
+
+const categoryMeta={
+  Activity:{label:"Activités",icon:"🌊"},
+  Party:{label:"Nightlife",icon:"🎉"},
+  Restaurant:{label:"Restaurants",icon:"🍽️"},
+  Services:{label:"Services",icon:"🛠️"}
+};
+const imageMap={"jet ski boat water activities":0,"quad buggy":1,"cosanuestra":2,"bro":3,"sala gold":4,"aura":5,"euphoria club":6,"teatro club":7,"mirror":8,"bubbles club":9,"distinto":10};
+function imgFor(p){const i=imageMap[norm(p.name)];return Number.isInteger(i)?i:null}
+const norm=s=>String(s||"").toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,"").replace(/[^a-z0-9]+/g," ").trim();
+function label(c){return categoryMeta[c]?.label||c||"Partenaire"}
+function icon(c){return categoryMeta[c]?.icon||"📍"}
+function imgFor(p){return imageMap[norm(p.name)]||null}
+function safeUrl(u){try{const x=new URL(u);return x.protocol==="https:"||x.protocol==="http:"?x.href:""}catch{return""}}
+function filtered(){const q=norm(document.getElementById("search").value);return PARTNERS.filter(p=>(activeCategory==="All"||p.category===activeCategory)&&(!q||norm([p.name,p.category,p.description,p.address,p.tags,p.menu,p.promo,p.audience].join(" ")).includes(q)))}
+function scrollToGuide(){document.getElementById("guide").scrollIntoView({behavior:"smooth"})}
+function setCategory(c){activeCategory=c;renderAll();document.getElementById("guide").scrollIntoView({behavior:"smooth"})}
+function categories(){const m=new Map();PARTNERS.forEach(p=>m.set(p.category,(m.get(p.category)||0)+1));return [...m.entries()].map(([c,n])=>({c,n}))}
+function renderUniverses(){document.getElementById("universes").innerHTML=categories().map(({c,n})=>'<button class="universe" onclick="setCategory('+JSON.stringify(c)+')"><div class="uniIcon">'+icon(c)+'</div><span class="uniTitle">'+label(c)+'</span><span class="uniCount">'+n+' partenaire'+(n>1?'s':'')+'</span></button>').join("")}
+function renderFilters(){const vals=["All",...categories().map(x=>x.c)];document.getElementById("filters").innerHTML=vals.map(c=>'<button class="filter '+(activeCategory===c?'active':'')+'" onclick="setCategory('+JSON.stringify(c)+')">'+(c==="All"?"Tous":label(c))+'</button>').join("");document.getElementById("mapFilters").innerHTML=vals.map(c=>'<button class="filter '+(activeCategory===c?'active':'')+'" onclick="setCategory('+JSON.stringify(c)+')">'+(c==="All"?"Tous":label(c))+'</button>').join("")}
+function bookingButtons(p,cls=""){return (p.bookingLinks||[]).filter(x=>safeUrl(x.url)).map((x)=>'<a class="'+cls+'" href="'+safeUrl(x.url)+'" target="_blank" rel="noopener">'+(x.label||"Réserver")+'</a>').join("")}
+function coverHtml(p,extra=""){const i=imgFor(p);return i===null?'<div class="coverFallback"><b>'+esc(p.name)+'</b></div>':'<div class="coverSprite '+extra+'" style="--sx:'+((i%4)*100/3)+'%;--sy:'+(Math.floor(i/4)*100/3)+'%"></div>'}
+function card(p){const menuText=p.menu?String(p.menu).split("\\n").filter(Boolean).slice(0,3).join(" · "):"";return '<article class="card"><div class="cover">'+coverHtml(p)+'</div><div class="cardBody"><div class="cardTop"><div><h3>'+esc(p.name)+'</h3><div class="meta">'+esc(label(p.category))+'</div></div></div>'+(p.hasPromotion?'<div class="promo">🔥 '+esc(p.promo)+'</div>':'')+(p.description?'<div class="desc">'+esc(p.description)+'</div>':'')+(p.address?'<div class="address">📍 '+esc(p.address)+'</div>':'')+(menuText?'<div class="menuHint">🍽️ '+esc(menuText)+'</div>':'')+'<div class="actions"><button class="dark" onclick="openPartner('+JSON.stringify(p.name)+')">Voir la fiche</button>'+(p.menu?'<button onclick="openPartner('+JSON.stringify(p.name)+')">Menu & formules</button>':'')+bookingButtons(p)+'</div></div></article>'}
+function renderGrid(){const arr=filtered();document.getElementById("count").textContent=arr.length+" partenaire"+(arr.length>1?"s":"");document.getElementById("grid").innerHTML=arr.length?arr.map(card).join(""):'<div class="empty">Aucun partenaire ne correspond à ta recherche.</div>'}
+function featuredCard(p){return '<article class="featureCard"><div class="featureSprite">'+coverHtml(p)+'</div><div class="fcBody"><h3>'+esc(p.name)+'</h3><p>'+esc(label(p.category))+(p.promo&&p.hasPromotion?" · "+p.promo:"")+'</p><button class="featureAction" onclick="openPartner('+JSON.stringify(p.name)+')">Voir la fiche</button></div></article>'}
+function renderFeatured(){const pick=[...PARTNERS].filter(p=>imgFor(p)).slice(0,6);document.getElementById("featured").innerHTML=(pick.length?pick:PARTNERS.slice(0,6)).map(featuredCard).join("")}
+function renderAll(){renderUniverses();renderFilters();renderGrid();renderMapMarkers()}
+function openPartner(name){const p=PARTNERS.find(x=>x.name===name);if(!p)return;document.getElementById("modalCover").innerHTML=coverHtml(p,"modalSprite")+'<button class="modalClose" onclick="closeModal()">×</button>';let html='<h3 class="modalTitle">'+esc(p.name)+'</h3><div class="modalMeta">'+esc(label(p.category))+'</div>';if(p.hasPromotion)html+='<div class="modalBlock"><div class="promo">🔥 '+esc(p.promo)+'</div></div>';if(p.description)html+='<div class="modalBlock"><h4>Description</h4><p>'+esc(p.description)+'</p></div>';if(p.address)html+='<div class="modalBlock"><h4>Adresse</h4><p>'+esc(p.address)+'</p></div>';if(p.when)html+='<div class="modalBlock"><h4>Quand</h4><p>'+esc(p.when)+'</p></div>';if(p.audience)html+='<div class="modalBlock"><h4>Pour qui</h4><p>'+esc(p.audience)+'</p></div>';if(p.price)html+='<div class="modalBlock"><h4>Prix indicatif</h4><p>'+esc(p.price)+'</p></div>';if(p.notes)html+='<div class="modalBlock"><h4>Notes Malago</h4><p>'+esc(p.notes)+'</p></div>';if(p.menu)html+='<div id="menuTarget" class="modalBlock"><h4>Menu / Formules / Tarifs</h4><div class="menuPanel">'+esc(p.menu)+'</div></div>';const actions=bookingButtons(p,"alt");const mapsUrl="https://www.google.com/maps/search/?api=1&query="+encodeURIComponent(p.address||p.name+" Málaga");document.getElementById("modalBody").innerHTML=html+'<div class="modalActions">'+actions+'<a href="'+mapsUrl+'" target="_blank" rel="noopener">📍 Ouvrir dans Google Maps</a></div>';document.getElementById("modal").classList.add("open")}
+function closeModal(){document.getElementById("modal").classList.remove("open")}
+function esc(s){return String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]))}
+
+function clearMarkers(){markers.forEach(m=>m.setMap(null));markers=[]}
+function renderMapMarkers(){
+  if(!mapInstance)return;
+  clearMarkers();
+  const visible=PARTNERS.filter(p=>(activeCategory==="All"||p.category===activeCategory)&&Array.isArray(p.coordinates));
+  const bounds=new google.maps.LatLngBounds();
+  visible.forEach(p=>{
+    const pos={lat:Number(p.coordinates[0]),lng:Number(p.coordinates[1])};bounds.extend(pos);
+    const marker=new google.maps.Marker({map:mapInstance,position:pos,title:p.name});
+    marker.addListener("click",()=>{openPartner(p.name)});
+    markers.push(marker);
+  });
+  if(visible.length)mapInstance.fitBounds(bounds,{top:70,right:70,bottom:70,left:70});else mapInstance.setCenter({lat:36.7219,lng:-4.4214}),mapInstance.setZoom(13);
+}
+async function initGoogleMap(){
+  const cfg=await fetch("/api/config",{cache:"no-store"}).then(r=>r.json()).catch(()=>({}));
+  if(!cfg.googleMapsConfigured)return;
+  const script=document.createElement("script");
+  script.src="https://maps.googleapis.com/maps/api/js?key="+encodeURIComponent(cfg.googleMapsConfigured?window.__GMAPS_KEY__:"")+"&loading=async";
+}
+async function bootGoogleMap(key){
+  if(!key)return;
+  window.__GMAPS_KEY__=key;
+  const s=document.createElement("script");
+  s.src="https://maps.googleapis.com/maps/api/js?key="+encodeURIComponent(key)+"&loading=async";
+  s.async=true;s.defer=true;
+  s.onload=async()=>{
+    const {Map}=await google.maps.importLibrary("maps");
+    mapInstance=new Map(document.getElementById("mapBox"),{center:{lat:36.7219,lng:-4.4214},zoom:13,mapTypeControl:false,streetViewControl:false,fullscreenControl:true,gestureHandling:"greedy"});
+    document.getElementById("mapBox").innerHTML="";
+    const holder=document.createElement("div");holder.className="gmaps";holder.style.cssText="width:100%;height:100%";document.getElementById("mapBox").appendChild(holder);
+    mapInstance=new Map(holder,{center:{lat:36.7219,lng:-4.4214},zoom:13,mapTypeControl:false,streetViewControl:false,fullscreenControl:true,gestureHandling:"greedy"});
+    document.getElementById("mapStatus").textContent="Google Maps · "+PARTNERS.filter(p=>Array.isArray(p.coordinates)).length+" partenaire(s) avec coordonnées confirmées";
+    renderMapMarkers();
+  };
+  s.onerror=()=>{document.getElementById("mapStatus").textContent="Google Maps n’a pas pu être chargé. Utilise les liens Google Maps dans les fiches."};
+  document.head.appendChild(s);
+}
+async function loadPartners(){
+  try{
+    const r=await fetch("/api/partners",{cache:"no-store"});const d=await r.json();if(!r.ok)throw new Error(d.error||"API");
+    PARTNERS=d.partners||[];document.getElementById("mapStatus").textContent=PARTNERS.length+" partenaires chargés depuis le Guide Master";
+    renderAll();renderFeatured();
+    const cfg=await fetch("/api/config",{cache:"no-store"}).then(x=>x.json()).then(cfg=>{if(cfg.googleMapsKey)bootGoogleMap(cfg.googleMapsKey)})catch(e){
+    document.getElementById("grid").innerHTML='<div class="empty">Impossible de charger les partenaires.</div>';
+    document.getElementById("mapStatus").textContent="Impossible de charger les partenaires.";
+  }
+}
+
+function openChat(){document.getElementById("chatOverlay").classList.add("open");if(!document.getElementById("messages").children.length)addMsg("assistant","Salut 👋 Que cherches-tu à Málaga ?");setTimeout(()=>document.getElementById("chatInput").focus(),50)}
+function closeChat(){document.getElementById("chatOverlay").classList.remove("open")}
+function addMsg(role,text){const row=document.createElement("div");row.className="msg "+role;const b=document.createElement("div");b.className="bubble";b.textContent=text;row.appendChild(b);document.getElementById("messages").appendChild(row);row.scrollIntoView({behavior:"smooth",block:"nearest"})}
+async function sendChat(){if(waiting)return;const input=document.getElementById("chatInput"),q=input.value.trim();if(!q)return;waiting=true;addMsg("user",q);const prev=chatHistory.slice();chatHistory.push({role:"user",content:q});input.value="";try{const r=await fetch("/api/chat",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({question:q,history:prev})});const d=await r.json();if(!r.ok)throw new Error(d.error||"Erreur");addMsg("assistant",d.answer||"");renderChatResults(d.results||[]);chatHistory.push({role:"assistant",content:d.answer||""})}catch(e){addMsg("assistant","Je rencontre un problème technique. Réessaie dans un instant.")}finally{waiting=false;input.focus()}}
+function renderChatResults(items){document.getElementById("chatResults").innerHTML=(items||[]).slice(0,3).map(p=>'<div class="chatCard"><b>'+esc(p.name)+'</b><small>'+esc(label(p.category))+'</small><button onclick="openPartner('+JSON.stringify(p.name)+')">Voir la fiche</button></div>').join("")}
+
+document.getElementById("search").addEventListener("input",renderGrid);
+document.getElementById("chatInput").addEventListener("keydown",e=>{if(e.key==="Enter")sendChat()});
+
+fetch("/api/config",{cache:"no-store"}).then(r=>r.json()).then(cfg=>{
+  if(cfg.googleMapsKey){bootGoogleMap(cfg.googleMapsKey)}
+});
+loadPartners();
+</script>
+</body>
+</html>
