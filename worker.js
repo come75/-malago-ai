@@ -1,5 +1,8 @@
 import { GUIDE, RESSOURCES } from "./data.js";
 
+/* Preview build trigger — V4 Notion site
+   ========================================================= */
+
 /* =========================================================
    MALAGO V6 — production V1
    Source of truth: data.js (GUIDE + RESSOURCES)
