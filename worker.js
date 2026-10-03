@@ -101,6 +101,7 @@ async function fetchNotionPartners(env) {
   const token = env?.NOTION_TOKEN;
   if (!token) throw new Error("Missing NOTION_TOKEN secret");
   const ds = env?.NOTION_DATA_SOURCE_ID || NOTION_DATA_SOURCE_ID;
+  const database = env?.NOTION_DATABASE_ID || "c8e606a858d84dadb77406ad5dd36132";
   const cacheKey = new Request("https://malago.internal/notion-partners/" + ds);
   const cached = await caches.default.match(cacheKey);
   if (cached) {
@@ -111,7 +112,7 @@ async function fetchNotionPartners(env) {
   for (let i = 0; i < 20; i++) {
     const body = {page_size: 100};
     if (cursor) body.start_cursor = cursor;
-    const r = await fetch("https://api.notion.com/v1/data_sources/" + ds + "/query", {
+    const r = await fetch("https://api.notion.com/v1/databases/" + database + "/query", {
       method: "POST",
       headers: {
         "Authorization": "Bearer " + token,
