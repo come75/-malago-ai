@@ -97,6 +97,25 @@ function mapNotionRow(row) {
     coordinates: Number.isFinite(lat) && Number.isFinite(lon) ? [lat, lon] : null
   };
 }
+async function notionRequest(token, method, path, body) {
+  const response = await fetch("https://api.notion.com/v1" + path, {
+    method,
+    headers: {
+      "Authorization": "Bearer " + token,
+      "Notion-Version": NOTION_VERSION,
+      "Content-Type": "application/json"
+    },
+    ...(body ? {body: JSON.stringify(body)} : {})
+  });
+  const raw = await response.text();
+  let data = {};
+  try { data = raw ? JSON.parse(raw) : {}; } catch {}
+  if (!response.ok) {
+    const message = clean(data?.message || data?.code || raw || "unknown error").slice(0,240);
+    throw new Error("Notion API " + response.status + ": " + message);
+  }
+  return data;
+}
 async function fetchNotionPartners(env) {
   const token = env?.NOTION_TOKEN;
   if (!token) throw new Error("Missing NOTION_TOKEN secret");
@@ -111,17 +130,7 @@ async function fetchNotionPartners(env) {
   for (let i = 0; i < 20; i++) {
     const body = {page_size: 100};
     if (cursor) body.start_cursor = cursor;
-    const r = await fetch("https://api.notion.com/v1/data_sources/" + ds + "/query", {
-      method: "POST",
-      headers: {
-        "Authorization": "Bearer " + token,
-        "Notion-Version": NOTION_VERSION,
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify(body)
-    });
-    if (!r.ok) throw new Error("Notion API " + r.status);
-    const data = await r.json();
+    const data = await notionRequest(token, "POST", "/data_sources/" + ds + "/query", body);
     all.push(...(data.results || []).map(mapNotionRow).filter(Boolean));
     if (!data.has_more || !data.next_cursor) break;
     cursor = data.next_cursor;
