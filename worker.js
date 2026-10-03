@@ -69,6 +69,14 @@ function notionLinks(text, category) {
   }
   return out;
 }
+function notionFileUrl(value) {
+  const files = Array.isArray(value) ? value : [];
+  for (const f of files) {
+    const url = f?.file?.url || f?.external?.url || f?.url || "";
+    if (url) return url;
+  }
+  return "";
+}
 function mapNotionRow(row) {
   const p = row?.properties || {};
   const name = notionText(p["Élément à intégrer au guide"]);
@@ -79,6 +87,7 @@ function mapNotionRow(row) {
   const menu = notionText(p["Carte / Formules"]);
   const lat = Number(p["Latitude"]?.number);
   const lon = Number(p["Longitude"]?.number);
+  const photo = notionFileUrl(p["Photo"]?.files || p["Photo"]?.file || p["Photo"]?.external ? [p["Photo"]] : []);
   return {
     name,
     category,
@@ -94,6 +103,7 @@ function mapNotionRow(row) {
     audience: notionText(p["Pour Qui ?"]),
     notes: notionText(p["Notes"]),
     tags: notionText(p["Tags"]),
+    photo,
     coordinates: Number.isFinite(lat) && Number.isFinite(lon) ? [lat, lon] : null
   };
 }
@@ -263,7 +273,8 @@ function resultPayload(p) {
     notes:p.notes,
     bookingLinks:p.bookingLinks,
     menuLinks:[],
-    coordinates:p.coordinates
+    coordinates:p.coordinates,
+    photo:p.photo || ""
   };
 }
 function languageOf(q) {
@@ -302,7 +313,7 @@ async function answerWithAI(question, history, selected, allPartners, env) {
   if (!env?.AI || !selected.length) return "";
   const context = selected.map(p => ({
     name:p.name, category:p.category, description:p.description, promo:p.hasPromotion ? p.promo : "",
-    price:p.price, menu:p.menu, address:p.address, when:p.when, audience:p.audience, notes:p.notes, bookingLinks:p.bookingLinks
+    price:p.price, menu:p.menu, address:p.address, when:p.when, audience:p.audience, notes:p.notes, photo:p.photo || "", bookingLinks:p.bookingLinks
   }));
   const system = `Tu es MALAGO, guide local de Málaga.
 Réponds dans la langue de l'utilisateur, brièvement et naturellement.
