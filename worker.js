@@ -6,6 +6,7 @@ import { GUIDE, RESSOURCES } from "./data.js";
    Cloudflare binding: env.AI (Workers AI)
    ========================================================= */
 
+const VERSION = "V4";
 const MODEL = "@cf/meta/llama-3.1-8b-instruct-fast";
 const MAX_HISTORY_MESSAGES = 12;
 const MAX_HISTORY_CHARS = 1800;
