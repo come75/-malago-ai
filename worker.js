@@ -104,6 +104,7 @@ function mapNotionRow(row) {
     notes: notionText(p["Notes"]),
     tags: notionText(p["Tags"]),
     photo: photo ? `/api/photo/${encodeURIComponent(name)}` : "",
+    photoSource: photo,
     coordinates: Number.isFinite(lat) && Number.isFinite(lon) ? [lat, lon] : null
   };
 }
@@ -371,8 +372,8 @@ export default {
       try {
         const partners = await fetchNotionPartners(env);
         const partner = partners.find(p => p.name === name);
-        if (!partner?.photo) return new Response("Photo introuvable",{status:404,headers});
-        const upstream = await fetch(partner.photo, {cf:{cacheEverything:true,cacheTtl:86400}});
+        if (!partner?.photoSource) return new Response("Photo introuvable",{status:404,headers});
+        const upstream = await fetch(partner.photoSource, {cf:{cacheEverything:true,cacheTtl:86400}});
         if (!upstream.ok) return new Response("Photo indisponible",{status:502,headers});
         const responseHeaders = new Headers(headers);
         responseHeaders.set("Content-Type", upstream.headers.get("Content-Type") || "image/jpeg");
