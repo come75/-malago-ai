@@ -566,3 +566,66 @@ body.menuOpen{position:fixed;width:100%;overflow:hidden}
     letter-spacing:-.45px !important;
   }
 }
+
+
+/* FICHES PARTENAIRES — nouvelle présentation éditoriale */
+.partnerDetail .detailBody{padding-top:24px}
+.partnerDetail .detailMeta{font-size:12px;color:#8a847b}
+.partnerDetail .detailIntro{font-size:16px;line-height:1.58;color:#302d29;max-width:820px;font-weight:520}
+.partnerDetail .promo{font-size:12px;padding:11px 13px;border:1px solid #f2d1ad;background:linear-gradient(135deg,#fff4e7,#fff9f2);color:#a94912}
+.partnerDetail .detailSections{margin-top:25px}
+.partnerDetail .detailBlock{padding:20px 0}
+.partnerDetail .detailBlock h3{font-size:11px;letter-spacing:1.8px;color:#777169}
+.partnerDetail .detailBlock p{font-size:14px;line-height:1.62;color:#4f4a44}
+.partnerDetail .priceBlock{
+  margin-top:2px;
+  padding:18px 16px !important;
+  border:1px solid #e8ded1;
+  border-radius:18px;
+  background:linear-gradient(135deg,#fffaf3,#fff);
+}
+.partnerDetail .priceBlock h3{color:var(--accent);margin-bottom:8px}
+.partnerDetail .priceBlock p{font-size:15px;font-weight:800;color:#211f1b}
+.partnerDetail .opinionBlock{
+  padding:21px 17px !important;
+  margin-top:8px;
+  border:1px solid #e8e1d7;
+  border-radius:20px;
+  background:#f8f5ef;
+}
+.partnerDetail .opinionBlock h3{font-size:12px;color:#111;letter-spacing:1.6px}
+.partnerDetail .opinionBlock p{font-size:14px;line-height:1.68;color:#3f3b36}
+.partnerDetail .detailActions{
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:9px;
+  margin-top:26px;
+}
+.partnerDetail .detailActions .ctaBtn{
+  min-height:52px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  border:1px solid #171716;
+  border-radius:15px;
+  background:linear-gradient(180deg,#252523,#111);
+  color:#fff;
+  font-size:12px;
+  font-weight:900;
+  letter-spacing:.1px;
+  box-shadow:0 10px 24px #00000012;
+  transition:transform .18s,box-shadow .18s,background .18s,border-color .18s;
+}
+.partnerDetail .detailActions .ctaBtn:hover{transform:translateY(-2px);box-shadow:0 14px 30px #00000018}
+.partnerDetail .detailActions .ctaBtn.vip{background:var(--accent);border-color:var(--accent);box-shadow:0 10px 24px #EE84053d}
+.partnerDetail .detailActions .ctaBtn.whatsapp{background:#171716;border-color:#171716}
+.partnerDetail .detailActions .ctaBtn.itinerary{background:#fff;color:#111;border-color:#d8d0c5}
+@media(max-width:759px){
+  .partnerDetail .detailBody{padding:20px 16px 25px}
+  .partnerDetail .detailIntro{font-size:15px;line-height:1.55}
+  .partnerDetail .detailSections{margin-top:20px}
+  .partnerDetail .detailActions{grid-template-columns:1fr 1fr}
+  .partnerDetail .detailActions .ctaBtn{min-height:50px}
+}
+@media(max-width:389px){
+  .partnerDetail .detailActions{grid-template-columns:1fr}
+}
