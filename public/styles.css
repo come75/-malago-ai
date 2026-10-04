@@ -382,3 +382,15 @@ body.menuOpen{position:fixed;width:100%;overflow:hidden}
     padding-top:0 !important;
   }
 }
+
+/* STORY CARD HEADLINES — compact single-line labels on the two small cards */
+@media(max-width:759px){
+  .storyCard:not(:first-child) h3{
+    font-size:13px !important;
+    line-height:1.1 !important;
+    letter-spacing:-.55px !important;
+    white-space:nowrap !important;
+    max-width:none !important;
+    width:100% !important;
+  }
+}
