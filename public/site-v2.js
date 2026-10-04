@@ -27,8 +27,8 @@ const GUIDE=[
 let partners=[],history=[],activeResults=[],guideFilter="Tous";
 function esc(s){return String(s??"").replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[m]))}
 function img(p){return p?.photo||""}
-function openMenu(){document.getElementById("drawer")?.classList.add("open")}
-function closeMenu(){document.getElementById("drawer")?.classList.remove("open")}
+function openMenu(){document.getElementById("drawer")?.classList.add("open");document.body.classList.add("menuOpen")}
+function closeMenu(){document.getElementById("drawer")?.classList.remove("open");document.body.classList.remove("menuOpen")}
 function openPartnerPage(name){location.href="partenaire.html?name="+encodeURIComponent(name)}
 function countCat(c){return partners.filter(p=>p.category===c).length}
 function partnerLabel(p){return {Restaurant:"Restaurants",Party:"Sortir",Activity:"Activités",Service:"Services"}[p.category]||p.category}
