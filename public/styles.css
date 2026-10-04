@@ -365,3 +365,20 @@ body.menuOpen{position:fixed;width:100%;overflow:hidden}
     top:13px;
   }
 }
+
+/* STORY CARDS — compact kicker directly under thumbnail */
+@media(max-width:759px){
+  .storyCard .kicker,
+  .storyCard:not(:first-child) .kicker,
+  .storyCard:first-child .kicker{
+    margin-top:0 !important;
+    font-size:9px !important;
+    line-height:1 !important;
+    letter-spacing:1.8px !important;
+    white-space:nowrap !important;
+  }
+  .storyCard:not(:first-child) .kicker,
+  .storyCard:first-child .kicker{
+    padding-top:0 !important;
+  }
+}
