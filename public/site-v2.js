@@ -47,8 +47,45 @@ function renderGuidePage(){const params=new URLSearchParams(location.search);gui
 async function loadPartners(){try{const r=await fetch("/api/partners");const d=await r.json();partners=Array.isArray(d.partners)?d.partners:[];return partners}catch{partners=[];return partners}}
 async function renderHome(){renderCounts();const featured=partners.slice(0,6);renderPartners(featured,"featuredPartners");const badge=document.getElementById("partnerBadgeCount");if(badge)badge.textContent=partners.length+" adresse"+(partners.length>1?"s":"")+" dans le guide";const meta=document.getElementById("heroPartnerCount");if(meta)meta.textContent=partners.length+" adresses partenaires";const imageMap=[["storyNight","Bro"],["storyDay","Quad / Buggy"],["storyFood","Distinto"]];imageMap.forEach(([id,name])=>{const el=document.querySelector('[data-story="'+id+'"]');const p=partners.find(x=>x.name===name);if(el&&p?.photo){el.src=p.photo;el.alt=p.name}});observe()}
 async function renderCategoryPage(cat,title){const titleEl=document.getElementById("pageTitle");if(titleEl)titleEl.textContent=title;const list=partners.filter(p=>p.category===cat);renderPartners(list,"categoryPartners");const count=document.getElementById("pageCount");if(count)count.textContent=list.length+" adresse"+(list.length>1?"s":"")+" dans cette sélection.";observe()}
-async function renderPartnerPage(){const name=new URLSearchParams(location.search).get("name"),root=document.getElementById("partnerRoot");if(!name){root.innerHTML='<div class="empty">Cette fiche partenaire n’a pas été trouvée.</div>';return}const p=partners.find(x=>x.name===name);if(!p){root.innerHTML='<div class="empty">Cette adresse n’est pas disponible pour le moment.</div>';return}const links=(p.bookingLinks||[]).map(x=>{const raw=String(x.label||"Réserver");const label=/vip/i.test(raw)?"VIP":/whatsapp/i.test(raw)?"WhatsApp":/ticket|réserver/i.test(raw)?"Ticket":raw;return '<a class="'+(/whatsapp/i.test(raw)?"accent":"")+'" href="'+esc(x.url)+'" target="_blank" rel="noopener">'+esc(label)+'</a>'}).join("");const menus=Array.isArray(p.menuPhotos)&&p.menuPhotos.length?'<div class="menuGallery"><div class="menuGalleryHead"><h3>Formules</h3><span class="menuGalleryHint">Fais glisser pour voir les pages</span></div><div class="menuGalleryGrid">'+p.menuPhotos.map((src,i)=>'<div class="menuGalleryItem"><img src="'+esc(src)+'" alt="Formule '+esc(p.name)+' — page '+(i+1)+'" loading="lazy"></div>').join("")+'</div></div>':"";root.innerHTML='<article class="partnerDetail"><div class="detailPhoto">'+(img(p)?'<img src="'+esc(img(p))+'" alt="'+esc(p.name)+'">':"")+'</div><div class="detailBody"><span class="tag">'+esc(partnerLabel(p))+'</span><h1>'+esc(p.name)+'</h1><div class="detailMeta">'+esc(p.address||"Málaga")+'</div><p class="detailIntro">'+esc(p.description||"Adresse recommandée par Malago.")+'</p>'+(p.hasPromotion?'<div class="promo">🔥 '+esc(/-?10\s*%/i.test(String(p.promo||""))?"-10 % avec Malago":p.promo)+'</div>':"")+'<div class="detailSections">'+detailBlock("Quand ?",p.when)+detailBlock("Pour qui ?",p.audience)+detailBlock("Prix indicatif",p.price)+detailBlock("Notes",p.notes)+'</div>'+menus+'<div class="detailActions">'+links+(p.address?'<a href="https://www.google.com/maps/search/?api=1&query='+encodeURIComponent(p.address)+'" target="_blank" rel="noopener">Itinéraire</a>':"")+'</div></div></article>';observe()}
-function detailBlock(t,v){return v?'<div class="detailBlock"><h3>'+t+'</h3><p>'+esc(v)+'</p></div>':""}
+function cleanPartnerAddress(v){return String(v||"Málaga").replace(/\b\d{5}\b/g,"").replace(/,?\s*(Espagne|España)\s*$/i,"").replace(/\s*,\s*,/g,",").replace(/\s{2,}/g," ").replace(/,\s*$/,"").trim()}
+
+function partnerPrice(p){
+  const raw=String(p.price||"").trim();
+  if(/^Santa Rita$/i.test(String(p.name||""))) return "Entrée à partir de 10 € en prévente · VIP à partir de 150 €";
+  return raw||"Tarifs à consulter selon la formule choisie.";
+}
+
+function partnerIntro(p){
+  if(/^Santa Rita$/i.test(String(p.name||""))) return "Une vraie grande boîte de nuit à Málaga, pensée pour ceux qui veulent profiter de la soirée jusqu’au bout. Santa Rita combine grands espaces, programmation variée et formules VIP pour vivre une vraie nuit malagueña.";
+  return String(p.description||"Adresse recommandée par Malago.");
+}
+
+function partnerOpinion(p){
+  if(/^Santa Rita$/i.test(String(p.name||""))) return "Une de nos options préférées si tu veux passer toute ta soirée dans une vraie grande boîte. Santa Rita offre suffisamment d’espace et d’ambiances pour tenir toute la nuit, avec des formules VIP particulièrement intéressantes pour les groupes. Si tu vises environ 25 €, regarde les préventes suffisamment tôt : selon la soirée, tu peux tomber sur une offre très intéressante.";
+  return String(p.notes||"Une adresse que Malago recommande pour profiter pleinement de Málaga.");
+}
+
+function detailCtaLabel(raw){
+  const s=String(raw||"Réserver");
+  if(/vip/i.test(s))return "VIP";
+  if(/whatsapp/i.test(s))return "WhatsApp";
+  if(/ticket|réserver/i.test(s))return "Ticket";
+  return s;
+}
+
+async function renderPartnerPage(){
+  const name=new URLSearchParams(location.search).get("name"),root=document.getElementById("partnerRoot");
+  if(!name){root.innerHTML='<div class="empty">Cette fiche partenaire n’a pas été trouvée.</div>';return}
+  const p=partners.find(x=>x.name===name);
+  if(!p){root.innerHTML='<div class="empty">Cette adresse n’est pas disponible pour le moment.</div>';return}
+  const links=(p.bookingLinks||[]).map(x=>{const raw=String(x.label||"Réserver"),label=detailCtaLabel(raw);const cls=/whatsapp/i.test(raw)?"ctaBtn whatsapp":/vip/i.test(raw)?"ctaBtn vip":"ctaBtn";return '<a class="'+cls+'" href="'+esc(x.url)+'" target="_blank" rel="noopener">'+esc(label)+'</a>'}).join("");
+  const menus=Array.isArray(p.menuPhotos)&&p.menuPhotos.length?'<div class="menuGallery"><div class="menuGalleryHead"><h3>Formules</h3><span class="menuGalleryHint">Fais glisser pour voir les pages</span></div><div class="menuGalleryGrid">'+p.menuPhotos.map((src,i)=>'<div class="menuGalleryItem"><img src="'+esc(src)+'" alt="Formule '+esc(p.name)+' — page '+(i+1)+'" loading="lazy"></div>').join("")+'</div></div>':"";
+  const address=cleanPartnerAddress(p.address),opinion=partnerOpinion(p);
+  root.innerHTML='<article class="partnerDetail"><div class="detailPhoto">'+(img(p)?'<img src="'+esc(img(p))+'" alt="'+esc(p.name)+'">':"")+'</div><div class="detailBody"><span class="tag">'+esc(partnerLabel(p))+'</span><h1>'+esc(p.name)+'</h1><div class="detailMeta">'+esc(address)+'</div><p class="detailIntro">'+esc(partnerIntro(p))+'</p>'+(p.hasPromotion?'<div class="promo">🔥 '+esc(/-?10\s*%/i.test(String(p.promo||""))?"-10 % avec Malago":p.promo)+'</div>':"")+'<div class="detailSections">'+detailBlock("Quand ?",p.when)+detailBlock("Tarifs",partnerPrice(p),"priceBlock")+detailBlock("L’avis de Malago",opinion,"opinionBlock")+'</div>'+menus+'<div class="detailActions">'+links+(p.address?'<a class="ctaBtn itinerary" href="https://www.google.com/maps/search/?api=1&query='+encodeURIComponent(p.address)+'" target="_blank" rel="noopener">Itinéraire</a>':"")+'</div></div></article>';
+  observe()
+}
+
+function detailBlock(t,v,extraClass=""){return v?'<div class="detailBlock '+extraClass+'"><h3>'+t+'</h3><p>'+esc(v)+'</p></div>':""}
 function mapNorm(v=""){return String(v||"").toLowerCase().normalize("NFD").replace(/[\\u0300-\\u036f]/g,"").replace(/[-_/]+/g," ").replace(/\\s+/g," ").trim()}
 function mapHas(text,terms){const n=" "+mapNorm(text)+" ";return terms.some(t=>n.includes(" "+mapNorm(t)+" "))}
 function mapIconKind(p){const n=p?.name||"",cat=mapNorm(p?.category||"");if(mapHas(n,["quad","buggy"]))return"quad";if(mapHas(n,["jet ski","jetski","boat","water activities"]))return"jetski";if(mapHas(n,["beach","playa","silencio","chiringuito"]))return"beach";if(mapHas(n,["hotel","hostel","apart"]))return"hotel";if(mapHas(n,["spa","wellness","massage","hammam","yoga"]))return"wellness";if(mapHas(n,["photo","photograph","camera"]))return"camera";if(mapHas(n,["shop","shopping","boutique","store"]))return"shopping";if(mapHas(n,["voiture","car","rental","location de voiture"]))return"car";if(cat==="restaurant"||mapHas(n,["restaurant","resto"]))return"restaurant";if(cat==="party"||mapHas(n,["club","disco","nightlife"]))return"nightlife";if(mapHas(n,["bar","cocktail","lounge"]))return"cocktail";if(cat==="activity")return"activity";return"activity"}
