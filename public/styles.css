@@ -159,3 +159,50 @@ body.menuOpen{position:fixed;width:100%;overflow:hidden}
   .heroLine{display:block}
   .homeMap{height:480px}
 }
+
+/* HEADER STEP 1 — hamburger left / Malago centered / WhatsApp right */
+.top{
+  grid-template-columns:1fr auto 1fr !important;
+  min-height:68px !important;
+  height:68px !important;
+  padding:8px 14px !important;
+}
+.menuBtn{
+  grid-column:1 !important;
+  justify-self:start !important;
+  display:flex !important;
+  visibility:visible !important;
+  opacity:1 !important;
+}
+.topNav{
+  display:none !important;
+  visibility:hidden !important;
+}
+.brand{
+  grid-column:2 !important;
+  justify-self:center !important;
+  width:150px !important;
+  height:48px !important;
+  margin:0 !important;
+}
+.brand img{
+  width:142px !important;
+  height:44px !important;
+  object-fit:contain !important;
+  object-position:center !important;
+}
+.whatsappBtn{
+  grid-column:3 !important;
+  justify-self:end !important;
+  margin:0 !important;
+}
+@media(max-width:759px){
+  .top{
+    margin:0 -14px !important;
+    padding:7px 10px !important;
+  }
+  .menuBtn{width:42px !important;height:42px !important}
+  .brand{width:150px !important}
+  .brand img{width:142px !important;height:42px !important}
+  .whatsappBtn{min-height:38px !important;padding:8px 11px !important}
+}
