@@ -56,12 +56,12 @@ function partnerPrice(p){
 }
 
 function partnerIntro(p){
-  if(/^Santa Rita$/i.test(String(p.name||""))) return "Une vraie grande boîte de nuit à Málaga. De grands espaces, plusieurs ambiances et une programmation variée pour profiter de la soirée jusqu’au bout. Les formules VIP permettent aussi de passer à l’expérience supérieure.";
+  if(/^Santa Rita$/i.test(String(p.name||""))) return "Une vraie grande boîte de nuit à Málaga, pensée pour ceux qui veulent profiter de la soirée jusqu’au bout. Santa Rita combine grands espaces, programmation variée et formules VIP pour vivre une vraie nuit locale.";
   return String(p.description||"Adresse recommandée par Malago.");
 }
 
 function partnerOpinion(p){
-  if(/^Santa Rita$/i.test(String(p.name||""))) return "Si tu veux une vraie grosse soirée, Santa Rita est une de nos valeurs sûres. Le club est assez grand pour profiter de plusieurs ambiances sans avoir l’impression de tourner en rond. Et pour les groupes, les formules VIP peuvent être particulièrement intéressantes.";
+  if(/^Santa Rita$/i.test(String(p.name||""))) return "Une de nos options préférées si tu veux passer toute ta soirée dans une vraie grande boîte. Santa Rita offre suffisamment d’espace et d’ambiances pour tenir toute la nuit, avec des formules VIP particulièrement intéressantes pour les groupes à partir de 4 personnes (≈37 €/pers). Si tu vises environ 25 €, regarde les préventes suffisamment tôt : selon la soirée, tu peux tomber sur une offre très intéressante.";
   return String(p.notes||"Une adresse que Malago recommande pour profiter pleinement de Málaga.");
 }
 
