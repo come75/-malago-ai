@@ -206,3 +206,18 @@ body.menuOpen{position:fixed;width:100%;overflow:hidden}
   .brand img{width:142px !important;height:42px !important}
   .whatsappBtn{min-height:38px !important;padding:8px 11px !important}
 }
+
+/* DRAWER STEP 2 — vrai logo Malago */
+.drawerBrand{
+  display:flex !important;
+  align-items:center !important;
+  width:150px !important;
+  height:42px !important;
+  text-decoration:none !important;
+}
+.drawerBrand img{
+  display:block !important;
+  width:142px !important;
+  height:40px !important;
+  object-fit:contain !important;
+}
