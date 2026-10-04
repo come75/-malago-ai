@@ -424,7 +424,12 @@ export default {
       const contentLength = Number(request.headers.get("content-length") || 0);
       if (contentLength && contentLength > MAX_BODY) return json({error:"Requête trop volumineuse."},413,headers);
       try {
-        const body = await request.json();
+        const rawBody = await request.text();
+        const bodyBytes = new TextEncoder().encode(rawBody).byteLength;
+        if (bodyBytes > MAX_BODY) return json({error:"Requête trop volumineuse."},413,headers);
+        let body;
+        try { body = JSON.parse(rawBody); }
+        catch { return json({error:"JSON invalide."},400,headers); }
         const question = sanitize(body?.question);
         if (!question) return json({error:"Question vide."},400,headers);
         const history = cleanHistory(body?.history);
