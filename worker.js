@@ -390,7 +390,7 @@ export default {
     if (request.method === "GET" && url.pathname === "/api/partners") {
       try {
         const partners = await fetchNotionPartners(env);
-        return json({version:VERSION,source:"notion",partners},200,headers);
+        return json({version:VERSION,source:"notion",partners:partners.map(({photoSource,...p}) => p)},200,headers);
       } catch (error) {
         const requestId = crypto.randomUUID();
         console.error("Malago Notion partners error",requestId,error);
