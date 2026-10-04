@@ -251,7 +251,7 @@ body.menuOpen{position:fixed;width:100%;overflow:hidden}
   align-items:center !important;
   justify-content:center !important;
   text-decoration:none !important;
-  font-size:13px !important;
+  font-size:15px !important;
   font-weight:850 !important;
   letter-spacing:-.15px !important;
   transition:transform .18s ease,box-shadow .18s ease,background .18s ease,border-color .18s ease !important;
@@ -262,12 +262,7 @@ body.menuOpen{position:fixed;width:100%;overflow:hidden}
   border:1px solid #ffffff18 !important;
   box-shadow:0 10px 24px #EE84053d, inset 0 1px 0 #ffffff22 !important;
 }
-.heroActions .btn.primary:after{
-  content:"↗";
-  margin-left:9px;
-  font-size:14px;
-  transition:transform .18s ease;
-}
+.heroActions .btn.primary:after{content:none !important;}
 .heroActions .btn.ghost{
   position:relative !important;
   background:linear-gradient(180deg,#252525d9 0%,#111111d9 100%) !important;
@@ -285,19 +280,7 @@ body.menuOpen{position:fixed;width:100%;overflow:hidden}
   background:linear-gradient(115deg,#ffffff12,transparent 42%);
   pointer-events:none;
 }
-.heroActions .btn.ghost:after{
-  content:"→";
-  margin-left:10px;
-  width:25px;
-  height:25px;
-  display:inline-grid;
-  place-items:center;
-  border:1px solid #ffffff30;
-  border-radius:50%;
-  font-size:13px;
-  line-height:1;
-  transition:transform .18s ease,background .18s ease;
-}
+.heroActions .btn.ghost:after{content:none !important;}
 .heroActions .btn.ghost:hover{
   background:linear-gradient(180deg,#30302fdc 0%,#151515dc 100%) !important;
   border-color:#ffffff60 !important;
