@@ -156,6 +156,7 @@ img{max-width:100%}
 .discoveryCard:nth-child(3) .discoveryIcon{background:#f2efe9}
 .discoveryCard:nth-child(4) .discoveryIcon{background:var(--accent-soft);border-color:#f4d9b7}
 .discoveryCard h3{margin:0;color:var(--accent);font-size:19px;letter-spacing:-.5px}
+.uCount{display:block;color:var(--muted);font-size:11px;margin-top:8px}
 .discoveryCard p{margin:5px 0 0;color:var(--muted);font-size:12px;line-height:1.45;max-width:230px}
 .discoveryArrow{
   position:absolute;right:16px;top:16px;width:29px;height:29px;border:1px solid #e6dfd4;
@@ -211,6 +212,7 @@ img{max-width:100%}
 .partnersToolbar{
   display:flex;justify-content:space-between;align-items:end;gap:16px;margin-bottom:16px
 }
+.partnersToolbar .sectionHead{flex:1}
 .partnersBadge{
   display:inline-flex;align-items:center;gap:7px;border:1px solid #ded7cc;background:#fff;
   padding:8px 11px;border-radius:999px;font-size:10px;font-weight:850;color:#6e6962
@@ -239,7 +241,7 @@ img{max-width:100%}
 .partner p{margin:0;color:#77736d;font-size:13px;line-height:1.48}
 .promo{margin-top:11px;background:#fff0e8;color:#b74316;padding:9px 10px;border-radius:12px;font-size:11px;font-weight:850}
 .cardActions{
-  display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:7px;
+  display:grid;grid-template-columns:repeat(auto-fit,minmax(0,1fr));gap:7px;
   margin-top:auto;padding-top:28px
 }
 .smallBtn{
