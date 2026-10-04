@@ -103,7 +103,7 @@ function mapNotionRow(row) {
     audience: notionText(p["Pour Qui ?"]),
     notes: notionText(p["Notes"]),
     tags: notionText(p["Tags"]),
-    photo,
+    photo: photo ? `/api/photo/${encodeURIComponent(name)}` : "",
     coordinates: Number.isFinite(lat) && Number.isFinite(lon) ? [lat, lon] : null
   };
 }
@@ -361,6 +361,30 @@ export default {
       try { notionCount = (await fetchNotionPartners(env)).length; }
       catch (e) { notionError = String(e?.message || e).slice(0,300); }
       return json({ok:true,version:VERSION,aiConfigured:Boolean(env?.AI),notionConfigured:Boolean(env?.NOTION_TOKEN),model:MODEL,notionRecords:notionCount,notionError},200,headers);
+    }
+    if (request.method === "GET" && url.pathname.startsWith("/api/photo/")) {
+      const name = decodeURIComponent(url.pathname.slice("/api/photo/".length));
+      if (!name) return new Response("Photo introuvable",{status:404,headers});
+      const cacheKey = new Request(url.origin + "/api/photo/" + encodeURIComponent(name));
+      const cached = await caches.default.match(cacheKey);
+      if (cached) return cached;
+      try {
+        const partners = await fetchNotionPartners(env);
+        const partner = partners.find(p => p.name === name);
+        if (!partner?.photo) return new Response("Photo introuvable",{status:404,headers});
+        const upstream = await fetch(partner.photo, {cf:{cacheEverything:true,cacheTtl:86400}});
+        if (!upstream.ok) return new Response("Photo indisponible",{status:502,headers});
+        const responseHeaders = new Headers(headers);
+        responseHeaders.set("Content-Type", upstream.headers.get("Content-Type") || "image/jpeg");
+        responseHeaders.set("Cache-Control", "public, max-age=86400, immutable");
+        responseHeaders.set("X-Malago-Photo-Cache", "edge");
+        const response = new Response(upstream.body,{status:200,headers:responseHeaders});
+        await caches.default.put(cacheKey,response.clone());
+        return response;
+      } catch (error) {
+        console.error("Malago photo error",name,error);
+        return new Response("Photo indisponible",{status:502,headers});
+      }
     }
     if (request.method === "GET" && url.pathname === "/api/partners") {
       try {
