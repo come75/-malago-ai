@@ -566,3 +566,18 @@ body.menuOpen{position:fixed;width:100%;overflow:hidden}
     letter-spacing:-.45px !important;
   }
 }
+
+/* FOURVENUES EVENTS — Santa Rita */
+.partnerEvents{margin-top:24px;border-top:1px solid var(--line);padding-top:18px}
+.partnerEventsHead{display:flex;justify-content:space-between;align-items:flex-end;gap:12px;margin-bottom:12px}
+.partnerEventsKicker{display:block;color:var(--accent);font-size:10px;font-weight:900;text-transform:uppercase;letter-spacing:1.4px;margin-bottom:5px}
+.partnerEventsHead h2{margin:0;font-size:24px;line-height:1;letter-spacing:-1px}
+.partnerEventsHint{font-size:10px;color:#817b73;text-transform:uppercase;letter-spacing:1px}
+.partnerEventsList{display:grid;gap:8px}
+.partnerEvent{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:13px 12px;border:1px solid var(--line);border-radius:14px;background:#faf9f6;color:#111;text-decoration:none;transition:transform .18s ease,background .18s ease}
+.partnerEvent:hover{transform:translateY(-1px);background:#f3f0eb}
+.partnerEvent>div{display:grid;gap:4px;min-width:0}
+.partnerEvent strong{font-size:13px;line-height:1.2}
+.partnerEvent span:not(.partnerEventBtn){font-size:11px;color:#77736d}
+.partnerEventBtn{flex:0 0 auto;padding:9px 11px;border-radius:10px;background:#111;color:#fff;font-size:10px;font-weight:900;text-transform:uppercase;letter-spacing:.4px}
+@media(max-width:759px){.partnerEventsHead h2{font-size:21px}.partnerEvent{padding:12px 11px}.partnerEventBtn{padding:8px 10px}}
