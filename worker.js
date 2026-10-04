@@ -381,7 +381,9 @@ export default {
       return json({ok:true,version:VERSION,aiConfigured:Boolean(env?.AI),notionConfigured:Boolean(env?.NOTION_TOKEN),model:MODEL,notionRecords:notionCount,notionError},200,headers);
     }
     if (request.method === "GET" && url.pathname.startsWith("/api/photo/")) {
-      const name = decodeURIComponent(url.pathname.slice("/api/photo/".length));
+      let name = "";
+      try { name = decodeURIComponent(url.pathname.slice("/api/photo/".length)); }
+      catch { return new Response("Photo introuvable",{status:400,headers}); }
       if (!name) return new Response("Photo introuvable",{status:404,headers});
       const cacheKey = new Request(url.origin + "/api/photo/" + encodeURIComponent(name));
       const cached = await caches.default.match(cacheKey);
