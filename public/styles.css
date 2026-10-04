@@ -653,3 +653,5 @@ body.menuOpen{position:fixed;width:100%;overflow:hidden}
   .partnerDetail .menuGalleryItem{border-radius:17px}
   .partnerDetail .detailActions{margin-top:30px;gap:11px}
 }
+
+.partnerDetail .detailIntro,.partnerDetail .opinionBlock p{white-space:pre-line}
