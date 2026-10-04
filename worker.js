@@ -1,4 +1,4 @@
-const VERSION = "V7-NOTION";
+const VERSION = "V7-NOTION"; // trigger Cloudflare build
 const MODEL = "@cf/meta/llama-3.1-8b-instruct-fast";
 const NOTION_VERSION = "2025-09-03";
 const NOTION_DATA_SOURCE_ID = "43dd83a7-a18a-461c-9bb8-9cd9e79376df";
