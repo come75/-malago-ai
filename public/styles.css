@@ -221,3 +221,17 @@ body.menuOpen{position:fixed;width:100%;overflow:hidden}
   height:40px !important;
   object-fit:contain !important;
 }
+
+/* DRAWER STEP 3 — navigation uniforme */
+.drawerPanel .navLink{
+  font-family:inherit !important;
+  font-size:17px !important;
+  line-height:1.2 !important;
+  font-weight:800 !important;
+  letter-spacing:-.2px !important;
+  white-space:nowrap !important;
+  min-height:54px !important;
+}
+.drawerPanel .drawerSectionLabel{
+  font-family:inherit !important;
+}
