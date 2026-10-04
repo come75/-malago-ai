@@ -629,3 +629,27 @@ body.menuOpen{position:fixed;width:100%;overflow:hidden}
 @media(max-width:389px){
   .partnerDetail .detailActions{grid-template-columns:1fr}
 }
+
+
+/* FICHES — respiration mobile */
+@media(max-width:759px){
+  .partnerDetail .detailBody{padding:22px 20px 32px}
+  .partnerDetail .detailIntro{font-size:16px;line-height:1.7;margin:22px 0 28px;max-width:none}
+  .partnerDetail .detailMeta{font-size:13px;line-height:1.5;margin-top:9px}
+  .partnerDetail .detailSections{margin-top:26px}
+  .partnerDetail .detailBlock{padding:24px 0}
+  .partnerDetail .detailBlock h3{font-size:12px;letter-spacing:2px;margin:0 0 13px}
+  .partnerDetail .detailBlock p{font-size:15px;line-height:1.72;margin:0}
+  .partnerDetail .priceBlock{margin:10px 0 8px;padding:20px 18px !important}
+  .partnerDetail .priceBlock p{font-size:16px;line-height:1.65}
+  .partnerDetail .opinionBlock{margin-top:14px;padding:22px 18px !important}
+  .partnerDetail .opinionBlock h3{margin-bottom:14px}
+  .partnerDetail .opinionBlock p{font-size:15px;line-height:1.75}
+  .partnerDetail .menuGallery{margin-top:30px}
+  .partnerDetail .menuGalleryHead{margin-bottom:15px}
+  .partnerDetail .menuGalleryHead h3{font-size:12px;letter-spacing:2px}
+  .partnerDetail .menuGalleryHint{font-size:11px}
+  .partnerDetail .menuGalleryGrid{gap:14px}
+  .partnerDetail .menuGalleryItem{border-radius:17px}
+  .partnerDetail .detailActions{margin-top:30px;gap:11px}
+}
