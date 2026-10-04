@@ -235,3 +235,60 @@ body.menuOpen{position:fixed;width:100%;overflow:hidden}
 .drawerPanel .drawerSectionLabel{
   font-family:inherit !important;
 }
+
+/* HERO BUTTONS — final premium treatment */
+.heroActions{
+  display:flex !important;
+  align-items:stretch !important;
+  gap:10px !important;
+  margin-top:22px !important;
+}
+.heroActions .btn{
+  min-height:50px !important;
+  padding:14px 20px !important;
+  border-radius:16px !important;
+  display:inline-flex !important;
+  align-items:center !important;
+  justify-content:center !important;
+  text-decoration:none !important;
+  font-size:13px !important;
+  font-weight:850 !important;
+  letter-spacing:-.15px !important;
+  transition:transform .18s ease,box-shadow .18s ease,background .18s ease,border-color .18s ease !important;
+}
+.heroActions .btn.primary{
+  background:var(--accent) !important;
+  color:#fff !important;
+  border:1px solid #ffffff18 !important;
+  box-shadow:0 10px 24px #EE84053d, inset 0 1px 0 #ffffff22 !important;
+}
+.heroActions .btn.primary:after{
+  content:"↗";
+  margin-left:9px;
+  font-size:14px;
+  transition:transform .18s ease;
+}
+.heroActions .btn.ghost{
+  background:#111111b8 !important;
+  color:#fff !important;
+  border:1px solid #ffffff3a !important;
+  box-shadow:inset 0 1px 0 #ffffff18,0 8px 22px #00000020 !important;
+  backdrop-filter:blur(12px) !important;
+  -webkit-backdrop-filter:blur(12px) !important;
+}
+.heroActions .btn.ghost:after{
+  content:"→";
+  margin-left:9px;
+  font-size:14px;
+  transition:transform .18s ease;
+}
+.heroActions .btn:hover{transform:translateY(-2px) !important}
+.heroActions .btn:hover:after{transform:translate(2px,-1px)}
+.heroActions .btn:active{transform:scale(.98) !important}
+@media(max-width:759px){
+  .heroActions{display:grid !important;grid-template-columns:1fr 1fr !important;gap:8px !important;margin-top:20px !important}
+  .heroActions .btn{min-width:0 !important;min-height:52px !important;padding:13px 10px !important;border-radius:15px !important;font-size:12px !important}
+}
+@media(max-width:389px){
+  .heroActions{grid-template-columns:1fr !important}
+}
