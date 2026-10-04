@@ -373,7 +373,7 @@ export default {
         const partners = await fetchNotionPartners(env);
         const partner = partners.find(p => p.name === name);
         if (!partner?.photoSource) return new Response("Photo introuvable",{status:404,headers});
-        const upstream = await fetch(partner.photoSource, {cf:{cacheEverything:true,cacheTtl:86400}});
+        const upstream = await fetch(partner.photoSource, {cf:{cacheEverything:true,cacheTtl:86400,image:{width:600,height:440,fit:"cover",format:"webp",quality:76}}});
         if (!upstream.ok) return new Response("Photo indisponible",{status:502,headers});
         const responseHeaders = new Headers(headers);
         responseHeaders.set("Content-Type", upstream.headers.get("Content-Type") || "image/jpeg");
