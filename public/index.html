@@ -30,7 +30,9 @@ body:before{content:"";position:fixed;inset:0;pointer-events:none;background:rad
 @media(min-width:430px) and (max-width:759px){.partner .cardActions .smallBtn{font-size:7.5px;padding:9px 1px}}
 @media(min-width:760px){.hero{min-height:760px;align-items:stretch}.heroContent{min-height:760px;padding:38px 55px 30px}.partner .cardActions{grid-template-columns:repeat(3,minmax(0,1fr))}.partner .cardActions .smallBtn{font-size:8.5px;padding:9px 3px}}
 /* V7 hero title separation */
-.hero .eyebrow,.hero h1,.hero p{position:relative;top:-45px}
+.hero .eyebrow,.hero h1{position:relative;top:-45px}
+.heroSub{position:relative;top:-10px;display:flex;flex-direction:column;gap:0}
+.heroSub p{margin:0}
 @media(min-width:760px){.app{padding:0 28px 90px}.top{margin:0 -28px;padding:12px 28px}.universes{grid-template-columns:repeat(4,1fr)}.guideGrid{grid-template-columns:repeat(3,1fr)}.partnersGrid{grid-template-columns:repeat(3,1fr)}.hero{min-height:760px}.heroContent{padding:87px 55px 30px}.modal{align-items:center;padding:30px}.modalPanel{max-width:760px;border-radius:28px}.modalPhoto{height:310px}}
 </style>
 </head>
@@ -38,7 +40,7 @@ body:before{content:"";position:fixed;inset:0;pointer-events:none;background:rad
 <div class="app">
 <header class="top"><a class="brand" href="#accueil" aria-label="Malago"><img src="/img/malago-logo.webp" alt="Malago"></a><button class="menuBtn" onclick="openMenu()">Menu</button></header>
 
-<section class="hero reveal" id="accueil"><div class="heroPhoto"></div><div class="heroContent"><div class="eyebrow">Málaga, autrement</div><h1>Le guide que tu aurais aimé avoir en arrivant.</h1><p>Restaurants, soirées, activités, services et bonnes adresses sélectionnés pour vivre Málaga comme un local. Et si tu ne sais pas quoi choisir, demande à Malago.</p><div class="heroActions"><button class="btn primary" onclick="go('guide')">Explorer le guide</button><button class="btn ghost" onclick="go('ai')">Demander à Malago AI</button></div></div></section>
+<section class="hero reveal" id="accueil"><div class="heroPhoto"></div><div class="heroContent"><div class="eyebrow">Málaga, autrement</div><h1>Le guide que tu aurais aimé avoir en arrivant.</h1><div class="heroSub"><p>Restaurants, soirées, activités, services et bonnes adresses sélectionnés pour vivre Málaga comme un local.</p><p>Et si tu ne sais pas quoi choisir, demande à Malago.</p></div><div class="heroActions"><button class="btn primary" onclick="go('guide')">Explorer le guide</button><button class="btn ghost" onclick="go('ai')">Demander à Malago AI</button></div></div></section>
 
 <section class="section reveal" id="univers"><div class="sectionHead"><div class="kicker">Découvrir Málaga</div><h2>Tu cherches quoi ?</h2><p class="sub">Des portes d’entrée simples vers tout l’univers Malago.</p></div><div class="universes">
 <button class="universe" onclick="go('guide','Restaurants')"><span class="uIcon">🍽️</span><span class="uTitle">Restaurants</span><span class="uCount" id="countRestaurant">— adresses</span></button>
