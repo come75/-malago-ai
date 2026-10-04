@@ -85,7 +85,8 @@ async function renderPartnerPage(){
   observe()
 }
 
-function textWithBreaks(v){return esc(v).replace(/\\n/g,"<br>")}\nfunction detailBlock(t,v,extraClass=""){return v?'<div class="detailBlock '+extraClass+'"><h3>'+t+'</h3><p>'+textWithBreaks(v)+'</p></div>':""}
+function textWithBreaks(v){return esc(v).replace(/\\n/g,"<br>")}
+function detailBlock(t,v,extraClass=""){return v?'<div class="detailBlock '+extraClass+'"><h3>'+t+'</h3><p>'+textWithBreaks(v)+'</p></div>':""}
 function mapNorm(v=""){return String(v||"").toLowerCase().normalize("NFD").replace(/[\\u0300-\\u036f]/g,"").replace(/[-_/]+/g," ").replace(/\\s+/g," ").trim()}
 function mapHas(text,terms){const n=" "+mapNorm(text)+" ";return terms.some(t=>n.includes(" "+mapNorm(t)+" "))}
 function mapIconKind(p){const n=p?.name||"",cat=mapNorm(p?.category||"");if(mapHas(n,["quad","buggy"]))return"quad";if(mapHas(n,["jet ski","jetski","boat","water activities"]))return"jetski";if(mapHas(n,["beach","playa","silencio","chiringuito"]))return"beach";if(mapHas(n,["hotel","hostel","apart"]))return"hotel";if(mapHas(n,["spa","wellness","massage","hammam","yoga"]))return"wellness";if(mapHas(n,["photo","photograph","camera"]))return"camera";if(mapHas(n,["shop","shopping","boutique","store"]))return"shopping";if(mapHas(n,["voiture","car","rental","location de voiture"]))return"car";if(cat==="restaurant"||mapHas(n,["restaurant","resto"]))return"restaurant";if(cat==="party"||mapHas(n,["club","disco","nightlife"]))return"nightlife";if(mapHas(n,["bar","cocktail","lounge"]))return"cocktail";if(cat==="activity")return"activity";return"activity"}
