@@ -51,17 +51,17 @@ function cleanPartnerAddress(v){return String(v||"Málaga").replace(/\b\d{5}\b/g
 
 function partnerPrice(p){
   const raw=String(p.price||"").trim();
-  if(/^Santa Rita$/i.test(String(p.name||""))) return "Entrée à partir de 10 € en prévente · VIP à partir de 150 €";
+  if(/^Santa Rita$/i.test(String(p.name||""))) return "Entrée à partir de 10 € en prévente\nVIP à partir de 150 €";
   return raw||"Tarifs à consulter selon la formule choisie.";
 }
 
 function partnerIntro(p){
-  if(/^Santa Rita$/i.test(String(p.name||""))) return "Une vraie grande boîte de nuit à Málaga, pensée pour ceux qui veulent profiter de la soirée jusqu’au bout.\n\nSanta Rita combine grands espaces, programmation variée et formules VIP pour vivre une vraie nuit locale.";
+  if(/^Santa Rita$/i.test(String(p.name||""))) return "Une vraie grande boîte de nuit à Málaga, pensée pour ceux qui veulent profiter de la soirée jusqu’au bout.\n\nSanta Rita combine de grands espaces, une programmation variée et des formules VIP pour vivre une vraie nuit locale.";
   return String(p.description||"Adresse recommandée par Malago.");
 }
 
 function partnerOpinion(p){
-  if(/^Santa Rita$/i.test(String(p.name||""))) return "Une de nos options préférées si tu veux passer toute ta soirée dans une vraie grande boîte.\n\nSanta Rita offre suffisamment d’espace et d’ambiances pour tenir toute la nuit, avec des formules VIP particulièrement intéressantes pour les groupes à partir de 4 personnes (≈37 €/pers).\n\nSi tu vises environ 25 €, regarde les préventes suffisamment tôt : selon la soirée, tu peux tomber sur une offre très intéressante.";
+  if(/^Santa Rita$/i.test(String(p.name||""))) return "Une de nos options préférées si tu veux passer toute ta soirée dans une vraie grande boîte.\n\nSanta Rita offre suffisamment d’espace et d’ambiances pour tenir toute la nuit, avec des formules VIP intéressantes dès 4 personnes (≈37 €/pers.).\n\nSi tu vises environ 25 €, regarde les préventes suffisamment tôt : selon la soirée, tu peux tomber sur une offre très intéressante.";
   return String(p.notes||"Une adresse que Malago recommande pour profiter pleinement de Málaga.");
 }
 
