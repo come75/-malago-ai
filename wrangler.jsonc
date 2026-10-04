@@ -3,6 +3,7 @@
   "name": "test",
   "main": "worker.js",
   "compatibility_date": "2026-09-25",
+  "cache": {"enabled": true},
   "ai": {"binding": "AI"},
   "assets": {"directory": "./public","binding": "ASSETS"},
   "previews": {
