@@ -463,3 +463,29 @@ body.menuOpen{position:fixed;width:100%;overflow:hidden}
     max-width:100% !important;
   }
 }
+
+
+/* STORY CARDS — validated mobile layout 2026-10-04
+   Both secondary headlines use the exact same size and stay on one line.
+   The main "Ce soir" headline is also reduced so it stays on one line.
+*/
+@media(max-width:759px){
+  .storyCard:not(:first-child) h3{
+    font-size:16px !important;
+    line-height:1.08 !important;
+    letter-spacing:-.45px !important;
+    white-space:nowrap !important;
+    overflow:visible !important;
+    width:max-content !important;
+    max-width:none !important;
+  }
+  .storyCard:first-child h3{
+    font-size:20px !important;
+    line-height:1.06 !important;
+    letter-spacing:-.8px !important;
+    white-space:nowrap !important;
+    overflow:visible !important;
+    width:max-content !important;
+    max-width:calc(100% - 88px) !important;
+  }
+}
