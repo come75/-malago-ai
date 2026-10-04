@@ -113,6 +113,7 @@ function mapNotionRow(row) {
     tags: notionText(p["Tags"]),
     photo: photo ? `/api/photo/${encodeURIComponent(name)}` : "",
     photoSource: photo,
+    menuPhotos: MENU_GALLERIES[name] || [],
     coordinates: Number.isFinite(lat) && Number.isFinite(lon) ? [lat, lon] : null
   };
 }
