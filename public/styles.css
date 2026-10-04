@@ -306,3 +306,43 @@ body.menuOpen{position:fixed;width:100%;overflow:hidden}
 @media(max-width:389px){
   .heroActions{grid-template-columns:1fr !important}
 }
+
+/* STORY CARDS — cleaner editorial layout */
+.storyCard .storyImage{
+  z-index:1;
+  box-shadow:0 8px 24px #00000018;
+}
+.storyCard h3,
+.storyCard p,
+.storyCard .storyLink,
+.storyCard .kicker{
+  position:relative;
+  z-index:2;
+}
+@media(max-width:759px){
+  .storyCard{
+    min-width:0;
+    isolation:isolate;
+  }
+  .storyCard .storyImage{
+    width:82px;
+    height:82px;
+    right:14px;
+    top:14px;
+    border-radius:18px;
+  }
+  .storyCard h3{
+    max-width:68% !important;
+  }
+  .storyCard p{
+    max-width:72% !important;
+  }
+  .storyCard .storyLink{
+    width:max-content;
+    max-width:100%;
+    margin-top:15px;
+  }
+  .storyCard:first-child h3{
+    max-width:70% !important;
+  }
+}
