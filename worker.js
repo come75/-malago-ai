@@ -7,6 +7,14 @@ const MAX_QUESTION = 1800;
 const MAX_BODY = 90000;
 const MAX_RESULTS = 3;
 
+// Menu galleries for the first partner rollout. The files live under /public/img/menus.
+const MENU_GALLERIES = {
+  "Silencio Beach Club": ["/img/menus/silencio-1.webp", "/img/menus/silencio-2.webp"],
+  "Sala Gold": ["/img/menus/sala-gold-1.webp", "/img/menus/sala-gold-2.webp"],
+  "Santa Rita": ["/img/menus/santa-rita-1.webp", "/img/menus/santa-rita-2.webp"],
+  "Bro": ["/img/menus/bro-1.webp", "/img/menus/bro-2.webp"]
+};
+
 const CATEGORY_MAP = {
   "Party": "Party",
   "Activité": "Activity",
@@ -274,6 +282,7 @@ function resultPayload(p) {
     notes:p.notes,
     bookingLinks:p.bookingLinks,
     menuLinks:[],
+    menuPhotos:MENU_GALLERIES[p.name] || [],
     coordinates:p.coordinates,
     photo:p.photo || ""
   };
