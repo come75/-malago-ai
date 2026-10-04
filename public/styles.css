@@ -346,3 +346,22 @@ body.menuOpen{position:fixed;width:100%;overflow:hidden}
     max-width:70% !important;
   }
 }
+
+/* STORY CARDS — reserve clear space below the thumbnail */
+@media(max-width:759px){
+  .storyCard .kicker{
+    margin-top:0;
+  }
+  .storyCard:not(:first-child) .kicker{
+    margin-top:92px;
+  }
+  .storyCard:not(:first-child) h3{
+    margin-top:8px;
+  }
+  .storyCard:first-child .kicker{
+    margin-top:86px;
+  }
+  .storyCard .storyImage{
+    top:13px;
+  }
+}
