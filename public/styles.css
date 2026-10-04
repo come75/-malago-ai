@@ -57,3 +57,53 @@ img{max-width:100%}
 @media(max-width:759px){.partnersToolbar{align-items:flex-start;flex-direction:column;gap:12px}.partnersBadge{align-self:flex-start}}
 @media(max-width:429px){.brand{width:150px}.brand img{width:142px;height:42px}.whatsappBtn{padding:8px 10px}.whatsappBtn span{display:none}.hero{min-height:650px;border-radius:28px}.heroContent{min-height:650px;padding:34px 19px 20px}.hero h1{font-size:clamp(45px,13vw,60px);letter-spacing:-3.4px;max-width:100%}.heroSub p{font-size:14px}.heroActions{width:100%}.heroActions .btn{flex:1;min-width:0}.discoveryCard{min-height:158px;padding:15px}.discoveryCard h3{font-size:17px}.discoveryCard p{font-size:11px}.storyCard{min-height:230px}.partnerPhoto{height:210px}.partnerBody{min-height:238px;padding:15px}.partner h3{font-size:21px}.partner p{font-size:12px}.cardActions{gap:6px;padding-top:28px}.smallBtn{font-size:10.5px;padding:10px 7px}.detailPhoto{height:250px}.pageHero{padding:34px 19px 30px}.pageTitle{font-size:40px}}
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*,*:before,*:after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}}
+
+/* MALAGO V2 — second visual pass */
+.heroLine{display:inline}
+.darkBtn{background:#111;color:#fff;border:1px solid #111}
+.storyCard{justify-content:flex-end}
+.storyImage{position:absolute;right:18px;top:18px;width:96px;height:96px;border-radius:22px;overflow:hidden;border:1px solid #ffffff22;box-shadow:0 15px 35px #00000022;transform:rotate(2deg);transition:transform .3s,box-shadow .3s}
+.storyCard.light .storyImage{border-color:#00000010}
+.storyCard.accent .storyImage{border-color:#ffffff38}
+.storyImage img{width:100%;height:100%;object-fit:cover;display:block}
+.storyCard:hover .storyImage{transform:rotate(0) scale(1.04);box-shadow:0 20px 42px #0000002b}
+.storyCard h3,.storyCard p,.storyCard .storyLink{max-width:72%}
+.mapPanel{box-shadow:0 20px 65px #0000000d}
+.homeMap{height:430px}
+.homeMap .mapNotice{display:none}
+#homeMapBox,#mapBox{overflow:hidden}
+.leaflet-map{height:100%;width:100%}
+.mapLeafletMarker{font-size:20px}
+@media(max-width:759px){
+  body.menuOpen{overflow:hidden}
+  .top{position:sticky;min-height:66px;height:66px;margin:0 -14px;padding:7px 10px;grid-template-columns:1fr auto 1fr}
+  .menuBtn{display:flex;width:42px;height:42px;border-radius:14px;background:#ffffff09}
+  .topNav{display:none!important}
+  .brand{grid-column:2;width:150px;height:48px}
+  .brand img{width:142px;height:42px;object-fit:contain}
+  .whatsappBtn{grid-column:3}
+  .hero{min-height:520px;height:520px;margin-top:8px;border-radius:25px}
+  .heroContent{min-height:520px;height:520px;padding:28px 19px 19px;justify-content:flex-end}
+  .hero h1{font-size:clamp(38px,10.4vw,47px);line-height:.91;letter-spacing:-2.7px;margin:10px 0 16px;max-width:100%}
+  .heroLine{display:block;white-space:nowrap}
+  .heroActions{margin-top:0;width:100%;gap:7px}
+  .heroActions .btn{padding:12px 10px;font-size:11px}
+  .section{padding-top:70px}
+  .story{gap:10px}
+  .storyCard{min-height:245px;padding:20px}
+  .storyImage{width:84px;height:84px;right:15px;top:15px}
+  .storyCard h3,.storyCard p,.storyCard .storyLink{max-width:74%}
+  .storyCard h3{font-size:25px}
+  .storyCard p{font-size:12px}
+  .partnersGrid{grid-template-columns:1fr;gap:11px}
+  .partnersToolbar .sectionHead h2{font-size:39px;letter-spacing:-2.5px}
+  .partnerBody{min-height:255px}
+  .cardActions{grid-template-columns:repeat(2,minmax(0,1fr));padding-top:28px}
+  .smallBtn{min-height:42px}
+  .homeMap{height:370px}
+  .partnersToolbar .darkBtn{align-self:flex-start}
+  .bottomNav{display:none}
+}
+@media(min-width:760px){
+  .heroLine{display:block}
+}
