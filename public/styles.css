@@ -394,3 +394,54 @@ body.menuOpen{position:fixed;width:100%;overflow:hidden}
     width:100% !important;
   }
 }
+
+/* STORY CARDS — two secondary cards: equal height + large image header */
+@media(max-width:759px){
+  .storyCard:not(:first-child){
+    min-height:390px !important;
+    height:390px !important;
+    padding:0 !important;
+    justify-content:flex-start !important;
+    overflow:hidden !important;
+  }
+  .storyCard:not(:first-child) .storyImage{
+    position:relative !important;
+    inset:auto !important;
+    width:100% !important;
+    height:155px !important;
+    flex:0 0 155px !important;
+    border:0 !important;
+    border-radius:0 !important;
+    transform:none !important;
+    box-shadow:none !important;
+  }
+  .storyCard:not(:first-child) .kicker,
+  .storyCard:not(:first-child) h3,
+  .storyCard:not(:first-child) p,
+  .storyCard:not(:first-child) .storyLink{
+    margin-left:16px !important;
+    margin-right:16px !important;
+    max-width:none !important;
+  }
+  .storyCard:not(:first-child) .kicker{
+    margin-top:14px !important;
+    margin-bottom:7px !important;
+  }
+  .storyCard:not(:first-child) h3{
+    font-size:12px !important;
+    line-height:1.1 !important;
+    letter-spacing:-.25px !important;
+    white-space:nowrap !important;
+    margin-top:0 !important;
+    margin-bottom:8px !important;
+  }
+  .storyCard:not(:first-child) p{
+    font-size:11px !important;
+    line-height:1.4 !important;
+    margin-top:0 !important;
+  }
+  .storyCard:not(:first-child) .storyLink{
+    margin-top:auto !important;
+    margin-bottom:16px !important;
+  }
+}
