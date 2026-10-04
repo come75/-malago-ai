@@ -489,3 +489,19 @@ body.menuOpen{position:fixed;width:100%;overflow:hidden}
     max-width:calc(100% - 88px) !important;
   }
 }
+
+
+/* STORY CARDS — final mobile title fit
+   The two lower cards must keep their headline on exactly one line.
+*/
+@media(max-width:759px){
+  .storyCard:not(:first-child) h3{
+    font-size:15px !important;
+    line-height:1.1 !important;
+    letter-spacing:-.55px !important;
+    white-space:nowrap !important;
+    width:auto !important;
+    max-width:none !important;
+    overflow:visible !important;
+  }
+}
