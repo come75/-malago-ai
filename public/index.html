@@ -14,26 +14,27 @@ body:before{content:"";position:fixed;inset:0;pointer-events:none;background:rad
 .reveal{opacity:0;transform:translateY(18px);transition:opacity .7s ease,transform .7s ease}.reveal.visible{opacity:1;transform:none}
 /* V7 mobile polish — final visual pass */
 .top{min-height:70px}
-.brand{width:154px;height:50px;overflow:hidden;display:flex;align-items:center;justify-content:flex-start}
-.brand img{display:block;width:154px;height:50px;max-height:none;object-fit:cover;object-position:center;transform:scale(1.65);transform-origin:center}
+.brand{width:154px;height:50px;display:flex;align-items:center;overflow:hidden}
+.brand img{display:block;width:142px;height:44px;max-height:none;object-fit:contain;object-position:left center}
 .hero{align-items:stretch;min-height:690px}
-.heroContent{position:relative;z-index:2;width:100%;max-width:none;min-height:690px;padding:28px 22px 24px;display:flex;flex-direction:column;align-items:flex-start}
-.hero h1{margin:10px 0 16px}
-.hero p{max-width:610px}
+.heroContent{position:relative;z-index:2;width:100%;max-width:none;min-height:690px;padding:30px 22px 22px;display:flex;flex-direction:column;align-items:flex-start}
+.hero h1{margin:10px 0 16px;color:#1d1915;text-shadow:0 1px 12px #fff7}
+.hero p{max-width:610px;color:#2e2924;text-shadow:0 1px 10px #fff9}
+.hero .eyebrow{color:#d94f1f;text-shadow:0 1px 8px #fff9}
 .heroActions{margin-top:auto;width:100%;display:flex;gap:9px;flex-wrap:wrap}
-.hero:before{background:linear-gradient(180deg,#0005 0%,transparent 38%),linear-gradient(0deg,#000d 0%,transparent 52%)}
+.hero:before{background:linear-gradient(180deg,#fff7 0%,#fff1 40%,#0003 100%),linear-gradient(0deg,#0005 0%,transparent 58%)}
 .partner{display:flex;flex-direction:column}
 .partnerBody{display:flex;flex-direction:column;flex:1}
-.partner .cardActions{margin-top:auto;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px;flex-wrap:nowrap}
-.partner .cardActions .smallBtn{width:100%;min-width:0;flex:1;white-space:nowrap;overflow:hidden;text-overflow:clip;text-align:center;font-size:8px;letter-spacing:-.15px;line-height:1;padding:10px 2px}
-@media(min-width:430px) and (max-width:759px){.partner .cardActions .smallBtn{font-size:8.5px;padding:10px 2px}}
-@media(min-width:760px){.hero{min-height:760px;align-items:stretch}.heroContent{min-height:760px;padding:38px 55px 30px}.partner .cardActions{grid-template-columns:repeat(3,minmax(0,1fr))}.partner .cardActions .smallBtn{font-size:9px;padding:9px 3px}}
+.partner .cardActions{margin-top:auto;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:5px;flex-wrap:nowrap}
+.partner .cardActions .smallBtn{width:100%;min-width:0;flex:1;white-space:nowrap;overflow:hidden;text-overflow:clip;text-align:center;font-size:7px;letter-spacing:-.18px;line-height:1;padding:9px 1px}
+@media(min-width:430px) and (max-width:759px){.partner .cardActions .smallBtn{font-size:7.5px;padding:9px 1px}}
+@media(min-width:760px){.hero{min-height:760px;align-items:stretch}.heroContent{min-height:760px;padding:38px 55px 30px}.partner .cardActions{grid-template-columns:repeat(3,minmax(0,1fr))}.partner .cardActions .smallBtn{font-size:8.5px;padding:9px 3px}}
 @media(min-width:760px){.app{padding:0 28px 90px}.top{margin:0 -28px;padding:12px 28px}.universes{grid-template-columns:repeat(4,1fr)}.guideGrid{grid-template-columns:repeat(3,1fr)}.partnersGrid{grid-template-columns:repeat(3,1fr)}.hero{min-height:760px}.heroContent{padding:55px}.modal{align-items:center;padding:30px}.modalPanel{max-width:760px;border-radius:28px}.modalPhoto{height:310px}}
 </style>
 </head>
 <body>
 <div class="app">
-<header class="top"><a class="brand" href="#accueil" aria-label="Malago"><img src="/img/IMG_6595.png" alt="Malago"></a><button class="menuBtn" onclick="openMenu()">Menu</button></header>
+<header class="top"><a class="brand" href="#accueil" aria-label="Malago"><img src="/img/malago-logo.png" alt="Malago"></a><button class="menuBtn" onclick="openMenu()">Menu</button></header>
 
 <section class="hero reveal" id="accueil"><div class="heroPhoto"></div><div class="heroContent"><div class="eyebrow">Málaga, autrement</div><h1>Le guide que tu aurais aimé avoir en arrivant.</h1><p>Restaurants, soirées, activités, services et bonnes adresses sélectionnés pour vivre Málaga comme un local. Et si tu ne sais pas quoi choisir, demande à Malago.</p><div class="heroActions"><button class="btn primary" onclick="go('guide')">Explorer le guide</button><button class="btn ghost" onclick="go('ai')">Demander à Malago AI</button></div></div></section>
 
