@@ -63,7 +63,7 @@ function notionLinks(text, category) {
     if (out.some(x => x.url === url)) continue;
     let label = "Réserver";
     if (category === "Party" && low.includes("whatsapp") && url.includes("wa.me")) label = "Réserver VIP";
-    else if (category === "Party" && (low.includes("fourvenues") || low.includes("ticket"))) label = "Réserver un ticket";
+    else if (category === "Party" && (low.includes("fourvenues") || low.includes("ticket"))) label = "Ticket";
     else if (url.includes("wa.me")) label = "WhatsApp";
     out.push({label, url});
   }
