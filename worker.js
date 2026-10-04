@@ -378,7 +378,7 @@ export default {
       let notionError = null;
       try { notionCount = (await fetchNotionPartners(env)).length; }
       catch (e) { notionError = String(e?.message || e).slice(0,300); }
-      return json({ok:true,version:VERSION,aiConfigured:Boolean(env?.AI),notionConfigured:Boolean(env?.NOTION_TOKEN),model:MODEL,notionRecords:notionCount,notionError},200,headers);
+      return json({ok:notionError===null,version:VERSION,aiConfigured:Boolean(env?.AI),notionConfigured:Boolean(env?.NOTION_TOKEN),model:MODEL,notionRecords:notionCount,notionError},200,headers);
     }
     if (request.method === "GET" && url.pathname.startsWith("/api/photo/")) {
       let name = "";
