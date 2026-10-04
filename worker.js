@@ -12,7 +12,14 @@ const MENU_GALLERIES = {
   "Silencio Beach Club": ["/img/menus/silencio-1.webp", "/img/menus/silencio-2.webp"],
   "Sala Gold": ["/img/menus/sala-gold-1.webp", "/img/menus/sala-gold-2.webp"],
   "Santa Rita": ["/img/menus/santa-rita-1.webp", "/img/menus/santa-rita-2.webp"],
-  "Bro": ["/img/menus/bro-1.webp", "/img/menus/bro-2.webp"]
+  "Bro": ["/img/menus/bro-1.webp", "/img/menus/bro-2.webp"],
+  "Jet Ski, Boat & Water Activities": [
+    "/img/menus/jet-ski-boat-1.webp",
+    "/img/menus/jet-ski-boat-2.webp",
+    "/img/menus/jet-ski-boat-3.webp",
+    "/img/menus/jet-ski-boat-4.webp"
+  ],
+  "Quad / Buggy": ["/img/menus/quad-buggy-1.webp"]
 };
 
 const CATEGORY_MAP = {
