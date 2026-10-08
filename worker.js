@@ -370,29 +370,6 @@ export default {
     };
     if (request.method === "OPTIONS") return new Response(null,{status:204,headers});
 
-    if (request.method === "GET" && url.pathname === "/api/media-debug") {
-      try {
-        const mediaUrl = new URL("/media/malago-ai.MP4", request.url);
-        const response = env?.ASSETS ? await env.ASSETS.fetch(new Request(mediaUrl.toString(), {headers: request.headers})) : await fetch(mediaUrl);
-        const bytes = new Uint8Array(await response.arrayBuffer());
-        const ascii = new TextDecoder("latin1").decode(bytes);
-        const known = ["avc1","avc3","hvc1","hev1","av01","vp09","mp4v","encv"];
-        const codecs = known.filter(x => ascii.includes(x));
-        const hex = [...bytes.slice(0,32)].map(x=>x.toString(16).padStart(2,"0")).join("");
-        return json({
-          status: response.status,
-          contentType: response.headers.get("Content-Type"),
-          contentLength: response.headers.get("Content-Length"),
-          contentRange: response.headers.get("Content-Range"),
-          acceptRanges: response.headers.get("Accept-Ranges"),
-          size: bytes.byteLength,
-          signature: hex,
-          codecs
-        },200,headers);
-      } catch (error) {
-        return json({error:String(error?.message || error).slice(0,500)},500,headers);
-      }
-    }
     if (request.method === "GET" && url.pathname === "/api/config") {
       return json({version:VERSION,googleMapsConfigured:Boolean(env?.GOOGLE_MAPS_API_KEY),googleMapsKey:env?.GOOGLE_MAPS_API_KEY || null},200,headers);
     }
