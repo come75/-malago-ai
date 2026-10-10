@@ -192,6 +192,18 @@ body.villa-home-pool .villaHomeCarousel .villaStoryVignette{opacity:0!important;
 body.villa-home-pool .villaHomeCarousel .villaCarouselControls,
 body.villa-home-pool .villaHomeCarousel .villaCarouselScroll{display:none!important}
 
+
+/* Synchronisation stricte image/texte et transitions plus douces */
+.villaSingleHero .villaStoryFrame{opacity:0!important;transform:scale(1.035)!important;transition:opacity .9s ease,transform 5.8s cubic-bezier(.2,.65,.25,1)!important}
+.villaSingleHero .villaStoryFrame.is-active{opacity:1!important;transform:scale(1)!important}
+.villaHomeCarousel .villaStoryCopy{opacity:1;transition:opacity .35s ease,transform .45s ease!important}
+.villaHomeCarousel.is-copy-changing .villaStoryCopy{opacity:0!important;transform:translateY(12px)!important}
+.villaHomeCarousel .villaStoryFrame{will-change:opacity,transform}
+.villaHomeCarousel .villaCarouselDot{transition:width .35s ease,background .35s ease}
+@media(prefers-reduced-motion:reduce){
+ .villaSingleHero .villaStoryFrame,.villaHomeCarousel .villaStoryCopy{transition:none!important}
+}
+
 </style>
 </head>
 <body class="villa-home-pool">
@@ -298,8 +310,10 @@ document.getElementById('stayForm').addEventListener('submit',async e=>{e.preven
     {kicker:'AVEC MALAGO · COCKTAILS',title:'Le coucher du soleil,<br><em>un verre à la main.</em>',text:'Un barman prépare vos cocktails au bord de la piscine. Vous n’avez plus qu’à profiter du moment.',cta:'Imaginer mon expérience ↗'},
     {kicker:'AVEC MALAGO · SOIRÉE',title:'La villa change de rythme,<br><em>la soirée commence.</em>',text:'Un DJ, une playlist qui vous ressemble et une ambiance pensée pour votre groupe, du sunset jusqu’à la nuit.',cta:'Imaginer mon expérience ↗'}
   ];
-  let active=0;
-  function show(index){
+  let active=0,timer=null,resumeTimer=null;
+  const reduced=window.matchMedia('(prefers-reduced-motion: reduce)');
+  const delay=5600;
+  function render(index,animate=true){
     active=(index+slides.length)%slides.length;
     root.dataset.currentSlide=String(active);
     document.body.classList.toggle('villa-home-pool',active===0);
@@ -311,15 +325,25 @@ document.getElementById('stayForm').addEventListener('submit',async e=>{e.preven
       dot.classList.toggle('is-active',i===active);
       dot.setAttribute('aria-pressed',i===active?'true':'false');
     });
+    if(animate) root.classList.add('is-copy-changing');
     kicker.textContent=copy[active].kicker;
     title.innerHTML=copy[active].title;
     text.textContent=copy[active].text;
     cta.textContent=copy[active].cta;
+    cta.href='#experiences';
     count.textContent=String(active+1).padStart(2,'0')+' / '+String(slides.length).padStart(2,'0');
+    if(resumeTimer) clearTimeout(resumeTimer);
+    if(animate) resumeTimer=setTimeout(()=>root.classList.remove('is-copy-changing'),80);
   }
-  root.querySelector('[data-carousel-prev]').addEventListener('click',()=>show(active-1));
-  root.querySelector('[data-carousel-next]').addEventListener('click',()=>show(active+1));
-  dots.forEach((dot,i)=>dot.addEventListener('click',()=>show(i)));
+  function stop(){if(timer){clearInterval(timer);timer=null}}
+  function start(){
+    stop();
+    if(!reduced.matches && !document.hidden) timer=setInterval(()=>render(active+1),delay);
+  }
+  function go(index){render(index);start()}
+  root.querySelector('[data-carousel-prev]').addEventListener('click',()=>go(active-1));
+  root.querySelector('[data-carousel-next]').addEventListener('click',()=>go(active+1));
+  dots.forEach((dot,i)=>dot.addEventListener('click',()=>go(i)));
   let pointerStart=null;
   root.addEventListener('pointerdown',e=>{
     if(e.pointerType==='mouse' && e.button!==0) return;
@@ -329,14 +353,21 @@ document.getElementById('stayForm').addEventListener('submit',async e=>{e.preven
     if(!pointerStart) return;
     const dx=e.clientX-pointerStart.x,dy=e.clientY-pointerStart.y;
     pointerStart=null;
-    if(Math.abs(dx)>48 && Math.abs(dx)>Math.abs(dy)*1.2) show(active+(dx<0?1:-1));
+    if(Math.abs(dx)>48 && Math.abs(dx)>Math.abs(dy)*1.2) go(active+(dx<0?1:-1));
   },{passive:true});
   root.addEventListener('pointercancel',()=>{pointerStart=null},{passive:true});
+  root.addEventListener('mouseenter',stop);
+  root.addEventListener('mouseleave',start);
+  root.addEventListener('focusin',stop);
+  root.addEventListener('focusout',start);
   root.addEventListener('keydown',e=>{
-    if(e.key==='ArrowRight'){e.preventDefault();show(active+1)}
-    if(e.key==='ArrowLeft'){e.preventDefault();show(active-1)}
+    if(e.key==='ArrowRight'){e.preventDefault();go(active+1)}
+    if(e.key==='ArrowLeft'){e.preventDefault();go(active-1)}
   });
-  show(0);
+  document.addEventListener('visibilitychange',()=>document.hidden?stop():start());
+  if(reduced.addEventListener) reduced.addEventListener('change',start);
+  render(0,false);
+  start();
 })();
 </script>
 </body>
