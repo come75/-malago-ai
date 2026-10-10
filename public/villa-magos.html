@@ -204,6 +204,55 @@ body.villa-home-pool .villaHomeCarousel .villaCarouselScroll{display:none!import
  .villaSingleHero .villaStoryFrame,.villaHomeCarousel .villaStoryCopy{transition:none!important}
 }
 
+
+/* Lisibilité du hero : cadrage abaissé et zone de texte protégée */
+.villaHomeCarousel .villaStoryFrames{background:#0b0d0b}
+.villaHomeCarousel .villaStoryFrame{object-position:center 43%!important}
+.villaHomeCarousel .villaStoryFrame[data-slide="0"]{object-position:center 50%!important}
+.villaHomeCarousel .villaStoryVignette{
+  opacity:1!important;
+  background:
+    linear-gradient(0deg,rgba(5,7,6,.94) 0%,rgba(5,7,6,.78) 22%,rgba(5,7,6,.32) 48%,rgba(5,7,6,.02) 76%),
+    linear-gradient(90deg,rgba(5,7,6,.40) 0%,rgba(5,7,6,.12) 54%,transparent 100%)!important;
+  transition:opacity .5s ease,background .5s ease;
+}
+.villaHomeCarousel .villaStoryCopy{
+  left:clamp(24px,7vw,100px)!important;
+  bottom:clamp(116px,17vh,174px)!important;
+  max-width:min(650px,78vw)!important;
+  padding:clamp(0px,1vw,12px) 0 0!important;
+  text-shadow:0 2px 18px rgba(0,0,0,.28);
+}
+.villaHomeCarousel .villaStoryCopy h2{
+  max-width:620px;
+  text-wrap:balance;
+  line-height:1.02;
+  margin-bottom:14px!important;
+}
+.villaHomeCarousel .villaStoryCopy p{
+  max-width:430px!important;
+  color:rgba(255,255,255,.94)!important;
+  text-shadow:0 1px 12px rgba(0,0,0,.65);
+}
+.villaHomeCarousel .villaStoryKicker{ text-shadow:0 1px 10px rgba(0,0,0,.6) }
+.villaHomeCarousel .villaCarouselControls{bottom:clamp(28px,5vh,52px)!important}
+.villaHomeCarousel .villaCarouselScroll{bottom:clamp(34px,5vh,55px)!important}
+@media(max-width:650px){
+  .villaHomeCarousel .villaStoryFrame{object-position:center 38%!important}
+  .villaHomeCarousel .villaStoryFrame[data-slide="0"]{object-position:center 50%!important}
+  .villaHomeCarousel .villaStoryVignette{
+    background:linear-gradient(0deg,rgba(5,7,6,.96) 0%,rgba(5,7,6,.84) 28%,rgba(5,7,6,.38) 55%,rgba(5,7,6,.03) 82%)!important;
+  }
+  .villaHomeCarousel .villaStoryCopy{
+    left:22px!important;right:22px!important;bottom:116px!important;max-width:none!important;
+  }
+  .villaHomeCarousel .villaStoryCopy h2{font-size:clamp(39px,10.5vw,56px)!important;line-height:1.04}
+  .villaHomeCarousel .villaStoryCopy p{font-size:13px!important;line-height:1.6!important;max-width:340px!important}
+  .villaHomeCarousel .villaCarouselControls{bottom:30px!important}
+  .villaHomeCarousel .villaCarouselScroll{bottom:42px!important}
+}
+@media(prefers-reduced-motion:reduce){.villaHomeCarousel .villaStoryVignette{transition:none!important}}
+
 </style>
 </head>
 <body class="villa-home-pool">
