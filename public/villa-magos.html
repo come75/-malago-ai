@@ -565,6 +565,110 @@ body.villa-home-pool .villaHomeCarousel .villaCarouselScroll{display:none!import
   body.villa-home-pool .villaHomeCarousel .villaStoryCopy{top:calc(43% + 18px)!important}
 }
 
+
+/* MALAGO SIGNATURE — finitions premium et confort mobile */
+:root{
+  --malago-orange:#EE8405;
+  --malago-orange-deep:#d87500;
+  --malago-green:#075E54;
+  --dark:#0b0b0b;
+  --cream:#f5f1e8;
+  --gold:#EE8405;
+  --gold2:#ffd19a;
+  --line:rgba(245,241,232,.16);
+}
+html{scroll-padding-top:24px}
+body{background:#0b0b0b}
+::selection{background:#EE8405;color:#111}
+a,button,input,select,textarea{-webkit-tap-highlight-color:transparent}
+a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{
+  outline:2px solid #EE8405!important;outline-offset:4px!important
+}
+.eyebrow{color:#EE8405}
+.brand span{color:#EE8405}
+.btnGold,.btn:not(.btnWhatsapp){transition:transform .22s ease,background .22s ease,box-shadow .22s ease}
+.btnGold{background:#EE8405!important;color:#171915!important;border-color:#EE8405!important}
+.btnGold:hover{background:#ff9a19!important;box-shadow:0 12px 34px rgba(238,132,5,.2)}
+.section.dark{background:#0b0b0b;color:#f5f1e8}
+.sectionHead{gap:36px;align-items:end;margin-bottom:34px}
+.sectionHead h2{max-width:700px;font-size:clamp(36px,5vw,64px);line-height:.99;letter-spacing:-.045em;text-wrap:balance}
+.sectionHead p{max-width:390px;font-size:14px;line-height:1.8;color:rgba(245,241,232,.68)}
+.servicesGrid{gap:14px}
+.service{
+  min-height:390px;border:1px solid rgba(255,255,255,.16);border-radius:22px;
+  padding:22px;isolation:isolate;background:#171815;overflow:hidden;
+  transition:transform .35s cubic-bezier(.2,.7,.2,1),border-color .25s ease,box-shadow .25s ease;
+}
+.service:after{content:"";position:absolute;inset:0;z-index:-1;pointer-events:none;
+  background:linear-gradient(180deg,rgba(0,0,0,.06) 5%,rgba(0,0,0,.08) 28%,rgba(0,0,0,.68) 66%,rgba(0,0,0,.88) 100%)}
+.service img{transition:transform .65s cubic-bezier(.2,.7,.2,1);filter:saturate(.86)}
+.service:hover{transform:translateY(-4px);border-color:rgba(238,132,5,.8);box-shadow:0 18px 45px rgba(0,0,0,.22)}
+.service:hover img{transform:scale(1.045)}
+.serviceNum{font-size:9px;letter-spacing:.19em;color:rgba(255,255,255,.78)}
+.serviceText{gap:10px}
+.service h3{font-size:clamp(23px,2.5vw,32px);line-height:1.03;letter-spacing:-.035em}
+.service p{font-size:12px;line-height:1.7;color:rgba(255,255,255,.82);max-width:34ch}
+.serviceLink{font-size:10px;letter-spacing:.15em;color:#ffb65c;margin-top:7px}
+.note,.localNote{color:rgba(245,241,232,.56);font-size:11px;line-height:1.8}
+.localCard{border-radius:18px;overflow:hidden;transition:transform .25s ease,border-color .25s ease}
+.localCard:hover{transform:translateY(-3px);border-color:rgba(238,132,5,.6)}
+.request{background:#f5f1e8;color:#171915}
+.request .eyebrow{color:#a85c00}
+.requestCopy h2{font-size:clamp(42px,6vw,70px);line-height:.98;letter-spacing:-.05em;text-wrap:balance}
+.requestCopy p{font-size:14px;line-height:1.8;color:#62635d;max-width:42ch}
+.formCard{border:1px solid rgba(23,25,21,.12);border-radius:24px;box-shadow:0 18px 55px rgba(23,25,21,.08)}
+.field input,.field select,.field textarea{border-radius:12px;min-height:48px}
+.check{border-radius:12px;transition:border-color .2s ease,background .2s ease}
+.check:has(input:checked){border-color:#EE8405;background:#fff4e5}
+.check input{accent-color:#EE8405}
+.btnWhatsapp,.heroWhatsapp,.whatsappFloat{
+  background:#075E54!important;color:#fff!important;border-color:#075E54!important;
+  box-shadow:0 10px 28px rgba(7,94,84,.22)!important
+}
+.btnWhatsapp:hover,.heroWhatsapp:hover,.whatsappFloat:hover{background:#064e47!important}
+.mobileCta{
+  bottom:max(12px,env(safe-area-inset-bottom));left:14px;right:14px;
+  z-index:18;transition:transform .28s ease,opacity .22s ease;
+}
+.mobileCta .btn{
+  min-height:56px;border-radius:999px;font-size:11px;letter-spacing:.13em;
+  box-shadow:0 10px 35px rgba(0,0,0,.28)
+}
+body.experiences-visible .mobileCta,
+body.form-visible .mobileCta{
+  transform:translateY(150%);opacity:0;pointer-events:none
+}
+.villaStoryCopy h2{text-wrap:balance}
+.villaStoryCopy p{max-width:38ch}
+.villaCarouselArrow{transition:background .2s ease,border-color .2s ease,transform .2s ease}
+.villaCarouselArrow:hover{background:#EE8405;border-color:#EE8405;color:#111;transform:scale(1.04)}
+@media(max-width:850px){
+  .section,.intro,.editorial,.request{padding:clamp(54px,9vw,76px) 0}
+  .sectionHead{margin-bottom:26px}
+  .servicesGrid{gap:11px}
+  .service{min-height:300px;padding:17px;border-radius:18px}
+  .service h3{font-size:clamp(21px,4vw,28px)}
+  .service p{font-size:11px;line-height:1.6}
+  .serviceLink{font-size:9px;letter-spacing:.12em}
+}
+@media(max-width:480px){
+  .wrap{width:calc(100% - 30px)}
+  .sectionHead h2{font-size:clamp(35px,10vw,44px);line-height:1}
+  .sectionHead p{font-size:13px;line-height:1.7}
+  .servicesGrid{gap:9px}
+  .service{min-height:270px;padding:14px;border-radius:17px}
+  .serviceNum{font-size:8px;letter-spacing:.12em}
+  .service h3{font-size:22px;line-height:1.02}
+  .service p{font-size:10px;line-height:1.55}
+  .serviceLink{font-size:8px;line-height:1.45;letter-spacing:.1em}
+  .requestCopy h2{font-size:44px}
+  .mobileCta .btn{min-height:54px}
+  .whatsappFloat{bottom:calc(18px + env(safe-area-inset-bottom));right:12px;padding:12px 14px}
+}
+@media(prefers-reduced-motion:reduce){
+  *,*:before,*:after{scroll-behavior:auto!important;animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}
+}
+
 </style>
 </head>
 <body class="villa-home-pool">
@@ -733,5 +837,29 @@ document.getElementById('stayForm').addEventListener('submit',async e=>{e.preven
   start();
 })();
 </script>
+
+<script>
+/* Keep the fixed conversion button from covering experience cards or the request form. */
+(function(){
+  const cta=document.querySelector('.mobileCta');
+  if(!cta||!('IntersectionObserver' in window)) return;
+  const watch=[
+    [document.querySelector('#experiences'),'experiences-visible'],
+    [document.querySelector('#demande'),'form-visible']
+  ].filter(x=>x[0]);
+  const visible=new Set();
+  const observer=new IntersectionObserver(entries=>{
+    entries.forEach(entry=>{
+      const cls=watch.find(x=>x[0]===entry.target)?.[1];
+      if(!cls)return;
+      if(entry.isIntersecting)visible.add(cls);else visible.delete(cls);
+    });
+    document.body.classList.toggle('experiences-visible',visible.has('experiences-visible'));
+    document.body.classList.toggle('form-visible',visible.has('form-visible'));
+  },{threshold:0.08});
+  watch.forEach(([el])=>observer.observe(el));
+})();
+</script>
+
 </body>
 </html>
