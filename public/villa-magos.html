@@ -359,6 +359,40 @@ body.villa-home-pool .villaHomeCarousel .villaCarouselScroll{display:none!import
   .villaHomeCarousel .villaStoryCopy p{font-size:12px!important}
 }
 
+
+/* Invitation discrète à découvrir le carrousel par un swipe vers la gauche */
+@keyframes villaSwipeHint{
+  0%,100%{transform:translateX(0);opacity:.92}
+  50%{transform:translateX(-9px);opacity:1}
+}
+.villaHomeCarousel .villaSwipeHint{
+  position:absolute;z-index:14;display:flex;align-items:center;gap:12px;
+  color:#fff;letter-spacing:.17em;text-transform:uppercase;font-size:10px;
+  font-weight:700;pointer-events:none;
+  text-shadow:0 2px 12px rgba(0,0,0,.45);
+  animation:villaSwipeHint 1.8s ease-in-out infinite;
+}
+.villaHomeCarousel .villaSwipeHint .villaSwipeArrow{
+  width:40px;height:40px;border:1px solid rgba(255,255,255,.68);
+  border-radius:50%;display:grid;place-items:center;font-size:22px;line-height:1;
+  background:rgba(10,10,10,.16);backdrop-filter:blur(5px);
+}
+.villaHomeCarousel .villaSwipeHint[hidden]{display:none!important}
+@media(max-width:650px){
+  .villaHomeCarousel .villaSwipeHint{
+    top:calc(47% - 54px);right:20px;font-size:9px;gap:8px;
+  }
+  .villaHomeCarousel .villaSwipeHint .villaSwipeArrow{width:34px;height:34px}
+  .villaHomeCarousel[data-current-slide="0"] .villaSwipeHint{
+    top:calc(47% - 54px);
+    color:#fff;
+  }
+}
+@media(max-width:390px){
+  .villaHomeCarousel .villaSwipeHint{top:calc(43% - 48px);right:16px}
+}
+@media(prefers-reduced-motion:reduce){.villaHomeCarousel .villaSwipeHint{animation:none}}
+
 </style>
 </head>
 <body class="villa-home-pool">
@@ -373,6 +407,7 @@ body.villa-home-pool .villaHomeCarousel .villaCarouselScroll{display:none!import
       <img class="villaStoryFrame" data-slide="3" src="/media/villa-magos-dj.PNG" alt="DJ en soirée" loading="lazy">
     </div>
     <div class="villaStoryVignette"></div>
+    <div class="villaSwipeHint" aria-hidden="true"><span>Glissez pour découvrir</span><span class="villaSwipeArrow">←</span></div>
     <div class="villaStoryCopy is-visible">
       <div class="villaStoryKicker" id="villaSlideKicker">AVEC MALAGO</div>
       <h2 id="villaSlideTitle">Votre séjour,<br><em>en mieux.</em></h2>
@@ -465,12 +500,14 @@ document.getElementById('stayForm').addEventListener('submit',async e=>{e.preven
     {kicker:'AVEC MALAGO · COCKTAILS',title:'Le coucher du soleil,<br><em>un verre à la main.</em>',text:'Un barman prépare vos cocktails au bord de la piscine. Vous n’avez plus qu’à profiter du moment.',cta:'Imaginer mon expérience ↗'},
     {kicker:'AVEC MALAGO · SOIRÉE',title:'La villa change de rythme,<br><em>la soirée commence.</em>',text:'Un DJ, une playlist qui vous ressemble et une ambiance pensée pour votre groupe, du sunset jusqu’à la nuit.',cta:'Imaginer mon expérience ↗'}
   ];
+  const hint=root.querySelector('.villaSwipeHint');
   let active=0,timer=null,resumeTimer=null;
   const reduced=window.matchMedia('(prefers-reduced-motion: reduce)');
   const delay=5600;
   function render(index,animate=true){
     active=(index+slides.length)%slides.length;
     root.dataset.currentSlide=String(active);
+    if(hint) hint.hidden=active!==0;
     document.body.classList.toggle('villa-home-pool',active===0);
     slides.forEach((slide,i)=>{
       slide.classList.toggle('is-active',i===active);
