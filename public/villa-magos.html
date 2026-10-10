@@ -164,19 +164,38 @@
 .villaSingleHero .villaStoryCopy{opacity:1!important;transform:none!important;pointer-events:auto!important;bottom:clamp(100px,15vh,150px)!important}
 .villaSingleHero .villaCarouselScroll{bottom:clamp(35px,7vh,70px)!important}
 @media(max-width:650px){.villaSingleHero .villaStoryPin{height:88svh!important;min-height:640px!important;max-height:850px!important}.villaSingleHero .villaStoryCopy{left:22px!important;right:22px!important;bottom:100px!important}.villaSingleHero .villaCarouselScroll{left:22px!important;bottom:45px!important}}
+/* HERO d'accueil — piscine seule puis expériences à swiper */
+body.villa-home-pool .topbar,
+body.villa-home-pool .whatsappFloat,
+body.villa-home-pool .mobileCta{opacity:0!important;visibility:hidden!important;pointer-events:none!important}
+.topbar,.whatsappFloat,.mobileCta{transition:opacity .45s ease,visibility .45s ease}
+.villaHomeCarousel[data-current-slide="0"] .villaStoryVignette{opacity:0!important;background:none!important}
+.villaHomeCarousel[data-current-slide="0"] .villaStoryCopy{opacity:0!important;visibility:hidden!important;pointer-events:none!important;transform:none!important}
+.villaHomeCarousel[data-current-slide="0"] .villaCarouselControls,
+.villaHomeCarousel[data-current-slide="0"] .villaCarouselScroll{display:none!important}
+.villaHomeCarousel[data-current-slide="0"] .villaStoryFrame[data-slide="0"]{object-position:center center;filter:none}
+.villaHomeCarousel .villaStoryFrame{touch-action:pan-y}
+.villaHomeCarousel .villaStoryKicker{color:var(--malago-orange);letter-spacing:.24em}
+.villaHomeCarousel .villaStoryCopy h2 em{color:#f4b45b}
+@media(max-width:650px){
+ .villaHomeCarousel .villaStoryPin{height:100svh;min-height:560px;max-height:none}
+ .villaHomeCarousel .villaStoryCopy{bottom:145px}
+ .villaCarouselControls{bottom:34px}
+}
+@media(prefers-reduced-motion:reduce){.topbar,.whatsappFloat,.mobileCta{transition:none}}
 </style>
 </head>
-<body>
+<body class="villa-home-pool">
 <header class="topbar"><div class="wrap"><a class="brand" href="#top">LA VILLA MAGOS <span>×</span> MALAGO</a><nav class="nav"><a href="#experiences">Expériences</a><a href="#adresses">Adresses</a><a href="#concierge">Conciergerie</a><a href="#demande">Votre séjour</a></nav><a class="navcta" href="#demande">Créer mon séjour ↗</a></div></header>
 <main id="top">
 <section class="villaStory villaHomeCarousel villaSingleHero" id="villa" aria-label="Bienvenue à La Villa Magos">
-  <div class="villaStoryPin" data-scene="pool">
+  <div class="villaStoryPin" data-scene="pool" role="region" aria-roledescription="carrousel" aria-label="La Villa Magos et les expériences Malago" tabindex="0">
     <div class="villaStoryFrames">
       <img class="villaStoryFrame is-active" data-slide="0" src="https://media.vrbo.com/lodging/125000000/124250000/124246600/124246600/3c99860b.jpg?impolicy=resizecrop&ra=fit&rw=1800" alt="Piscine et extérieur de La Villa Magos" fetchpriority="high">
     </div>
     <div class="villaStoryVignette"></div>
     <div class="villaStoryCopy is-visible">
-      <div class="villaStoryKicker">La Villa Magos × Malago</div>
+      <div class="villaStoryKicker" id="villaSlideKicker">AVEC MALAGO</div>
       <h2>Votre séjour,<br><em>en mieux.</em></h2>
       <p>Une villa pour se retrouver. Malago vous aide à imaginer les expériences qui feront la différence.</p>
       <a class="btn btnGold" href="#experiences">Découvrir les expériences <span>↘</span></a>
@@ -239,5 +258,63 @@ document.getElementById('stayForm').addEventListener('submit',async e=>{e.preven
 
 
 
+<script>
+(function(){
+  const root=document.querySelector('.villaHomeCarousel');
+  if(!root) return;
+  const slides=[...root.querySelectorAll('.villaStoryFrame')];
+  const dots=[...root.querySelectorAll('.villaCarouselDot')];
+  const count=root.querySelector('.villaCarouselCount');
+  const kicker=root.querySelector('#villaSlideKicker');
+  const title=root.querySelector('#villaSlideTitle');
+  const text=root.querySelector('#villaSlideText');
+  const cta=root.querySelector('.villaStoryCopy .btn');
+  const copy=[
+    {kicker:'',title:'',text:'',cta:''},
+    {kicker:'Avec Malago',title:'Un chef privé,<br><em>à la villa.</em>',text:'Petit-déjeuner, brunch ou dîner : une expérience culinaire pensée pour votre groupe, directement à la villa.',cta:'Découvrir les expériences ↘'},
+    {kicker:'Avec Malago',title:'Un barman,<br><em>chez vous.</em>',text:'Cocktails sur mesure, service au bord de la piscine et moments à savourer ensemble, jusqu’au coucher du soleil.',cta:'Découvrir les expériences ↘'},
+    {kicker:'Avec Malago',title:'Un DJ,<br><em>la bonne ambiance.</em>',text:'Une bande-son pour votre groupe, du sunset aux soirées qui donnent envie de prolonger la nuit.',cta:'Découvrir les expériences ↘'}
+  ];
+  let active=0;
+  function show(index){
+    active=(index+slides.length)%slides.length;
+    root.dataset.currentSlide=String(active);
+    document.body.classList.toggle('villa-home-pool',active===0);
+    slides.forEach((slide,i)=>{
+      slide.classList.toggle('is-active',i===active);
+      slide.setAttribute('aria-hidden',i===active?'false':'true');
+    });
+    dots.forEach((dot,i)=>{
+      dot.classList.toggle('is-active',i===active);
+      dot.setAttribute('aria-pressed',i===active?'true':'false');
+    });
+    kicker.textContent=copy[active].kicker;
+    title.innerHTML=copy[active].title;
+    text.textContent=copy[active].text;
+    cta.textContent=copy[active].cta;
+    count.textContent=String(active+1).padStart(2,'0')+' / '+String(slides.length).padStart(2,'0');
+  }
+  root.querySelector('[data-carousel-prev]').addEventListener('click',()=>show(active-1));
+  root.querySelector('[data-carousel-next]').addEventListener('click',()=>show(active+1));
+  dots.forEach((dot,i)=>dot.addEventListener('click',()=>show(i)));
+  let pointerStart=null;
+  root.addEventListener('pointerdown',e=>{
+    if(e.pointerType==='mouse' && e.button!==0) return;
+    pointerStart={x:e.clientX,y:e.clientY};
+  },{passive:true});
+  root.addEventListener('pointerup',e=>{
+    if(!pointerStart) return;
+    const dx=e.clientX-pointerStart.x,dy=e.clientY-pointerStart.y;
+    pointerStart=null;
+    if(Math.abs(dx)>48 && Math.abs(dx)>Math.abs(dy)*1.2) show(active+(dx<0?1:-1));
+  },{passive:true});
+  root.addEventListener('pointercancel',()=>{pointerStart=null},{passive:true});
+  root.addEventListener('keydown',e=>{
+    if(e.key==='ArrowRight'){e.preventDefault();show(active+1)}
+    if(e.key==='ArrowLeft'){e.preventDefault();show(active-1)}
+  });
+  show(0);
+})();
+</script>
 </body>
 </html>
