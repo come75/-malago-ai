@@ -13,6 +13,23 @@
 @media(max-width:850px){.wrap{width:min(100% - 34px,680px)}.nav{display:none}.hero{min-height:760px;height:90svh;max-height:900px}.heroInner{padding:125px 0 62px}.heroText{font-size:14px}.intro,.section,.editorial,.request{padding:72px 0}.introGrid,.editorialGrid,.requestGrid{grid-template-columns:1fr;gap:32px}.introQuote{font-size:19px}.sectionHead{display:block}.sectionHead p{margin-top:20px}.servicesGrid{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.service{min-height:245px;padding:16px}.service h3{font-size:22px}.editorialPhoto{height:430px;order:2}.editorialCopy{order:1}.steps{grid-template-columns:1fr;gap:25px}.step{display:grid;grid-template-columns:40px 1fr;column-gap:15px}.stepNo{grid-row:span 2}.step h3{margin:0 0 7px}.step p{margin:0}.formCard{padding:21px}.footer .wrap{align-items:flex-start;flex-direction:column}.mobileCta{display:flex;position:fixed;bottom:12px;left:12px;right:12px;z-index:10;box-shadow:0 8px 30px #0003}.mobileCta .btn{width:100%;box-shadow:0 8px 30px #0002}.footer{padding-bottom:95px}}
 @media(max-width:420px){.wrap{width:calc(100% - 28px)}.brand{font-size:14px}.hero{min-height:740px}.hero h1{font-size:47px}.heroInner{padding-bottom:56px}.heroActions .btn{width:100%}.statRow{gap:8px}.stat strong{font-size:24px}.stat span{font-size:9px;line-height:1.4}.servicesGrid{gap:8px}.service{min-height:220px}.service h3{font-size:20px}.service p{font-size:10px}.formTwo{grid-template-columns:1fr}.checkGrid{grid-template-columns:1fr 1fr}}
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*,*:before,*:after{transition:none!important}}
+
+/* Identité Malago : vert profond de marque, distinct du vert officiel WhatsApp. */
+:root{--malago-green:#176b4a;--malago-green-dark:#10583c;--malago-green-soft:#e8f1eb;--gold:#b89a63;--gold2:#dfc796}
+.brand span{color:var(--malago-green)}
+.eyebrow{color:var(--malago-green)}
+.hero .eyebrow{color:var(--gold2)}
+/* En attendant une vraie photo de La Villa Magos, ne pas présenter une villa de stock comme si c'était la propriété. */
+.hero:before{background:linear-gradient(115deg,rgba(13,37,28,.96),rgba(23,107,74,.78) 55%,rgba(16,17,15,.7)),radial-gradient(ellipse at 78% 25%,rgba(223,199,150,.2),transparent 42%)}
+.btnWhatsapp,.heroWhatsapp{background:#25D366;color:#fff;border-color:#25D366}
+.btnWhatsapp:hover,.heroWhatsapp:hover{background:#1fb85a}
+.whatsappFloat{background:#25D366;color:#fff;border:2px solid rgba(255,255,255,.9)}
+.whatsappFloat:hover{background:#1fb85a}
+.localType{color:var(--malago-green)}
+.localCard a{color:var(--malago-green)}
+.check input{accent-color:var(--malago-green)}
+.field input:focus,.field select:focus,.field textarea:focus{border-color:var(--malago-green)}
+
 </style>
 </head>
 <body>
