@@ -669,10 +669,20 @@ body.form-visible .mobileCta{
   *,*:before,*:after{scroll-behavior:auto!important;animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}
 }
 
+
+/* En-tête featuring : logos originaux Villa Magos × Malago */
+.brandFeaturing{display:flex;align-items:center;gap:13px;flex:0 0 auto;font-size:initial;letter-spacing:normal}
+.brandFeaturing img{display:block;object-fit:contain}
+.brandVillaLogo{width:144px;height:45px;object-fit:contain;background:#f5f2eb;border-radius:5px;padding:4px 7px}
+.brandMalagoLogo{width:108px;height:35px;filter:drop-shadow(0 0 0 transparent)}
+.brandFeaturingX{color:var(--gold2);font-family:Georgia,serif;font-size:25px;font-weight:400;line-height:1}
+@media(max-width:850px){.brandFeaturing{gap:8px}.brandVillaLogo{width:112px;height:37px;padding:3px 5px}.brandMalagoLogo{width:83px;height:29px}.brandFeaturingX{font-size:21px}.topbar{padding:18px 0}.topbar .wrap{gap:10px}.navcta{padding:10px 12px;font-size:9px;white-space:nowrap}}
+@media(max-width:420px){.brandFeaturing{gap:6px}.brandVillaLogo{width:88px;height:32px;padding:3px}.brandMalagoLogo{width:66px;height:25px}.brandFeaturingX{font-size:18px}.navcta{padding:9px 10px;font-size:8px;letter-spacing:.04em}}
+
 </style>
 </head>
 <body class="villa-home-pool">
-<header class="topbar"><div class="wrap"><a class="brand" href="#top">LA VILLA MAGOS <span>×</span> MALAGO</a><nav class="nav"><a href="#experiences">Expériences</a><a href="#adresses">Adresses</a><a href="#concierge">Conciergerie</a><a href="#demande">Votre séjour</a></nav><a class="navcta" href="#demande">Créer mon séjour ↗</a></div></header>
+<header class="topbar"><div class="wrap"><a class="brand brandFeaturing" href="#top" aria-label="Villa Magos × Malago"><img class="brandVillaLogo" src="/img/villa-magos-logo.png" alt="Villa Magos Málaga"><span class="brandFeaturingX" aria-hidden="true">×</span><img class="brandMalagoLogo" src="/img/malago-logo.png" alt="Malago"></a><nav class="nav"><a href="#experiences">Expériences</a><a href="#adresses">Adresses</a><a href="#concierge">Conciergerie</a><a href="#demande">Votre séjour</a></nav><a class="navcta" href="#demande">Créer mon séjour ↗</a></div></header>
 <main id="top">
 <section class="section dark" id="experiences"><div class="wrap"><div class="sectionHead"><div><div class="eyebrow">À vivre sur la Costa del Sol</div><h2>Des expériences pour tout votre groupe.</h2></div><p>Du moment calme à la grande sortie, sélectionnez ce qui vous tente. Nous affinons ensuite les options selon votre groupe et les dates.</p></div>
 <div class="servicesGrid">
