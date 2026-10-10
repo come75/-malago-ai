@@ -124,31 +124,70 @@
  .villaStoryFrame,.villaStoryVignette,.villaStoryCopy,.villaStoryProgress{transition:none}
 }
 
+
+/* Accueil Villa Magos : carrousel plein écran, automatique et pilotable au doigt. */
+.villaStory.villaHomeCarousel{height:auto;min-height:0;background:#0b0d0b}
+.villaHomeCarousel .villaStoryPin{position:relative;top:auto;height:min(900px,100svh);min-height:650px;max-height:1000px}
+.villaHomeCarousel .villaStoryFrames{overflow:hidden}
+.villaHomeCarousel .villaStoryFrame{opacity:0;transform:scale(1.045);transition:opacity 1s ease,transform 6s ease}
+.villaHomeCarousel .villaStoryFrame.is-active{opacity:1;transform:scale(1)}
+.villaHomeCarousel .villaStoryVignette{opacity:1;background:linear-gradient(0deg,rgba(8,10,9,.78),rgba(8,10,9,.06) 72%),linear-gradient(90deg,rgba(8,10,9,.42),transparent 78%)}
+.villaHomeCarousel .villaStoryCopy{opacity:1;transform:none;pointer-events:auto;bottom:clamp(110px,15vh,150px);max-width:min(720px,82vw)}
+.villaHomeCarousel .villaStoryCopy h2{font-size:clamp(48px,7vw,88px);margin:0 0 18px}
+.villaHomeCarousel .villaStoryCopy p{font-size:15px;max-width:470px;margin-bottom:24px}
+.villaCarouselControls{position:absolute;z-index:4;right:clamp(22px,6vw,80px);bottom:clamp(35px,7vh,70px);display:flex;align-items:center;gap:13px;color:#fff}
+.villaCarouselArrow{width:42px;height:42px;border-radius:50%;border:1px solid rgba(255,255,255,.55);background:rgba(12,15,12,.25);color:#fff;font-size:19px;cursor:pointer;backdrop-filter:blur(8px)}
+.villaCarouselArrow:hover{background:var(--malago-orange);border-color:var(--malago-orange);color:#171915}
+.villaCarouselDots{display:flex;align-items:center;gap:6px}
+.villaCarouselDot{width:7px;height:7px;border:0;border-radius:50%;background:rgba(255,255,255,.5);padding:0;cursor:pointer;transition:width .25s,background .25s}
+.villaCarouselDot.is-active{width:24px;border-radius:99px;background:var(--malago-orange)}
+.villaCarouselCount{font-size:10px;letter-spacing:.14em;min-width:45px;text-align:center}
+.villaCarouselScroll{position:absolute;left:clamp(24px,7vw,100px);bottom:clamp(42px,7vh,70px);z-index:3;font-size:9px;letter-spacing:.18em;color:rgba(255,255,255,.75)}
+.villaCarouselScroll span{color:var(--malago-orange);font-size:15px;margin-left:10px}
+@media(max-width:650px){
+ .villaHomeCarousel .villaStoryPin{height:88svh;min-height:680px;max-height:850px}
+ .villaHomeCarousel .villaStoryCopy{left:22px;right:22px;bottom:140px;max-width:none}
+ .villaHomeCarousel .villaStoryCopy h2{font-size:clamp(43px,12vw,60px)}
+ .villaHomeCarousel .villaStoryCopy p{font-size:13px;max-width:330px}
+ .villaCarouselControls{left:22px;right:22px;bottom:52px;justify-content:flex-end;gap:9px}
+ .villaCarouselScroll{left:22px;bottom:63px;font-size:8px;max-width:45%}
+ .villaCarouselArrow{width:36px;height:36px}
+}
+@media(prefers-reduced-motion:reduce){.villaHomeCarousel .villaStoryFrame{transition:none}}
+
 </style>
 </head>
 <body>
 <header class="topbar"><div class="wrap"><a class="brand" href="#top">LA VILLA MAGOS <span>×</span> MALAGO</a><nav class="nav"><a href="#experiences">Expériences</a><a href="#adresses">Adresses</a><a href="#concierge">Conciergerie</a><a href="#demande">Votre séjour</a></nav><a class="navcta" href="#demande">Créer mon séjour ↗</a></div></header>
 <main id="top">
-<section class="villaStory" id="villa" aria-label="La piscine de Villa Magos et les expériences Malago">
+<section class="villaStory villaHomeCarousel" id="villa" aria-label="Bienvenue à La Villa Magos">
   <div class="villaStoryPin" data-scene="pool">
     <div class="villaStoryFrames">
-      <img class="villaStoryFrame" data-scene="pool" src="https://media.vrbo.com/lodging/125000000/124250000/124246600/124246600/3c99860b.jpg?impolicy=resizecrop&ra=fit&rw=1800" alt="La piscine de Villa Magos, sans aménagement ajouté" fetchpriority="high">
-      <img class="villaStoryFrame" data-scene="chef" src="/assets/villa-magos-chef.webp" alt="Chef privé préparant un repas face à la piscine de Villa Magos" loading="lazy">
-      <img class="villaStoryFrame" data-scene="barman" src="/assets/villa-magos-barman.webp" alt="Barman préparant des cocktails au bord de la piscine au coucher du soleil" loading="lazy">
-      <img class="villaStoryFrame" data-scene="dj" src="/assets/villa-magos-dj.webp" alt="DJ aux platines pendant une soirée au bord de la piscine" loading="lazy">
+      <img class="villaStoryFrame is-active" data-slide="0" src="https://media.vrbo.com/lodging/125000000/124250000/124246600/124246600/3c99860b.jpg?impolicy=resizecrop&ra=fit&rw=1800" alt="Piscine et extérieur de La Villa Magos" fetchpriority="high">
+      <img class="villaStoryFrame" data-slide="1" src="/assets/villa-magos-chef.webp" alt="Expérience de chef privé à la villa" loading="lazy">
+      <img class="villaStoryFrame" data-slide="2" src="/assets/villa-magos-barman.webp" alt="Cocktails au bord de la piscine" loading="lazy">
+      <img class="villaStoryFrame" data-slide="3" src="/assets/villa-magos-dj.webp" alt="Ambiance DJ pour une soirée à la villa" loading="lazy">
     </div>
     <div class="villaStoryVignette"></div>
-    <div class="villaStoryCopy" aria-live="polite">
-      <div class="villaStoryKicker">Avec Malago</div>
-      <h2>Un chef privé,<br><em>chez vous.</em></h2>
-      <p>Le plaisir d’un repas préparé sur place, dans le décor de votre séjour.</p>
-      <a class="btn btnGold" href="#demande">Imaginer cette expérience <span>↗</span></a>
+    <div class="villaStoryCopy is-visible" aria-live="polite">
+      <div class="villaStoryKicker">La Villa Magos × Malago</div>
+      <h2 id="villaSlideTitle">Votre séjour,<br><em>en mieux.</em></h2>
+      <p id="villaSlideText">Une villa pour se retrouver. Malago vous aide à imaginer les expériences qui feront la différence.</p>
+      <a class="btn btnGold" href="#experiences">Découvrir les expériences <span>↘</span></a>
     </div>
-    <div class="villaStoryProgress" aria-hidden="true"><span class="villaStoryCount">02 / 04</span><span class="villaStoryProgressTrack"><i></i><i></i><i></i></span></div>
+    <div class="villaCarouselControls">
+      <button class="villaCarouselArrow" type="button" data-carousel-prev aria-label="Photo précédente">←</button>
+      <div class="villaCarouselDots" aria-label="Choisir une photo">
+        <button class="villaCarouselDot is-active" type="button" data-carousel-to="0" aria-label="Photo 1"></button>
+        <button class="villaCarouselDot" type="button" data-carousel-to="1" aria-label="Photo 2"></button>
+        <button class="villaCarouselDot" type="button" data-carousel-to="2" aria-label="Photo 3"></button>
+        <button class="villaCarouselDot" type="button" data-carousel-to="3" aria-label="Photo 4"></button>
+      </div>
+      <span class="villaCarouselCount">01 / 04</span>
+      <button class="villaCarouselArrow" type="button" data-carousel-next aria-label="Photo suivante">→</button>
+    </div>
+    <div class="villaCarouselScroll">DÉFILER POUR DÉCOUVRIR <span>↓</span></div>
   </div>
-  <div class="villaStoryStep" data-scene="chef" aria-label="Expérience avec un chef privé"></div>
-  <div class="villaStoryStep" data-scene="barman" aria-label="Expérience avec un barman privé"></div>
-  <div class="villaStoryStep" data-scene="dj" aria-label="Expérience avec un DJ privé"></div>
 </section>
 
 <section class="section dark" id="experiences"><div class="wrap"><div class="sectionHead"><div><div class="eyebrow">À vivre sur la Costa del Sol</div><h2>Des expériences pour tout votre groupe.</h2></div><p>Du moment calme à la grande sortie, sélectionnez ce qui vous tente. Nous affinons ensuite les options selon votre groupe et les dates.</p></div>
@@ -205,35 +244,37 @@ document.getElementById('stayForm').addEventListener('submit',async e=>{e.preven
 
 <script>
 (function(){
-  const story=document.querySelector('.villaStory');
-  if(!story) return;
-  const pin=story.querySelector('.villaStoryPin');
-  const kicker=story.querySelector('.villaStoryKicker');
-  const title=story.querySelector('.villaStoryCopy h2');
-  const paragraph=story.querySelector('.villaStoryCopy p');
-  const count=story.querySelector('.villaStoryCount');
-  const scenes={
-    chef:{title:'Un chef privé,<br><em>chez vous.</em>',text:'Le plaisir d’un repas préparé sur place, dans le décor de votre séjour.',n:'02 / 04'},
-    barman:{title:'Le bar à cocktails,<br><em>à la villa.</em>',text:'Un barman, de beaux produits et un apéritif qui se prolonge au coucher du soleil.',n:'03 / 04'},
-    dj:{title:'La piscine devient<br><em>votre soirée.</em>',text:'Un DJ, une ambiance soignée et chacun profite de la soirée à son rythme.',n:'04 / 04'}
-  };
-  function activate(scene){
-    if(!scene) return;
-    pin.dataset.scene=scene;
-    if(scene==='pool'){kicker.textContent='';title.innerHTML='';paragraph.textContent='';count.textContent='';return;}
-    const item=scenes[scene]; if(!item) return;
-    kicker.textContent='Avec Malago';
-    title.innerHTML=item.title;
-    paragraph.textContent=item.text;
-    count.textContent=item.n;
+  const root=document.querySelector('.villaHomeCarousel');
+  if(!root) return;
+  const pin=root.querySelector('.villaStoryPin');
+  const slides=[...root.querySelectorAll('.villaStoryFrame')];
+  const dots=[...root.querySelectorAll('.villaCarouselDot')];
+  const count=root.querySelector('.villaCarouselCount');
+  const title=root.querySelector('#villaSlideTitle');
+  const text=root.querySelector('#villaSlideText');
+  const copy=[
+    ['Votre séjour,<br><em>en mieux.</em>','Une villa pour se retrouver. Malago vous aide à imaginer les expériences qui feront la différence.'],
+    ['Le plaisir d’un chef,<br><em>à la villa.</em>','Petit-déjeuner, brunch, dîner ou repas à partager : composez une expérience autour de votre groupe.'],
+    ['Un cocktail au bord<br><em>de la piscine.</em>','Des instants détendus, un service soigné et le coucher du soleil en toile de fond.'],
+    ['La villa prend vie,<br><em>à votre rythme.</em>','Une ambiance musicale et des expériences pensées pour profiter ensemble de votre séjour.']
+  ];
+  let active=0, timer=null;
+  function show(index){
+    active=(index+slides.length)%slides.length;
+    slides.forEach((slide,i)=>{slide.classList.toggle('is-active',i===active);slide.setAttribute('aria-hidden',i===active?'false':'true')});
+    dots.forEach((dot,i)=>{dot.classList.toggle('is-active',i===active);dot.setAttribute('aria-pressed',i===active?'true':'false')});
+    title.innerHTML=copy[active][0];text.textContent=copy[active][1];
+    count.textContent=String(active+1).padStart(2,'0')+' / '+String(slides.length).padStart(2,'0');
   }
-  const steps=[...story.querySelectorAll('.villaStoryStep')];
-  if('IntersectionObserver' in window){
-    const observer=new IntersectionObserver(entries=>{
-      entries.forEach(entry=>{if(entry.isIntersecting) activate(entry.target.dataset.scene);});
-    },{root:null,rootMargin:'-42% 0px -42% 0px',threshold:0});
-    steps.forEach(step=>observer.observe(step));
-  }
+  function restart(){if(timer) clearInterval(timer);if(!window.matchMedia('(prefers-reduced-motion: reduce)').matches)timer=setInterval(()=>show(active+1),5500)}
+  root.querySelector('[data-carousel-prev]').addEventListener('click',()=>{show(active-1);restart()});
+  root.querySelector('[data-carousel-next]').addEventListener('click',()=>{show(active+1);restart()});
+  dots.forEach((dot,i)=>dot.addEventListener('click',()=>{show(i);restart()}));
+  root.addEventListener('mouseenter',()=>{if(timer)clearInterval(timer)});
+  root.addEventListener('mouseleave',restart);
+  root.addEventListener('focusin',()=>{if(timer)clearInterval(timer)});
+  root.addEventListener('focusout',restart);
+  show(0);restart();
 })();
 </script>
 
