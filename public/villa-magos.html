@@ -253,6 +253,112 @@ body.villa-home-pool .villaHomeCarousel .villaCarouselScroll{display:none!import
 }
 @media(prefers-reduced-motion:reduce){.villaHomeCarousel .villaStoryVignette{transition:none!important}}
 
+
+/* HERO mobile : image en haut, texte sur fond uni — aucune superposition */
+@media(max-width:650px){
+  .villaHomeCarousel .villaStoryPin{
+    height:calc(100svh - 12px)!important;
+    min-height:700px!important;
+    max-height:none!important;
+    background:#0b0b0b!important;
+    overflow:hidden!important;
+  }
+  .villaHomeCarousel .villaStoryFrames{
+    position:absolute!important;
+    inset:0 0 auto 0!important;
+    height:47%!important;
+    background:#0b0b0b!important;
+    overflow:hidden!important;
+  }
+  .villaHomeCarousel .villaStoryFrame{
+    height:100%!important;
+    width:100%!important;
+    object-fit:cover!important;
+    object-position:center 42%!important;
+    transform:none!important;
+  }
+  .villaHomeCarousel .villaStoryFrame[data-slide="0"]{object-position:center 50%!important}
+  .villaHomeCarousel .villaStoryVignette{
+    position:absolute!important;
+    inset:0!important;
+    height:51%!important;
+    background:linear-gradient(180deg,rgba(0,0,0,.03) 35%,rgba(11,11,11,.35) 72%,#0b0b0b 100%)!important;
+    opacity:1!important;
+  }
+  .villaHomeCarousel .villaStoryCopy{
+    position:absolute!important;
+    top:calc(47% + 14px)!important;
+    bottom:94px!important;
+    left:22px!important;
+    right:22px!important;
+    width:auto!important;
+    max-width:none!important;
+    padding:0!important;
+    display:flex!important;
+    flex-direction:column!important;
+    align-items:flex-start!important;
+    justify-content:flex-start!important;
+    gap:0!important;
+    text-shadow:none!important;
+    overflow:hidden!important;
+  }
+  .villaHomeCarousel .villaStoryKicker{
+    margin:0 0 9px!important;
+    font-size:10px!important;
+    letter-spacing:.19em!important;
+    line-height:1.4!important;
+    text-shadow:none!important;
+  }
+  .villaHomeCarousel .villaStoryCopy h2{
+    margin:0 0 10px!important;
+    max-width:100%!important;
+    font-size:clamp(31px,8.2vw,43px)!important;
+    line-height:1.02!important;
+    letter-spacing:-.045em!important;
+    text-wrap:balance!important;
+  }
+  .villaHomeCarousel .villaStoryCopy p{
+    margin:0 0 14px!important;
+    max-width:100%!important;
+    font-size:13px!important;
+    line-height:1.45!important;
+    color:rgba(255,255,255,.82)!important;
+    text-shadow:none!important;
+  }
+  .villaHomeCarousel .villaStoryCopy .btn{
+    min-height:44px!important;
+    padding:12px 17px!important;
+    font-size:10px!important;
+    letter-spacing:.12em!important;
+    white-space:normal!important;
+    max-width:100%!important;
+  }
+  .villaHomeCarousel .villaCarouselScroll{display:none!important}
+  .villaHomeCarousel .villaCarouselControls{
+    bottom:22px!important;
+    left:18px!important;
+    right:18px!important;
+    justify-content:center!important;
+    gap:9px!important;
+    z-index:12!important;
+  }
+  .villaHomeCarousel .villaCarouselArrow{width:34px!important;height:34px!important}
+  .villaHomeCarousel .villaCarouselCount{font-size:10px!important}
+  .villaHomeCarousel .villaCarouselDot{min-width:7px!important}
+  .villaHomeCarousel .villaCarouselDot.is-active{min-width:22px!important}
+  body:not(.villa-home-pool) .whatsappFloat{display:none!important}
+  body.villa-home-pool .villaHomeCarousel .villaStoryCopy,
+  body.villa-home-pool .villaHomeCarousel .villaStoryVignette{opacity:0!important;visibility:hidden!important}
+}
+@media(max-width:390px){
+  .villaHomeCarousel .villaStoryPin{min-height:660px!important}
+  .villaHomeCarousel .villaStoryFrames{height:43%!important}
+  .villaHomeCarousel .villaStoryVignette{height:47%!important}
+  .villaHomeCarousel .villaStoryCopy{top:calc(43% + 12px)!important;bottom:88px!important}
+  .villaHomeCarousel .villaStoryCopy h2{font-size:31px!important}
+  .villaHomeCarousel .villaStoryCopy p{font-size:12px!important}
+}
+
 </style>
 </head>
 <body class="villa-home-pool">
