@@ -261,6 +261,16 @@ document.getElementById('stayForm').addEventListener('submit',async e=>{e.preven
     ['La villa prend vie,<br><em>à votre rythme.</em>','Une ambiance musicale et des expériences pensées pour profiter ensemble de votre séjour.']
   ];
   let active=0, timer=null;
+  // Ne jamais laisser une diapositive noire si une photo locale manque ou échoue à charger.
+  const villaFallback=slides[0]?.src || '';
+  slides.forEach(slide=>{
+    slide.addEventListener('error',()=>{
+      if(slide.dataset.fallbackApplied==='1') return;
+      slide.dataset.fallbackApplied='1';
+      slide.src=villaFallback;
+      slide.classList.add('is-fallback');
+    });
+  });
   function show(index){
     active=(index+slides.length)%slides.length;
     slides.forEach((slide,i)=>{slide.classList.toggle('is-active',i===active);slide.setAttribute('aria-hidden',i===active?'false':'true')});
