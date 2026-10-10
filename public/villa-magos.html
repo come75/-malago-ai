@@ -428,6 +428,58 @@ body.villa-home-pool .villaHomeCarousel .villaCarouselScroll{display:none!import
   body.villa-home-pool .villaHomeCarousel .villaSwipeHint{top:auto!important;bottom:28px!important;right:20px!important}
 }
 
+
+/* Hiérarchie du message d'accueil : plus éditoriale, plus proche de la photo */
+@media(max-width:650px){
+  body.villa-home-pool .villaHomeCarousel .villaStoryCopy{
+    bottom:100px!important;
+    gap:0!important;
+    padding:0!important;
+    max-width:360px!important;
+  }
+  body.villa-home-pool .villaHomeCarousel .villaStoryKicker{
+    display:flex!important;align-items:center!important;gap:9px!important;
+    margin:0 0 13px!important;font-size:9px!important;
+    letter-spacing:.17em!important;line-height:1.35!important;
+    color:#f3ad4d!important;
+  }
+  body.villa-home-pool .villaHomeCarousel .villaStoryKicker:before{
+    content:"";display:block;width:23px;height:1px;background:#ee8405;flex:0 0 23px;
+  }
+  body.villa-home-pool .villaHomeCarousel .villaStoryCopy h2{
+    font-size:clamp(36px,9.4vw,46px)!important;
+    line-height:.99!important;letter-spacing:-.055em!important;
+    margin:0 0 13px!important;max-width:350px!important;
+    text-wrap:balance!important;
+  }
+  body.villa-home-pool .villaHomeCarousel .villaStoryCopy h2 em{
+    display:block!important;color:#f0ae58!important;
+    font-weight:400!important;
+  }
+  body.villa-home-pool .villaHomeCarousel .villaStoryCopy p{
+    font-size:13px!important;line-height:1.55!important;
+    letter-spacing:-.01em!important;max-width:320px!important;
+    color:rgba(255,255,255,.84)!important;
+  }
+  body.villa-home-pool .villaHomeCarousel .villaSwipeHint{
+    left:22px!important;right:22px!important;bottom:26px!important;
+    top:auto!important;justify-content:space-between!important;
+    font-size:9px!important;letter-spacing:.14em!important;
+  }
+}
+@media(min-width:651px){
+  body.villa-home-pool .villaHomeCarousel .villaStoryCopy{
+    max-width:620px!important;bottom:clamp(110px,15vh,170px)!important;
+  }
+  body.villa-home-pool .villaHomeCarousel .villaStoryCopy h2{
+    max-width:620px!important;font-size:clamp(54px,6vw,82px)!important;
+    line-height:.98!important;letter-spacing:-.045em!important;
+  }
+  body.villa-home-pool .villaHomeCarousel .villaStoryCopy p{
+    max-width:440px!important;font-size:16px!important;line-height:1.65!important;
+  }
+}
+
 </style>
 </head>
 <body class="villa-home-pool">
