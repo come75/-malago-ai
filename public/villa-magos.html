@@ -393,6 +393,41 @@ body.villa-home-pool .villaHomeCarousel .villaCarouselScroll{display:none!import
 }
 @media(prefers-reduced-motion:reduce){.villaHomeCarousel .villaSwipeHint{animation:none}}
 
+
+/* Message d'accueil : montrer que Villa Magos offre plus qu'un logement */
+@media(max-width:650px){
+  body.villa-home-pool .villaHomeCarousel .villaStoryCopy{
+    top:auto!important;
+    bottom:94px!important;
+    left:22px!important;right:22px!important;
+    height:auto!important;
+    display:flex!important;
+    opacity:1!important;
+    visibility:visible!important;
+    pointer-events:auto!important;
+    transform:none!important;
+    overflow:visible!important;
+    color:#fff!important;
+    text-shadow:0 2px 18px rgba(0,0,0,.45)!important;
+  }
+  body.villa-home-pool .villaHomeCarousel .villaStoryVignette{
+    height:100%!important;
+    background:linear-gradient(180deg,rgba(0,0,0,0) 38%,rgba(0,0,0,.12) 53%,rgba(0,0,0,.76) 100%)!important;
+    opacity:1!important;visibility:visible!important;
+  }
+  body.villa-home-pool .villaHomeCarousel .villaStoryKicker{display:block!important;color:#ffb04a!important}
+  body.villa-home-pool .villaHomeCarousel .villaStoryCopy h2{
+    display:block!important;font-size:clamp(34px,9vw,44px)!important;
+    line-height:1.02!important;margin:0 0 10px!important;max-width:360px!important;
+  }
+  body.villa-home-pool .villaHomeCarousel .villaStoryCopy p{
+    display:block!important;font-size:13px!important;line-height:1.5!important;
+    max-width:340px!important;margin:0!important;color:rgba(255,255,255,.94)!important;
+  }
+  body.villa-home-pool .villaHomeCarousel .villaStoryCopy .btn{display:none!important}
+  body.villa-home-pool .villaHomeCarousel .villaSwipeHint{top:auto!important;bottom:28px!important;right:20px!important}
+}
+
 </style>
 </head>
 <body class="villa-home-pool">
@@ -495,7 +530,7 @@ document.getElementById('stayForm').addEventListener('submit',async e=>{e.preven
   const text=root.querySelector('#villaSlideText');
   const cta=root.querySelector('.villaStoryCopy .btn');
   const copy=[
-    {kicker:'',title:'',text:'',cta:''},
+    {kicker:'LA VILLA MAGOS × MALAGO',title:'Bien plus qu’un<br><em>simple logement.</em>',text:'Une villa à vivre pleinement, avec des expériences pensées pour vous et votre groupe.',cta:''},
     {kicker:'AVEC MALAGO · À TABLE',title:'Les plaisirs d’un chef,<br><em>chez vous.</em>',text:'Des produits de saison, une belle table et un menu imaginé pour votre groupe — sans quitter la villa.',cta:'Imaginer mon expérience ↗'},
     {kicker:'AVEC MALAGO · COCKTAILS',title:'Le coucher du soleil,<br><em>un verre à la main.</em>',text:'Un barman prépare vos cocktails au bord de la piscine. Vous n’avez plus qu’à profiter du moment.',cta:'Imaginer mon expérience ↗'},
     {kicker:'AVEC MALAGO · SOIRÉE',title:'La villa change de rythme,<br><em>la soirée commence.</em>',text:'Un DJ, une playlist qui vous ressemble et une ambiance pensée pour votre groupe, du sunset jusqu’à la nuit.',cta:'Imaginer mon expérience ↗'}
