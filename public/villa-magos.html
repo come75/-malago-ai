@@ -536,6 +536,35 @@ body.villa-home-pool .villaHomeCarousel .villaCarouselScroll{display:none!import
   .villaHomeCarousel:not([data-current-slide="0"]) .villaStoryCopy p{font-size:12px!important}
 }
 
+
+/* Piscine : rapprocher le bloc éditorial de la photo comme sur les autres slides */
+@media(max-width:650px){
+  body.villa-home-pool .villaHomeCarousel .villaStoryCopy{
+    top:calc(47% + 22px)!important;
+    bottom:auto!important;
+    left:22px!important;right:22px!important;
+    height:auto!important;
+    max-height:none!important;
+    justify-content:flex-start!important;
+    overflow:visible!important;
+  }
+  body.villa-home-pool .villaHomeCarousel .villaStoryCopy .villaStoryKicker{margin-bottom:11px!important}
+  body.villa-home-pool .villaHomeCarousel .villaStoryCopy h2{
+    margin-bottom:11px!important;
+    font-size:clamp(34px,8.8vw,43px)!important;
+    line-height:1.01!important;
+  }
+  body.villa-home-pool .villaHomeCarousel .villaStoryCopy p{
+    max-width:330px!important;
+    margin-bottom:0!important;
+    font-size:13px!important;
+    line-height:1.5!important;
+  }
+}
+@media(max-width:390px){
+  body.villa-home-pool .villaHomeCarousel .villaStoryCopy{top:calc(43% + 18px)!important}
+}
+
 </style>
 </head>
 <body class="villa-home-pool">
