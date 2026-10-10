@@ -70,19 +70,87 @@
 .villaGalleryItem figcaption{position:absolute;left:12px;bottom:12px;padding:9px 12px;background:rgba(11,11,11,.72);color:white;font-size:10px;letter-spacing:.1em;text-transform:uppercase;backdrop-filter:blur(8px)}
 @media(max-width:700px){.villaGallery{padding:58px 0}.villaGalleryHead{display:block}.villaGalleryHead p{margin-top:15px}.villaGalleryGrid{grid-template-columns:1fr 1fr;grid-template-rows:240px 150px 150px}.villaGalleryItem:first-child{grid-column:span 2;grid-row:auto}}
 
+
+/* HERO IMMERSIF — la piscine, puis les expériences Malago */
+.villaStory{position:relative;height:400svh;background:#0b0d0b;color:#fff;isolation:isolate}
+.villaStoryPin{position:sticky;top:0;height:100svh;min-height:560px;overflow:hidden;background:#10110f}
+.villaStoryFrames,.villaStoryVignette{position:absolute;inset:0}
+.villaStoryFrame{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center 50%;opacity:0;transform:scale(1.018);transition:opacity .85s ease,transform 1.5s cubic-bezier(.2,.7,.2,1);will-change:opacity,transform}
+.villaStoryFrame[data-scene="pool"]{opacity:1;transform:scale(1)}
+.villaStoryPin[data-scene="chef"] .villaStoryFrame[data-scene="chef"],
+.villaStoryPin[data-scene="barman"] .villaStoryFrame[data-scene="barman"],
+.villaStoryPin[data-scene="dj"] .villaStoryFrame[data-scene="dj"]{opacity:1;transform:scale(1)}
+.villaStoryVignette{pointer-events:none;background:linear-gradient(0deg,rgba(8,10,9,.72),transparent 42%),linear-gradient(90deg,rgba(8,10,9,.22),transparent 66%);opacity:0;transition:opacity .55s ease}
+.villaStoryPin[data-scene="chef"] .villaStoryVignette,
+.villaStoryPin[data-scene="barman"] .villaStoryVignette,
+.villaStoryPin[data-scene="dj"] .villaStoryVignette{opacity:1}
+.villaStoryCopy{position:absolute;z-index:2;left:clamp(24px,7vw,100px);bottom:clamp(42px,9vh,100px);max-width:min(570px,82vw);opacity:0;transform:translateY(18px);transition:opacity .45s ease,transform .55s ease;pointer-events:none}
+.villaStoryPin[data-scene="chef"] .villaStoryCopy,
+.villaStoryPin[data-scene="barman"] .villaStoryCopy,
+.villaStoryPin[data-scene="dj"] .villaStoryCopy{opacity:1;transform:translateY(0);pointer-events:auto}
+.villaStoryKicker{display:flex;align-items:center;gap:10px;color:#f1d8a8;font-size:10px;letter-spacing:.22em;font-weight:800;text-transform:uppercase;margin-bottom:16px}
+.villaStoryKicker:before{content:"";display:block;width:26px;height:1px;background:currentColor}
+.villaStoryCopy h2{font-family:Georgia,"Times New Roman",serif;font-weight:400;letter-spacing:-.045em;font-size:clamp(42px,6vw,76px);line-height:.98;margin:0 0 16px;max-width:580px}
+.villaStoryCopy h2 em{font-weight:400;color:#f1d8a8}
+.villaStoryCopy p{max-width:420px;font-size:14px;line-height:1.75;color:rgba(255,255,255,.86);margin:0 0 23px}
+.villaStoryCopy .btn{pointer-events:auto}
+.villaStoryProgress{position:absolute;z-index:2;right:clamp(20px,4vw,58px);bottom:clamp(42px,9vh,100px);display:flex;align-items:center;gap:10px;color:rgba(255,255,255,.8);font-size:10px;letter-spacing:.16em;opacity:0;transition:opacity .3s}
+.villaStoryPin[data-scene="chef"] .villaStoryProgress,
+.villaStoryPin[data-scene="barman"] .villaStoryProgress,
+.villaStoryPin[data-scene="dj"] .villaStoryProgress{opacity:1}
+.villaStoryProgressTrack{display:flex;gap:4px}
+.villaStoryProgressTrack i{display:block;width:17px;height:2px;background:rgba(255,255,255,.42);transition:background .25s,width .25s}
+.villaStoryPin[data-scene="chef"] .villaStoryProgressTrack i:nth-child(1),
+.villaStoryPin[data-scene="barman"] .villaStoryProgressTrack i:nth-child(-n+2),
+.villaStoryPin[data-scene="dj"] .villaStoryProgressTrack i{background:#f1d8a8}
+.villaStoryStep{height:100svh;min-height:560px;pointer-events:none}
+@media(min-width:1000px){
+ .villaStoryFrame[data-scene="chef"]{object-position:center 58%}
+ .villaStoryFrame[data-scene="barman"]{object-position:center 53%}
+ .villaStoryFrame[data-scene="dj"]{object-position:center 54%}
+}
+@media(max-width:700px){
+ .villaStory{height:400svh}
+ .villaStoryPin{min-height:520px}
+ .villaStoryFrame{object-position:center center}
+ .villaStoryVignette{background:linear-gradient(0deg,rgba(8,10,9,.78),transparent 58%)}
+ .villaStoryCopy{left:22px;right:22px;bottom:64px;max-width:none}
+ .villaStoryCopy h2{font-size:clamp(41px,12vw,60px);margin-bottom:13px}
+ .villaStoryCopy p{font-size:13px;line-height:1.65;max-width:340px;margin-bottom:18px}
+ .villaStoryCopy .btn{font-size:10px;padding:14px 16px}
+ .villaStoryProgress{right:22px;bottom:32px;font-size:9px}
+}
+@media(prefers-reduced-motion:reduce){
+ .villaStoryFrame,.villaStoryVignette,.villaStoryCopy,.villaStoryProgress{transition:none}
+}
+
 </style>
 </head>
 <body>
 <header class="topbar"><div class="wrap"><a class="brand" href="#top">LA VILLA MAGOS <span>×</span> MALAGO</a><nav class="nav"><a href="#experiences">Expériences</a><a href="#adresses">Adresses</a><a href="#concierge">Conciergerie</a><a href="#demande">Votre séjour</a></nav><a class="navcta" href="#demande">Créer mon séjour ↗</a></div></header>
 <main id="top">
-<section class="hero"><div class="wrap heroInner"><div class="eyebrow">Le concierge privé de votre villa</div><h1>La Costa del Sol,<br><em>à votre façon.</em></h1><p class="heroText">Onze chambres, une seule adresse pour organiser le reste. Des expériences privées aux meilleures tables de Málaga, nous imaginons un séjour fluide, élégant et adapté à votre groupe.</p><div class="heroActions"><a class="btn btnGold" href="#experiences">Explorer les expériences <span>↗</span></a><a class="btn btnGlass" href="#demande">Composer votre séjour <span>→</span></a></div><a class="heroWhatsapp" href="https://wa.me/34613384566?text=Bonjour%20Malago%2C%20je%20souhaite%20des%20informations%20sur%20La%20Villa%20Magos." target="_blank" rel="noopener"><svg class="waIcon" viewBox="0 0 32 32" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"><path fill="currentColor" d="M16 .9A15 15 0 0 0 3.1 23.6L1 31l7.6-2A15 15 0 1 0 16 .9Zm0 27.3a12.2 12.2 0 0 1-6.2-1.7l-.4-.2-4.5 1.2 1.2-4.4-.3-.5A12.3 12.3 0 1 1 16 28.2Zm6.8-9.2c-.4-.2-2.3-1.1-2.7-1.2-.4-.1-.6-.2-.9.2-.3.4-1 1.2-1.2 1.5-.2.3-.5.3-.9.1-.4-.2-1.7-.6-3.2-2-.9-.8-1.5-1.8-1.7-2.2-.2-.4 0-.6.2-.8l.6-.7c.2-.2.3-.4.4-.7.1-.3 0-.5 0-.7s-.9-2.1-1.3-2.9c-.3-.8-.7-.7-.9-.7h-.8c-.3 0-.7.1-1 .5-.4.4-1.4 1.3-1.4 3.2s1.4 3.7 1.6 4c.2.3 2.8 4.2 6.7 5.9.9.4 1.7.6 2.2.8.9.3 1.8.3 2.4.2.7-.1 2.3-.9 2.7-1.8.3-.9.3-1.7.2-1.8-.1-.2-.4-.3-.8-.5Z"/></svg><span>Une question ? Écrivez-nous sur WhatsApp</span></a><div class="heroNote">La Villa Magos × Malago · Churriana, Málaga</div></div></section>
-<section class="villaGallery" id="villa"><div class="wrap"><div class="villaGalleryHead"><div><div class="eyebrow">La maison en images</div><h2>Un aperçu de La Villa Magos.</h2></div><p>La piscine, les espaces extérieurs et les lieux de vie de la propriété, pour vous projeter avant votre arrivée.</p></div><div class="villaGalleryGrid">
-<figure class="villaGalleryItem"><img src="https://media.vrbo.com/lodging/125000000/124250000/124246600/124246600/3c99860b.jpg?impolicy=resizecrop&ra=fit&rw=1200" alt="Piscine extérieure de La Villa Magos" fetchpriority="high"><figcaption>La piscine</figcaption></figure>
-<figure class="villaGalleryItem"><img loading="lazy" src="https://media.vrbo.com/lodging/125000000/124250000/124246600/124246600/d62d9fcc.jpg?impolicy=resizecrop&ra=fit&rw=900" alt="Extérieur de La Villa Magos"><figcaption>La propriété</figcaption></figure>
-<figure class="villaGalleryItem"><img loading="lazy" src="https://media.vrbo.com/lodging/125000000/124250000/124246600/124246600/abdb6ad9.jpg?impolicy=resizecrop&ra=fit&rw=900" alt="Jardin et espaces extérieurs de La Villa Magos"><figcaption>Les extérieurs</figcaption></figure>
-<figure class="villaGalleryItem"><img loading="lazy" src="https://media.vrbo.com/lodging/125000000/124250000/124246600/124246600/74ac9575.jpg?impolicy=resizecrop&ra=fit&rw=900" alt="Espace extérieur de La Villa Magos"><figcaption>Les espaces de détente</figcaption></figure>
-<figure class="villaGalleryItem"><img loading="lazy" src="https://media.vrbo.com/lodging/125000000/124250000/124246600/124246600/1b8dfce2.jpg?impolicy=resizecrop&ra=fit&rw=900" alt="Autre vue de la piscine de La Villa Magos"><figcaption>La villa au soleil</figcaption></figure>
-</div></div></section>
+<section class="villaStory" id="villa" aria-label="La piscine de Villa Magos et les expériences Malago">
+  <div class="villaStoryPin" data-scene="pool">
+    <div class="villaStoryFrames">
+      <img class="villaStoryFrame" data-scene="pool" src="https://media.vrbo.com/lodging/125000000/124250000/124246600/124246600/3c99860b.jpg?impolicy=resizecrop&ra=fit&rw=1800" alt="La piscine de Villa Magos, sans aménagement ajouté" fetchpriority="high">
+      <img class="villaStoryFrame" data-scene="chef" src="/assets/villa-magos-chef.webp" alt="Chef privé préparant un repas face à la piscine de Villa Magos" loading="lazy">
+      <img class="villaStoryFrame" data-scene="barman" src="/assets/villa-magos-barman.webp" alt="Barman préparant des cocktails au bord de la piscine au coucher du soleil" loading="lazy">
+      <img class="villaStoryFrame" data-scene="dj" src="/assets/villa-magos-dj.webp" alt="DJ aux platines pendant une soirée au bord de la piscine" loading="lazy">
+    </div>
+    <div class="villaStoryVignette"></div>
+    <div class="villaStoryCopy" aria-live="polite">
+      <div class="villaStoryKicker">Avec Malago</div>
+      <h2>Un chef privé,<br><em>chez vous.</em></h2>
+      <p>Le plaisir d’un repas préparé sur place, dans le décor de votre séjour.</p>
+      <a class="btn btnGold" href="#demande">Imaginer cette expérience <span>↗</span></a>
+    </div>
+    <div class="villaStoryProgress" aria-hidden="true"><span class="villaStoryCount">02 / 04</span><span class="villaStoryProgressTrack"><i></i><i></i><i></i></span></div>
+  </div>
+  <div class="villaStoryStep" data-scene="chef" aria-label="Expérience avec un chef privé"></div>
+  <div class="villaStoryStep" data-scene="barman" aria-label="Expérience avec un barman privé"></div>
+  <div class="villaStoryStep" data-scene="dj" aria-label="Expérience avec un DJ privé"></div>
+</section>
+
 <section class="section dark" id="experiences"><div class="wrap"><div class="sectionHead"><div><div class="eyebrow">À vivre sur la Costa del Sol</div><h2>Des expériences pour tout votre groupe.</h2></div><p>Du moment calme à la grande sortie, sélectionnez ce qui vous tente. Nous affinons ensuite les options selon votre groupe et les dates.</p></div>
 <div class="servicesGrid">
 <a class="service" href="#demande" data-service="Chef privé"><img loading="lazy" src="https://images.unsplash.com/photo-1556911220-e15b29be8c8f?auto=format&fit=crop&w=700&q=80" alt="Cuisine préparée par un chef"><span class="serviceNum">01 / À LA VILLA</span><div class="serviceText"><h3>Chef privé</h3><p>Petit-déjeuner & brunch, déjeuner, dîner à la villa ou chef présent sur la journée. Menus adaptés au groupe, tapas, paella et barbecue selon la formule.</p><span class="serviceLink">Choisir votre formule ↗</span></div></a>
@@ -134,5 +202,40 @@ document.getElementById('activityClose').addEventListener('click',closeActivity)
 
 document.getElementById('stayForm').addEventListener('submit',async e=>{e.preventDefault();const f=e.currentTarget;const checks=[...f.querySelectorAll('input[type="checkbox"]:checked')].map(x=>x.value);const data={dates:f.dates.value||'À préciser',groupe:f.group.value||'À préciser',budget:f.budget.value||'À préciser',occasion:f.occasion.value||'Séjour entre proches',envies:checks.length?checks.join(', '):'À définir',details:f.details.value||'Aucun détail supplémentaire'};const message='LA VILLA MAGOS × MALAGO — DEMANDE DE SÉJOUR\nDates : '+data.dates+'\nGroupe : '+data.groupe+'\nBudget : '+data.budget+'\nOccasion : '+data.occasion+'\nEnvies : '+data.envies+'\nDétails : '+data.details;try{await navigator.clipboard.writeText(message);document.getElementById('formHint').textContent='Votre demande a été copiée. Collez-la dans votre message à Malago pour continuer.'}catch(err){const box=document.createElement('textarea');box.value=message;box.style.width='100%';box.style.minHeight='180px';box.style.marginTop='12px';f.querySelector('#formHint').after(box);box.focus();box.select();document.getElementById('formHint').textContent='Copiez le récapitulatif ci-dessous et envoyez-le à votre contact Malago.'}});
 </script>
+
+<script>
+(function(){
+  const story=document.querySelector('.villaStory');
+  if(!story) return;
+  const pin=story.querySelector('.villaStoryPin');
+  const kicker=story.querySelector('.villaStoryKicker');
+  const title=story.querySelector('.villaStoryCopy h2');
+  const paragraph=story.querySelector('.villaStoryCopy p');
+  const count=story.querySelector('.villaStoryCount');
+  const scenes={
+    chef:{title:'Un chef privé,<br><em>chez vous.</em>',text:'Le plaisir d’un repas préparé sur place, dans le décor de votre séjour.',n:'02 / 04'},
+    barman:{title:'Le bar à cocktails,<br><em>à la villa.</em>',text:'Un barman, de beaux produits et un apéritif qui se prolonge au coucher du soleil.',n:'03 / 04'},
+    dj:{title:'La piscine devient<br><em>votre soirée.</em>',text:'Un DJ, une ambiance soignée et chacun profite de la soirée à son rythme.',n:'04 / 04'}
+  };
+  function activate(scene){
+    if(!scene) return;
+    pin.dataset.scene=scene;
+    if(scene==='pool'){kicker.textContent='';title.innerHTML='';paragraph.textContent='';count.textContent='';return;}
+    const item=scenes[scene]; if(!item) return;
+    kicker.textContent='Avec Malago';
+    title.innerHTML=item.title;
+    paragraph.textContent=item.text;
+    count.textContent=item.n;
+  }
+  const steps=[...story.querySelectorAll('.villaStoryStep')];
+  if('IntersectionObserver' in window){
+    const observer=new IntersectionObserver(entries=>{
+      entries.forEach(entry=>{if(entry.isIntersecting) activate(entry.target.dataset.scene);});
+    },{root:null,rootMargin:'-42% 0px -42% 0px',threshold:0});
+    steps.forEach(step=>observer.observe(step));
+  }
+})();
+</script>
+
 </body>
 </html>
