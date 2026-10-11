@@ -570,6 +570,13 @@ export default {
       return json({error:"Route introuvable."},404,headers);
     }
 
+    // Clean client-facing route: serve the existing Villa Magos experience at a dedicated stay URL.
+    // The private token remains in the URL fragment, which is not sent to the server.
+    if (request.method === "GET" && url.pathname === "/villa-magos/sejour") {
+      if (env?.ASSETS) return env.ASSETS.fetch(new Request(new URL("/villa-magos", url), request));
+      return new Response("Malago assets unavailable",{status:503,headers:{...headers,"Content-Type":"text/plain;charset=UTF-8"}});
+    }
+
     if (request.method === "GET") {
       if (env?.ASSETS) return env.ASSETS.fetch(request);
       return new Response("Malago assets unavailable",{status:503,headers:{...headers,"Content-Type":"text/plain;charset=UTF-8"}});
