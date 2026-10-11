@@ -6,6 +6,13 @@
   "cache": {"enabled": true},
   "ai": {"binding": "AI"},
   "assets": {"directory": "./public","binding": "ASSETS"},
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "malago-client-requests",
+      "database_id": "573e7ef9-f5be-4ad2-b807-8c6c23661a33"
+    }
+  ],
   "previews": {
     "ai": {"binding": "AI"},
     "assets": {"binding": "ASSETS"}
