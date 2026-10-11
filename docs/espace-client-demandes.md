@@ -39,10 +39,23 @@ Chaque changement d'état doit être daté et attribué à un acteur. Les transi
 - Prévoir une durée de conservation, une procédure d'export/suppression et des journaux d'accès adaptés.
 - Les secrets d'e-mail et WhatsApp restent dans les secrets Cloudflare, jamais dans le code ni le navigateur.
 
-## Architecture d'implémentation
+## API initiale préparée dans la branche de travail
 
-- Worker : routes API pour créer/lire une demande, consulter l'historique et mettre à jour les états.
-- D1 : séjours, jetons d'accès hachés, demandes et événements d'état.
+Les routes suivantes sont ajoutées au Worker, mais elles ne sont pas encore déployées ni validées en environnement Cloudflare :
+
+- `POST /api/admin/stays` : crée un séjour et génère un jeton d'accès privé valable 30 jours. Exige `Authorization: Bearer <MALAGO_ADMIN_TOKEN>`. Le jeton brut est affiché une seule fois ; seule son empreinte SHA-256 est stockée.
+- `GET /api/admin/requests` : liste les demandes. Exige le secret administrateur.
+- `POST /api/admin/requests/:id/status` : change le statut et écrit un événement d'historique. Exige le secret administrateur.
+- `GET /api/client/requests` : liste uniquement les demandes du séjour autorisé.
+- `POST /api/client/requests` : enregistre une demande pour le séjour autorisé.
+
+Les routes client exigent `Authorization: Bearer <jeton de séjour>`. Elles vérifient le hash du jeton, sa révocation, son expiration et l'état du séjour. Les catégories initialement acceptées sont `car_rental`, `airport_transfer`, `restaurant`, `activity`, `chef` et `other`.
+
+Le secret `MALAGO_ADMIN_TOKEN` doit être créé dans les secrets du Worker Cloudflare avant d'utiliser les routes administrateur. Ne pas envoyer ce secret dans le navigateur, ne pas le committer et ne pas le transmettre dans une capture d'écran.
+
+## Architecture restante
+
+- D1 : séjours, jetons d'accès hachés, demandes, événements et file de notifications.
 - Interface client : formulaire de demande, confirmation claire, liste et statut des demandes.
 - Interface Malago : file de demandes à traiter, filtres par statut/urgence, détail et actions de suivi.
 - Notifications : commencer par l'e-mail transactionnel ; ajouter WhatsApp Business API après configuration et validation des coûts. Le lien wa.me prérempli n'est pas une notification automatique.
@@ -50,7 +63,7 @@ Chaque changement d'état doit être daté et attribué à un acteur. Les transi
 
 ## Pré-requis avant mise en production
 
-La branche actuelle n'a pas de liaison D1 configurée dans `wrangler.jsonc`, ni d'API de demandes, ni de portail client authentifié. Il faut créer la base D1 et configurer ses identifiants/bindings dans l'environnement Cloudflare avant de tester le flux réel. Aucun endpoint ne doit prétendre enregistrer une demande tant que cette persistance n'est pas disponible.
+La branche de travail contient maintenant le binding D1 et une première API, mais ceux-ci ne sont pas fusionnés ni déployés. Le schéma de la migration a été aligné sur les tables créées manuellement dans D1. Il reste à vérifier la syntaxe et les requêtes, configurer le secret administrateur, tester les accès autorisés/refusés et relier une interface. Aucun flux réel ne doit être annoncé comme opérationnel avant ces tests.
 
 ## Découpage conseillé
 
