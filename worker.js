@@ -362,6 +362,18 @@ function json(data,status=200,headers={}) {
 
 
 const REQUEST_STATUSES = new Set(["received","in_review","awaiting_customer","quoted","accepted_by_customer","confirmed","declined","cancelled"]);
+// Explicit state machine: a customer acceptance is not a provider confirmation.
+// Terminal states cannot be silently reopened; create a new request if needed.
+const REQUEST_STATUS_TRANSITIONS = {
+  received: new Set(["in_review","awaiting_customer","declined","cancelled"]),
+  in_review: new Set(["awaiting_customer","quoted","declined","cancelled"]),
+  awaiting_customer: new Set(["in_review","quoted","declined","cancelled"]),
+  quoted: new Set(["in_review","awaiting_customer","accepted_by_customer","declined","cancelled"]),
+  accepted_by_customer: new Set(["in_review","confirmed","declined","cancelled"]),
+  confirmed: new Set(["cancelled"]),
+  declined: new Set(),
+  cancelled: new Set()
+};
 const REQUEST_CATEGORIES = new Set(["car_rental","airport_transfer","restaurant","activity","chef","other"]);
 async function sha256Hex(value) {
   const digest = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(value));
@@ -542,6 +554,10 @@ export default {
           const requestId=statusMatch[1];
           const current=await env.DB.prepare("SELECT status FROM client_requests WHERE id=?").bind(requestId).first();
           if (!current) return json({error:"Demande introuvable."},404,headers);
+          if (current.status===nextStatus) return json({ok:true,id:requestId,status:nextStatus,unchanged:true},200,headers);
+          if (!REQUEST_STATUS_TRANSITIONS[current.status]?.has(nextStatus)) {
+            return json({error:"Transition de statut interdite.",current_status:current.status,requested_status:nextStatus},409,headers);
+          }
           const eventDetails=current.status+" -> "+nextStatus+(note ? " | "+note : "");
           await env.DB.batch([
             env.DB.prepare("UPDATE client_requests SET status=?,updated_at=datetime('now') WHERE id=?").bind(nextStatus,requestId),
