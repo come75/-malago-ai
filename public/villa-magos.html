@@ -728,7 +728,7 @@ body.form-visible .mobileCta{
 </style>
 </head>
 <body class="villa-home-pool">
-<header class="topbar"><div class="wrap"><a class="brand brandFeaturing" href="#top" aria-label="Villa Magos × Malago"><img class="brandVillaLogo" src="/img/villa-magos-logo.PNG" alt="Villa Magos Málaga" width="144" height="45" loading="eager" decoding="async"><span class="brandFeaturingX" aria-hidden="true">×</span><img class="brandMalagoLogo" src="/img/malago-logo.webp" alt="Malago" width="260" height="93" loading="eager" decoding="async"></a><nav class="nav"><a href="#experiences">Expériences</a><a href="#experiences">Expériences</a><a href="#villa">La villa</a><a href="#experiences">Préparer mon séjour</a></nav><a class="navcta" href="#demande">Créer mon séjour ↗</a></div></header>
+<header class="topbar"><div class="wrap"><a class="brand brandFeaturing" href="#top" aria-label="Villa Magos × Malago"><img class="brandVillaLogo" src="/img/villa-magos-logo.PNG" alt="Villa Magos Málaga" width="144" height="45" loading="eager" decoding="async"><span class="brandFeaturingX" aria-hidden="true">×</span><img class="brandMalagoLogo" src="/img/malago-logo.webp" alt="Malago" width="260" height="93" loading="eager" decoding="async"></a><nav class="nav"><a href="#experiences">Expériences</a><a href="#experiences">Expériences</a><a href="#villa">La villa</a><a href="#experiences">Préparer mon séjour</a></nav><a class="navcta" href="#experiences">Choisir une expérience ↗</a></div></header>
 <main id="top">
 
 <section class="malagoExperienceHero" id="experiences" aria-label="Choisissez votre expérience">
@@ -894,7 +894,7 @@ document.getElementById('activityClose').addEventListener('click',closeActivity)
   if(!cta||!('IntersectionObserver' in window)) return;
   const watch=[
     [document.querySelector('#experiences'),'experiences-visible'],
-    [document.querySelector('#demande'),'form-visible']
+    [document.querySelector('#villa'),'villa-visible']
   ].filter(x=>x[0]);
   const visible=new Set();
   const observer=new IntersectionObserver(entries=>{
