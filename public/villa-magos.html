@@ -781,6 +781,41 @@ body.form-visible .mobileCta{
 @media(max-width:480px){.clientPortalSection{padding:58px 0 68px}.clientPortalIntro h2{font-size:42px}.clientPortalAccess{grid-template-columns:1fr;gap:15px;padding:22px}.clientPortalAccessMark{width:43px;height:43px}.clientPortalCard{padding:19px;border-radius:15px}.clientPortalRequestsHead{align-items:start}.clientPortalStatus{white-space:normal;text-align:center}}
 
 
+
+/* Expérience privée : le lien client ouvre une interface dédiée, sans la vitrine ni ses CTA flottants */
+html.client-portal-mode{scroll-behavior:auto}
+html.client-portal-mode body{background:var(--cream)}
+html.client-portal-mode .topbar{position:relative;top:auto;left:auto;right:auto;background:var(--dark);box-shadow:none;border-bottom:1px solid rgba(228,206,158,.18);padding:13px 0}
+html.client-portal-mode .topbar .wrap{max-width:1180px}
+html.client-portal-mode .topbar .nav,
+html.client-portal-mode .topbar .navcta{display:none!important}
+html.client-portal-mode main>section:not(#espace-client){display:none!important}
+html.client-portal-mode .footer,
+html.client-portal-mode .mobileCta,
+html.client-portal-mode .whatsappFloat,
+html.client-portal-mode .activityModal{display:none!important}
+html.client-portal-mode .clientPortalSection{display:block!important;padding:58px 0 76px;min-height:calc(100svh - 72px);scroll-margin-top:0;background:var(--cream)}
+html.client-portal-mode .clientPortalIntro{margin-bottom:30px}
+html.client-portal-mode .clientPortalIntro h2{font-size:clamp(39px,5.2vw,66px);margin:19px 0}
+html.client-portal-mode .clientPortalAccess,
+html.client-portal-mode .clientPortalCard{box-shadow:0 16px 48px rgba(23,25,21,.055)}
+html.client-portal-mode .clientPortalPrivate{margin-top:12px}
+html.client-portal-mode .wrap{width:min(1040px,calc(100% - 48px))}
+@media(max-width:650px){
+ html.client-portal-mode .topbar{padding:11px 0}
+ html.client-portal-mode .topbar .wrap{justify-content:flex-start}
+ html.client-portal-mode .brandVillaLogo{width:95px;height:32px}
+ html.client-portal-mode .brandMalagoLogo{width:78px;height:28px}
+ html.client-portal-mode .brandFeaturingX{font-size:19px}
+ html.client-portal-mode .clientPortalSection{padding:38px 0 52px;min-height:calc(100svh - 54px)}
+ html.client-portal-mode .clientPortalIntro{margin-bottom:26px}
+ html.client-portal-mode .clientPortalIntro h2{font-size:clamp(38px,10vw,48px);line-height:1.02;margin:16px 0}
+ html.client-portal-mode .clientPortalIntro p{font-size:14px;line-height:1.75}
+ html.client-portal-mode .clientPortalBrandNote{margin-top:20px}
+ html.client-portal-mode .clientPortalGrid{gap:14px}
+ html.client-portal-mode .clientPortalAccess{padding:22px}
+ html.client-portal-mode .clientPortalCard{padding:20px}
+}
 </style>
 </head>
 <body class="villa-home-pool">
@@ -1057,7 +1092,7 @@ document.getElementById('activityClose').addEventListener('click',closeActivity)
   const statuses={received:"Demande reçue",in_review:"En cours d’examen",awaiting_customer:"Votre réponse attendue",quoted:"Proposition envoyée",accepted_by_customer:"Proposition acceptée",confirmed:"Confirmée",declined:"Indisponible",cancelled:"Annulée"};
   const section=document.getElementById("espace-client"),access=document.getElementById("clientPortalAccess"),invalid=document.getElementById("clientPortalInvalid"),privateView=document.getElementById("clientPortalPrivate"),form=document.getElementById("clientPortalForm"),submit=document.getElementById("clientPortalSubmit"),message=document.getElementById("clientPortalMessage"),requests=document.getElementById("clientPortalRequests");
   let token="";
-  try{const params=new URLSearchParams(location.hash.slice(1));token=params.get("token")||"";if(token){sessionStorage.setItem(TOKEN_KEY,token);history.replaceState(null,"",location.pathname+location.search+"#espace-client")}else token=sessionStorage.getItem(TOKEN_KEY)||""}catch{}
+  try{const params=new URLSearchParams(location.hash.slice(1));token=params.get("token")||"";if(token){sessionStorage.setItem(TOKEN_KEY,token);document.documentElement.classList.add("client-portal-mode");history.replaceState(null,"",location.pathname+location.search+"#espace-client")}else{token=sessionStorage.getItem(TOKEN_KEY)||"";if(token)document.documentElement.classList.add("client-portal-mode")}}catch{}
   function showAccess(){access.hidden=false;invalid.hidden=true;privateView.hidden=true}
   function showInvalid(text){access.hidden=true;privateView.hidden=true;invalid.hidden=false;if(text)document.getElementById("clientPortalInvalidText").textContent=text}
   function notify(text,type){message.textContent=text;message.className="clientPortalMessage "+type;message.hidden=false}
