@@ -1,0 +1,219 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#102b28">
+  <title>Mon séjour — Malago</title>
+  <meta name="description" content="Retrouvez vos demandes et contactez l'équipe Malago pendant votre séjour.">
+  <style>
+    :root{color-scheme:light;--ink:#18332f;--muted:#687a75;--paper:#f6f5f0;--card:#fff;--line:#e4e7df;--green:#1d5148;--lime:#d5ee9c;--shadow:0 18px 50px #173a2c12}
+    *{box-sizing:border-box}body{margin:0;background:var(--paper);color:var(--ink);font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;line-height:1.5}
+    .top{background:#102b28;color:#fff;padding:22px 20px}.top-inner{max-width:960px;margin:auto;display:flex;align-items:center;justify-content:space-between;gap:20px}.brand{font-size:21px;font-weight:850;letter-spacing:.16em}.brand span{color:var(--lime)}.secure{font-size:12px;color:#d4e2da;display:flex;align-items:center;gap:8px}.dot{width:7px;height:7px;background:var(--lime);border-radius:50%}
+    main{max-width:960px;margin:0 auto;padding:44px 20px 70px}.eyebrow{font-size:11px;font-weight:800;letter-spacing:.17em;text-transform:uppercase;color:#5d786e}.intro{display:flex;justify-content:space-between;gap:24px;align-items:end;margin-bottom:28px}.intro h1{font-size:clamp(32px,5vw,48px);letter-spacing:-.045em;line-height:1.08;margin:10px 0 12px;font-weight:760}.intro p{color:var(--muted);margin:0;max-width:540px}.pill{background:#e8efd9;color:#31583f;border-radius:999px;padding:9px 13px;font-size:12px;font-weight:750;white-space:nowrap}
+    .layout{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(280px,.85fr);gap:20px;align-items:start}.card{background:var(--card);border:1px solid var(--line);border-radius:20px;padding:24px;box-shadow:var(--shadow)}.card h2{font-size:20px;letter-spacing:-.025em;margin:0 0 6px}.sub{font-size:13px;color:var(--muted);margin:0 0 22px}
+    label{display:block;font-size:13px;font-weight:750;margin:16px 0 7px}select,textarea{width:100%;font:inherit;color:var(--ink);background:#fcfcfa;border:1px solid #dce2d8;border-radius:12px;padding:13px 14px;outline:none}select:focus,textarea:focus{border-color:#5b8976;box-shadow:0 0 0 3px #5b89761c}textarea{min-height:126px;resize:vertical}button{font:inherit;cursor:pointer}.primary{width:100%;margin-top:18px;background:var(--green);color:#fff;border:0;border-radius:12px;padding:14px 18px;font-weight:800;transition:transform .15s,background .15s}.primary:hover{background:#28675a;transform:translateY(-1px)}button:disabled{opacity:.6;cursor:wait;transform:none}.hint{font-size:12px;color:var(--muted);margin:12px 0 0}.message{display:none;margin-top:14px;padding:12px 14px;border-radius:12px;font-size:13px}.message.show{display:block}.message.error{background:#fff0ed;color:#963c2f}.message.success{background:#edf6e5;color:#2e6238}
+    .requests-head{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:16px}.refresh{border:1px solid var(--line);background:#fff;border-radius:9px;padding:8px 10px;font-size:12px;font-weight:750}.request{padding:16px 0;border-top:1px solid var(--line)}.request:first-child{border-top:0;padding-top:0}.request-top{display:flex;align-items:start;justify-content:space-between;gap:12px}.request h3{font-size:14px;margin:0 0 5px}.date{font-size:11px;color:var(--muted)}.status{font-size:10px;font-weight:800;padding:5px 8px;border-radius:999px;background:#edf0eb;white-space:nowrap}.status.received{background:#fff1cf;color:#76530b}.status.confirmed{background:#e4f3dd;color:#2d6837}.status.declined,.status.cancelled{background:#fbe8e4;color:#934537}.desc{font-size:13px;color:#53645e;margin:10px 0 0;white-space:pre-wrap;overflow-wrap:anywhere}.empty{border:1px dashed #d9dfd5;border-radius:14px;padding:24px 16px;text-align:center;color:var(--muted);font-size:13px}.empty strong{display:block;color:var(--ink);margin-bottom:4px}.foot{font-size:12px;color:var(--muted);text-align:center;margin-top:24px}.hidden{display:none!important}
+    @media(max-width:720px){main{padding:30px 15px 48px}.intro{display:block}.pill{display:inline-block;margin-top:18px}.layout{grid-template-columns:1fr}.card{padding:20px}.top{padding:18px 16px}.secure{font-size:11px}}
+
+    /* Premium polish v2: calmer hierarchy, tighter rhythm, more concierge than dashboard */
+    :root{--ink:#17342f;--muted:#697973;--paper:#f7f6f1;--card:#fffefa;--line:#e6e8df;--green:#174f45;--lime:#d9eaa9;--shadow:0 12px 34px rgba(23,52,47,.055)}
+    body{background:radial-gradient(ellipse at 12% 0%,rgba(217,234,169,.20),transparent 35%),var(--paper);letter-spacing:-.008em}
+    .top{padding:17px 24px;background:#102b28}
+    .top-inner{max-width:1080px}
+    .brand{font-size:18px;letter-spacing:.19em}
+    main{max-width:1080px;padding:34px 24px 56px}
+    .eyebrow{font-size:10px;letter-spacing:.19em;color:#70857a}
+    .intro{align-items:center;margin-bottom:24px;gap:28px}
+    .intro h1{font-size:clamp(30px,3.7vw,42px);letter-spacing:-.05em;line-height:1.08;margin:9px 0 10px;font-weight:760}
+    .intro p{font-size:15px;line-height:1.7;max-width:570px}
+    .pill{background:#edf1df;border:1px solid #e1e8ce;color:#345b49;padding:10px 14px;font-size:11px;letter-spacing:.01em}
+    .layout{grid-template-columns:minmax(0,1.08fr) minmax(300px,.92fr);gap:16px}
+    .card{border:1px solid rgba(220,225,214,.9);border-radius:16px;padding:22px;box-shadow:var(--shadow)}
+    .card h2{font-size:18px;letter-spacing:-.035em;margin-bottom:5px}
+    .sub{font-size:12px;line-height:1.65;margin-bottom:18px}
+    label{font-size:12px;margin:14px 0 6px;letter-spacing:.005em}
+    select,textarea{border-color:#dfe4d9;background:#fffefa;border-radius:10px;padding:12px 13px;font-size:14px;transition:border-color .15s,box-shadow .15s}
+    textarea{min-height:112px}
+    select:focus,textarea:focus{border-color:#7b9c8a;box-shadow:0 0 0 3px rgba(91,137,118,.12)}
+    .primary{margin-top:14px;padding:13px 17px;border-radius:10px;font-size:13px;letter-spacing:.005em;box-shadow:0 5px 12px rgba(23,79,69,.12)}
+    .primary:hover{background:#226457}
+    .hint{font-size:11px;line-height:1.6}
+    .requests-head{align-items:center;margin-bottom:12px}
+    .refresh{border-radius:9px;padding:8px 11px;font-size:11px;color:#34564d;transition:background .15s}
+    .refresh:hover{background:#f5f7f0}
+    .request{padding:14px 0}
+    .request h3{font-size:13px;font-weight:750}
+    .status{font-size:10px;letter-spacing:.01em}
+    .desc{font-size:12px;line-height:1.7}
+    .empty{border-color:#dfe4d8;background:linear-gradient(135deg,#fffefa,#fbfcf7);border-radius:12px;padding:22px 16px;font-size:12px}
+    .empty strong{font-size:13px;font-weight:750}
+    .foot{font-size:11px;margin-top:20px}
+    @media(max-width:720px){
+      .top{padding:16px}
+      main{padding:26px 15px 40px}
+      .intro{margin-bottom:20px}
+      .intro h1{font-size:32px}
+      .intro p{font-size:14px}
+      .layout{grid-template-columns:1fr;gap:13px}
+      .card{padding:19px;border-radius:15px}
+      .pill{margin-top:15px}
+      .requests-head{align-items:start}
+    }
+
+    /* Villa Magos × Malago — identité partagée avec la vitrine premium */
+    :root{--ink:#171915;--muted:#686b62;--paper:#f5f1e8;--card:#fffdf8;--line:rgba(23,25,21,.13);--green:#075E54;--lime:#ffd19a;--gold:#EE8405;--shadow:0 18px 55px rgba(23,25,21,.07)}
+    body{background:var(--paper);color:var(--ink);font-family:Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;line-height:1.6}
+    .top{background:#0b0b0b;padding:19px 0;border-bottom:1px solid rgba(255,255,255,.1)}
+    .top-inner{max-width:1180px;width:calc(100% - 48px);margin:auto}
+    .brandFeaturing{display:flex;align-items:center;flex:0 0 auto;color:#fff;text-decoration:none}
+    .brandWordmark{font-family:Georgia,"Times New Roman",serif;font-size:19px;font-weight:400;letter-spacing:.055em;white-space:nowrap}
+    .brandWordmark i{font-style:normal;color:#e4ce9e;padding:0 5px}
+    .secure{font-size:10px;letter-spacing:.13em;text-transform:uppercase;color:rgba(245,241,232,.7)}
+    .dot{background:#EE8405}
+    .brandFeaturing:hover .brandWordmark{color:#e4ce9e}
+    #invalid h1{font-family:Georgia,"Times New Roman",serif;font-weight:400;font-size:clamp(34px,4.8vw,52px)!important;letter-spacing:-.04em;line-height:1.05}
+    .back-home{display:inline-flex;align-items:center;gap:10px;margin-top:24px;padding:13px 18px;border:1px solid rgba(23,25,21,.22);border-radius:99px;color:#171915;text-decoration:none;font-size:10px;letter-spacing:.1em;text-transform:uppercase;font-weight:800;transition:background .2s,border-color .2s}
+    .back-home:hover{background:#f8ead6;border-color:#EE8405}
+    .site-footer{background:#10110f;color:#fff;padding:24px;margin-top:30px}
+    .site-footer-inner{max-width:1180px;margin:auto;display:flex;align-items:center;justify-content:space-between;gap:18px;font-size:10px;letter-spacing:.08em;color:rgba(255,255,255,.65)}
+    .site-footer a{color:#e4ce9e;text-decoration:none}
+    @media(max-width:720px){.site-footer-inner{flex-direction:column;align-items:flex-start;gap:8px}}
+    main{max-width:1180px;padding:44px 24px 70px}
+    .eyebrow{font-size:10px;letter-spacing:.2em;color:#b86b08}
+    .intro{gap:30px;margin-bottom:28px}
+    .intro h1{font-family:Georgia,"Times New Roman",serif;font-weight:400;font-size:clamp(38px,5vw,60px);letter-spacing:-.045em;line-height:.99;margin:17px 0}
+    .intro p{font-size:14px;line-height:1.85;color:#686b62;max-width:540px}
+    .pill{background:#fff4e5;border:1px solid rgba(238,132,5,.28);color:#75440b;border-radius:99px;padding:10px 14px;font-size:10px;letter-spacing:.06em;text-transform:uppercase}
+    .layout{grid-template-columns:minmax(0,1.08fr) minmax(300px,.92fr);gap:16px}
+    .card{background:#fffdf8;border:1px solid rgba(23,25,21,.12);border-radius:20px;padding:26px;box-shadow:0 18px 55px rgba(23,25,21,.06)}
+    .card h2{font-family:Georgia,"Times New Roman",serif;font-size:29px;font-weight:400;letter-spacing:-.03em;margin:0 0 7px}
+    .sub{font-size:12px;line-height:1.75;color:#74766d;margin-bottom:20px}
+    label{font-size:10px;text-transform:uppercase;letter-spacing:.13em;font-weight:800;color:#77796f;margin:16px 0 8px}
+    select,textarea{background:transparent;border:1px solid #dedbd2;border-radius:11px;padding:14px 15px;color:#171915;font-size:14px}
+    select:focus,textarea:focus{border-color:#EE8405;box-shadow:0 0 0 3px rgba(238,132,5,.1)}
+    textarea{min-height:112px}
+    .primary{background:#EE8405;color:#171915;border-radius:99px;padding:16px 20px;font-size:10px;letter-spacing:.1em;text-transform:uppercase;font-weight:850;box-shadow:none}
+    .primary:hover{background:#ff9a19}
+    .hint,.foot{font-size:10px;line-height:1.75;color:#85877d}
+    .requests-head{align-items:center;margin-bottom:16px}
+    .refresh{border:1px solid rgba(23,25,21,.16);border-radius:99px;padding:10px 14px;background:transparent;color:#171915;font-size:10px;letter-spacing:.08em;text-transform:uppercase}
+    .refresh:hover{background:#fff4e5}
+    .request{border-top:1px solid rgba(23,25,21,.12)}
+    .request h3{font-family:Georgia,serif;font-size:18px;font-weight:400}
+    .date{font-size:10px;color:#85877d}
+    .status{border-radius:99px;font-size:9px;letter-spacing:.04em;text-transform:uppercase;background:#f0eee7;color:#55584f}
+    .status.received{background:#fff0dc;color:#8d5100}
+    .status.confirmed{background:#e3eee6;color:#075E54}
+    .status.declined,.status.cancelled{background:#f5e7e2;color:#934537}
+    .desc{font-size:12px;line-height:1.75;color:#686b62}
+    .empty{border:1px dashed rgba(23,25,21,.2);background:#faf8f1;border-radius:14px;padding:26px 16px;color:#74766d}
+    .empty strong{font-family:Georgia,serif;font-size:19px;font-weight:400;color:#171915}
+    .foot{margin-top:25px}
+    @media(max-width:720px){
+      .top{padding:15px 0}.top-inner{width:calc(100% - 30px);align-items:center}
+      .brandWordmark{font-size:16px;letter-spacing:.015em}
+      .secure{font-size:8px;letter-spacing:.08em;gap:6px}
+      main{padding:30px 15px 44px}
+      .intro h1{font-size:42px}
+      .intro p{font-size:13px}
+      .layout{grid-template-columns:1fr;gap:13px}
+      .card{padding:21px;border-radius:16px}
+      .card h2{font-size:26px}
+      .pill{margin-top:16px}
+    }
+  </style>
+</head>
+<body>
+  <header class="top"><div class="top-inner"><a class="brandFeaturing" href="/villa-magos" aria-label="Retour au site Villa Magos × Malago"><span class="brandWordmark">Villa Magos <i>×</i> Malago</span></a><div class="secure"><i class="dot"></i> Votre espace privé</div></div></header>
+  <main>
+    <div id="loading" class="card"><strong>Ouverture de votre espace…</strong><p class="sub" style="margin:6px 0 0">Nous vérifions votre lien sécurisé.</p></div>
+    <section id="portal" class="hidden">
+      <div class="intro"><div><div class="eyebrow">Votre séjour, en toute simplicité</div><h1>On s’occupe de vous.</h1><p>Envoyez vos demandes à l’équipe Malago et retrouvez ici leur avancement. Nous vous confirmerons toujours clairement ce qui est réellement réservé.</p></div><span class="pill">Votre concierge Malago</span></div>
+      <div class="layout">
+        <section class="card">
+          <h2>Faire une demande</h2><p class="sub">Dites-nous ce dont vous avez besoin. L’équipe revient vers vous avec les prochaines étapes.</p>
+          <form id="request-form">
+            <label for="category">De quoi avez-vous besoin ?</label>
+            <select id="category" name="category" required>
+              <option value="car_rental">Location de voiture</option><option value="airport_transfer">Transfert aéroport</option><option value="restaurant">Restaurant</option><option value="activity">Activité ou sortie</option><option value="chef">Chef à domicile</option><option value="other">Autre demande</option>
+            </select>
+            <label for="description">Précisez votre demande</label>
+            <textarea id="description" name="description" minlength="3" maxlength="3000" required placeholder="Ex. : nous aimerions une voiture automatique pour 4 personnes, du 12 au 16 juin…"></textarea>
+            <button id="submit" class="primary" type="submit">Envoyer ma demande</button>
+            <p class="hint">Votre demande sera transmise à l’équipe Malago. Elle ne constitue pas une réservation confirmée.</p>
+            <div id="form-message" class="message" role="status" aria-live="polite"></div>
+          </form>
+        </section>
+        <section class="card">
+          <div class="requests-head"><div><h2>Mes demandes</h2><p class="sub" style="margin:5px 0 0">Suivez leur avancement ici.</p></div><button id="refresh" class="refresh" type="button">Actualiser</button></div>
+          <div id="requests"><div class="empty">Chargement de vos demandes…</div></div>
+        </section>
+      </div>
+      <p class="foot">Un doute ou une urgence ? Répondez au message par lequel vous avez reçu votre lien Malago.</p>
+    </section>
+    <section id="invalid" class="card hidden"><div class="eyebrow">Accès privé</div><h1 style="font-size:30px;margin:10px 0">Ce lien n’est plus disponible</h1><p class="sub" style="margin-bottom:0">Pour protéger vos informations, cet espace est accessible uniquement avec votre lien personnel sécurisé. Si vous êtes déjà client, contactez votre interlocuteur Malago pour en recevoir un nouveau.</p><a class="back-home" href="/villa-magos">← Retour au site Villa Magos × Malago</a></section>
+  </main>
+  <footer class="site-footer"><div class="site-footer-inner"><span>VILLA MAGOS × MALAGO</span><a href="/villa-magos">Découvrir le site principal ↗</a><span>Conciergerie privée · Málaga</span></div></footer>
+<script>
+(() => {
+  const KEY = "malago_client_access_token";
+  const labels = {car_rental:"Location de voiture",airport_transfer:"Transfert aéroport",restaurant:"Restaurant",activity:"Activité ou sortie",chef:"Chef à domicile",other:"Autre demande"};
+  const statusLabels = {received:"Reçue",in_review:"En cours d’examen",awaiting_customer:"Votre réponse attendue",quoted:"Proposition envoyée",accepted_by_customer:"Proposition acceptée",confirmed:"Confirmée",declined:"Indisponible",cancelled:"Annulée"};
+  const loading = document.getElementById("loading"), portal = document.getElementById("portal"), invalid = document.getElementById("invalid");
+  const requestBox = document.getElementById("requests"), form = document.getElementById("request-form"), submit = document.getElementById("submit"), message = document.getElementById("form-message");
+  let token = "";
+  try {
+    const hash = new URLSearchParams(location.hash.slice(1));
+    token = hash.get("token") || "";
+    if (token) {
+      sessionStorage.setItem(KEY, token);
+      history.replaceState(null, "", location.pathname + location.search);
+    } else token = sessionStorage.getItem(KEY) || "";
+  } catch {}
+  function showMessage(text, kind) { message.textContent = text; message.className = "message show " + kind; }
+  async function api(path, options = {}) {
+    const response = await fetch(path, { ...options, headers: { "Authorization": "Bearer " + token, ...(options.body ? {"Content-Type":"application/json"} : {}), ...(options.headers || {}) }});
+    let data = {}; try { data = await response.json(); } catch {}
+    if (!response.ok) throw new Error(data.error || "Une erreur est survenue. Réessayez dans un instant.");
+    return data;
+  }
+  function renderRequests(items) {
+    if (!items.length) { requestBox.innerHTML = '<div class="empty"><strong>Aucune demande pour le moment</strong>Vos prochaines demandes apparaîtront ici.</div>'; return; }
+    requestBox.replaceChildren();
+    for (const item of items) {
+      const article = document.createElement("article"); article.className = "request";
+      const top = document.createElement("div"); top.className = "request-top";
+      const left = document.createElement("div"), title = document.createElement("h3"), date = document.createElement("div"), badge = document.createElement("span"), desc = document.createElement("p");
+      title.textContent = labels[item.category] || "Demande Malago";
+      const parsedDate = new Date(item.created_at);
+      date.className = "date"; date.textContent = Number.isNaN(parsedDate.getTime()) ? "" : parsedDate.toLocaleDateString("fr-FR",{day:"numeric",month:"short",year:"numeric"});
+      badge.className = "status " + item.status; badge.textContent = statusLabels[item.status] || "En traitement";
+      desc.className = "desc"; desc.textContent = item.description || "";
+      left.append(title,date); top.append(left,badge); article.append(top,desc); requestBox.append(article);
+    }
+  }
+  async function loadRequests() {
+    requestBox.innerHTML = '<div class="empty">Actualisation…</div>';
+    try { const data = await api("/api/client/requests"); renderRequests(data.requests || []); }
+    catch (err) { requestBox.innerHTML = ""; const empty = document.createElement("div"); empty.className = "empty"; empty.textContent = err.message; requestBox.append(empty); if (/invalide|expiré/i.test(err.message)) { sessionStorage.removeItem(KEY); portal.classList.add("hidden"); invalid.classList.remove("hidden"); } }
+  }
+  async function init() {
+    if (!token) { loading.classList.add("hidden"); invalid.classList.remove("hidden"); return; }
+    try { await api("/api/client/requests"); loading.classList.add("hidden"); portal.classList.remove("hidden"); await loadRequests(); }
+    catch { loading.classList.add("hidden"); invalid.classList.remove("hidden"); sessionStorage.removeItem(KEY); }
+  }
+  form.addEventListener("submit", async event => {
+    event.preventDefault(); submit.disabled = true; submit.textContent = "Envoi en cours…"; message.className = "message";
+    try {
+      await api("/api/client/requests",{method:"POST",body:JSON.stringify({category:document.getElementById("category").value,description:document.getElementById("description").value.trim()})});
+      form.reset(); showMessage("Votre demande est enregistrée. Elle n’est pas encore une réservation confirmée.","success"); await loadRequests();
+    } catch (err) { showMessage(err.message,"error"); }
+    finally { submit.disabled = false; submit.textContent = "Envoyer ma demande"; }
+  });
+  document.getElementById("refresh").addEventListener("click",loadRequests);
+  init();
+})();
+</script>
+</body>
+</html>

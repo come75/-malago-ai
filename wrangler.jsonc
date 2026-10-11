@@ -3,11 +3,36 @@
   "name": "test",
   "main": "worker.js",
   "compatibility_date": "2026-09-25",
-  "cache": {"enabled": true},
-  "ai": {"binding": "AI"},
-  "assets": {"directory": "./public","binding": "ASSETS"},
+  "cache": {
+    "enabled": true
+  },
+  "ai": {
+    "binding": "AI"
+  },
+  "assets": {
+    "directory": "./public",
+    "binding": "ASSETS"
+  },
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "malago-client-requests",
+      "database_id": "573e7ef9-f5be-4ad2-b807-8c6c23661a33"
+    }
+  ],
   "previews": {
-    "ai": {"binding": "AI"},
-    "assets": {"binding": "ASSETS"}
+    "ai": {
+      "binding": "AI"
+    },
+    "assets": {
+      "binding": "ASSETS"
+    },
+    "d1_databases": [
+      {
+        "binding": "DB",
+        "database_name": "malago-client-requests",
+        "database_id": "573e7ef9-f5be-4ad2-b807-8c6c23661a33"
+      }
+    ]
   }
 }
