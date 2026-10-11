@@ -528,13 +528,16 @@ export default {
           const parsed=await readJson(request);
           if (parsed.error) return json({error:parsed.error},parsed.status,headers);
           const nextStatus=sanitize(parsed.body?.status,40);
+          const note=sanitize(parsed.body?.note,1000);
           if (!REQUEST_STATUSES.has(nextStatus)) return json({error:"Statut invalide."},400,headers);
+          if (nextStatus==="confirmed" && note.length<5) return json({error:"Pour confirmer, ajoute une note attestant la confirmation réelle du prestataire."},400,headers);
           const requestId=statusMatch[1];
           const current=await env.DB.prepare("SELECT status FROM client_requests WHERE id=?").bind(requestId).first();
           if (!current) return json({error:"Demande introuvable."},404,headers);
+          const eventDetails=current.status+" -> "+nextStatus+(note ? " | "+note : "");
           await env.DB.batch([
             env.DB.prepare("UPDATE client_requests SET status=?,updated_at=datetime('now') WHERE id=?").bind(nextStatus,requestId),
-            env.DB.prepare("INSERT INTO client_request_events (id,request_id,event_type,details) VALUES (?,?,?,?)").bind(crypto.randomUUID(),requestId,"status_changed",current.status+" -> "+nextStatus)
+            env.DB.prepare("INSERT INTO client_request_events (id,request_id,event_type,details) VALUES (?,?,?,?)").bind(crypto.randomUUID(),requestId,"status_changed",eventDetails)
           ]);
           return json({ok:true,id:requestId,status:nextStatus},200,headers);
         }
