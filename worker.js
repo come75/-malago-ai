@@ -570,7 +570,13 @@ export default {
       return json({error:"Route introuvable."},404,headers);
     }
 
-    // Team-only interface for creating individual Villa Magos stay links. API actions still require the admin bearer token.\n    if (request.method === "GET" && url.pathname === "/villa-magos/admin") {\n      if (env?.ASSETS) return env.ASSETS.fetch(new Request(new URL("/villa-magos-admin.html", url), { method: "GET", headers: request.headers }));\n      return new Response("Malago assets unavailable",{status:503,headers:{...headers,"Content-Type":"text/plain;charset=UTF-8"}});\n    }\n\n    // Clean client-facing route: serve the existing Villa Magos experience at a dedicated stay URL.
+    // Team-only interface for creating individual Villa Magos stay links. API actions still require the admin bearer token.
+    if (request.method === "GET" && url.pathname === "/villa-magos/admin") {
+      if (env?.ASSETS) return env.ASSETS.fetch(new Request(new URL("/villa-magos-admin.html", url), { method: "GET", headers: request.headers }));
+      return new Response("Malago assets unavailable",{status:503,headers:{...headers,"Content-Type":"text/plain;charset=UTF-8"}});
+    }
+
+    // Clean client-facing route: serve the existing Villa Magos experience at a dedicated stay URL.
     // The private token remains in the URL fragment, which is not sent to the server.
     if (request.method === "GET" && url.pathname === "/villa-magos/sejour") {
       if (env?.ASSETS) return env.ASSETS.fetch(new Request(new URL("/villa-magos.html", url), { method: "GET", headers: request.headers }));
