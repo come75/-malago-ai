@@ -59,9 +59,9 @@ Les routes client exigent `Authorization: Bearer <jeton de séjour>`. Elles vér
 
 ### Interfaces ajoutées
 
-- `public/espace-client.html` : interface responsive client, formulaire de demande, historique et statut des demandes. Utilise le jeton privé du séjour.
-- `public/admin-demandes.html` : outil interne protégé par le secret administrateur ; création d'un séjour, affichage ponctuel du lien client, consultation de la file et changement de statut.
-- Les deux interfaces sont des pages statiques qui appellent l'API Worker ; elles ne nécessitent pas de framework supplémentaire.
+- `public/villa-magos.html` : espace client intégré directement à la vitrine Villa Magos, avec navigation commune, formulaire de demande, suivi des statuts et accès par jeton privé. Le lien client généré pointe vers `/villa-magos#token=...` ; le jeton est retiré de la barre d'adresse et conservé dans la session de l'onglet.
+- `public/admin-demandes.html` : outil interne protégé par le secret administrateur ; création d'un séjour, génération ponctuelle du lien vers la vitrine intégrée, consultation de la file et changement de statut.
+- `public/espace-client.html` reste présent comme ancienne interface autonome de compatibilité ; les nouveaux liens sont générés vers l'espace intégré à `public/villa-magos.html`.
 
 ### Vérification déjà effectuée
 
