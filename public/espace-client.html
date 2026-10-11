@@ -60,10 +60,65 @@
       .pill{margin-top:15px}
       .requests-head{align-items:start}
     }
+
+    /* Villa Magos × Malago — identité partagée avec la vitrine premium */
+    :root{--ink:#171915;--muted:#686b62;--paper:#f5f1e8;--card:#fffdf8;--line:rgba(23,25,21,.13);--green:#075E54;--lime:#ffd19a;--gold:#EE8405;--shadow:0 18px 55px rgba(23,25,21,.07)}
+    body{background:var(--paper);color:var(--ink);font-family:Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;line-height:1.6}
+    .top{background:#0b0b0b;padding:19px 0;border-bottom:1px solid rgba(255,255,255,.1)}
+    .top-inner{max-width:1180px;width:calc(100% - 48px);margin:auto}
+    .brandFeaturing{display:flex;align-items:center;gap:13px;flex:0 0 auto}
+    .brandVillaLogo{width:144px;height:45px;object-fit:contain;background:#f5f2eb;border-radius:5px;padding:4px 7px}
+    .brandMalagoLogo{width:108px;height:35px;object-fit:contain}
+    .brandFeaturingX{color:#ffd19a;font-family:Georgia,serif;font-size:25px;font-weight:400;line-height:1}
+    .secure{font-size:10px;letter-spacing:.13em;text-transform:uppercase;color:rgba(245,241,232,.7)}
+    .dot{background:#EE8405}
+    main{max-width:1180px;padding:44px 24px 70px}
+    .eyebrow{font-size:10px;letter-spacing:.2em;color:#b86b08}
+    .intro{gap:30px;margin-bottom:28px}
+    .intro h1{font-family:Georgia,"Times New Roman",serif;font-weight:400;font-size:clamp(38px,5vw,60px);letter-spacing:-.045em;line-height:.99;margin:17px 0}
+    .intro p{font-size:14px;line-height:1.85;color:#686b62;max-width:540px}
+    .pill{background:#fff4e5;border:1px solid rgba(238,132,5,.28);color:#75440b;border-radius:99px;padding:10px 14px;font-size:10px;letter-spacing:.06em;text-transform:uppercase}
+    .layout{grid-template-columns:minmax(0,1.08fr) minmax(300px,.92fr);gap:16px}
+    .card{background:#fffdf8;border:1px solid rgba(23,25,21,.12);border-radius:20px;padding:26px;box-shadow:0 18px 55px rgba(23,25,21,.06)}
+    .card h2{font-family:Georgia,"Times New Roman",serif;font-size:29px;font-weight:400;letter-spacing:-.03em;margin:0 0 7px}
+    .sub{font-size:12px;line-height:1.75;color:#74766d;margin-bottom:20px}
+    label{font-size:10px;text-transform:uppercase;letter-spacing:.13em;font-weight:800;color:#77796f;margin:16px 0 8px}
+    select,textarea{background:transparent;border:1px solid #dedbd2;border-radius:11px;padding:14px 15px;color:#171915;font-size:14px}
+    select:focus,textarea:focus{border-color:#EE8405;box-shadow:0 0 0 3px rgba(238,132,5,.1)}
+    textarea{min-height:112px}
+    .primary{background:#EE8405;color:#171915;border-radius:99px;padding:16px 20px;font-size:10px;letter-spacing:.1em;text-transform:uppercase;font-weight:850;box-shadow:none}
+    .primary:hover{background:#ff9a19}
+    .hint,.foot{font-size:10px;line-height:1.75;color:#85877d}
+    .requests-head{align-items:center;margin-bottom:16px}
+    .refresh{border:1px solid rgba(23,25,21,.16);border-radius:99px;padding:10px 14px;background:transparent;color:#171915;font-size:10px;letter-spacing:.08em;text-transform:uppercase}
+    .refresh:hover{background:#fff4e5}
+    .request{border-top:1px solid rgba(23,25,21,.12)}
+    .request h3{font-family:Georgia,serif;font-size:18px;font-weight:400}
+    .date{font-size:10px;color:#85877d}
+    .status{border-radius:99px;font-size:9px;letter-spacing:.04em;text-transform:uppercase;background:#f0eee7;color:#55584f}
+    .status.received{background:#fff0dc;color:#8d5100}
+    .status.confirmed{background:#e3eee6;color:#075E54}
+    .status.declined,.status.cancelled{background:#f5e7e2;color:#934537}
+    .desc{font-size:12px;line-height:1.75;color:#686b62}
+    .empty{border:1px dashed rgba(23,25,21,.2);background:#faf8f1;border-radius:14px;padding:26px 16px;color:#74766d}
+    .empty strong{font-family:Georgia,serif;font-size:19px;font-weight:400;color:#171915}
+    .foot{margin-top:25px}
+    @media(max-width:720px){
+      .top{padding:15px 0}.top-inner{width:calc(100% - 30px);align-items:center}
+      .brandFeaturing{gap:7px}.brandVillaLogo{width:92px;height:33px;padding:3px}.brandMalagoLogo{width:70px;height:26px}.brandFeaturingX{font-size:19px}
+      .secure{font-size:8px;letter-spacing:.08em;gap:6px}
+      main{padding:30px 15px 44px}
+      .intro h1{font-size:42px}
+      .intro p{font-size:13px}
+      .layout{grid-template-columns:1fr;gap:13px}
+      .card{padding:21px;border-radius:16px}
+      .card h2{font-size:26px}
+      .pill{margin-top:16px}
+    }
   </style>
 </head>
 <body>
-  <header class="top"><div class="top-inner"><div class="brand">MALA<span>GO</span></div><div class="secure"><i class="dot"></i> Espace privé</div></div></header>
+  <header class="top"><div class="top-inner"><a class="brandFeaturing" href="/villa-magos" aria-label="Villa Magos × Malago"><img class="brandVillaLogo" src="/img/villa-magos-logo.png?v=20261011" alt="Villa Magos Málaga" width="144" height="45"><span class="brandFeaturingX" aria-hidden="true">×</span><img class="brandMalagoLogo" src="/img/malago-logo.png?v=20261011" alt="Malago" width="108" height="35"></a><div class="secure"><i class="dot"></i> Votre espace privé</div></div></header>
   <main>
     <div id="loading" class="card"><strong>Ouverture de votre espace…</strong><p class="sub" style="margin:6px 0 0">Nous vérifions votre lien sécurisé.</p></div>
     <section id="portal" class="hidden">
