@@ -386,7 +386,6 @@ async function resolveStayToken(request, env) {
     "SELECT t.id AS token_id, t.stay_id, t.expires_at, t.revoked_at FROM stay_access_tokens t JOIN stays s ON s.id=t.stay_id WHERE t.token_hash=? AND s.status='active' LIMIT 1"
   ).bind(tokenHash).first();
   if (!row || row.revoked_at || !row.expires_at || Date.parse(row.expires_at) <= Date.now()) return {error:"Accès invalide ou expiré.",status:401};
-  await env.DB.prepare("UPDATE stay_access_tokens SET last_used_at=datetime('now') WHERE id=?").bind(row.token_id).run().catch(()=>{});
   return {stayId:row.stay_id,tokenId:row.token_id};
 }
 function adminAuthorized(request, env) {
