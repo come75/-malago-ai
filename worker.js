@@ -360,6 +360,58 @@ function json(data,status=200,headers={}) {
   return new Response(JSON.stringify(data),{status,headers:{"Content-Type":"application/json; charset=utf-8","Cache-Control":"no-store",...headers}});
 }
 
+const REQUEST_STATUSES = new Set(["received","in_review","awaiting_customer","quoted","accepted_by_customer","confirmed","declined","cancelled"]);
+// Explicit state machine: a customer acceptance is not a provider confirmation.
+// Terminal states cannot be silently reopened; create a new request if needed.
+const REQUEST_STATUS_TRANSITIONS = {
+  received: new Set(["in_review","awaiting_customer","declined","cancelled"]),
+  in_review: new Set(["awaiting_customer","quoted","declined","cancelled"]),
+  awaiting_customer: new Set(["in_review","quoted","declined","cancelled"]),
+  quoted: new Set(["in_review","awaiting_customer","accepted_by_customer","declined","cancelled"]),
+  accepted_by_customer: new Set(["in_review","confirmed","declined","cancelled"]),
+  confirmed: new Set(["cancelled"]),
+  declined: new Set(),
+  cancelled: new Set()
+};
+const REQUEST_CATEGORIES = new Set(["car_rental","airport_transfer","restaurant","activity","chef","other"]);
+async function sha256Hex(value) {
+  const digest = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(value));
+  return [...new Uint8Array(digest)].map(b => b.toString(16).padStart(2,"0")).join("");
+}
+function bearer(request) {
+  const value = request.headers.get("Authorization") || "";
+  const match = value.match(/^Bearer\s+(.+)$/i);
+  return match ? match[1].trim() : "";
+}
+async function readJson(request, maxBytes = 16000) {
+  const raw = await request.text();
+  if (new TextEncoder().encode(raw).byteLength > maxBytes) return {error:"Requête trop volumineuse.",status:413};
+  try { return {body:JSON.parse(raw)}; } catch { return {error:"JSON invalide.",status:400}; }
+}
+async function resolveStayToken(request, env) {
+  if (!env?.DB) return {error:"Base de données non configurée.",status:503};
+  const token = bearer(request);
+  if (token.length < 32 || token.length > 512) return {error:"Accès invalide ou expiré.",status:401};
+  const tokenHash = await sha256Hex(token);
+  const row = await env.DB.prepare(
+    "SELECT t.id AS token_id, t.stay_id, t.expires_at, t.revoked_at FROM stay_access_tokens t JOIN stays s ON s.id=t.stay_id WHERE t.token_hash=? AND s.status='active' LIMIT 1"
+  ).bind(tokenHash).first();
+  if (!row || row.revoked_at || !row.expires_at || Date.parse(row.expires_at) <= Date.now()) return {error:"Accès invalide ou expiré.",status:401};
+  return {stayId:row.stay_id,tokenId:row.token_id};
+}
+function adminAuthorized(request, env) {
+  const expected = clean(env?.MALAGO_ADMIN_TOKEN);
+  const supplied = bearer(request);
+  return Boolean(expected && supplied && supplied === expected);
+}
+async function adminJson(request, env) {
+  if (!env?.DB) return json({error:"Base de données non configurée."},503);
+  if (!clean(env?.MALAGO_ADMIN_TOKEN)) return json({error:"Secret MALAGO_ADMIN_TOKEN non configuré."},503);
+  if (!adminAuthorized(request,env)) return json({error:"Authentification administrateur requise."},401);
+  return null;
+}
+
+
 export default {
   async fetch(request, env) {
     const url = new URL(request.url);
@@ -416,6 +468,108 @@ export default {
         return json({error:"Impossible de charger les partenaires depuis Notion.",requestId},502,headers);
       }
     }
+    if (url.pathname.startsWith("/api/client/")) {
+      if (!["GET","POST"].includes(request.method)) return json({error:"Méthode non autorisée."},405,headers);
+      const auth = await resolveStayToken(request,env);
+      if (auth.error) return json({error:auth.error},auth.status,headers);
+      try {
+        if (request.method === "GET" && url.pathname === "/api/client/requests") {
+          const result = await env.DB.prepare(
+            "SELECT id, category, description, status, created_at, updated_at FROM client_requests WHERE stay_id=? ORDER BY created_at DESC LIMIT 100"
+          ).bind(auth.stayId).all();
+          return json({requests:result.results || []},200,headers);
+        }
+        if (request.method === "POST" && url.pathname === "/api/client/requests") {
+          const parsed = await readJson(request);
+          if (parsed.error) return json({error:parsed.error},parsed.status,headers);
+          const body = parsed.body || {};
+          const category = sanitize(body.category,40);
+          const description = sanitize(body.description,3000);
+          if (!REQUEST_CATEGORIES.has(category)) return json({error:"Catégorie de demande invalide."},400,headers);
+          if (description.length < 3) return json({error:"Précise ta demande en quelques mots."},400,headers);
+          const id = crypto.randomUUID();
+          await env.DB.batch([
+            env.DB.prepare("INSERT INTO client_requests (id,stay_id,category,description,status) VALUES (?,?,?,?,'received')").bind(id,auth.stayId,category,description),
+            env.DB.prepare("INSERT INTO client_request_events (id,request_id,event_type,details) VALUES (?,?,?,?)").bind(crypto.randomUUID(),id,"received","Demande créée par le client")
+          ]);
+          return json({ok:true,request:{id,category,description,status:"received"},message:"Demande enregistrée. Elle n’est pas une réservation confirmée."},201,headers);
+        }
+      } catch (error) {
+        const requestId=crypto.randomUUID(); console.error("Client requests API error",requestId,error);
+        return json({error:"Impossible de traiter la demande.",requestId},500,headers);
+      }
+      return json({error:"Route introuvable."},404,headers);
+    }
+
+    // Admin endpoints require the MALAGO_ADMIN_TOKEN secret in Worker settings.
+    if (url.pathname.startsWith("/api/admin/")) {
+      const denied = await adminJson(request,env);
+      if (denied) return json(JSON.parse(await denied.text()),denied.status,headers);
+      if (!env?.DB) return json({error:"Base de données non configurée."},503,headers);
+      try {
+        if (request.method === "POST" && url.pathname === "/api/admin/stays") {
+          const parsed=await readJson(request);
+          if (parsed.error) return json({error:parsed.error},parsed.status,headers);
+          const body=parsed.body || {};
+          const propertyName=sanitize(body.property_name,160);
+          const guestName=sanitize(body.guest_name,160);
+          const guestEmail=sanitize(body.guest_email,254);
+          const startDate=sanitize(body.start_date,10);
+          const endDate=sanitize(body.end_date,10);
+          const days=30;
+          if (!propertyName) return json({error:"property_name est obligatoire."},400,headers);
+          if (guestEmail && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(guestEmail)) return json({error:"Adresse e-mail invalide."},400,headers);
+          const id=crypto.randomUUID();
+          const rawToken=[...crypto.getRandomValues(new Uint8Array(32))].map(b=>b.toString(16).padStart(2,"0")).join("");
+          const tokenHash=await sha256Hex(rawToken);
+          const expiresAt=new Date(Date.now()+days*86400000).toISOString();
+          await env.DB.batch([
+            env.DB.prepare("INSERT INTO stays (id,property_name,guest_name,guest_email,start_date,end_date,status) VALUES (?,?,?,?,?,?, 'active')").bind(id,propertyName,guestName||null,guestEmail||null,startDate||null,endDate||null),
+            env.DB.prepare("INSERT INTO stay_access_tokens (id,stay_id,token_hash,expires_at) VALUES (?,?,?,?)").bind(crypto.randomUUID(),id,tokenHash,expiresAt)
+          ]);
+          return json({ok:true,stay:{id,property_name:propertyName,guest_name:guestName||null,start_date:startDate||null,end_date:endDate||null},access_token:rawToken,expires_at:expiresAt,warning:"Le jeton ne sera plus affiché. Transmets-le uniquement au client autorisé via un canal sécurisé."},201,headers);
+        }
+        const revokeMatch=url.pathname.match(/^\/api\/admin\/stays\/([0-9a-f-]+)\/revoke-tokens$/i);
+        if (request.method === "POST" && revokeMatch) {
+          const stayId=revokeMatch[1];
+          const stay=await env.DB.prepare("SELECT id FROM stays WHERE id=?").bind(stayId).first();
+          if (!stay) return json({error:"Séjour introuvable."},404,headers);
+          const result=await env.DB.prepare("UPDATE stay_access_tokens SET revoked_at=datetime('now') WHERE stay_id=? AND revoked_at IS NULL").bind(stayId).run();
+          return json({ok:true,revoked:result.meta?.changes || 0},200,headers);
+        }
+        if (request.method === "GET" && url.pathname === "/api/admin/requests") {
+          const result=await env.DB.prepare("SELECT r.id,r.stay_id,s.property_name,s.guest_name,r.category,r.description,r.status,r.created_at,r.updated_at FROM client_requests r JOIN stays s ON s.id=r.stay_id ORDER BY r.created_at DESC LIMIT 200").all();
+          return json({requests:result.results||[]},200,headers);
+        }
+        const statusMatch=url.pathname.match(/^\/api\/admin\/requests\/([0-9a-f-]+)\/status$/i);
+        if (request.method === "POST" && statusMatch) {
+          const parsed=await readJson(request);
+          if (parsed.error) return json({error:parsed.error},parsed.status,headers);
+          const nextStatus=sanitize(parsed.body?.status,40);
+          const note=sanitize(parsed.body?.note,1000);
+          if (!REQUEST_STATUSES.has(nextStatus)) return json({error:"Statut invalide."},400,headers);
+          if (nextStatus==="confirmed" && note.length<5) return json({error:"Pour confirmer, ajoute une note attestant la confirmation réelle du prestataire."},400,headers);
+          const requestId=statusMatch[1];
+          const current=await env.DB.prepare("SELECT status FROM client_requests WHERE id=?").bind(requestId).first();
+          if (!current) return json({error:"Demande introuvable."},404,headers);
+          if (current.status===nextStatus) return json({ok:true,id:requestId,status:nextStatus,unchanged:true},200,headers);
+          if (!REQUEST_STATUS_TRANSITIONS[current.status]?.has(nextStatus)) {
+            return json({error:"Transition de statut interdite.",current_status:current.status,requested_status:nextStatus},409,headers);
+          }
+          const eventDetails=current.status+" -> "+nextStatus+(note ? " | "+note : "");
+          await env.DB.batch([
+            env.DB.prepare("UPDATE client_requests SET status=?,updated_at=datetime('now') WHERE id=?").bind(nextStatus,requestId),
+            env.DB.prepare("INSERT INTO client_request_events (id,request_id,event_type,details) VALUES (?,?,?,?)").bind(crypto.randomUUID(),requestId,"status_changed",eventDetails)
+          ]);
+          return json({ok:true,id:requestId,status:nextStatus},200,headers);
+        }
+      } catch (error) {
+        const requestId=crypto.randomUUID(); console.error("Admin requests API error",requestId,error);
+        return json({error:"Impossible de traiter l’opération.",requestId},500,headers);
+      }
+      return json({error:"Route introuvable."},404,headers);
+    }
+
     if (request.method === "GET") {
       if (env?.ASSETS) return env.ASSETS.fetch(request);
       return new Response("Malago assets unavailable",{status:503,headers:{...headers,"Content-Type":"text/plain;charset=UTF-8"}});

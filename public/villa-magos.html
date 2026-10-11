@@ -725,10 +725,66 @@ body.form-visible .mobileCta{
 @media(max-width:650px){.malagoExperienceHero{padding:84px 0 42px}.malagoExperienceIntro{display:block;margin-bottom:20px}.malagoExperienceIntro h1{font-size:43px;margin-top:15px}.malagoExperienceIntro p{margin-top:13px;font-size:12px}.malagoExperienceGrid{gap:8px}.malagoExperienceTile{min-height:190px;padding:11px;border-radius:12px}.malagoExperienceTile h2{font-size:23px}.malagoExperienceTile p{font-size:10px}.malagoFlowTop{padding:12px 14px}.malagoFlowBody{padding:18px}.malagoFlowOptions{gap:8px}.malagoFlowOption{padding:11px;min-height:76px}.malagoFlowOption b{font-size:12px}.malagoFlowOption small{font-size:10px}.malagoFlowRow{position:sticky;bottom:0;background:#11110f;padding:9px 0 2px}.malagoFlowNext,.malagoFlowBack{padding:12px 14px}}
 @media(prefers-reduced-motion:reduce){.malagoExperienceTile,#malagoExperienceFlow,.malagoFlowOption{animation:none!important;transition:none!important}}
 
+/* Espace client intégré à la vitrine Villa Magos : mêmes tokens, mêmes composants, même navigation */
+.clientPortalSection{padding:100px 0 110px;background:#f5f1e8;scroll-margin-top:24px}
+.clientPortalIntro{display:flex;justify-content:space-between;align-items:end;gap:36px;margin-bottom:36px}
+.clientPortalIntro h2{font-family:Georgia,"Times New Roman",serif;font-weight:400;font-size:clamp(42px,5.2vw,68px);line-height:.99;letter-spacing:-.045em;margin:22px 0}
+.clientPortalIntro h2 em{font-weight:400;color:#a66a18}
+.clientPortalIntro p{max-width:530px;font-size:14px;line-height:1.85;color:#686b62;margin:0}
+.clientPortalBrandNote{display:flex;align-items:center;gap:13px;color:#686b62;font-size:10px;line-height:1.7;letter-spacing:.1em;text-transform:uppercase;white-space:nowrap;padding-bottom:7px}
+.clientPortalLock{display:grid;place-items:center;width:43px;height:43px;border:1px solid rgba(23,25,21,.2);border-radius:50%;font-size:20px;color:#a66a18}
+.clientPortalAccess{display:grid;grid-template-columns:64px minmax(0,1fr);gap:22px;align-items:start;padding:30px;background:#fffdf8;border:1px solid rgba(23,25,21,.13);border-radius:20px;box-shadow:0 15px 45px rgba(23,25,21,.045)}
+.clientPortalAccessMark{display:grid;place-items:center;width:52px;height:52px;border-radius:50%;background:#fff0dc;color:#9a5b00;font-family:Georgia,serif;font-size:26px}
+.clientPortalKicker,.clientPortalCardKicker{font-size:9px;letter-spacing:.2em;text-transform:uppercase;font-weight:800;color:#a66a18}
+.clientPortalAccess h3,.clientPortalWelcome h3,.clientPortalCard h3{font-family:Georgia,"Times New Roman",serif;font-weight:400;letter-spacing:-.025em}
+.clientPortalAccess h3{font-size:clamp(25px,3vw,34px);margin:9px 0 10px}
+.clientPortalAccess p{max-width:690px;color:#686b62;font-size:13px;line-height:1.85;margin:0 0 22px}
+.clientPortalAccess .btn{min-height:46px}
+.clientPortalPrivate{margin-top:25px}
+.clientPortalWelcome{display:flex;align-items:end;justify-content:space-between;gap:24px;margin-bottom:22px}
+.clientPortalWelcome h3{font-size:clamp(30px,4vw,44px);margin:10px 0}
+.clientPortalWelcome p{max-width:570px;color:#686b62;font-size:13px;line-height:1.8;margin:0}
+.clientPortalBadge{display:inline-flex;align-items:center;gap:9px;border:1px solid rgba(238,132,5,.25);background:#fff4e5;color:#75440b;padding:11px 14px;border-radius:99px;font-size:9px;letter-spacing:.1em;text-transform:uppercase;white-space:nowrap}
+.clientPortalBadge span{width:6px;height:6px;border-radius:50%;background:#EE8405}
+.clientPortalGrid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:16px;align-items:start}
+.clientPortalCard{min-width:0;background:#fffdf8;border:1px solid rgba(23,25,21,.13);border-radius:18px;padding:27px;box-shadow:0 15px 45px rgba(23,25,21,.045)}
+.clientPortalCard h3{font-size:26px;margin:8px 0}
+.clientPortalSub{font-size:12px;line-height:1.75;color:#686b62;margin:0 0 21px}
+.clientPortalField{margin:17px 0}
+.clientPortalField label{display:block;font-size:10px;letter-spacing:.13em;text-transform:uppercase;font-weight:800;color:#686b62;margin:0 0 9px}
+.clientPortalField select,.clientPortalField textarea{width:100%;border:1px solid #dedbd2;background:#fffdf8;color:#171915;border-radius:10px;padding:14px 15px;font-size:13px;outline:none}
+.clientPortalField select:focus,.clientPortalField textarea:focus{border-color:#EE8405;box-shadow:0 0 0 3px rgba(238,132,5,.1)}
+.clientPortalField textarea{min-height:130px;resize:vertical;line-height:1.65}
+.clientPortalSubmit{width:100%;min-height:49px}
+.clientPortalHint,.clientPortalFoot{font-size:10px;line-height:1.7;color:#85877d;margin:13px 0 0}
+.clientPortalMessage{margin-top:13px;padding:13px 14px;border-radius:10px;font-size:12px;line-height:1.6}
+.clientPortalMessage.success{display:block;background:#e3eee6;color:#075E54}
+.clientPortalMessage.error{display:block;background:#fff0ed;color:#963c2f}
+.clientPortalRequestsHead{display:flex;align-items:start;justify-content:space-between;gap:12px;margin-bottom:15px}
+.clientPortalRequestsHead h3{margin-bottom:5px}
+.clientPortalRequestsHead .clientPortalSub{margin-bottom:0}
+.clientPortalRefresh{border:1px solid rgba(23,25,21,.18);border-radius:99px;background:transparent;color:#171915;font-size:9px;letter-spacing:.08em;text-transform:uppercase;padding:11px 13px;min-height:40px;cursor:pointer}
+.clientPortalRefresh:hover{background:#fff4e5;border-color:#EE8405}
+.clientPortalRequest{padding:16px 0;border-top:1px solid rgba(23,25,21,.1)}
+.clientPortalRequest:first-child{border-top:0;padding-top:0}
+.clientPortalRequestTop{display:flex;align-items:start;justify-content:space-between;gap:12px}
+.clientPortalRequest h4{font-size:12px;font-weight:800;margin:0 0 5px}
+.clientPortalDate{font-size:10px;color:#85877d}
+.clientPortalStatus{font-size:9px;font-weight:800;letter-spacing:.04em;padding:6px 9px;border-radius:99px;background:#fff0dc;color:#75440b;white-space:nowrap}
+.clientPortalStatus.confirmed{background:#e3eee6;color:#075E54}
+.clientPortalStatus.declined,.clientPortalStatus.cancelled{background:#fbe8e4;color:#934537}
+.clientPortalDescription{font-size:12px;line-height:1.75;color:#686b62;margin:10px 0 0;white-space:pre-wrap;overflow-wrap:anywhere}
+.clientPortalEmpty{padding:22px 16px;border:1px dashed rgba(23,25,21,.2);border-radius:12px;text-align:center;font-size:12px;line-height:1.7;color:#686b62;background:#faf8f1}
+.clientPortalFoot{margin-top:18px}
+.clientPortalSection [hidden]{display:none!important}
+@media(max-width:850px){.clientPortalSection{padding:72px 0 80px}.clientPortalIntro{display:block}.clientPortalBrandNote{margin-top:24px}.clientPortalGrid{grid-template-columns:1fr;gap:13px}.clientPortalWelcome{display:block}.clientPortalBadge{margin-top:18px}.clientPortalCard{padding:22px}}
+@media(max-width:480px){.clientPortalSection{padding:58px 0 68px}.clientPortalIntro h2{font-size:42px}.clientPortalAccess{grid-template-columns:1fr;gap:15px;padding:22px}.clientPortalAccessMark{width:43px;height:43px}.clientPortalCard{padding:19px;border-radius:15px}.clientPortalRequestsHead{align-items:start}.clientPortalStatus{white-space:normal;text-align:center}}
+
+
 </style>
 </head>
 <body class="villa-home-pool">
-<header class="topbar"><div class="wrap"><a class="brand brandFeaturing" href="#top" aria-label="Villa Magos × Malago"><img class="brandVillaLogo" src="/img/villa-magos-logo.PNG" alt="Villa Magos Málaga" width="144" height="45" loading="eager" decoding="async"><span class="brandFeaturingX" aria-hidden="true">×</span><img class="brandMalagoLogo" src="/img/malago-logo.webp" alt="Malago" width="260" height="93" loading="eager" decoding="async"></a><nav class="nav"><a href="#experiences">Expériences</a><a href="#experiences">Expériences</a><a href="#villa">La villa</a><a href="#experiences">Préparer mon séjour</a></nav><a class="navcta" href="#experiences">Choisir une expérience ↗</a></div></header>
+<header class="topbar"><div class="wrap"><a class="brand brandFeaturing" href="#top" aria-label="Villa Magos × Malago"><img class="brandVillaLogo" src="/img/villa-magos-logo.PNG" alt="Villa Magos Málaga" width="144" height="45" loading="eager" decoding="async"><span class="brandFeaturingX" aria-hidden="true">×</span><img class="brandMalagoLogo" src="/img/malago-logo.webp" alt="Malago" width="260" height="93" loading="eager" decoding="async"></a><nav class="nav"><a href="#experiences">Expériences</a><a href="#experiences">Expériences</a><a href="#villa">La villa</a><a href="#experiences">Préparer mon séjour</a></nav><a class="navcta" href="#espace-client">Espace client ↗</a></div></header>
 <main id="top">
 
 <section class="malagoExperienceHero" id="experiences" aria-label="Choisissez votre expérience">
@@ -779,6 +835,28 @@ body.form-visible .mobileCta{
     </div>
   </div>
 </section>
+<section class="clientPortalSection" id="espace-client">
+  <div class="wrap">
+    <div class="clientPortalIntro">
+      <div><div class="eyebrow">Villa Magos × Malago · Accès privé</div><h2>Votre séjour,<br><em>en toute simplicité.</em></h2><p>Retrouvez vos demandes, transmettez vos envies à notre équipe et suivez leur avancement au même endroit.</p></div>
+      <div class="clientPortalBrandNote"><span class="clientPortalLock" aria-hidden="true">↗</span><span>Un espace personnel<br>réservé à nos voyageurs</span></div>
+    </div>
+    <div id="clientPortalAccess" class="clientPortalAccess"><div class="clientPortalAccessMark" aria-hidden="true">✳</div><div><div class="clientPortalKicker">Votre concierge privé</div><h3>Bienvenue dans votre espace personnel.</h3><p>Pour protéger vos informations, vos demandes ne sont accessibles qu’avec le lien privé transmis par l’équipe Malago. Ouvrez ce lien depuis votre message pour retrouver votre séjour.</p><a class="btn btnGold" href="https://wa.me/34613384566?text=Bonjour%20Malago%2C%20je%20souhaite%20recevoir%20mon%20lien%20priv%C3%A9%20pour%20l%E2%80%99espace%20client." target="_blank" rel="noopener">Recevoir mon lien privé <span>↗</span></a></div></div>
+    <div id="clientPortalInvalid" class="clientPortalAccess clientPortalInvalid" hidden><div class="clientPortalAccessMark" aria-hidden="true">!</div><div><div class="clientPortalKicker">Accès privé</div><h3>Ce lien n’est plus disponible.</h3><p id="clientPortalInvalidText">Le lien est absent, invalide ou expiré. Contactez votre interlocuteur Malago pour recevoir un nouveau lien sécurisé.</p><a class="btn btnGold" href="https://wa.me/34613384566?text=Bonjour%20Malago%2C%20j%E2%80%99ai%20besoin%20d%E2%80%99un%20nouveau%20lien%20pour%20mon%20espace%20client." target="_blank" rel="noopener">Contacter Malago <span>↗</span></a></div></div>
+    <div id="clientPortalPrivate" class="clientPortalPrivate" hidden>
+      <div class="clientPortalWelcome"><div><div class="clientPortalKicker">Votre séjour · Espace privé</div><h3>On s’occupe de vous.</h3><p>Envoyez-nous vos demandes. Nous vous confirmerons toujours clairement ce qui est réellement réservé.</p></div><span class="clientPortalBadge"><span></span> Votre concierge Malago</span></div>
+      <div class="clientPortalGrid">
+        <section class="clientPortalCard"><div class="clientPortalCardKicker">À votre service</div><h3>Faire une demande</h3><p class="clientPortalSub">Dites-nous ce dont vous avez besoin. Nous revenons vers vous avec les prochaines étapes.</p>
+          <form id="clientPortalForm"><div class="clientPortalField"><label for="clientPortalCategory">De quoi avez-vous besoin ?</label><select id="clientPortalCategory" name="category" required><option value="car_rental">Location de voiture</option><option value="airport_transfer">Transfert aéroport</option><option value="restaurant">Restaurant</option><option value="activity">Activité ou sortie</option><option value="chef">Chef à domicile</option><option value="other">Autre demande</option></select></div>
+          <div class="clientPortalField"><label for="clientPortalDescription">Précisez votre demande</label><textarea id="clientPortalDescription" name="description" minlength="3" maxlength="3000" required placeholder="Ex. : nous aimerions une voiture automatique pour 4 personnes, du 12 au 16 juin…"></textarea></div>
+          <button id="clientPortalSubmit" class="btn btnGold clientPortalSubmit" type="submit">Envoyer ma demande <span>↗</span></button><p class="clientPortalHint">Votre demande sera transmise à l’équipe Malago. Elle ne constitue pas une réservation confirmée.</p><div id="clientPortalMessage" class="clientPortalMessage" role="status" aria-live="polite" hidden></div></form>
+        </section>
+        <section class="clientPortalCard"><div class="clientPortalRequestsHead"><div><div class="clientPortalCardKicker">Votre suivi</div><h3>Mes demandes</h3><p class="clientPortalSub">Retrouvez ici leur avancement.</p></div><button id="clientPortalRefresh" class="clientPortalRefresh" type="button">Actualiser ↻</button></div><div id="clientPortalRequests"><div class="clientPortalEmpty">Chargement de vos demandes…</div></div></section>
+      </div><p class="clientPortalFoot">Les prestations sont confirmées uniquement après validation explicite du prestataire. Gardez ce lien privé.</p>
+    </div>
+  </div>
+</section>
+
 <footer class="footer"><div class="wrap"><a class="brand" href="#top">LA VILLA MAGOS <span>×</span> MALAGO</a><small>Guide privé des hôtes de La Villa Magos · Churriana, Málaga<br>Prestations soumises à confirmation, disponibilités et conditions des prestataires.</small><a class="navcta" href="https://test.malago.workers.dev/">Malago Guide ↗</a></div></footer>
 <div class="mobileCta"><a class="btn btnGold" href="#experiences">Choisir une expérience ↗</a></div>
 <a class="whatsappFloat" href="https://wa.me/34613384566?text=Bonjour%20Malago%2C%20je%20souhaite%20des%20informations%20sur%20les%20services%20de%20La%20Villa%20Magos." target="_blank" rel="noopener" aria-label="Contacter Malago sur WhatsApp"><svg class="waIcon" viewBox="0 0 32 32" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"><path fill="currentColor" d="M16 .9A15 15 0 0 0 3.1 23.6L1 31l7.6-2A15 15 0 1 0 16 .9Zm0 27.3a12.2 12.2 0 0 1-6.2-1.7l-.4-.2-4.5 1.2 1.2-4.4-.3-.5A12.3 12.3 0 1 1 16 28.2Zm6.8-9.2c-.4-.2-2.3-1.1-2.7-1.2-.4-.1-.6-.2-.9.2-.3.4-1 1.2-1.2 1.5-.2.3-.5.3-.9.1-.4-.2-1.7-.6-3.2-2-.9-.8-1.5-1.8-1.7-2.2-.2-.4 0-.6.2-.8l.6-.7c.2-.2.3-.4.4-.7.1-.3 0-.5 0-.7s-.9-2.1-1.3-2.9c-.3-.8-.7-.7-.9-.7h-.8c-.3 0-.7.1-1 .5-.4.4-1.4 1.3-1.4 3.2s1.4 3.7 1.6 4c.2.3 2.8 4.2 6.7 5.9.9.4 1.7.6 2.2.8.9.3 1.8.3 2.4.2.7-.1 2.3-.9 2.7-1.8.3-.9.3-1.7.2-1.8-.1-.2-.4-.3-.8-.5Z"/></svg><span>WhatsApp · Informations</span></a>
@@ -970,6 +1048,28 @@ document.getElementById('activityClose').addEventListener('click',closeActivity)
  
  $('#malagoExperienceCategories').addEventListener('click',e=>{const b=e.target.closest('[data-malago-cat]');if(b)openCat(b.dataset.malagoCat);});
  $('#malagoFlowClose').addEventListener('click',()=>{$('#malagoExperienceFlow').classList.remove('is-open');$('#malagoExperienceCategories').scrollIntoView({behavior:'smooth',block:'start'});});
+})();
+</script>
+<script>
+(function(){
+  const TOKEN_KEY="malago_client_access_token";
+  const labels={car_rental:"Location de voiture",airport_transfer:"Transfert aéroport",restaurant:"Restaurant",activity:"Activité ou sortie",chef:"Chef à domicile",other:"Autre demande"};
+  const statuses={received:"Demande reçue",in_review:"En cours d’examen",awaiting_customer:"Votre réponse attendue",quoted:"Proposition envoyée",accepted_by_customer:"Proposition acceptée",confirmed:"Confirmée",declined:"Indisponible",cancelled:"Annulée"};
+  const section=document.getElementById("espace-client"),access=document.getElementById("clientPortalAccess"),invalid=document.getElementById("clientPortalInvalid"),privateView=document.getElementById("clientPortalPrivate"),form=document.getElementById("clientPortalForm"),submit=document.getElementById("clientPortalSubmit"),message=document.getElementById("clientPortalMessage"),requests=document.getElementById("clientPortalRequests");
+  let token="";
+  try{const params=new URLSearchParams(location.hash.slice(1));token=params.get("token")||"";if(token){sessionStorage.setItem(TOKEN_KEY,token);history.replaceState(null,"",location.pathname+location.search+"#espace-client")}else token=sessionStorage.getItem(TOKEN_KEY)||""}catch{}
+  function showAccess(){access.hidden=false;invalid.hidden=true;privateView.hidden=true}
+  function showInvalid(text){access.hidden=true;privateView.hidden=true;invalid.hidden=false;if(text)document.getElementById("clientPortalInvalidText").textContent=text}
+  function notify(text,type){message.textContent=text;message.className="clientPortalMessage "+type;message.hidden=false}
+  async function api(path,options={}){const response=await fetch(path,{...options,cache:"no-store",headers:{"Authorization":"Bearer "+token,...(options.body?{"Content-Type":"application/json"}:{}),...(options.headers||{})}});let data={};try{data=await response.json()}catch{}if(!response.ok)throw new Error(data.error||"Une erreur est survenue. Réessayez dans un instant.");return data}
+  function render(items){requests.replaceChildren();if(!items.length){const empty=document.createElement("div");empty.className="clientPortalEmpty";empty.textContent="Aucune demande pour le moment. Vos prochaines demandes apparaîtront ici.";requests.append(empty);return}for(const item of items){const article=document.createElement("article");article.className="clientPortalRequest";const top=document.createElement("div");top.className="clientPortalRequestTop";const left=document.createElement("div"),title=document.createElement("h4"),date=document.createElement("div"),badge=document.createElement("span"),desc=document.createElement("p");title.textContent=labels[item.category]||"Demande Malago";const d=new Date(item.created_at);date.className="clientPortalDate";date.textContent=Number.isNaN(d.getTime())?"":d.toLocaleDateString("fr-FR",{day:"numeric",month:"short",year:"numeric"});badge.className="clientPortalStatus "+item.status;badge.textContent=statuses[item.status]||"En traitement";desc.className="clientPortalDescription";desc.textContent=item.description||"";left.append(title,date);top.append(left,badge);article.append(top,desc);requests.append(article)}}
+  async function load(){requests.replaceChildren();const loading=document.createElement("div");loading.className="clientPortalEmpty";loading.textContent="Actualisation de vos demandes…";requests.append(loading);try{const data=await api("/api/client/requests");render(data.requests||[])}catch(error){const text=error.message||"Impossible de charger vos demandes.";requests.replaceChildren();const empty=document.createElement("div");empty.className="clientPortalEmpty";empty.textContent=text;requests.append(empty);if(/invalide|expiré|accès/i.test(text)){sessionStorage.removeItem(TOKEN_KEY);token="";showInvalid(text)}}}
+  async function init(){if(!token){showAccess();return}try{await api("/api/client/requests");access.hidden=true;invalid.hidden=true;privateView.hidden=false;await load();if(location.hash==="#espace-client")setTimeout(()=>section.scrollIntoView({behavior:"smooth",block:"start"}),80)}catch{sessionStorage.removeItem(TOKEN_KEY);token="";showInvalid("Ce lien est absent, invalide ou expiré. Contactez votre interlocuteur Malago pour recevoir un nouveau lien sécurisé.")}}
+  form.addEventListener("submit",async event=>{event.preventDefault();submit.disabled=true;submit.innerHTML="Envoi en cours…";message.hidden=true;try{await api("/api/client/requests",{method:"POST",body:JSON.stringify({category:document.getElementById("clientPortalCategory").value,description:document.getElementById("clientPortalDescription").value.trim()})});form.reset();notify("Votre demande est enregistrée. Elle n’est pas encore une réservation confirmée.","success");await load()}catch(error){notify(error.message||"Impossible d’envoyer votre demande.","error")}finally{submit.disabled=false;submit.innerHTML="Envoyer ma demande <span>↗</span>"}});
+  document.getElementById("clientPortalRefresh").addEventListener("click",load);
+  document.querySelectorAll('a[href="#espace-client"]').forEach(link=>link.addEventListener("click",()=>{if(!token)showAccess()}));
+  if(location.hash==="#espace-client")setTimeout(()=>section.scrollIntoView({behavior:"smooth",block:"start"}),100);
+  init();
 })();
 </script>
 </body>
