@@ -27,7 +27,10 @@ Ce plan doit être exécuté sur un environnement de test, après configuration 
 ## Statuts et historique
 - [ ] Changer un statut via la route admin crée un événement d'historique.
 - [ ] Tentative de passer à `confirmed` sans note : réponse 400.
-- [ ] Passage à `confirmed` avec une note attestant la confirmation du prestataire : événement enregistré.
+- [ ] Passage à `confirmed` depuis `accepted_by_customer`, avec une note attestant la confirmation du prestataire : événement enregistré.
+- [ ] Tentative de passer directement de `received` à `confirmed` : réponse 409.
+- [ ] Tentative de rouvrir une demande `declined` ou `cancelled` : réponse 409.
+- [ ] Répéter le statut déjà actif : réponse 200 sans créer un doublon d'événement.
 - [ ] Vérifier que le site n'annonce jamais qu'une demande est une réservation simplement parce qu'elle a été envoyée.
 
 ## Critères de validation
