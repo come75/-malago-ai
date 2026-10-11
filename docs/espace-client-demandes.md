@@ -45,7 +45,8 @@ Les routes suivantes sont ajoutées au Worker, mais elles ne sont pas encore dé
 
 - `POST /api/admin/stays` : crée un séjour et génère un jeton d'accès privé valable 30 jours. Exige `Authorization: Bearer <MALAGO_ADMIN_TOKEN>`. Le jeton brut est affiché une seule fois ; seule son empreinte SHA-256 est stockée.
 - `GET /api/admin/requests` : liste les demandes. Exige le secret administrateur.
-- `POST /api/admin/requests/:id/status` : change le statut et écrit un événement d'historique. Exige le secret administrateur.
+- `POST /api/admin/requests/:id/status` : change le statut et écrit un événement d'historique. Exige le secret administrateur ; passer à `confirmed` exige une note attestant la confirmation réelle du prestataire.
+- `POST /api/admin/stays/:id/revoke-tokens` : révoque les jetons actifs d'un séjour. Exige le secret administrateur.
 - `GET /api/client/requests` : liste uniquement les demandes du séjour autorisé.
 - `POST /api/client/requests` : enregistre une demande pour le séjour autorisé.
 
