@@ -519,6 +519,14 @@ export default {
           ]);
           return json({ok:true,stay:{id,property_name:propertyName,guest_name:guestName||null,start_date:startDate||null,end_date:endDate||null},access_token:rawToken,expires_at:expiresAt,warning:"Le jeton ne sera plus affiché. Transmets-le uniquement au client autorisé via un canal sécurisé."},201,headers);
         }
+        const revokeMatch=url.pathname.match(/^\/api\/admin\/stays\/([0-9a-f-]+)\/revoke-tokens$/i);
+        if (request.method === "POST" && revokeMatch) {
+          const stayId=revokeMatch[1];
+          const stay=await env.DB.prepare("SELECT id FROM stays WHERE id=?").bind(stayId).first();
+          if (!stay) return json({error:"Séjour introuvable."},404,headers);
+          const result=await env.DB.prepare("UPDATE stay_access_tokens SET revoked_at=datetime('now') WHERE stay_id=? AND revoked_at IS NULL").bind(stayId).run();
+          return json({ok:true,revoked:result.meta?.changes || 0},200,headers);
+        }
         if (request.method === "GET" && url.pathname === "/api/admin/requests") {
           const result=await env.DB.prepare("SELECT r.id,r.stay_id,s.property_name,s.guest_name,r.category,r.description,r.status,r.created_at,r.updated_at FROM client_requests r JOIN stays s ON s.id=r.stay_id ORDER BY r.created_at DESC LIMIT 200").all();
           return json({requests:result.results||[]},200,headers);
