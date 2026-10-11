@@ -495,8 +495,8 @@ export default {
         if (!upstream.ok) return new Response("Villa Magos est temporairement indisponible.", {status:502,headers:{...headers,"Content-Type":"text/plain;charset=UTF-8"}});
         let page = await upstream.text();
         page = page
-          .replace(/src="\\/img\\/villa-magos-logo\\.png(?:\\?[^"]*)?"/g, 'src="https://raw.githubusercontent.com/come75/-malago-ai/villa-magos-premium/public/img/villa-magos-logo.png"')
-          .replace(/src="\\/img\\/malago-logo\\.png(?:\\?[^"]*)?"/g, 'src="https://raw.githubusercontent.com/come75/-malago-ai/villa-magos-premium/public/img/malago-logo.png"');
+          .replace(/src="\/img\/villa-magos-logo\.png(?:\?[^"]*)?"/g, 'src="https://raw.githubusercontent.com/come75/-malago-ai/villa-magos-premium/public/img/villa-magos-logo.png"')
+          .replace(/src="\/img\/malago-logo\.png(?:\?[^"]*)?"/g, 'src="https://raw.githubusercontent.com/come75/-malago-ai/villa-magos-premium/public/img/malago-logo.png"');
         return new Response(page, {status:200,headers:{...headers,"Content-Type":"text/html;charset=UTF-8","Cache-Control":"no-store"}});
       } catch (error) {
         console.error("Villa Magos page error", error);
