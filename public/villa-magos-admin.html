@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="robots" content="noindex,nofollow">
+<meta name="theme-color" content="#10110f">
+<title>Villa Magos · Créer un accès client</title>
+<style>
+:root{--ink:#171915;--muted:#74776e;--cream:#f5f2eb;--paper:#fffdf8;--gold:#c5a46d;--dark:#10110f;--line:rgba(23,25,21,.13);--red:#9c382c;--green:#356647}
+*{box-sizing:border-box}body{margin:0;background:var(--cream);color:var(--ink);font-family:Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;-webkit-font-smoothing:antialiased}.bar{background:var(--dark);color:var(--paper);padding:21px 24px}.barin{max-width:900px;margin:auto;display:flex;justify-content:space-between;gap:16px;align-items:center}.brand{font-size:11px;letter-spacing:.18em;text-transform:uppercase}.brand span{color:var(--gold)}.secure{font-size:10px;color:#d5c7a7;letter-spacing:.12em;text-transform:uppercase}.wrap{width:min(900px,calc(100% - 32px));margin:42px auto 70px}.eyebrow{font-size:10px;letter-spacing:.2em;text-transform:uppercase;font-weight:800;color:#9a7138}.intro h1{font-family:Georgia,serif;font-weight:400;letter-spacing:-.04em;font-size:clamp(35px,6vw,56px);line-height:1.03;margin:12px 0}.intro p{max-width:600px;color:var(--muted);line-height:1.75;font-size:14px}.layout{display:grid;grid-template-columns:1.1fr .9fr;gap:18px;margin-top:28px;align-items:start}.card{background:var(--paper);border:1px solid var(--line);border-radius:18px;padding:25px;box-shadow:0 15px 45px rgba(23,25,21,.04)}h2{font-family:Georgia,serif;font-size:25px;font-weight:400;margin:0 0 8px}.sub{font-size:12px;line-height:1.7;color:var(--muted);margin:0 0 20px}.field{margin:15px 0}.field label{display:block;font-size:10px;letter-spacing:.12em;text-transform:uppercase;font-weight:800;margin-bottom:8px}.field input{width:100%;border:1px solid var(--line);border-radius:9px;background:white;padding:13px 12px;min-height:46px;color:var(--ink)}.field input:focus{outline:2px solid #c5a46d66;border-color:var(--gold)}.twocol{display:grid;grid-template-columns:1fr 1fr;gap:12px}.btn{display:inline-flex;align-items:center;justify-content:center;gap:9px;border:0;border-radius:9px;padding:14px 17px;background:var(--dark);color:white;font-weight:700;font-size:12px;min-height:46px;cursor:pointer}.btn.gold{background:var(--gold);color:#171915}.btn:disabled{opacity:.55;cursor:wait}.wide{width:100%}.hint{font-size:11px;line-height:1.7;color:var(--muted);margin:13px 0 0}.message{padding:12px 13px;border-radius:9px;font-size:12px;line-height:1.65;margin-top:15px;overflow-wrap:anywhere}.error{background:#f8e8e4;color:var(--red)}.success{background:#e9f2e9;color:var(--green)}[hidden]{display:none!important}.result{margin-top:17px;padding-top:18px;border-top:1px solid var(--line)}.result h3{font-family:Georgia,serif;font-weight:400;font-size:22px;margin:0 0 8px}.linkbox{background:#f1eee6;padding:12px;border-radius:9px;font-size:11px;line-height:1.6;overflow-wrap:anywhere;margin:12px 0}.expiry{font-size:11px;color:var(--muted);line-height:1.6}.step{display:flex;gap:12px;margin:19px 0}.num{width:28px;height:28px;border-radius:50%;display:grid;place-items:center;flex:none;background:#f2e8d6;color:#8e652b;font-size:11px;font-weight:800}.step b{font-size:12px}.step p{font-size:11px;color:var(--muted);line-height:1.6;margin:4px 0 0}.warn{font-size:11px;line-height:1.7;color:#795b2c;background:#f5ecd9;border-radius:9px;padding:12px;margin-top:22px}@media(max-width:700px){.wrap{margin:27px auto 45px}.layout{grid-template-columns:1fr}.card{padding:20px}.barin{align-items:flex-start;flex-direction:column;gap:8px}.twocol{gap:9px}}
+</style>
+</head>
+<body>
+<header class="bar"><div class="barin"><div class="brand">LA VILLA MAGOS <span>×</span> MALAGO</div><div class="secure">Administration · Accès sécurisé</div></div></header>
+<main class="wrap">
+<div class="intro"><div class="eyebrow">Espace équipe · Villa Magos uniquement</div><h1>Créer l’accès<br>à un séjour.</h1><p>Un seul modèle pour tous les voyageurs. Renseigne les informations du séjour pour générer un lien privé individuel à transmettre au client.</p></div>
+<div class="layout">
+<section class="card">
+<h2>Nouveau séjour</h2><p class="sub">Les champs nom et dates aident à identifier le séjour. L’e-mail est facultatif pour cette première version.</p>
+<form id="stayForm">
+<div class="field"><label for="adminToken">Clé d’administration</label><input id="adminToken" type="password" autocomplete="current-password" required placeholder="Clé fournie par l’administrateur"></div>
+<div class="field"><label for="guestName">Nom du client</label><input id="guestName" name="guest_name" autocomplete="name" placeholder="Ex. : Alex Martin"></div>
+<div class="field"><label for="guestEmail">E-mail du client</label><input id="guestEmail" name="guest_email" type="email" autocomplete="email" placeholder="client@exemple.com"></div>
+<div class="twocol"><div class="field"><label for="startDate">Arrivée</label><input id="startDate" name="start_date" type="date"></div><div class="field"><label for="endDate">Départ</label><input id="endDate" name="end_date" type="date"></div></div>
+<button class="btn gold wide" id="createBtn" type="submit">Créer le lien privé <span>↗</span></button>
+<p class="hint">Le lien donne accès aux informations du séjour. Transmets-le uniquement au client concerné.</p>
+<div id="formMessage" class="message" role="status" aria-live="polite" hidden></div>
+<div id="result" class="result" hidden><h3>Le lien est prêt.</h3><p class="sub">Copie-le et transmets-le au voyageur par un canal privé. Il ne sera pas réaffiché si tu quittes cette page.</p><div class="linkbox" id="generatedLink"></div><button class="btn wide" id="copyBtn" type="button">Copier le lien</button><p id="copyMessage" class="hint" aria-live="polite"></p><p class="expiry" id="expires"></p></div>
+</form>
+</section>
+<aside class="card"><div class="eyebrow">Comment ça marche</div><h2>Un modèle, un lien par client.</h2>
+<div class="step"><div class="num">01</div><div><b>Tu crées le séjour</b><p>Tu saisis les informations utiles une seule fois.</p></div></div>
+<div class="step"><div class="num">02</div><div><b>Malago génère un accès unique</b><p>Les demandes envoyées depuis ce lien sont associées à ce séjour précis.</p></div></div>
+<div class="step"><div class="num">03</div><div><b>Le client utilise son espace</b><p>Il découvre les services et retrouve ses demandes dans son espace privé.</p></div></div>
+<div class="warn"><b>Important.</b> Pour le moment, le lien privé est valable 30 jours et sert de preuve d’accès. La vérification par e-mail et le compte client durable seront ajoutés dans une prochaine étape. Ne partage pas ce lien avec une autre personne.</div>
+</aside>
+</div>
+</main>
+<script>
+(function(){
+const form=document.getElementById("stayForm"),tokenField=document.getElementById("adminToken"),button=document.getElementById("createBtn"),message=document.getElementById("formMessage"),result=document.getElementById("result"),linkBox=document.getElementById("generatedLink"),copyBtn=document.getElementById("copyBtn"),copyMessage=document.getElementById("copyMessage"),expires=document.getElementById("expires");
+let latestLink="";
+function say(text,type){message.textContent=text;message.className="message "+type;message.hidden=false}
+form.addEventListener("submit",async e=>{
+e.preventDefault();result.hidden=true;message.hidden=true;copyMessage.textContent="";
+const token=tokenField.value.trim();if(!token){say("Saisis la clé d’administration.", "error");return}
+const start=document.getElementById("startDate").value,end=document.getElementById("endDate").value;
+if(start&&end&&end<start){say("La date de départ doit être postérieure ou égale à la date d’arrivée.","error");return}
+button.disabled=true;button.textContent="Création en cours…";
+try{
+const response=await fetch("/api/admin/stays",{method:"POST",cache:"no-store",headers:{"Authorization":"Bearer "+token,"Content-Type":"application/json"},body:JSON.stringify({property_name:"Villa Magos",guest_name:document.getElementById("guestName").value.trim(),guest_email:document.getElementById("guestEmail").value.trim(),start_date:start,end_date:end})});
+let data={};try{data=await response.json()}catch{}
+if(!response.ok)throw new Error(data.error||"Impossible de créer le séjour.");
+latestLink=location.origin+"/villa-magos/sejour#token="+encodeURIComponent(data.access_token);
+linkBox.textContent=latestLink;
+const d=new Date(data.expires_at);expires.textContent="Accès valable jusqu’au "+(Number.isNaN(d.getTime())?"dans 30 jours":d.toLocaleDateString("fr-FR",{day:"numeric",month:"long",year:"numeric"}))+".";
+result.hidden=false;say("Séjour créé. Copie maintenant le lien et transmets-le au client concerné.","success");
+}catch(err){say(err.message||"Erreur de connexion. Réessaie.","error")}
+finally{button.disabled=false;button.innerHTML='Créer le lien privé <span>↗</span>'}
+});
+copyBtn.addEventListener("click",async()=>{
+if(!latestLink)return;
+try{await navigator.clipboard.writeText(latestLink);copyMessage.textContent="Lien copié. Envoie-le uniquement au client concerné."}
+catch{copyMessage.textContent="La copie automatique n’est pas disponible : sélectionne et copie le lien affiché ci-dessus."}
+});
+})();
+</script>
+</body>
+</html>
