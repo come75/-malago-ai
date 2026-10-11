@@ -486,6 +486,24 @@ export default {
 
     if (request.method === "OPTIONS") return new Response(null,{status:204,headers});
 
+    // Villa Magos premium landing page (hosted in the dedicated design branch).
+    if (request.method === "GET" && (url.pathname === "/villa-magos" || url.pathname === "/villa-magos/")) {
+      try {
+        const upstream = await fetch("https://raw.githubusercontent.com/come75/-malago-ai/villa-magos-premium/public/villa-magos.html", {
+          headers: { "Accept": "text/html" }
+        });
+        if (!upstream.ok) return new Response("Villa Magos est temporairement indisponible.", {status:502,headers:{...headers,"Content-Type":"text/plain;charset=UTF-8"}});
+        let page = await upstream.text();
+        page = page
+          .replace(/src="\\/img\\/villa-magos-logo\\.png(?:\\?[^"]*)?"/g, 'src="https://raw.githubusercontent.com/come75/-malago-ai/villa-magos-premium/public/img/villa-magos-logo.png"')
+          .replace(/src="\\/img\\/malago-logo\\.png(?:\\?[^"]*)?"/g, 'src="https://raw.githubusercontent.com/come75/-malago-ai/villa-magos-premium/public/img/malago-logo.png"');
+        return new Response(page, {status:200,headers:{...headers,"Content-Type":"text/html;charset=UTF-8","Cache-Control":"no-store"}});
+      } catch (error) {
+        console.error("Villa Magos page error", error);
+        return new Response("Impossible de charger Villa Magos pour le moment.", {status:502,headers:{...headers,"Content-Type":"text/plain;charset=UTF-8"}});
+      }
+    }
+
     if (request.method === "GET" && url.pathname === "/health") {
       return json({ok:true,aiConfigured:Boolean(env?.AI),model:MODEL,guideRecords:GUIDE_NORM.length,resourceRecords:RESSOURCES.length,dateMadrid:localMadridDateKey()});
     }
