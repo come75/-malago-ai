@@ -405,7 +405,7 @@ const REQUEST_STATUSES = new Set(["received","in_review","awaiting_customer","qu
 // Explicit state machine: a customer acceptance is not a provider confirmation.
 // Terminal states cannot be silently reopened; create a new request if needed.
 const REQUEST_STATUS_TRANSITIONS = {
-  received: new Set(["in_review","awaiting_customer","declined","cancelled"]),
+  received: new Set(["in_review","awaiting_customer","quoted","declined","cancelled"]),
   in_review: new Set(["awaiting_customer","quoted","declined","cancelled"]),
   awaiting_customer: new Set(["in_review","quoted","declined","cancelled"]),
   quoted: new Set(["in_review","awaiting_customer","accepted_by_customer","declined","cancelled"]),
