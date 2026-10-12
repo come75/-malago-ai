@@ -470,6 +470,65 @@ async function ensureStayEventsTable(db) {
   await db.prepare("CREATE INDEX IF NOT EXISTS idx_stay_events_date ON stay_events(event_date,start_time)").run();
 }
 
+async function ensureStayNotificationTables(db) {
+  await db.prepare("CREATE TABLE IF NOT EXISTS stay_preferences (stay_id TEXT PRIMARY KEY, reminders_enabled INTEGER NOT NULL DEFAULT 1, remind_day_before INTEGER NOT NULL DEFAULT 1, remind_hours_before INTEGER NOT NULL DEFAULT 1, reminder_portal INTEGER NOT NULL DEFAULT 1, reminder_email INTEGER NOT NULL DEFAULT 1, updated_at TEXT NOT NULL DEFAULT (datetime('now')))").run();
+  await db.prepare("CREATE TABLE IF NOT EXISTS stay_notifications (id TEXT PRIMARY KEY, stay_id TEXT NOT NULL, event_id TEXT NOT NULL, reminder_type TEXT NOT NULL CHECK(reminder_type IN ('day_before','hours_before')), message TEXT NOT NULL, email_sent INTEGER NOT NULL DEFAULT 0, created_at TEXT NOT NULL DEFAULT (datetime('now')), read_at TEXT, UNIQUE(event_id,reminder_type))").run();
+  await db.prepare("CREATE INDEX IF NOT EXISTS idx_stay_notifications_stay ON stay_notifications(stay_id,created_at)").run();
+}
+function localDateTimeParts(date, timeZone) {
+  const parts = new Intl.DateTimeFormat("en-GB", {timeZone,year:"numeric",month:"2-digit",day:"2-digit",hour:"2-digit",minute:"2-digit",hourCycle:"h23"}).formatToParts(date);
+  return Object.fromEntries(parts.filter(p=>p.type!=="literal").map(p=>[p.type,p.value]));
+}
+function localDateTimeToUtc(dateValue,timeValue) {
+  const [year,month,day]=String(dateValue).split("-").map(Number),[hour,minute]=String(timeValue||"09:00").split(":").map(Number);
+  const target=Date.UTC(year,month-1,day,hour,minute);let guess=target;
+  for(let i=0;i<4;i++){
+    const parts=localDateTimeParts(new Date(guess),"Europe/Madrid");
+    const actual=Date.UTC(Number(parts.year),Number(parts.month)-1,Number(parts.day),Number(parts.hour),Number(parts.minute));
+    const diff=target-actual;if(!diff)break;guess+=diff;
+  }
+  return guess;
+}
+function boolPref(value, fallback=true) {
+  if(value===undefined||value===null)return fallback?1:0;
+  return value===true||value===1||value==="1"?1:0;
+}
+async function processStayReminders(env) {
+  if(!env?.DB)return {processed:0,reason:"db_unavailable"};
+  await ensureStayEventsTable(env.DB);await ensureStayNotificationTables(env.DB);
+  const now=new Date(),local=localDateTimeParts(now,"Europe/Madrid"),today=local.year+"-"+local.month+"-"+local.day;
+  const tomorrowDate=new Date(Number(local.year),Number(local.month)-1,Number(local.day)+1,12);
+  const tomorrow=tomorrowDate.getFullYear()+"-"+String(tomorrowDate.getMonth()+1).padStart(2,"0")+"-"+String(tomorrowDate.getDate()).padStart(2,"0");
+  const result=await env.DB.prepare("SELECT e.id,e.stay_id,e.title,e.event_date,e.start_time,e.location,e.status,e.event_type,s.guest_name,s.guest_email,s.property_name FROM stay_events e JOIN stays s ON s.id=e.stay_id WHERE e.status='confirmed' AND e.event_date>=? AND e.event_date<=? ORDER BY e.event_date,e.start_time LIMIT 500").bind(today,tomorrow).all();
+  let processed=0;
+  for(const event of result.results||[]){
+    let prefs=await env.DB.prepare("SELECT reminders_enabled,remind_day_before,remind_hours_before,reminder_portal,reminder_email FROM stay_preferences WHERE stay_id=? LIMIT 1").bind(event.stay_id).first();
+    if(!prefs)prefs={reminders_enabled:1,remind_day_before:1,remind_hours_before:1,reminder_portal:1,reminder_email:1};
+    if(!prefs.reminders_enabled)continue;
+    let untilStart=null;
+    if(event.start_time)untilStart=localDateTimeToUtc(event.event_date,event.start_time)-now.getTime();
+    const due=[];
+    if(prefs.remind_day_before&&event.event_date===tomorrow&&Number(local.hour)===9)due.push("day_before");
+    if(prefs.remind_hours_before&&untilStart!==null&&untilStart>=2*60*60*1000&&untilStart<4*60*60*1000)due.push("hours_before");
+    for(const type of due){
+      const message=type==="day_before"?"Rappel pour demain : "+event.title+(event.start_time?" à "+event.start_time:"")+".":"Votre événement approche : "+event.title+(event.start_time?" à "+event.start_time:"")+".";
+      await env.DB.prepare("INSERT OR IGNORE INTO stay_notifications (id,stay_id,event_id,reminder_type,message) VALUES (?,?,?,?,?)").bind(crypto.randomUUID(),event.stay_id,event.id,type,message).run();
+      processed++;
+    }
+    const notifications=await env.DB.prepare("SELECT id,reminder_type,message,email_sent FROM stay_notifications WHERE event_id=?").bind(event.id).all();
+    for(const item of notifications.results||[]){
+      if(!prefs.reminder_email||!event.guest_email||item.email_sent)continue;
+      const validWindow=item.reminder_type==="day_before"
+        ? event.event_date===tomorrow&&Number(local.hour)>=9&&Number(local.hour)<=18
+        : untilStart!==null&&untilStart>0&&untilStart<=4*60*60*1000;
+      if(!validWindow)continue;
+      const mail=await sendMalagoEmail(env,{to:event.guest_email,subject:item.reminder_type==="day_before"?"Villa Magos · Rappel pour demain":"Villa Magos · Votre événement approche",text:["Bonjour"+(event.guest_name?" "+event.guest_name:"")+",","",item.message,"","Séjour : "+(event.property_name||"Villa Magos"),"Date : "+event.event_date+(event.start_time?" · "+event.start_time:""),event.location?"Lieu : "+event.location:"","","Retrouvez votre programme dans votre espace privé Villa Magos.","","Malago · Votre concierge privé"].filter(Boolean).join("\n")});
+      if(mail.sent)await env.DB.prepare("UPDATE stay_notifications SET email_sent=1 WHERE id=?").bind(item.id).run();
+    }
+  }
+  return {processed};
+}
+
 
 export default {
   async fetch(request, env) {
@@ -532,7 +591,35 @@ export default {
       const auth = await resolveStayToken(request,env);
       if (auth.error) return json({error:auth.error},auth.status,headers);
       try {
-        const eventMatch = url.pathname.match(/^\/api\/client\/events(?:\/([0-9a-f-]{36}))?$/i);
+        if(request.method==="GET"&&url.pathname==="/api/client/preferences"){
+          await ensureStayNotificationTables(env.DB);
+          await env.DB.prepare("INSERT OR IGNORE INTO stay_preferences (stay_id) VALUES (?)").bind(auth.stayId).run();
+          const prefs=await env.DB.prepare("SELECT reminders_enabled,remind_day_before,remind_hours_before,reminder_portal,reminder_email FROM stay_preferences WHERE stay_id=? LIMIT 1").bind(auth.stayId).first();
+          const stay=await env.DB.prepare("SELECT guest_email FROM stays WHERE id=? AND status='active' LIMIT 1").bind(auth.stayId).first();
+          return json({preferences:{reminders_enabled:Boolean(prefs?.reminders_enabled),remind_day_before:Boolean(prefs?.remind_day_before),remind_hours_before:Boolean(prefs?.remind_hours_before),reminder_portal:Boolean(prefs?.reminder_portal),reminder_email:Boolean(prefs?.reminder_email)},email_configured:Boolean(stay?.guest_email)},200,headers);
+        }
+        if(request.method==="PATCH"&&url.pathname==="/api/client/preferences"){
+          await ensureStayNotificationTables(env.DB);
+          const parsed=await readJson(request);if(parsed.error)return json({error:parsed.error},parsed.status,headers);
+          const body=parsed.body||{},enabled=boolPref(body.reminders_enabled),dayBefore=boolPref(body.remind_day_before),hoursBefore=boolPref(body.remind_hours_before),portal=boolPref(body.reminder_portal),email=boolPref(body.reminder_email);
+          await env.DB.prepare("INSERT INTO stay_preferences (stay_id,reminders_enabled,remind_day_before,remind_hours_before,reminder_portal,reminder_email,updated_at) VALUES (?,?,?,?,?,?,datetime('now')) ON CONFLICT(stay_id) DO UPDATE SET reminders_enabled=excluded.reminders_enabled,remind_day_before=excluded.remind_day_before,remind_hours_before=excluded.remind_hours_before,reminder_portal=excluded.reminder_portal,reminder_email=excluded.reminder_email,updated_at=datetime('now')").bind(auth.stayId,enabled,dayBefore,hoursBefore,portal,email).run();
+          return json({ok:true,preferences:{reminders_enabled:Boolean(enabled),remind_day_before:Boolean(dayBefore),remind_hours_before:Boolean(hoursBefore),reminder_portal:Boolean(portal),reminder_email:Boolean(email)}},200,headers);
+        }
+        if(request.method==="GET"&&url.pathname==="/api/client/notifications"){
+          await ensureStayNotificationTables(env.DB);
+          const prefs=await env.DB.prepare("SELECT reminders_enabled,reminder_portal FROM stay_preferences WHERE stay_id=? LIMIT 1").bind(auth.stayId).first();
+          if(prefs&&(!prefs.reminders_enabled||!prefs.reminder_portal))return json({notifications:[]},200,headers);
+          const result=await env.DB.prepare("SELECT id,event_id,reminder_type,message,created_at,read_at FROM stay_notifications WHERE stay_id=? AND read_at IS NULL ORDER BY created_at DESC LIMIT 30").bind(auth.stayId).all();
+          return json({notifications:result.results||[]},200,headers);
+        }
+        const notificationReadMatch=url.pathname.match(/^\/api\/client\/notifications\/([0-9a-f-]{36})\/read$/i);
+        if(request.method==="POST"&&notificationReadMatch){
+          await ensureStayNotificationTables(env.DB);
+          const result=await env.DB.prepare("UPDATE stay_notifications SET read_at=datetime('now') WHERE id=? AND stay_id=?").bind(notificationReadMatch[1],auth.stayId).run();
+          if(!result.meta?.changes)return json({error:"Rappel introuvable."},404,headers);
+          return json({ok:true},200,headers);
+        }
+                const eventMatch = url.pathname.match(/^\/api\/client\/events(?:\/([0-9a-f-]{36}))?$/i);
         if (eventMatch) {
           await ensureStayEventsTable(env.DB);
           const eventId = eventMatch[1] || "";
@@ -569,14 +656,23 @@ export default {
             const stay=await env.DB.prepare("SELECT start_date,end_date FROM stays WHERE id=? AND status='active' LIMIT 1").bind(auth.stayId).first();
             if((stay?.start_date&&eventDate<stay.start_date)||(stay?.end_date&&eventDate>stay.end_date))return json({error:"La date doit être comprise dans les dates de votre séjour."},400,headers);
             const status=eventType==="idea"?"idea":"personal";
-            await env.DB.prepare("UPDATE stay_events SET title=?,event_date=?,start_time=?,end_time=?,location=?,notes=?,event_type=?,status=?,updated_at=datetime('now') WHERE id=? AND stay_id=?").bind(title,eventDate,startTime||null,endTime||null,location||null,notes||null,eventType,status,eventId,auth.stayId).run();
+            await ensureStayNotificationTables(env.DB);
+            await env.DB.batch([
+              env.DB.prepare("UPDATE stay_events SET title=?,event_date=?,start_time=?,end_time=?,location=?,notes=?,event_type=?,status=?,updated_at=datetime('now') WHERE id=? AND stay_id=?").bind(title,eventDate,startTime||null,endTime||null,location||null,notes||null,eventType,status,eventId,auth.stayId),
+              env.DB.prepare("DELETE FROM stay_notifications WHERE event_id=?").bind(eventId)
+            ]);
             return json({ok:true,event:{id:eventId,title,event_date:eventDate,start_time:startTime||null,end_time:endTime||null,location:location||null,notes:notes||null,event_type:eventType,status}},200,headers);
           }
           if(request.method==="DELETE"&&eventId){
             const current=await env.DB.prepare("SELECT status,event_type FROM stay_events WHERE id=? AND stay_id=? LIMIT 1").bind(eventId,auth.stayId).first();
             if(!current)return json({error:"Événement introuvable."},404,headers);
             if(current.status==="confirmed"||current.event_type==="service")return json({error:"Une prestation confirmée doit être annulée avec l’aide de Malago."},409,headers);
-            await env.DB.prepare("DELETE FROM stay_events WHERE id=? AND stay_id=?").bind(eventId,auth.stayId).run();return json({ok:true,id:eventId},200,headers);
+            await ensureStayNotificationTables(env.DB);
+            await env.DB.batch([
+              env.DB.prepare("DELETE FROM stay_notifications WHERE event_id=?").bind(eventId),
+              env.DB.prepare("DELETE FROM stay_events WHERE id=? AND stay_id=?").bind(eventId,auth.stayId)
+            ]);
+            return json({ok:true,id:eventId},200,headers);
           }
           return json({error:"Route ou méthode invalide pour cet événement."},405,headers);
         }
@@ -827,5 +923,9 @@ export default {
       }
     }
     return new Response("Malago",{status:404,headers:{...headers,"Content-Type":"text/plain;charset=UTF-8"}});
+  },
+  async scheduled(controller, env, ctx) {
+    try { await processStayReminders(env); }
+    catch(error) { console.error("Villa Magos reminder job failed",error); }
   }
 };
