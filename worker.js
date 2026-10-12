@@ -414,7 +414,7 @@ const REQUEST_STATUS_TRANSITIONS = {
   declined: new Set(),
   cancelled: new Set()
 };
-const REQUEST_CATEGORIES = new Set(["car_rental","airport_transfer","restaurant","activity","chef","other"]);
+const REQUEST_CATEGORIES = new Set(["car_rental","airport_transfer","chauffeur","restaurant","activity","chef","groceries","beach_club","wellness","family","decoration","bartender","dj","event","villa_services","other"]);
 async function sha256Hex(value) {
   const digest = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(value));
   return [...new Uint8Array(digest)].map(b => b.toString(16).padStart(2,"0")).join("");
@@ -852,7 +852,7 @@ export default {
             const proposalEvent=await env.DB.prepare("SELECT details FROM client_request_events WHERE request_id=? AND event_type='proposal' ORDER BY created_at DESC LIMIT 1").bind(requestId).first();
             const proposal=parseStructuredDetails(proposalEvent?.details);
             if(proposal?.proposed_date&&isIsoCalendarDate(proposal.proposed_date)){
-              const categoryLabel={car_rental:"Location de voiture",airport_transfer:"Transfert chauffeur",restaurant:"Restaurant",activity:"Expérience",chef:"Chef privé",other:"Service Villa Magos"};
+              const categoryLabel={car_rental:"Location de voiture",airport_transfer:"Transfert chauffeur",chauffeur:"Chauffeur privé",restaurant:"Restaurant",activity:"Expérience",chef:"Chef privé",groceries:"Courses livrées",beach_club:"Plage / beach club",wellness:"Bien-être",family:"Famille & enfants",decoration:"Décoration & fleurs",bartender:"Barman privé",dj:"DJ privé",event:"Événement privé",villa_services:"Service à la villa",other:"Service Villa Magos"};
               const eventTitle=sanitize((categoryLabel[current.category]||"Service Villa Magos")+(proposal.partner_name?" · "+proposal.partner_name:""),120);
               const existing=await env.DB.prepare("SELECT id FROM stay_events WHERE linked_request_id=? LIMIT 1").bind(requestId).first();
               if(existing)ops.push(env.DB.prepare("UPDATE stay_events SET title=?,event_date=?,start_time=?,end_time=?,location=?,notes=?,event_type='service',status='confirmed',updated_at=datetime('now') WHERE id=?").bind(eventTitle,proposal.proposed_date,proposal.proposed_start_time||null,proposal.proposed_end_time||null,proposal.proposal_location||null,proposal.message||proposal.conditions||null,existing.id));
