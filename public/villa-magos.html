@@ -1154,7 +1154,38 @@ document.getElementById('activityClose').addEventListener('click',closeActivity)
   function showInvalid(text){access.hidden=true;privateView.hidden=true;invalid.hidden=false;if(text)document.getElementById("clientPortalInvalidText").textContent=text}
   function notify(text,type){message.textContent=text;message.className="clientPortalMessage "+type;message.hidden=false}
   async function api(path,options={}){const response=await fetch(path,{...options,cache:"no-store",headers:{"Authorization":"Bearer "+token,...(options.body?{"Content-Type":"application/json"}:{}),...(options.headers||{})}});let data={};try{data=await response.json()}catch{}if(!response.ok)throw new Error(data.error||"Une erreur est survenue. Réessayez dans un instant.");return data}
-  function render(items){requests.replaceChildren();if(!items.length){const empty=document.createElement("div");empty.className="clientPortalEmpty";empty.textContent="Aucune demande pour le moment. Vos prochaines demandes apparaîtront ici.";requests.append(empty);return}for(const item of items){const article=document.createElement("article");article.className="clientPortalRequest";const top=document.createElement("div");top.className="clientPortalRequestTop";const left=document.createElement("div"),title=document.createElement("h4"),date=document.createElement("div"),badge=document.createElement("span"),desc=document.createElement("p");title.textContent=labels[item.category]||"Demande Malago";const d=new Date(item.created_at);date.className="clientPortalDate";date.textContent=Number.isNaN(d.getTime())?"":d.toLocaleDateString("fr-FR",{day:"numeric",month:"short",year:"numeric"});badge.className="clientPortalStatus "+item.status;badge.textContent=statuses[item.status]||"En traitement";desc.className="clientPortalDescription";desc.textContent=item.description||"";left.append(title,date);top.append(left,badge);article.append(top,desc);requests.append(article)}}
+  function render(items){requests.replaceChildren();if(!items.length){const empty=document.createElement("div");empty.className="clientPortalEmpty";empty.textContent="Aucune demande pour le moment. Vos prochaines demandes apparaîtront ici.";requests.append(empty);return}
+for(const item of items){
+ const article=document.createElement("article");article.className="clientPortalRequest";
+ const top=document.createElement("div");top.className="clientPortalRequestTop";
+ const left=document.createElement("div"),title=document.createElement("h4"),date=document.createElement("div"),badge=document.createElement("span"),desc=document.createElement("p");
+ title.textContent=labels[item.category]||"Demande Malago";
+ const d=new Date(item.created_at);date.className="clientPortalDate";date.textContent=Number.isNaN(d.getTime())?"":d.toLocaleDateString("fr-FR",{day:"numeric",month:"short",year:"numeric"});
+ badge.className="clientPortalStatus "+item.status;badge.textContent=statuses[item.status]||"En traitement";desc.className="clientPortalDescription";desc.textContent=item.description||"";left.append(title,date);top.append(left,badge);article.append(top,desc);
+ for(const event of (item.history||[])){
+  if(event.event_type==="proposal"&&event.proposal){
+   const p=event.proposal,box=document.createElement("div");box.className="clientPortalProposal";box.style.cssText="margin-top:14px;padding:16px;border:1px solid #c5a46d;border-radius:12px;background:#fffaf0";
+   const heading=document.createElement("strong");heading.textContent="Proposition Malago";
+   const text=document.createElement("p");text.textContent=p.message||"";
+   box.append(heading,text);
+   if(p.price){const price=document.createElement("p");price.style.fontWeight="700";price.textContent="Prix proposé : "+p.price+" "+(p.currency||"EUR");box.append(price)}
+   if(p.availability){const avail=document.createElement("p");avail.textContent="Disponibilité annoncée : "+p.availability;box.append(avail)}
+   if(p.conditions){const cond=document.createElement("p");cond.textContent="Conditions : "+p.conditions;box.append(cond)}
+   if(item.status==="quoted"){
+    const row=document.createElement("div");row.style.cssText="display:flex;gap:8px;flex-wrap:wrap;margin-top:12px";
+    for(const [decision,label] of [["accept","Accepter la proposition"],["decline","Refuser"]]){
+     const b=document.createElement("button");b.type="button";b.textContent=label;b.className=decision==="accept"?"clientPortalSubmit":"clientPortalSecondary";b.style.cssText="padding:10px 14px;border-radius:99px;cursor:pointer;border:1px solid #b8a47f;background:"+(decision==="accept"?"#20221d":"transparent")+";color:"+(decision==="accept"?"white":"#20221d");
+     b.addEventListener("click",async()=>{if(decision==="decline"&&!window.confirm("Souhaitez-vous refuser cette proposition ?"))return;b.disabled=true;try{const result=await api("/api/client/requests/"+encodeURIComponent(item.id)+"/decision",{method:"POST",body:JSON.stringify({decision})});notify(result.message||"Votre réponse est enregistrée.","success");await load()}catch(e){notify(e.message||"Impossible d’enregistrer votre réponse.","error");b.disabled=false}});row.append(b);
+    }
+    box.append(row);
+   } else if(item.status==="accepted_by_customer"){const pending=document.createElement("p");pending.textContent="Votre accord est enregistré. La prestation attend encore la confirmation finale du prestataire.";box.append(pending)}
+   article.append(box);
+  } else if(event.event_type!=="received"){
+   const historyLine=document.createElement("p");historyLine.className="clientPortalDate";historyLine.style.marginTop="10px";historyLine.textContent=(event.details||"Mise à jour")+" · "+(Number.isNaN(new Date(event.created_at).getTime())?"":new Date(event.created_at).toLocaleDateString("fr-FR"));article.append(historyLine);
+  }
+ }
+ requests.append(article);
+}}
   async function load(){requests.replaceChildren();const loading=document.createElement("div");loading.className="clientPortalEmpty";loading.textContent="Actualisation de vos demandes…";requests.append(loading);try{const data=await api("/api/client/requests");render(data.requests||[])}catch(error){const text=error.message||"Impossible de charger vos demandes.";requests.replaceChildren();const empty=document.createElement("div");empty.className="clientPortalEmpty";empty.textContent=text;requests.append(empty);if(/invalide|expiré|accès/i.test(text)){sessionStorage.removeItem(TOKEN_KEY);token="";showInvalid(text)}}}
   function personalize(stay){
     window.MALAGO_CLIENT_STAY=stay||null;
