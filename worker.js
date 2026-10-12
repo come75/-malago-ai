@@ -719,26 +719,30 @@ export default {
         if (request.method === "POST" && url.pathname === "/api/client/requests") {
           const parsed = await readJson(request);
           if (parsed.error) return json({error:parsed.error},parsed.status,headers);
-          const body = parsed.body || {};
-          const category = sanitize(body.category,40);
-          const description = sanitize(body.description,3000);
-          if (!REQUEST_CATEGORIES.has(category)) return json({error:"Catégorie de demande invalide."},400,headers);
-          if (description.length < 3) return json({error:"Précise ta demande en quelques mots."},400,headers);
-          const structuredDetails=body.details&&typeof body.details==="object"&&!Array.isArray(body.details)?body.details:null;
-          const structuredJson=structuredDetails?JSON.stringify(structuredDetails):"";
-          if(structuredJson.length>8000)return json({error:"Les précisions structurées sont trop volumineuses."},413,headers);
-          const id = crypto.randomUUID();
-          const operations=[
-            env.DB.prepare("INSERT INTO client_requests (id,stay_id,category,description,status) VALUES (?,?,?,?,'received')").bind(id,auth.stayId,category,description),
-            env.DB.prepare("INSERT INTO client_request_events (id,request_id,event_type,details) VALUES (?,?,?,?)").bind(crypto.randomUUID(),id,"received","Demande créée par le client")
-          ];
-          if(structuredJson)operations.push(env.DB.prepare("INSERT INTO client_request_events (id,request_id,event_type,details) VALUES (?,?,?,?)").bind(crypto.randomUUID(),id,"structured_details",structuredJson));
+          const body=parsed.body||{};
+          const inputs=Array.isArray(body.requests)?body.requests:[body];
+          if(!inputs.length||inputs.length>12)return json({error:"Une demande peut contenir jusqu’à 12 prestations distinctes."},400,headers);
+          const normalized=[];
+          for(const item of inputs){
+            const category=sanitize(item.category,40),description=sanitize(item.description,3000);
+            if(!REQUEST_CATEGORIES.has(category))return json({error:"Catégorie de demande invalide."},400,headers);
+            if(description.length<3)return json({error:"Précise chaque demande en quelques mots."},400,headers);
+            const structuredDetails=item.details&&typeof item.details==="object"&&!Array.isArray(item.details)?item.details:null;
+            const structuredJson=structuredDetails?JSON.stringify(structuredDetails):"";
+            if(structuredJson.length>8000)return json({error:"Les précisions structurées sont trop volumineuses."},413,headers);
+            normalized.push({id:crypto.randomUUID(),category,description,structuredDetails,structuredJson});
+          }
+          const operations=[];
+          for(const item of normalized){
+            operations.push(env.DB.prepare("INSERT INTO client_requests (id,stay_id,category,description,status) VALUES (?,?,?,?,'received')").bind(item.id,auth.stayId,item.category,item.description));
+            operations.push(env.DB.prepare("INSERT INTO client_request_events (id,request_id,event_type,details) VALUES (?,?,?,?)").bind(crypto.randomUUID(),item.id,"received","Demande créée par le client"));
+            if(item.structuredJson)operations.push(env.DB.prepare("INSERT INTO client_request_events (id,request_id,event_type,details) VALUES (?,?,?,?)").bind(crypto.randomUUID(),item.id,"structured_details",item.structuredJson));
+          }
           await env.DB.batch(operations);
-          // Email is best-effort: a provider outage must never undo a saved client request.
-          const emailResult=await notifyNewClientRequest(env,{requestId:id,category,description,stayId:auth.stayId});
-          return json({ok:true,request:{id,category,description,status:"received"},message:"Demande enregistrée. Elle n’est pas une réservation confirmée.",notification:emailResult.sent?"email_sent":"email_pending_configuration"},201,headers);
-        }
-      } catch (error) {
+          const notifications=await Promise.all(normalized.map(item=>notifyNewClientRequest(env,{requestId:item.id,category:item.category,description:item.description,stayId:auth.stayId})));
+          const saved=normalized.map(item=>({id:item.id,category:item.category,description:item.description,status:"received",structured_details:item.structuredDetails}));
+          return json({ok:true,request:saved.length===1?saved[0]:undefined,requests:saved,message:saved.length===1?"Demande enregistrée. Elle n’est pas une réservation confirmée.":saved.length+" demandes distinctes enregistrées. Elles ne sont pas des réservations confirmées.",notifications_sent:notifications.filter(item=>item.sent).length},201,headers);
+        }      } catch (error) {
         const requestId=crypto.randomUUID(); console.error("Client requests API error",requestId,error);
         return json({error:"Impossible de traiter la demande.",requestId},500,headers);
       }
