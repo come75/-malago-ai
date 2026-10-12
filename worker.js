@@ -460,6 +460,10 @@ function isIsoCalendarDate(value) {
 function isCalendarTime(value) {
   return !value || /^(?:[01]\d|2[0-3]):[0-5]\d$/.test(String(value));
 }
+function parseStructuredDetails(value) {
+  if (!value) return null;
+  try { const data=JSON.parse(value); return data && typeof data==="object" && !Array.isArray(data) ? data : null; } catch (_) { return null; }
+}
 async function ensureStayEventsTable(db) {
   await db.prepare("CREATE TABLE IF NOT EXISTS stay_events (id TEXT PRIMARY KEY, stay_id TEXT NOT NULL, title TEXT NOT NULL, event_date TEXT NOT NULL, start_time TEXT, end_time TEXT, location TEXT, notes TEXT, event_type TEXT NOT NULL DEFAULT 'personal' CHECK(event_type IN ('personal','idea','service')), status TEXT NOT NULL DEFAULT 'personal' CHECK(status IN ('personal','idea','requested','pending','confirmed','cancelled')), linked_request_id TEXT, created_at TEXT NOT NULL DEFAULT (datetime('now')), updated_at TEXT NOT NULL DEFAULT (datetime('now')))").run();
   await db.prepare("CREATE INDEX IF NOT EXISTS idx_stay_events_stay_date ON stay_events(stay_id,event_date,start_time)").run();
@@ -587,9 +591,10 @@ export default {
           for (const item of requests) {
             const history = await env.DB.prepare("SELECT event_type,details,created_at FROM client_request_events WHERE request_id=? ORDER BY created_at ASC LIMIT 100").bind(item.id).all();
             item.history = (history.results || []).map(event => {
-              let proposal = null;
+              let proposal = null, structuredDetails = null;
               if (event.event_type === "proposal") { try { proposal = JSON.parse(event.details || "{}"); } catch {} }
-              return {event_type:event.event_type,details:event.event_type === "proposal" ? "" : event.details,created_at:event.created_at,proposal};
+              if (event.event_type === "structured_details") { structuredDetails = parseStructuredDetails(event.details); item.structured_details=structuredDetails; }
+              return {event_type:event.event_type,details:["proposal","structured_details"].includes(event.event_type) ? "" : event.details,created_at:event.created_at,proposal,structured_details:structuredDetails};
             });
           }
           return json({stay:stay || null,requests},200,headers);
@@ -623,11 +628,16 @@ export default {
           const description = sanitize(body.description,3000);
           if (!REQUEST_CATEGORIES.has(category)) return json({error:"Catégorie de demande invalide."},400,headers);
           if (description.length < 3) return json({error:"Précise ta demande en quelques mots."},400,headers);
+          const structuredDetails=body.details&&typeof body.details==="object"&&!Array.isArray(body.details)?body.details:null;
+          const structuredJson=structuredDetails?JSON.stringify(structuredDetails):"";
+          if(structuredJson.length>8000)return json({error:"Les précisions structurées sont trop volumineuses."},413,headers);
           const id = crypto.randomUUID();
-          await env.DB.batch([
+          const operations=[
             env.DB.prepare("INSERT INTO client_requests (id,stay_id,category,description,status) VALUES (?,?,?,?,'received')").bind(id,auth.stayId,category,description),
             env.DB.prepare("INSERT INTO client_request_events (id,request_id,event_type,details) VALUES (?,?,?,?)").bind(crypto.randomUUID(),id,"received","Demande créée par le client")
-          ]);
+          ];
+          if(structuredJson)operations.push(env.DB.prepare("INSERT INTO client_request_events (id,request_id,event_type,details) VALUES (?,?,?,?)").bind(crypto.randomUUID(),id,"structured_details",structuredJson));
+          await env.DB.batch(operations);
           // Email is best-effort: a provider outage must never undo a saved client request.
           const emailResult=await notifyNewClientRequest(env,{requestId:id,category,description,stayId:auth.stayId});
           return json({ok:true,request:{id,category,description,status:"received"},message:"Demande enregistrée. Elle n’est pas une réservation confirmée.",notification:emailResult.sent?"email_sent":"email_pending_configuration"},201,headers);
@@ -684,8 +694,16 @@ export default {
           return json({ok:true,revoked:result.meta?.changes || 0},200,headers);
         }
         if (request.method === "GET" && url.pathname === "/api/admin/requests") {
-          const result=await env.DB.prepare("SELECT r.id,r.stay_id,s.property_name,s.guest_name,r.category,r.description,r.status,r.created_at,r.updated_at FROM client_requests r JOIN stays s ON s.id=r.stay_id ORDER BY r.created_at DESC LIMIT 200").all();
-          return json({requests:result.results||[]},200,headers);
+          const result=await env.DB.prepare("SELECT r.id,r.stay_id,s.property_name,s.guest_name,s.guest_email,s.start_date AS stay_start_date,s.end_date AS stay_end_date,r.category,r.description,r.status,r.created_at,r.updated_at FROM client_requests r JOIN stays s ON s.id=r.stay_id ORDER BY r.created_at DESC LIMIT 200").all();
+          const requests=result.results||[],ids=requests.map(item=>item.id);
+          if(ids.length){
+            const placeholders=ids.map(()=>"?").join(",");
+            const extra=await env.DB.prepare("SELECT request_id,details FROM client_request_events WHERE event_type='structured_details' AND request_id IN ("+placeholders+") ORDER BY created_at DESC").bind(...ids).all();
+            const detailMap=new Map();
+            for(const row of extra.results||[])if(!detailMap.has(row.request_id))detailMap.set(row.request_id,parseStructuredDetails(row.details));
+            for(const item of requests)item.structured_details=detailMap.get(item.id)||null;
+          }
+          return json({requests},200,headers);
         }
         const proposalMatch=url.pathname.match(/^\/api\/admin\/requests\/([0-9a-f-]+)\/proposal$/i);
         if (request.method === "POST" && proposalMatch) {
@@ -693,12 +711,18 @@ export default {
           if(parsed.error)return json({error:parsed.error},parsed.status,headers);
           const body=parsed.body||{},requestId=proposalMatch[1];
           const message=sanitize(body.message,2000),price=sanitize(body.price,100),currency=sanitize(body.currency||"EUR",8),conditions=sanitize(body.conditions,1200),availability=sanitize(body.availability,300);
+          const proposedDate=sanitize(body.proposed_date,10),proposedStart=sanitize(body.proposed_start_time,5),proposedEnd=sanitize(body.proposed_end_time,5),proposalLocation=sanitize(body.proposal_location,180);
           if(message.length<5)return json({error:"Ajoute le détail de la proposition du prestataire."},400,headers);
           if(price&&!/^[0-9]+([.,][0-9]{1,2})?$/.test(price))return json({error:"Le prix doit être un montant simple, par exemple 180 ou 180,50."},400,headers);
-          const current=await env.DB.prepare("SELECT r.id,r.status,s.guest_email,s.guest_name,s.property_name FROM client_requests r JOIN stays s ON s.id=r.stay_id WHERE r.id=?").bind(requestId).first();
+          if(proposedDate&&!isIsoCalendarDate(proposedDate))return json({error:"La date proposée est invalide."},400,headers);
+          if(!isCalendarTime(proposedStart)||!isCalendarTime(proposedEnd))return json({error:"L’horaire proposé est invalide."},400,headers);
+          if(proposedStart&&proposedEnd&&proposedEnd<=proposedStart)return json({error:"L’heure de fin doit être postérieure à l’heure de début."},400,headers);
+          if(!proposedDate&&(proposedStart||proposedEnd))return json({error:"Ajoute une date si tu renseignes un horaire."},400,headers);
+          const current=await env.DB.prepare("SELECT r.id,r.status,s.guest_email,s.guest_name,s.property_name,s.start_date,s.end_date FROM client_requests r JOIN stays s ON s.id=r.stay_id WHERE r.id=?").bind(requestId).first();
           if(!current)return json({error:"Demande introuvable."},404,headers);
+          if(proposedDate&&((current.start_date&&proposedDate<current.start_date)||(current.end_date&&proposedDate>current.end_date)))return json({error:"La date proposée doit être comprise dans le séjour."},400,headers);
           if(current.status!=="quoted"&&!REQUEST_STATUS_TRANSITIONS[current.status]?.has("quoted"))return json({error:"Cette demande ne peut pas recevoir de proposition dans son état actuel."},409,headers);
-          const proposal={message,price:price||null,currency,conditions:conditions||"",availability:availability||"",provider_confirmed:false};
+          const proposal={message,price:price||null,currency,conditions:conditions||"",availability:availability||"",proposed_date:proposedDate||"",proposed_start_time:proposedStart||"",proposed_end_time:proposedEnd||"",proposal_location:proposalLocation||"",provider_confirmed:false};
           await env.DB.batch([
             env.DB.prepare("UPDATE client_requests SET status='quoted',updated_at=datetime('now') WHERE id=?").bind(requestId),
             env.DB.prepare("INSERT INTO client_request_events (id,request_id,event_type,details) VALUES (?,?,?,?)").bind(crypto.randomUUID(),requestId,"proposal",JSON.stringify(proposal))
@@ -719,17 +743,28 @@ export default {
           if (!REQUEST_STATUSES.has(nextStatus)) return json({error:"Statut invalide."},400,headers);
           if (nextStatus==="confirmed" && note.length<5) return json({error:"Pour confirmer, ajoute une note attestant la confirmation réelle du prestataire."},400,headers);
           const requestId=statusMatch[1];
-          const current=await env.DB.prepare("SELECT status FROM client_requests WHERE id=?").bind(requestId).first();
+          const current=await env.DB.prepare("SELECT status,stay_id,category FROM client_requests WHERE id=?").bind(requestId).first();
           if (!current) return json({error:"Demande introuvable."},404,headers);
           if (current.status===nextStatus) return json({ok:true,id:requestId,status:nextStatus,unchanged:true},200,headers);
-          if (!REQUEST_STATUS_TRANSITIONS[current.status]?.has(nextStatus)) {
-            return json({error:"Transition de statut interdite.",current_status:current.status,requested_status:nextStatus},409,headers);
-          }
-          const eventDetails=current.status+" -> "+nextStatus+(note ? " | "+note : "");
-          await env.DB.batch([
+          if (!REQUEST_STATUS_TRANSITIONS[current.status]?.has(nextStatus)) return json({error:"Transition de statut interdite.",current_status:current.status,requested_status:nextStatus},409,headers);
+          const eventDetails=current.status+" -> "+nextStatus+(note ? " | "+note : ""),ops=[
             env.DB.prepare("UPDATE client_requests SET status=?,updated_at=datetime('now') WHERE id=?").bind(nextStatus,requestId),
             env.DB.prepare("INSERT INTO client_request_events (id,request_id,event_type,details) VALUES (?,?,?,?)").bind(crypto.randomUUID(),requestId,"status_changed",eventDetails)
-          ]);
+          ];
+          if(nextStatus==="confirmed"){
+            await ensureStayEventsTable(env.DB);
+            const proposalEvent=await env.DB.prepare("SELECT details FROM client_request_events WHERE request_id=? AND event_type='proposal' ORDER BY created_at DESC LIMIT 1").bind(requestId).first();
+            const proposal=parseStructuredDetails(proposalEvent?.details);
+            if(proposal?.proposed_date&&isIsoCalendarDate(proposal.proposed_date)){
+              const categoryLabel={car_rental:"Location de voiture",airport_transfer:"Transfert chauffeur",restaurant:"Restaurant",activity:"Expérience",chef:"Chef privé",other:"Service Villa Magos"};
+              const eventTitle=sanitize(categoryLabel[current.category]||"Service Villa Magos",120);
+              const existing=await env.DB.prepare("SELECT id FROM stay_events WHERE linked_request_id=? LIMIT 1").bind(requestId).first();
+              if(existing)ops.push(env.DB.prepare("UPDATE stay_events SET title=?,event_date=?,start_time=?,end_time=?,location=?,notes=?,event_type='service',status='confirmed',updated_at=datetime('now') WHERE id=?").bind(eventTitle,proposal.proposed_date,proposal.proposed_start_time||null,proposal.proposed_end_time||null,proposal.proposal_location||null,proposal.message||proposal.conditions||null,existing.id));
+              else ops.push(env.DB.prepare("INSERT INTO stay_events (id,stay_id,title,event_date,start_time,end_time,location,notes,event_type,status,linked_request_id) VALUES (?,?,?,?,?,?,?,?,'service','confirmed',?)").bind(crypto.randomUUID(),current.stay_id,eventTitle,proposal.proposed_date,proposal.proposed_start_time||null,proposal.proposed_end_time||null,proposal.proposal_location||null,proposal.message||proposal.conditions||null,requestId));
+            }
+          }
+          if(nextStatus==="cancelled"){await ensureStayEventsTable(env.DB);ops.push(env.DB.prepare("UPDATE stay_events SET status='cancelled',updated_at=datetime('now') WHERE linked_request_id=?").bind(requestId));}
+          await env.DB.batch(ops);
           return json({ok:true,id:requestId,status:nextStatus},200,headers);
         }
       } catch (error) {
