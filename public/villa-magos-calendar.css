@@ -45,3 +45,18 @@
 .vmCalendarCard [hidden]{display:none!important}.vmCalendarError{margin-top:15px}
 @media(max-width:640px){.vmCalendarCard{padding:18px}.vmCalendarTop{gap:9px}.vmCalendarBadge{font-size:7px;padding:8px 9px}.vmCalendarActions{align-items:stretch}.vmCalendarSwitch{flex:1}.vmCalendarSwitch button{flex:1;padding:10px}.vmCalendarAdd{width:100%}.vmCalendarMonth{padding:9px;border-radius:12px}.vmCalendarGrid{gap:3px}.vmCalendarDays{grid-auto-rows:minmax(43px,auto)}.vmCalendarDay{min-height:43px;border-radius:7px;padding:6px 1px 4px}.vmCalendarDayNumber{font-size:11px}.vmCalendarWeekdays span{font-size:7px;letter-spacing:0}.vmCalendarMonthNav{grid-template-columns:34px 1fr 34px}.vmCalendarMonthNav button{width:33px;height:33px;font-size:17px}.vmEventItem{grid-template-columns:7px minmax(0,1fr);gap:9px}.vmEventActions{grid-column:2;justify-content:flex-start}.vmCalendarForm{padding:15px}.vmCalendarFormGrid{grid-template-columns:1fr}.vmCalendarFieldWide{grid-column:auto}.vmCalendarFormActions{flex-direction:column-reverse;align-items:stretch}.vmCalendarFormActions button{width:100%;min-height:43px}}
 @media(prefers-reduced-motion:reduce){.vmCalendarCard *{scroll-behavior:auto!important}}
+/* Guest reminder preferences */
+.vmReminderSettings{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.35fr);gap:18px;padding:18px;margin:18px 0 22px;border:1px solid var(--vm-calendar-line);border-radius:14px;background:linear-gradient(135deg,#fbf8f1,#fff)}
+.vmReminderSettings h4{font-family:Georgia,serif;font-size:20px;font-weight:400;margin:3px 0 7px}
+.vmReminderSettings p{font-size:11px;line-height:1.7;color:var(--vm-calendar-muted);margin:0}
+.vmReminderChoices{display:flex;flex-wrap:wrap;gap:10px 14px;align-items:center}
+.vmReminderChoices label{display:flex;align-items:center;gap:7px;font-size:10px;color:var(--vm-calendar-ink)}
+.vmReminderChoices input{accent-color:#b79a68}
+.vmReminderChoices button,.vmNotification button{border:1px solid var(--vm-calendar-line);background:#fff;color:var(--vm-calendar-ink);border-radius:99px;padding:9px 13px;font-size:10px;cursor:pointer}
+.vmReminderChoices button:disabled{opacity:.55;cursor:wait}
+#vmReminderStatus{font-size:10px;color:var(--vm-calendar-muted)}
+.vmNotifications{grid-column:1/-1;display:grid;gap:8px}
+.vmNotifications h5{font-size:11px;font-weight:600;margin:0}
+.vmNotification{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:10px 12px;border-radius:9px;background:#fff;border:1px solid var(--vm-calendar-line);font-size:11px;line-height:1.5}
+.vmNotification button{padding:6px 10px;flex-shrink:0}
+@media(max-width:640px){.vmReminderSettings{grid-template-columns:1fr;gap:12px;padding:14px}.vmReminderChoices{gap:11px}.vmReminderChoices label{width:calc(50% - 8px);align-items:flex-start}.vmReminderChoices button{width:100%}.vmNotification{align-items:flex-start}}
