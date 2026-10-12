@@ -730,7 +730,7 @@ export default {
           if(current.guest_email) await sendMalagoEmail(env,{
             to:current.guest_email,
             subject:"Une proposition vous attend — Villa Magos × Malago",
-            text:["Bonjour"+(current.guest_name?" "+current.guest_name:"")+",","","Malago a ajouté une proposition à votre demande.","","Séjour : "+(current.property_name||"Villa Magos"),"Référence : "+requestId,"Proposition : "+message,price?"Prix proposé : "+price+" "+currency:"",availability?"Disponibilité annoncée : "+availability:"",conditions?"Conditions : "+conditions:"","","Connectez-vous à votre espace privé Villa Magos pour consulter la proposition et l’accepter ou la refuser.","","Votre accord ne vaut pas confirmation finale tant que le prestataire n’a pas confirmé la prestation."].filter(Boolean).join("\n")
+            text:["Bonjour"+(current.guest_name?" "+current.guest_name:"")+",","","Malago a ajouté une proposition à votre demande.","","Séjour : "+(current.property_name||"Villa Magos"),"Référence : "+requestId,"Proposition : "+message,price?"Prix proposé : "+price+" "+currency:"",availability?"Disponibilité annoncée : "+availability:"",proposedDate?"Date proposée : "+proposedDate:"",proposedStart?"Début : "+proposedStart:"",proposedEnd?"Fin : "+proposedEnd:"",proposalLocation?"Lieu : "+proposalLocation:"",conditions?"Conditions : "+conditions:"","","Connectez-vous à votre espace privé Villa Magos pour consulter la proposition et l’accepter ou la refuser.","","Votre accord ne vaut pas confirmation finale tant que le prestataire n’a pas confirmé la prestation."].filter(Boolean).join("\n")
           });
           return json({ok:true,id:requestId,status:"quoted",proposal},200,headers);
         }
