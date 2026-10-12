@@ -1,0 +1,47 @@
+:root{--vm-calendar-ink:#22241f;--vm-calendar-muted:#73766d;--vm-calendar-gold:#b99760;--vm-calendar-line:rgba(35,37,30,.12)}
+.vmCalendarCard{grid-column:1/-1;scroll-margin-top:90px}
+.vmCalendarTop,.vmCalendarSelectedHead,.vmCalendarFormHead{display:flex;align-items:flex-start;justify-content:space-between;gap:16px}
+.vmCalendarTop h3{font-family:Georgia,"Times New Roman",serif;font-size:clamp(28px,3vw,38px);font-weight:400;letter-spacing:-.03em;margin:7px 0}
+.vmCalendarBadge{display:inline-flex;align-items:center;gap:8px;border:1px solid var(--vm-calendar-line);border-radius:99px;padding:9px 12px;font-size:9px;letter-spacing:.09em;text-transform:uppercase;white-space:nowrap}
+.vmCalendarBadge i{width:6px;height:6px;background:#7b9b82;border-radius:50%}
+.vmCalendarActions{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:23px 0 17px;flex-wrap:wrap}
+.vmCalendarSwitch{display:inline-flex;gap:3px;background:#f1eee6;border-radius:99px;padding:4px}
+.vmCalendarSwitch button{border:0;background:transparent;padding:10px 16px;border-radius:99px;font-size:10px;color:#77796f;cursor:pointer}
+.vmCalendarSwitch button.is-active{background:#fffdf8;color:#262820;box-shadow:0 1px 5px #0000000b}
+.vmCalendarAdd,.vmCalendarPrimary{border:0;background:#22241f;color:#fffdf8;border-radius:99px;padding:12px 16px;font-size:10px;letter-spacing:.05em;cursor:pointer;min-height:42px}
+.vmCalendarAdd:hover,.vmCalendarPrimary:hover{background:#544b3b}
+.vmCalendarMonth{border:1px solid var(--vm-calendar-line);border-radius:16px;padding:17px}
+.vmCalendarMonthNav{display:grid;grid-template-columns:42px 1fr 42px;align-items:center;gap:8px;margin-bottom:15px}
+.vmCalendarMonthNav h4{text-align:center;text-transform:capitalize;font-size:15px;margin:0;font-weight:700}
+.vmCalendarMonthNav button{height:40px;width:40px;border:1px solid var(--vm-calendar-line);background:transparent;border-radius:50%;font-size:20px;cursor:pointer;color:var(--vm-calendar-ink)}
+.vmCalendarGrid{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:4px}
+.vmCalendarWeekdays{padding-bottom:8px}.vmCalendarWeekdays span{text-align:center;font-size:9px;letter-spacing:.06em;color:var(--vm-calendar-muted);padding:7px 0;text-transform:uppercase}
+.vmCalendarDays{grid-auto-rows:minmax(54px,auto)}
+.vmCalendarDay{position:relative;border:1px solid transparent;background:#f8f6f0;border-radius:10px;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;gap:4px;padding:8px 3px 5px;cursor:pointer;color:var(--vm-calendar-ink);min-width:0;min-height:55px}
+.vmCalendarDay:hover:not(:disabled){border-color:#c9b184;background:#fffaf0}.vmCalendarDay.is-selected{background:#24251f;color:#fffdf8;border-color:#24251f}
+.vmCalendarDay.is-other-month{opacity:.48}.vmCalendarDay.is-outside-stay{background:transparent;color:#b2b3ac;opacity:.25;cursor:not-allowed}.vmCalendarDay:disabled{cursor:not-allowed}
+.vmCalendarDayNumber{font-size:12px;font-weight:700}.vmCalendarDots{height:7px;display:flex;align-items:center;justify-content:center;gap:3px}
+.vmCalendarDots i{width:5px;height:5px;background:#b5a16f;border-radius:50%;display:block}.vmCalendarDots i.is-idea{background:#b47a58}.vmCalendarDay.is-selected .vmCalendarDots i{background:#e1c997}.vmCalendarDots i.is-empty{opacity:0}
+.vmCalendarSelected{margin-top:20px;padding-top:19px;border-top:1px solid var(--vm-calendar-line)}.vmCalendarSelectedHead{align-items:center;margin-bottom:11px}
+.vmCalendarSelectedHead h4{font-family:Georgia,serif;font-size:23px;font-weight:400;margin:4px 0;text-transform:capitalize}.vmCalendarSelectedHead>span{font-size:10px;color:var(--vm-calendar-muted)}
+.vmEventItem{display:grid;grid-template-columns:8px minmax(0,1fr) auto;gap:12px;align-items:start;border-top:1px solid var(--vm-calendar-line);padding:15px 0}.vmEventItem:first-child{border-top:0}
+.vmEventMarker{width:7px;height:7px;border-radius:50%;background:#7b9b82;margin-top:5px}.vmEventMarker.is-idea{background:#b47a58}.vmEventCopy{min-width:0}
+.vmEventCopy h5{font-size:12px;line-height:1.5;margin:0 0 4px;font-weight:800;overflow-wrap:anywhere}
+.vmEventMeta,.vmEventNotes{font-size:10px;color:var(--vm-calendar-muted);line-height:1.6;margin:0;overflow-wrap:anywhere}.vmEventNotes{margin-top:5px;white-space:pre-line}
+.vmEventActions{display:flex;align-items:center;gap:7px;flex-wrap:wrap;justify-content:flex-end}
+.vmEventStatus{font-size:8px;font-weight:800;letter-spacing:.04em;padding:6px 8px;border-radius:99px;white-space:nowrap;background:#f0eee8;color:#5d6055}.vmEventStatus.is-idea{background:#f7e9df;color:#87563d}.vmEventStatus.is-confirmed{background:#e4eee5;color:#356647}.vmEventStatus.is-cancelled{background:#f7e5e1;color:#9b4336}
+.vmEventAction,.vmCalendarTextButton{border:0;background:transparent;color:#776144;font-size:9px;font-weight:800;cursor:pointer;padding:5px}.vmEventAction:hover,.vmCalendarTextButton:hover{text-decoration:underline}.vmEventAction.is-delete{color:#a35447}
+.vmCalendarEmpty{font-size:11px;color:var(--vm-calendar-muted);line-height:1.8;padding:17px 0}.vmCalendarTextButton{display:block;padding:9px 0}
+.vmAgendaView{border:1px solid var(--vm-calendar-line);border-radius:16px;padding:17px}.vmAgendaDate{font-family:Georgia,serif;font-size:20px;font-weight:400;text-transform:capitalize;margin:6px 0 12px}.vmAgendaDate:not(:first-child){margin-top:23px;padding-top:15px;border-top:1px solid var(--vm-calendar-line)}
+.vmCalendarForm{margin-top:18px;border:1px solid var(--vm-calendar-line);background:#faf8f2;border-radius:16px;padding:20px}.vmCalendarFormHead{align-items:center;margin-bottom:18px}.vmCalendarFormHead h4{font-family:Georgia,serif;font-size:24px;font-weight:400;margin:4px 0}
+.vmCalendarCancel{border:1px solid var(--vm-calendar-line);background:white;border-radius:50%;width:38px;height:38px;font-size:23px;cursor:pointer;color:var(--vm-calendar-ink)}
+.vmCalendarFormGrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:13px}.vmCalendarField{min-width:0}.vmCalendarFieldWide{grid-column:1/-1}
+.vmCalendarField label{display:block;font-size:9px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:#77796f;margin:0 0 7px}
+.vmCalendarField input,.vmCalendarField select,.vmCalendarField textarea{display:block;width:100%;min-height:43px;border:1px solid #dedbd2;border-radius:9px;padding:11px 12px;background:#fffdf8;color:var(--vm-calendar-ink);font:inherit;font-size:12px;max-width:100%}
+.vmCalendarField textarea{resize:vertical;line-height:1.65}.vmCalendarField input:focus,.vmCalendarField select:focus,.vmCalendarField textarea:focus{outline:2px solid #c5a46d55;border-color:var(--vm-calendar-gold)}
+.vmCalendarFormHint,.vmCalendarStatusNote{font-size:10px;line-height:1.7;color:#85877d;margin:13px 0}.vmCalendarFormActions{display:flex;align-items:center;justify-content:flex-end;gap:9px;margin-top:16px}
+.vmCalendarSecondary{border:1px solid var(--vm-calendar-line);background:transparent;color:var(--vm-calendar-ink);border-radius:99px;padding:12px 16px;font-size:10px;cursor:pointer}
+.vmCalendarNotice,.vmCalendarError{margin:14px 0 0;padding:11px 13px;border-radius:9px;font-size:11px;line-height:1.6;background:#f6e8d9;color:#87563d}.vmCalendarNotice.success{background:#e4eee5;color:#356647}.vmCalendarNotice.error,.vmCalendarError{background:#f7e5e1;color:#9b4336}
+.vmCalendarCard [hidden]{display:none!important}.vmCalendarError{margin-top:15px}
+@media(max-width:640px){.vmCalendarCard{padding:18px}.vmCalendarTop{gap:9px}.vmCalendarBadge{font-size:7px;padding:8px 9px}.vmCalendarActions{align-items:stretch}.vmCalendarSwitch{flex:1}.vmCalendarSwitch button{flex:1;padding:10px}.vmCalendarAdd{width:100%}.vmCalendarMonth{padding:9px;border-radius:12px}.vmCalendarGrid{gap:3px}.vmCalendarDays{grid-auto-rows:minmax(43px,auto)}.vmCalendarDay{min-height:43px;border-radius:7px;padding:6px 1px 4px}.vmCalendarDayNumber{font-size:11px}.vmCalendarWeekdays span{font-size:7px;letter-spacing:0}.vmCalendarMonthNav{grid-template-columns:34px 1fr 34px}.vmCalendarMonthNav button{width:33px;height:33px;font-size:17px}.vmEventItem{grid-template-columns:7px minmax(0,1fr);gap:9px}.vmEventActions{grid-column:2;justify-content:flex-start}.vmCalendarForm{padding:15px}.vmCalendarFormGrid{grid-template-columns:1fr}.vmCalendarFieldWide{grid-column:auto}.vmCalendarFormActions{flex-direction:column-reverse;align-items:stretch}.vmCalendarFormActions button{width:100%;min-height:43px}}
+@media(prefers-reduced-motion:reduce){.vmCalendarCard *{scroll-behavior:auto!important}}
