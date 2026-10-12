@@ -100,7 +100,7 @@ jobs:
               "filterCombination": "and",
               "filters": [
                 {
-                  "key": "$workers.scriptName",
+                  "key": "\$workers.scriptName",
                   "operation": "eq",
                   "type": "string",
                   "value": "test"
