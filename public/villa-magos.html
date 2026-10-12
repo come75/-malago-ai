@@ -1101,7 +1101,7 @@ document.getElementById('activityClose').addEventListener('click',closeActivity)
   const item=items[0]||'',choices=choicesFor(item);
   if(state.cat==='transport'){
     if(/transfert aéroport/i.test(item))return 'airport_transfer';
-    if(/louer une voiture|véhicule/i.test(item))return 'car_rental';
+    if(/louer une voiture|véhicule|plusieurs véhicules/i.test(item))return 'car_rental';
     if(/chauffeur|taxi/i.test(item))return 'chauffeur';
     return 'other';
   }
