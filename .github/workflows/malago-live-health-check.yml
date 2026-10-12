@@ -32,8 +32,6 @@ jobs:
           for attempt in $(seq 1 12); do
             echo "Health check attempt ${attempt}/12"
             if curl --connect-timeout 10 --max-time 20 --fail --silent --show-error "$HEALTH_URL" -o health.json; then
-              # Accept the V7/Notion response schema or the legacy V6 data schema.
-              # Keep missing/null numeric fields safe so schema changes produce a clear failure, not a jq parse error.
               if jq -e '
                 .ok == true
                 and .aiConfigured == true
@@ -133,14 +131,7 @@ jobs:
           echo "Cloudflare logs query succeeded for Worker test (last 24 hours)."
           jq '{
             success,
-            totalEvents: (.result.total // .result.statistics.total // (.result.events | length) // 0),
+            resultKeys: (.result | if type == "object" then keys else ["result is not an object"] end),
             returnedEvents: ((.result.events // []) | length),
-            errorEvents: ([.result.events[]? | select(."$metadata".error != null or ."$metadata".level == "error" or ."source".level == "error")] | length),
-            recentErrors: ([.result.events[]? | select(."$metadata".error != null or ."$metadata".level == "error" or ."source".level == "error") | {
-              timestamp,
-              scriptName: ."$workers".scriptName,
-              level: ."$metadata".level,
-              error: ."$metadata".error,
-              message: (."$metadata".message // ."source".message // ."source")
-            }] | .[:10])
+            sampleEvent: ((.result.events // [])[0] // null)
           }' cloudflare-logs.json
