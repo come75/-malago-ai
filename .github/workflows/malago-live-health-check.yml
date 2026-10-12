@@ -94,7 +94,16 @@ jobs:
             "view": "events",
             "limit": 200,
             "parameters": {
-              "datasets": ["cloudflare-workers"]
+              "datasets": ["cloudflare-workers"],
+              "filterCombination": "and",
+              "filters": [
+                {
+                  "key": "\$workers.scriptName",
+                  "operation": "eq",
+                  "type": "string",
+                  "value": "test"
+                }
+              ]
             }
           }
           EOF
@@ -119,11 +128,11 @@ jobs:
             exit 1
           fi
 
-          echo "Cloudflare logs query succeeded for all Workers in the account (last 24 hours)."
+          echo "Cloudflare logs query succeeded for Worker test (last 24 hours)."
           jq '{
             success,
-            resultKeys: (.result | if type == "object" then keys else [] end),
-            returnedEvents: (if (.result.events | type) == "array" then (.result.events | length) else 0 end),
-            eventFieldNames: (if (.result.events | type) == "array" and (.result.events | length) > 0 and (.result.events[0] | type) == "object" then (.result.events[0] | keys) else [] end),
+            returnedEvents: (.result.events.count // ((.result.events.events // []) | length)),
+            returnedRows: ((.result.events.events // []) | length),
+            eventFieldNames: (if ((.result.events.events // []) | length) > 0 and ((.result.events.events[0] | type) == "object") then (.result.events.events[0] | keys) else [] end),
             statistics: (.result.statistics // null)
           }' cloudflare-logs.json
