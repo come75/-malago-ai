@@ -69,3 +69,78 @@ jobs:
             --output /dev/null \
             --write-out "Website HTTP status: %{http_code}\n" \
             "https://test.malago.workers.dev/"
+
+      - name: Query Cloudflare Worker logs
+        shell: bash
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+        run: |
+          set -euo pipefail
+
+          if [ -z "${CLOUDFLARE_API_TOKEN:-}" ] || [ -z "${CLOUDFLARE_ACCOUNT_ID:-}" ]; then
+            echo "::error::Missing CLOUDFLARE_API_TOKEN or CLOUDFLARE_ACCOUNT_ID GitHub Actions secret."
+            exit 1
+          fi
+
+          now_ms="$(date +%s%3N)"
+          from_ms="$((now_ms - 24 * 60 * 60 * 1000))"
+
+          cat > query.json <<EOF
+          {
+            "queryId": "malago-worker-logs-last-24h",
+            "timeframe": {
+              "from": ${from_ms},
+              "to": ${now_ms}
+            },
+            "view": "events",
+            "limit": 200,
+            "parameters": {
+              "datasets": ["cloudflare-workers"],
+              "filterCombination": "and",
+              "filters": [
+                {
+                  "key": "$workers.scriptName",
+                  "operation": "eq",
+                  "type": "string",
+                  "value": "test"
+                }
+              ]
+            }
+          }
+          EOF
+
+          http_code="$(curl --connect-timeout 10 --max-time 45 --silent --show-error \
+            --output cloudflare-logs.json --write-out "%{http_code}" \
+            --request POST \
+            --url "https://api.cloudflare.com/client/v4/accounts/${CLOUDFLARE_ACCOUNT_ID}/workers/observability/telemetry/query" \
+            --header "Authorization: Bearer ${CLOUDFLARE_API_TOKEN}" \
+            --header "Content-Type: application/json" \
+            --data @query.json)"
+
+          if [ "$http_code" -lt 200 ] || [ "$http_code" -ge 300 ]; then
+            echo "::error::Cloudflare Observability API returned HTTP ${http_code}."
+            jq '{success, errors, messages}' cloudflare-logs.json 2>/dev/null || cat cloudflare-logs.json
+            exit 1
+          fi
+
+          if ! jq -e '.success == true' cloudflare-logs.json >/dev/null; then
+            echo "::error::Cloudflare API did not confirm a successful log query."
+            jq '{success, errors, messages}' cloudflare-logs.json
+            exit 1
+          fi
+
+          echo "Cloudflare logs query succeeded for Worker test (last 24 hours)."
+          jq '{
+            success,
+            totalEvents: (.result.total // .result.statistics.total // (.result.events | length) // 0),
+            returnedEvents: ((.result.events // []) | length),
+            errorEvents: ([.result.events[]? | select(."$metadata".error != null or ."$metadata".level == "error" or ."source".level == "error")] | length),
+            recentErrors: ([.result.events[]? | select(."$metadata".error != null or ."$metadata".level == "error" or ."source".level == "error") | {
+              timestamp,
+              scriptName: ."$workers".scriptName,
+              level: ."$metadata".level,
+              error: ."$metadata".error,
+              message: (."$metadata".message // ."source".message // ."source")
+            }] | .[:10])
+          }' cloudflare-logs.json
