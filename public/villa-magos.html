@@ -755,8 +755,8 @@ body.form-visible .mobileCta{
 .clientPortalField select,.clientPortalField textarea{width:100%;border:1px solid #dedbd2;background:#fffdf8;color:#171915;border-radius:10px;padding:14px 15px;font-size:13px;outline:none}
 .clientPortalField select:focus,.clientPortalField textarea:focus{border-color:#EE8405;box-shadow:0 0 0 3px rgba(238,132,5,.1)}
 .clientPortalField textarea{min-height:130px;resize:vertical;line-height:1.65}
-.malagoFilterCard{border:1px solid var(--line);border-radius:14px;background:#fffdf8;padding:17px;margin:16px 0;text-align:left}
-.malagoFilterCard h3{font:400 23px Georgia,serif;margin:7px 0 10px}
+.malagoFilterCard{border:1px solid #454035;border-radius:14px;background:#171815;color:#f8f4ec;padding:17px;margin:16px 0;text-align:left}
+.malagoFilterCard h3{font:400 23px Georgia,serif;color:#fffdf8;margin:7px 0 10px}.malagoFilterCard .eyebrow{color:#ee8405}.malagoFilterAnswers{color:#c4bdb1}.malagoFilterAnswers li{margin:5px 0}.malagoFilterGrid .malagoFlowField label{color:#e5dac7}.malagoFilterGrid input,.malagoFilterGrid select,.malagoFilterGrid textarea{background:#24221e!important;color:#fff!important;border-color:#494238!important;border-radius:10px!important}.malagoFilterGrid select option{background:#24221e;color:#fff}.malagoFilterGrid input::placeholder,.malagoFilterGrid textarea::placeholder{color:#aaa49a}
 .malagoFilterAnswers{font-size:11px;line-height:1.65;color:#6f7168;padding-left:18px;margin:0 0 12px}
 .malagoFilterGrid,.clientPortalFilterGrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:0 12px}
 .malagoFilterGrid .malagoFlowField{min-width:0}.malagoFilterGrid input,.malagoFilterGrid select,.malagoFilterGrid textarea{width:100%;min-width:0}
@@ -1169,31 +1169,34 @@ document.getElementById('activityClose').addEventListener('click',closeActivity)
   else control='<input id="'+id+'" type="'+type+'"'+common+' value="'+esc(value)+'" '+(type==='number'?'min="0" max="99"':'')+' placeholder="'+(type==='text'?'À préciser':'')+'">';
   return '<div class="malagoFlowField"><label for="'+id+'">'+esc(label)+(required?' *':'')+'</label>'+control+'</div>';
  }
- async function summary(){
-  const d=DATA[state.cat],body=$('#malagoFlowBody'),token=window.MALAGO_CLIENT_TOKEN||'';
-  const lines=['Catégorie : '+d.label];
-  selectedItems().forEach((item,idx)=>{lines.push('',(idx+1)+'. '+item);const answers=state.itemAnswers[item]||{};d.steps.slice(1).forEach((s,j)=>lines.push(s[0]+' : '+(answers[j+1]||'À préciser')));});
-  if(state.detail)lines.push('Précision générale : '+state.detail);
-  state.message=['Demande Villa Magos'+(window.MALAGO_CLIENT_STAY&&window.MALAGO_CLIENT_STAY.guest_name?' · '+window.MALAGO_CLIENT_STAY.guest_name:''),'',...lines,'','Merci de nous proposer les options disponibles.','Cette demande n’est pas une réservation confirmée.'].join('\n');
-  $('#malagoFlowCrumbs').innerHTML='<strong>'+esc(d.label)+'</strong> &nbsp; / &nbsp; RÉCAPITULATIF';
-  if(!token){
-   body.innerHTML='<div class="malagoFlowDone"><div class="eyebrow" style="justify-content:center">ESPACE PERSONNEL</div><h2>Gardons cette envie au même endroit.</h2><p>Pour enregistrer cette demande et la retrouver plus tard, ouvrez votre lien privé Villa Magos. Cette sélection n’a pas encore été envoyée.</p><div class="malagoFlowRow"><button class="malagoFlowBack" id="malagoFlowEdit" type="button">← Modifier mes envies</button><button class="malagoFlowNext" id="malagoRequestOpenSpace" type="button">Accéder à mon espace ↗</button></div></div>';
-   $('#malagoFlowEdit').onclick=()=>{state.itemIndex=Math.max(0,selectedItems().length-1);state.step=d.steps.length>1?d.steps.length-1:0;draw();};
-   $('#malagoRequestOpenSpace').onclick=()=>{document.body.classList.add('show-client-access');const section=document.getElementById('espace-client');if(section)section.scrollIntoView({behavior:'smooth',block:'start'});};return;
-  }
-  const cards=selectedItems().map((item,idx)=>{
-   const category=requestCategory(item),fields=FILTERS[category]||FILTERS.other,values=state.itemDetails[item]||{};
-   const previous=Object.values(state.itemAnswers[item]||{}).map((v,j)=>'<li>'+esc((d.steps[j+1]||['Précision'])[0])+': '+esc(Array.isArray(v)?v.join(', '):String(v||'À préciser'))+'</li>').join('');
-   return '<section class="malagoFilterCard"><div class="eyebrow">PRESTATION '+(idx+1)+' · '+esc(categoryLabel(category))+'</div><h3>'+esc(item)+'</h3>'+(previous?'<ul class="malagoFilterAnswers">'+previous+'</ul>':'')+'<div class="malagoFilterGrid">'+fields.map(f=>fieldHtml(f,item,values)).join('')+'</div></section>';
-  }).join('');
-  body.innerHTML='<div class="malagoFlowDone malagoFlowReview"><div class="eyebrow">DERNIÈRES PRÉCISIONS</div><h2>Affinons votre demande.</h2><p>Renseignez les éléments que vous connaissez. Vous pourrez préciser le reste avec votre concierge. Les tarifs et disponibilités seront vérifiés avant toute confirmation.</p><form id="malagoDetailsForm">'+cards+'<div class="malagoFlowField"><label for="malagoFlowDetail">Autres précisions (facultatif)</label><textarea id="malagoFlowDetail" rows="3" placeholder="Budget global, contraintes, préférences…">'+esc(state.detail)+'</textarea></div><div class="malagoFlowRow"><button class="malagoFlowBack" id="malagoFlowEdit" type="button">← Modifier mes choix</button><button class="malagoFlowNext" id="malagoFlowSubmit" type="submit">Envoyer '+selectedItems().length+' demande'+(selectedItems().length>1?'s':'')+' ↗</button></div><p class="malagoFlowFine">Une demande n’est pas une réservation. Nous confirmerons séparément la disponibilité réelle du prestataire.</p><div id="malagoFlowSubmitMessage" role="status" aria-live="polite"></div></form></div>';
-  const detailForm=$('#malagoDetailsForm');
-  detailForm.addEventListener('input',e=>{const el=e.target;if(el.dataset.filterItem){state.itemDetails[el.dataset.filterItem]=state.itemDetails[el.dataset.filterItem]||{};state.itemDetails[el.dataset.filterItem][el.dataset.filterKey]=el.value;}if(el.id==='malagoFlowDetail')state.detail=el.value;});
-  detailForm.addEventListener('change',e=>{const el=e.target;if(el.dataset.filterItem){state.itemDetails[el.dataset.filterItem]=state.itemDetails[el.dataset.filterItem]||{};state.itemDetails[el.dataset.filterItem][el.dataset.filterKey]=el.value;}});
-  $('#malagoFlowEdit').onclick=()=>{state.itemIndex=Math.max(0,selectedItems().length-1);state.step=d.steps.length>1?d.steps.length-1:0;draw();};
-  detailForm.addEventListener('submit',async e=>{e.preventDefault();state.detail=$('#malagoFlowDetail').value.trim();await submitRequests();});
+ function buildDetailFields(){return selectedItems().flatMap(item=>{const category=requestCategory(item);return (FILTERS[category]||FILTERS.other).map(field=>({item,category,field}));});}
+function saveDetailValue(entry,value){const key=entry.field[0];state.itemDetails[entry.item]=state.itemDetails[entry.item]||{};state.itemDetails[entry.item][key]=value;}
+function renderDetailWizard(){
+ const body=$('#malagoFlowBody'),items=selectedItems(),fields=state.detailFields||(state.detailFields=buildDetailFields()),index=state.detailIndex||0,total=fields.length;
+ $('#malagoFlowCrumbs').innerHTML='<strong>'+esc(DATA[state.cat].label)+'</strong> &nbsp; / &nbsp; '+(index<total?'PRÉCISIONS '+(index+1)+' / '+total:'RÉCAPITULATIF');
+ if(index>=total){
+  const cards=items.map((item,i)=>{const category=requestCategory(item),fs=FILTERS[category]||FILTERS.other,values=state.itemDetails[item]||{};return '<section class="malagoFilterCard"><div class="eyebrow">PRESTATION '+(i+1)+' · '+esc(categoryLabel(category))+'</div><h3>'+esc(item)+'</h3><ul class="malagoFilterAnswers">'+fs.map(f=>'<li><strong>'+esc(f[1])+':</strong> '+esc(values[f[0]]||'À préciser')+'</li>').join('')+'</ul></section>';}).join('');
+  body.innerHTML='<div class="malagoFlowDone malagoFlowReview"><div class="eyebrow">DERNIÈRES PRÉCISIONS</div><h2>Votre demande prend forme.</h2><p>Vérifiez vos choix avant l’envoi. Vous pourrez préciser le reste avec votre concierge.</p>'+cards+'<div class="malagoFlowField"><label for="malagoFlowDetail">Une précision globale ? (facultatif)</label><textarea id="malagoFlowDetail" rows="3" placeholder="Préférences ou contraintes…">'+esc(state.detail)+'</textarea></div><div class="malagoFlowRow"><button class="malagoFlowBack" id="malagoFlowEdit" type="button">← Modifier mes choix</button><button class="malagoFlowNext" id="malagoFlowSubmit" type="button">Envoyer '+items.length+' demande'+(items.length>1?'s':'')+' ↗</button></div><p class="malagoFlowFine">Une demande n’est pas une réservation confirmée.</p><div id="malagoFlowSubmitMessage" role="status" aria-live="polite"></div></div>';
+  $('#malagoFlowDetail').addEventListener('input',e=>state.detail=e.target.value);$('#malagoFlowEdit').onclick=()=>{state.detailIndex=Math.max(0,total-1);renderDetailWizard();};$('#malagoFlowSubmit').onclick=submitRequests;return;
  }
- function categoryLabel(category){return ({car_rental:'Location de voiture',airport_transfer:'Transfert aéroport',chauffeur:'Chauffeur privé',restaurant:'Restaurant',activity:'Activité',chef:'Chef privé',groceries:'Courses livrées',beach_club:'Beach club',wellness:'Bien-être',family:'Famille & enfants',decoration:'Décoration',bartender:'Barman privé',dj:'DJ privé',event:'Événement privé',villa_services:'Services à la villa',other:'Autre demande'})[category]||category;}
+ const entry=fields[index],[key,label,type='text',required=false,options=[]]=entry.field,value=((state.itemDetails[entry.item]||{})[key])||'';
+ let control='';
+ if(type==='select')control='<div class="malagoFlowOptions">'+options.map((o,i)=>'<button type="button" class="malagoFlowOption '+(value===o?'is-selected':'')+'" data-detail-choice="'+esc(o)+'" style="--option-i:'+i+'"><b>'+esc(o)+'</b></button>').join('')+'</div>';
+ else if(type==='number')control='<div class="malagoFlowOptions">'+Array.from({length:8},(_,i)=>String(i+1)).map((o,i)=>'<button type="button" class="malagoFlowOption '+(String(value)===o?'is-selected':'')+'" data-detail-choice="'+o+'" style="--option-i:'+i+'"><b>'+o+'</b></button>').join('')+'</div><div class="malagoFlowField"><label for="malagoDetailCustom">Autre nombre</label><input id="malagoDetailCustom" type="number" min="0" max="99" value="'+esc(value)+'" placeholder="Nombre à préciser"></div>';
+ else if(type==='textarea')control='<div class="malagoFlowField"><label for="malagoDetailValue">Votre réponse (facultatif)</label><textarea id="malagoDetailValue" rows="3" placeholder="À préciser si utile">'+esc(value)+'</textarea></div>';
+ else control='<div class="malagoFlowField"><label for="malagoDetailValue">Votre réponse (facultatif)</label><input id="malagoDetailValue" type="'+esc(type)+'" value="'+esc(value)+'" placeholder="'+(type==='text'?'Touchez pour préciser':'')+'"></div>';
+ body.innerHTML='<div class="malagoFlowDone malagoFlowReview"><div class="eyebrow">'+esc(categoryLabel(entry.category))+' · '+esc(entry.item)+'</div><h2>'+esc(label)+'</h2><p class="malagoFlowLead">Choisissez une réponse pour continuer.</p>'+control+'<div class="malagoFlowRow"><button class="malagoFlowBack" id="malagoDetailBack" type="button">← Retour</button><button class="malagoFlowNext" id="malagoDetailNext" type="button">'+(index===total-1?'Voir le récapitulatif →':'Continuer →')+'</button></div></div>';
+ body.querySelectorAll('[data-detail-choice]').forEach(b=>b.addEventListener('click',()=>{saveDetailValue(entry,b.dataset.detailChoice);if(type==='select'){state.detailIndex=index+1;renderDetailWizard();}else{body.querySelectorAll('[data-detail-choice]').forEach(x=>x.classList.toggle('is-selected',x===b));const custom=$('#malagoDetailCustom');if(custom)custom.value=b.dataset.detailChoice;}}));
+ const input=$('#malagoDetailValue'),custom=$('#malagoDetailCustom');if(input)input.addEventListener('input',()=>saveDetailValue(entry,input.value));if(custom)custom.addEventListener('input',()=>saveDetailValue(entry,custom.value));
+ $('#malagoDetailBack').onclick=()=>{if(index===0){state.itemIndex=Math.max(0,items.length-1);state.step=Math.max(1,DATA[state.cat].steps.length-1);draw();return;}state.detailIndex=index-1;renderDetailWizard();};
+ $('#malagoDetailNext').onclick=()=>{const v=(state.itemDetails[entry.item]||{})[key]||'';if(required&&!String(v).trim()){window.alert('Choisissez ou renseignez une réponse pour continuer.');return;}if(input)saveDetailValue(entry,input.value);if(custom&&custom.value)saveDetailValue(entry,custom.value);state.detailIndex=index+1;renderDetailWizard();};
+}
+async function summary(){
+ const d=DATA[state.cat],body=$('#malagoFlowBody'),token=window.MALAGO_CLIENT_TOKEN||'';
+ if(!token){$('#malagoFlowCrumbs').innerHTML='<strong>'+esc(d.label)+'</strong> &nbsp; / &nbsp; RÉCAPITULATIF';body.innerHTML='<div class="malagoFlowDone"><div class="eyebrow" style="justify-content:center">ESPACE PERSONNEL</div><h2>Gardons cette envie au même endroit.</h2><p>Pour enregistrer cette demande, ouvrez votre lien privé Villa Magos. Cette sélection n’a pas encore été envoyée.</p><div class="malagoFlowRow"><button class="malagoFlowBack" id="malagoFlowEdit" type="button">← Modifier mes envies</button><button class="malagoFlowNext" id="malagoRequestOpenSpace" type="button">Accéder à mon espace ↗</button></div></div>';$('#malagoFlowEdit').onclick=()=>{state.itemIndex=Math.max(0,selectedItems().length-1);state.step=Math.max(1,d.steps.length-1);draw();};$('#malagoRequestOpenSpace').onclick=()=>{document.body.classList.add('show-client-access');const section=document.getElementById('espace-client');if(section)section.scrollIntoView({behavior:'smooth',block:'start'});};return;}
+ state.detailFields=buildDetailFields();state.detailIndex=0;renderDetailWizard();
+}
+function categoryLabel(category){return ({car_rental:'Location de voiture',airport_transfer:'Transfert aéroport',chauffeur:'Chauffeur privé',restaurant:'Restaurant',activity:'Activité',chef:'Chef privé',groceries:'Courses livrées',beach_club:'Beach club',wellness:'Bien-être',family:'Famille & enfants',decoration:'Décoration',bartender:'Barman privé',dj:'DJ privé',event:'Événement privé',villa_services:'Services à la villa',other:'Autre demande'})[category]||category;}
  async function submitRequests(){
   const d=DATA[state.cat],body=$('#malagoFlowBody'),saveButton=$('#malagoFlowSubmit'),notice=$('#malagoFlowSubmitMessage');
   if(!window.MALAGO_CLIENT_TOKEN){notice.textContent='Ouvrez votre lien privé Villa Magos pour enregistrer la demande.';return;}
@@ -1212,7 +1215,7 @@ document.getElementById('activityClose').addEventListener('click',closeActivity)
    if(!response.ok)throw new Error(data.error||'Impossible d’enregistrer les demandes.');
    body.querySelector('h2').textContent='C’est bien enregistré.';
    body.querySelector('p').textContent=(data.requests&&data.requests.length>1?data.requests.length+' demandes distinctes sont maintenant dans votre espace personnel.':'Votre demande est maintenant dans votre espace personnel.')+' Elles ne sont pas encore des réservations confirmées.';
-   const form=$('#malagoDetailsForm');if(form)form.querySelectorAll('input,select,textarea,button').forEach(el=>el.disabled=true);
+   
    saveButton.textContent='Voir mes demandes ↗';saveButton.disabled=false;saveButton.type='button';saveButton.onclick=()=>{const section=document.getElementById('espace-client');if(section)section.scrollIntoView({behavior:'smooth',block:'start'});};
    const refresh=document.getElementById('clientPortalRefresh');if(refresh)refresh.click();
   }catch(error){notice.textContent=(error.message||'Une erreur est survenue.')+' Réessayez ; vos réponses sont conservées.';saveButton.disabled=false;saveButton.textContent='Réessayer';}
