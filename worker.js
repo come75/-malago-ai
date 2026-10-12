@@ -589,6 +589,9 @@ export default {
           const days=30;
           if (!propertyName) return json({error:"property_name est obligatoire."},400,headers);
           if (guestEmail && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(guestEmail)) return json({error:"Adresse e-mail invalide."},400,headers);
+          if (startDate && !isIsoCalendarDate(startDate)) return json({error:"Date d’arrivée invalide."},400,headers);
+          if (endDate && !isIsoCalendarDate(endDate)) return json({error:"Date de départ invalide."},400,headers);
+          if (startDate && endDate && endDate < startDate) return json({error:"La date de départ doit être égale ou postérieure à la date d’arrivée."},400,headers);
           const id=crypto.randomUUID();
           const rawToken=[...crypto.getRandomValues(new Uint8Array(32))].map(b=>b.toString(16).padStart(2,"0")).join("");
           const tokenHash=await sha256Hex(rawToken);
