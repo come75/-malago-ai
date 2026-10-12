@@ -1118,7 +1118,9 @@ document.getElementById('activityClose').addEventListener('click',closeActivity)
   const saveButton=document.getElementById('malagoFlowMyRequests');
   saveButton.disabled=true;saveButton.textContent='Enregistrement…';
   try{
-    const response=await fetch('/api/client/requests',{method:'POST',cache:'no-store',headers:{'Authorization':'Bearer '+token,'Content-Type':'application/json'},body:JSON.stringify({category:requestCategory(),description:state.message})});
+    const d=DATA[state.cat];
+    const structuredDetails={category_key:state.cat,category_label:d.label,items:selectedItems().map(item=>{const answers=state.itemAnswers[item]||{};return {name:item,answers:d.steps.slice(1).map((step,j)=>{const raw=answers[j+1]||'À préciser';return {question:step[0],answer:Array.isArray(raw)?raw.join(', '):String(raw)}})}}),general_note:state.detail||''};
+    const response=await fetch('/api/client/requests',{method:'POST',cache:'no-store',headers:{'Authorization':'Bearer '+token,'Content-Type':'application/json'},body:JSON.stringify({category:requestCategory(),description:state.message,details:structuredDetails})});
     let data={};try{data=await response.json()}catch{}
     if(!response.ok)throw new Error(data.error||'Impossible d’enregistrer la demande.');
     body.querySelector('.malagoFlowCheck').textContent='✓';
@@ -1162,6 +1164,14 @@ for(const item of items){
  title.textContent=labels[item.category]||"Demande Malago";
  const d=new Date(item.created_at);date.className="clientPortalDate";date.textContent=Number.isNaN(d.getTime())?"":d.toLocaleDateString("fr-FR",{day:"numeric",month:"short",year:"numeric"});
  badge.className="clientPortalStatus "+item.status;badge.textContent=statuses[item.status]||"En traitement";desc.className="clientPortalDescription";desc.textContent=item.description||"";left.append(title,date);top.append(left,badge);article.append(top,desc);
+ const structured=item.structured_details;
+ if(structured&&Array.isArray(structured.items)&&structured.items.length){
+  const detailBox=document.createElement("div");detailBox.className="clientPortalStructuredDetails";const detailTitle=document.createElement("strong");detailTitle.textContent="Précisions de votre demande";detailBox.append(detailTitle);
+  if(structured.category_label){const category=document.createElement("p");category.textContent="Parcours : "+structured.category_label;detailBox.append(category);}
+  structured.items.forEach(entry=>{const itemTitle=document.createElement("h5");itemTitle.textContent=entry.name||"Prestation";detailBox.append(itemTitle);(Array.isArray(entry.answers)?entry.answers:[]).forEach(answer=>{const row=document.createElement("p");const label=document.createElement("b");label.textContent=(answer.question||"Précision")+" : ";row.append(label,document.createTextNode(Array.isArray(answer.answer)?answer.answer.join(", "):String(answer.answer||"À préciser")));detailBox.append(row);});});
+  if(structured.general_note){const note=document.createElement("p");note.textContent="Précision générale : "+structured.general_note;detailBox.append(note);}
+  article.append(detailBox);
+ }
  const proposalEvents=(item.history||[]).filter(event=>event.event_type==="proposal"&&event.proposal);
  const latestProposal=proposalEvents[proposalEvents.length-1]||null;
  for(const event of (item.history||[])){
@@ -1172,6 +1182,9 @@ for(const item of items){
    box.append(heading,text);
    if(p.price){const price=document.createElement("p");price.style.fontWeight="700";price.textContent="Prix proposé : "+p.price+" "+(p.currency||"EUR");box.append(price)}
    if(p.availability){const avail=document.createElement("p");avail.textContent="Disponibilité annoncée : "+p.availability;box.append(avail)}
+   if(p.partner_name){const partner=document.createElement("p");partner.textContent="Prestataire : "+p.partner_name;box.append(partner)}
+   if(p.proposed_date){const date=document.createElement("p");const dateValue=new Date(p.proposed_date+"T12:00:00");date.textContent="Date proposée : "+dateValue.toLocaleDateString("fr-FR",{weekday:"long",day:"numeric",month:"long",year:"numeric"})+(p.proposed_start_time?" · "+p.proposed_start_time+(p.proposed_end_time?" – "+p.proposed_end_time:""):"");box.append(date);}
+   if(p.proposal_location){const place=document.createElement("p");place.textContent="Lieu proposé : "+p.proposal_location;box.append(place);}
    if(p.conditions){const cond=document.createElement("p");cond.textContent="Conditions : "+p.conditions;box.append(cond)}
    if(item.status==="quoted"&&event===latestProposal){
     const row=document.createElement("div");row.style.cssText="display:flex;gap:8px;flex-wrap:wrap;margin-top:12px";
@@ -1182,7 +1195,7 @@ for(const item of items){
     box.append(row);
    } else if(item.status==="accepted_by_customer"){const pending=document.createElement("p");pending.textContent="Votre accord est enregistré. La prestation attend encore la confirmation finale du prestataire.";box.append(pending)}
    article.append(box);
-  } else if(event.event_type!=="received"){
+  } else if(event.event_type!=="received"&&event.event_type!=="structured_details"){
    const historyLine=document.createElement("p");historyLine.className="clientPortalDate";historyLine.style.marginTop="10px";historyLine.textContent=(event.details||"Mise à jour")+" · "+(Number.isNaN(new Date(event.created_at).getTime())?"":new Date(event.created_at).toLocaleDateString("fr-FR"));article.append(historyLine);
   }
  }
