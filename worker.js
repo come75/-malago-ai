@@ -850,7 +850,7 @@ export default {
           if (!REQUEST_STATUSES.has(nextStatus)) return json({error:"Statut invalide."},400,headers);
           if (nextStatus==="confirmed" && note.length<5) return json({error:"Pour confirmer, ajoute une note attestant la confirmation réelle du prestataire."},400,headers);
           const requestId=statusMatch[1];
-          const current=await env.DB.prepare("SELECT status,stay_id,category FROM client_requests WHERE id=?").bind(requestId).first();
+          const current=await env.DB.prepare("SELECT r.status,r.stay_id,r.category,s.start_date,s.end_date FROM client_requests r JOIN stays s ON s.id=r.stay_id WHERE r.id=?").bind(requestId).first();
           if (!current) return json({error:"Demande introuvable."},404,headers);
           if (current.status===nextStatus) return json({ok:true,id:requestId,status:nextStatus,unchanged:true},200,headers);
           if (!REQUEST_STATUS_TRANSITIONS[current.status]?.has(nextStatus)) return json({error:"Transition de statut interdite.",current_status:current.status,requested_status:nextStatus},409,headers);
@@ -859,16 +859,16 @@ export default {
             env.DB.prepare("INSERT INTO client_request_events (id,request_id,event_type,details) VALUES (?,?,?,?)").bind(crypto.randomUUID(),requestId,"status_changed",eventDetails)
           ];
           if(nextStatus==="confirmed"){
-            await ensureStayEventsTable(env.DB);
             const proposalEvent=await env.DB.prepare("SELECT details FROM client_request_events WHERE request_id=? AND event_type='proposal' ORDER BY created_at DESC LIMIT 1").bind(requestId).first();
             const proposal=parseStructuredDetails(proposalEvent?.details);
-            if(proposal?.proposed_date&&isIsoCalendarDate(proposal.proposed_date)){
-              const categoryLabel={car_rental:"Location de voiture",airport_transfer:"Transfert chauffeur",chauffeur:"Chauffeur privé",restaurant:"Restaurant",activity:"Expérience",chef:"Chef privé",groceries:"Courses livrées",beach_club:"Plage / beach club",wellness:"Bien-être",family:"Famille & enfants",decoration:"Décoration & fleurs",bartender:"Barman privé",dj:"DJ privé",event:"Événement privé",villa_services:"Service à la villa",other:"Service Villa Magos"};
-              const eventTitle=sanitize((categoryLabel[current.category]||"Service Villa Magos")+(proposal.partner_name?" · "+proposal.partner_name:""),120);
-              const existing=await env.DB.prepare("SELECT id FROM stay_events WHERE linked_request_id=? LIMIT 1").bind(requestId).first();
-              if(existing)ops.push(env.DB.prepare("UPDATE stay_events SET title=?,event_date=?,start_time=?,end_time=?,location=?,notes=?,event_type='service',status='confirmed',updated_at=datetime('now') WHERE id=?").bind(eventTitle,proposal.proposed_date,proposal.proposed_start_time||null,proposal.proposed_end_time||null,proposal.proposal_location||null,proposal.message||proposal.conditions||null,existing.id));
-              else ops.push(env.DB.prepare("INSERT INTO stay_events (id,stay_id,title,event_date,start_time,end_time,location,notes,event_type,status,linked_request_id) VALUES (?,?,?,?,?,?,?,?,'service','confirmed',?)").bind(crypto.randomUUID(),current.stay_id,eventTitle,proposal.proposed_date,proposal.proposed_start_time||null,proposal.proposed_end_time||null,proposal.proposal_location||null,proposal.message||proposal.conditions||null,requestId));
-            }
+            if(!proposal?.proposed_date||!isIsoCalendarDate(proposal.proposed_date))return json({error:"Ajoute une date valide à la proposition avant de confirmer : la prestation doit pouvoir être inscrite dans l’agenda."},400,headers);
+            if((current.start_date&&proposal.proposed_date<current.start_date)||(current.end_date&&proposal.proposed_date>current.end_date))return json({error:"La date confirmée doit être comprise dans les dates du séjour."},400,headers);
+            await ensureStayEventsTable(env.DB);
+            const categoryLabel={car_rental:"Location de voiture",airport_transfer:"Transfert chauffeur",chauffeur:"Chauffeur privé",restaurant:"Restaurant",activity:"Expérience",chef:"Chef privé",groceries:"Courses livrées",beach_club:"Plage / beach club",wellness:"Bien-être",family:"Famille & enfants",decoration:"Décoration & fleurs",bartender:"Barman privé",dj:"DJ privé",event:"Événement privé",villa_services:"Service à la villa",other:"Service Villa Magos"};
+            const eventTitle=sanitize((categoryLabel[current.category]||"Service Villa Magos")+(proposal.partner_name?" · "+proposal.partner_name:""),120);
+            const existing=await env.DB.prepare("SELECT id FROM stay_events WHERE linked_request_id=? LIMIT 1").bind(requestId).first();
+            if(existing)ops.push(env.DB.prepare("UPDATE stay_events SET title=?,event_date=?,start_time=?,end_time=?,location=?,notes=?,event_type='service',status='confirmed',updated_at=datetime('now') WHERE id=?").bind(eventTitle,proposal.proposed_date,proposal.proposed_start_time||null,proposal.proposed_end_time||null,proposal.proposal_location||null,proposal.message||proposal.conditions||null,existing.id));
+            else ops.push(env.DB.prepare("INSERT INTO stay_events (id,stay_id,title,event_date,start_time,end_time,location,notes,event_type,status,linked_request_id) VALUES (?,?,?,?,?,?,?,?,'service','confirmed',?)").bind(crypto.randomUUID(),current.stay_id,eventTitle,proposal.proposed_date,proposal.proposed_start_time||null,proposal.proposed_end_time||null,proposal.proposal_location||null,proposal.message||proposal.conditions||null,requestId));
           }
           if(nextStatus==="cancelled"){await ensureStayEventsTable(env.DB);ops.push(env.DB.prepare("UPDATE stay_events SET status='cancelled',updated_at=datetime('now') WHERE linked_request_id=?").bind(requestId));}
           await env.DB.batch(ops);

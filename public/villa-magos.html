@@ -755,6 +755,18 @@ body.form-visible .mobileCta{
 .clientPortalField select,.clientPortalField textarea{width:100%;border:1px solid #dedbd2;background:#fffdf8;color:#171915;border-radius:10px;padding:14px 15px;font-size:13px;outline:none}
 .clientPortalField select:focus,.clientPortalField textarea:focus{border-color:#EE8405;box-shadow:0 0 0 3px rgba(238,132,5,.1)}
 .clientPortalField textarea{min-height:130px;resize:vertical;line-height:1.65}
+.malagoFilterCard{border:1px solid var(--line);border-radius:14px;background:#fffdf8;padding:17px;margin:16px 0;text-align:left}
+.malagoFilterCard h3{font:400 23px Georgia,serif;margin:7px 0 10px}
+.malagoFilterAnswers{font-size:11px;line-height:1.65;color:#6f7168;padding-left:18px;margin:0 0 12px}
+.malagoFilterGrid,.clientPortalFilterGrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:0 12px}
+.malagoFilterGrid .malagoFlowField{min-width:0}.malagoFilterGrid input,.malagoFilterGrid select,.malagoFilterGrid textarea{width:100%;min-width:0}
+.malagoFlowReview{max-width:760px;margin:auto}.malagoFlowReview>p{line-height:1.7}
+.malagoFlowFine{font-size:10px;line-height:1.6;color:#77796f;margin-top:12px}
+.clientPortalCategoryFilters{margin:12px 0 18px;padding:14px;background:#f7f4ed;border:1px solid #e4dfd3;border-radius:12px}
+.clientPortalFilterHeading{font-size:10px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:#98733c;margin-bottom:7px}
+.clientPortalFilterGrid .clientPortalField{min-width:0}.clientPortalFilterGrid input,.clientPortalFilterGrid select,.clientPortalFilterGrid textarea{width:100%;min-width:0}
+@media(max-width:560px){.malagoFilterGrid,.clientPortalFilterGrid{grid-template-columns:1fr}.malagoFilterCard{padding:13px}}
+
 .clientPortalSubmit{width:100%;min-height:49px}
 .clientPortalHint,.clientPortalFoot{font-size:10px;line-height:1.7;color:#85877d;margin:13px 0 0}
 .clientPortalMessage{margin-top:13px;padding:13px 14px;border-radius:10px;font-size:12px;line-height:1.6}
@@ -890,8 +902,8 @@ html:not(.client-portal-mode) body:not(.show-client-access) .clientPortalSection
       <div class="clientPortalWelcome"><div><div class="clientPortalKicker">Votre séjour · Espace privé</div><h3 id="clientPortalWelcomeName">On s’occupe de vous.</h3><p>Envoyez-nous vos demandes. Nous vous confirmerons toujours clairement ce qui est réellement réservé.</p></div><span class="clientPortalBadge"><span></span> Votre concierge Malago</span></div>
       <div class="clientPortalGrid">
         <section class="clientPortalCard"><div class="clientPortalCardKicker">À votre service</div><h3>Faire une demande</h3><p class="clientPortalSub">Dites-nous ce dont vous avez besoin. Nous revenons vers vous avec les prochaines étapes.</p>
-          <form id="clientPortalForm"><div class="clientPortalField"><label for="clientPortalCategory">De quoi avez-vous besoin ?</label><select id="clientPortalCategory" name="category" required><option value="car_rental">Location de voiture</option><option value="chauffeur">Chauffeur privé</option><option value="airport_transfer">Transfert aéroport</option><option value="restaurant">Restaurant</option><option value="activity">Activité ou sortie</option><option value="beach_club">Plages & beach clubs</option><option value="chef">Chef à domicile</option><option value="groceries">Courses livrées</option><option value="bartender">Barman privé</option><option value="dj">DJ privé</option><option value="decoration">Décoration, fleurs & cadeaux</option><option value="wellness">Massages & bien-être</option><option value="family">Famille & enfants</option><option value="event">Événement privé</option><option value="villa_services">Services & confort à la villa</option><option value="other">Autre demande</option></select></div>
-          <div class="clientPortalField"><label for="clientPortalDescription">Précisez votre demande</label><textarea id="clientPortalDescription" name="description" minlength="3" maxlength="3000" required placeholder="Ex. : nous aimerions une voiture automatique pour 4 personnes, du 12 au 16 juin…"></textarea></div>
+          <form id="clientPortalForm"><div class="clientPortalField"><label for="clientPortalCategory">De quoi avez-vous besoin ?</label><select id="clientPortalCategory" name="category" required><option value="" disabled selected>Choisissez une catégorie</option><option value="car_rental">Location de voiture</option><option value="chauffeur">Chauffeur privé</option><option value="airport_transfer">Transfert aéroport</option><option value="restaurant">Restaurant</option><option value="activity">Activité ou sortie</option><option value="beach_club">Plages & beach clubs</option><option value="chef">Chef à domicile</option><option value="groceries">Courses livrées</option><option value="bartender">Barman privé</option><option value="dj">DJ privé</option><option value="decoration">Décoration, fleurs & cadeaux</option><option value="wellness">Massages & bien-être</option><option value="family">Famille & enfants</option><option value="event">Événement privé</option><option value="villa_services">Services & confort à la villa</option><option value="other">Autre demande</option></select></div>
+          <div id="clientPortalCategoryFilters" class="clientPortalCategoryFilters" aria-live="polite"></div><div class="clientPortalField"><label for="clientPortalDescription">Un complément utile</label><textarea id="clientPortalDescription" name="description" maxlength="3000" placeholder="Ajoutez un détail utile, une préférence ou une contrainte…"></textarea></div>
           <button id="clientPortalSubmit" class="btn btnGold clientPortalSubmit" type="submit">Envoyer ma demande <span>↗</span></button><p class="clientPortalHint">Votre demande sera transmise à l’équipe Malago. Elle ne constitue pas une réservation confirmée.</p><div id="clientPortalMessage" class="clientPortalMessage" role="status" aria-live="polite" hidden></div></form>
         </section>
         <section class="clientPortalCard"><div class="clientPortalRequestsHead"><div><div class="clientPortalCardKicker">Votre suivi</div><h3>Mes demandes</h3><p class="clientPortalSub">Retrouvez ici leur avancement.</p></div><button id="clientPortalRefresh" class="clientPortalRefresh" type="button">Actualiser ↻</button></div><div id="clientPortalRequests"><div class="clientPortalEmpty">Chargement de vos demandes…</div></div></section>
@@ -1036,6 +1048,25 @@ document.getElementById('activityClose').addEventListener('click',closeActivity)
 (function(){
  const $=s=>document.querySelector(s);
  const WA_NUMBER='34613384566';
+ const FILTERS=window.VM_REQUEST_FILTERS={
+  car_rental:[['pickup_date','Date de prise en charge','date'],['pickup_time','Heure de prise en charge','time'],['return_date','Date de restitution','date'],['return_time','Heure de restitution','time'],['pickup_location','Lieu de livraison','select',false,['Villa Magos','Aéroport','Gare','Autre adresse']],['return_location','Lieu de restitution','select',false,['Même lieu','Villa Magos','Aéroport','Gare','Autre adresse']],['vehicle_type','Catégorie de véhicule','select',false,['Économique','Compacte','Berline','SUV','Cabriolet','Familiale','Premium']],['passengers','Nombre de passagers','number'],['luggage','Nombre de bagages','number'],['transmission','Boîte de vitesses','select',false,['Automatique','Manuelle','Sans préférence']],['child_seats','Sièges enfants / rehausseurs','text'],['budget','Budget souhaité','text'],['extras','Autres besoins','textarea']],
+  airport_transfer:[['route','Trajet','select',false,['Aéroport → Villa Magos','Villa Magos → Aéroport','Autre trajet','Aller-retour']],['date','Date du trajet','date'],['time','Heure souhaitée','time'],['flight_number','Numéro de vol','text'],['passengers','Nombre de passagers','number'],['luggage','Nombre de bagages','number'],['vehicle_type','Véhicule','select',false,['Standard','Familial','Van','Premium']],['child_seats','Sièges enfants','text'],['budget','Budget souhaité','text'],['notes','Précisions','textarea']],
+  chauffeur:[['date','Date','date'],['start_time','Heure de début','time'],['duration','Durée souhaitée','select',false,['Trajet simple','Aller-retour','Quelques heures','Demi-journée','Journée complète','Soirée']],['route','Trajet / itinéraire','textarea'],['passengers','Nombre de passagers','number'],['vehicle_type','Véhicule souhaité','select',false,['Berline','SUV','Van','Premium','Sans préférence']],['stops','Arrêts supplémentaires','text'],['budget','Budget souhaité','text']],
+  restaurant:[['date','Date souhaitée','date'],['time','Heure souhaitée','time'],['meal','Moment','select',false,['Déjeuner','Dîner','Brunch','Autre']],['guests','Nombre de personnes','number'],['cuisine','Type de cuisine','text'],['atmosphere','Ambiance','select',false,['Romantique','Familiale','Festive','Calme','Gastronomique','Locale & authentique']],['budget','Budget par personne','text'],['dietary','Préférences alimentaires','text'],['allergies','Allergies / intolérances à signaler','textarea'],['location','Zone souhaitée','text'],['transport','Besoin de transport','select',false,['Oui','Non','À discuter']]],
+  activity:[['activity_type','Activité souhaitée','text'],['date','Date souhaitée','date'],['time','Moment de la journée','select',false,['Matin','Après-midi','Soir','Flexible']],['participants','Nombre de participants','number'],['children','Âges des enfants, si concernés','text'],['duration','Durée souhaitée','select',false,['1–2 heures','Demi-journée','Journée','Flexible']],['format','Format','select',false,['Privé','En groupe','Sans préférence']],['budget','Budget par personne / total','text'],['pickup','Départ / transport','text'],['language','Langue souhaitée','text'],['notes','Contraintes ou envies','textarea']],
+  chef:[['date','Date du repas','date'],['time','Heure du repas','time'],['guests','Nombre de convives','number'],['meal','Type de repas','select',false,['Petit-déjeuner','Brunch','Déjeuner','Dîner','Barbecue','Menu dégustation','Autre']],['cuisine','Style de cuisine','text'],['courses','Nombre de plats / services','text'],['budget','Budget par personne ou total','text'],['dietary','Préférences alimentaires','text'],['allergies','Allergies / intolérances','textarea'],['service','Service souhaité','select',false,['Repas livré / préparé','Service à table','Expérience gastronomique','À discuter']],['ingredients','Courses et ingrédients','select',false,['Inclus dans la proposition','À préciser']],['notes','Équipement / besoins cuisine','textarea']],
+  groceries:[['delivery_date','Date de livraison','date'],['delivery_time','Créneau souhaité','text'],['order_type','Type de courses','select',false,['Courses d’arrivée','Livraison ponctuelle','Livraisons multiples']],['people','Nombre de personnes','number'],['list','Liste de courses / catégories','textarea'],['preferences','Marques ou préférences alimentaires','textarea'],['avoid','Produits à éviter','text'],['substitutions','En cas d’indisponibilité','select',false,['Me demander avant remplacement','Proposer une alternative','Choisir la meilleure option']],['budget','Budget approximatif','text'],['notes','Livraison / rangement souhaité','textarea']],
+  beach_club:[['date','Date','date'],['arrival_time','Heure d’arrivée souhaitée','time'],['guests','Nombre de personnes','number'],['booking_type','Réservation souhaitée','select',false,['Transats','Table','Lit balinais','Cabana / espace privé','Autre / à conseiller']],['atmosphere','Ambiance','select',false,['Détente','Festive','Chic','Familiale']],['budget','Budget total','text'],['food','Restauration souhaitée','select',false,['Oui','Non','À discuter']],['transport','Transport depuis la villa','select',false,['Oui','Non','À discuter']],['occasion','Occasion particulière','text'],['notes','Préférences / contraintes','textarea']],
+  wellness:[['service','Soin souhaité','select',false,['Massage','Massage en duo','Yoga','Fitness','Soin beauté','Autre']],['date','Date souhaitée','date'],['time','Horaire souhaité','time'],['duration','Durée souhaitée','select',false,['30 min','60 min','90 min','120 min','À conseiller']],['guests','Nombre de personnes','number'],['location','Lieu','select',false,['À la villa','Dans un établissement','Sans préférence']],['budget','Budget souhaité','text'],['notes','Préférences à communiquer au praticien','textarea']],
+  family:[['service','Besoin famille','select',false,['Baby-sitting','Lit bébé','Chaise haute','Poussette','Siège auto / rehausseur','Jeux / accessoires','Autre']],['date','Date souhaitée','date'],['start_time','Heure de début','time'],['end_time','Heure de fin','time'],['children_count','Nombre d’enfants','number'],['ages','Âges des enfants','text'],['language','Langue souhaitée','text'],['equipment','Équipement / matériel','textarea'],['budget','Budget souhaité','text'],['notes','Autres besoins à signaler','textarea']],
+  decoration:[['occasion','Occasion','select',false,['Anniversaire','Demande en mariage','Anniversaire de couple','Fête / événement','Surprise','Autre']],['date','Date','date'],['setup_time','Heure d’installation souhaitée','time'],['style','Style / couleurs','text'],['budget','Budget total','text'],['message','Texte personnalisé','text'],['timing','Installation','select',false,['Avant l’arrivée','Le jour même','Pendant le séjour']],['extras','Fleurs, gâteau ou autres éléments','textarea']],
+  bartender:[['date','Date','date'],['start_time','Heure de début','time'],['end_time','Heure de fin','time'],['guests','Nombre d’invités','number'],['service','Type de service','select',false,['Cocktails','Mocktails sans alcool','Cocktails & mocktails','Bar à thème']],['budget','Budget total','text'],['ingredients','Boissons / ingrédients inclus ?','select',false,['À inclure dans la proposition','Je fournis les boissons','À discuter']],['equipment','Matériel / verrerie','text'],['notes','Préférences et besoins','textarea']],
+  dj:[['date','Date','date'],['start_time','Heure de début','time'],['end_time','Heure de fin','time'],['guests','Nombre d’invités','number'],['music','Styles musicaux','text'],['equipment','Son / éclairage','select',false,['DJ seul','Sonorisation incluse','Son + éclairage','À discuter']],['budget','Budget souhaité','text'],['noise','Contraintes de volume / horaires','textarea']],
+  event:[['event_type','Type d’événement','text'],['date','Date','date'],['start_time','Heure de début','time'],['end_time','Heure de fin','time'],['guests','Nombre d’invités','number'],['location','Lieu','select',false,['Villa Magos','Bateau','Lieu extérieur','À conseiller']],['budget','Budget total','text'],['services','Prestations à coordonner','textarea'],['setup','Installation / nettoyage','textarea'],['notes','Contraintes particulières','textarea']],
+  villa_services:[['service','Service demandé','select',false,['Ménage supplémentaire','Linge / blanchisserie','Préparation de la villa','Intervention technique','Assistance','Autre']],['date','Date souhaitée','date'],['time','Créneau souhaité','text'],['urgency','Priorité','select',false,['Normale','Urgente']],['location','Zone / équipement concerné','text'],['description','Description du besoin','textarea'],['access','Accès à la villa / consignes','textarea'],['budget','Budget éventuel','text']],
+  other:[['description','Décrivez votre besoin','textarea'],['date','Date ou période souhaitée','text'],['people','Nombre de personnes, si utile','number'],['location','Lieu','text'],['budget','Budget approximatif (facultatif)','text'],['urgency','Priorité','select',false,['Normale','Urgente']]]
+ };
+
  const DATA={
  villa:{label:'À LA VILLA',steps:[
  ['Qu’est-ce qui vous ferait plaisir ?',[['Un chef','Petit-déjeuner, brunch ou dîner'],['Des courses','Tout prêt à votre arrivée'],['Un bar','Barman et cocktails'],['Une ambiance','DJ, musique et lumière'],['Une décoration','Transformer les espaces'],['Une soirée complète','Organisation de A à Z']]],
@@ -1082,17 +1113,17 @@ document.getElementById('activityClose').addEventListener('click',closeActivity)
  comfort:{label:'SERVICES & CONFORT À LA VILLA',steps:[['Quel service vous aiderait ?',[['Ménage supplémentaire','Un passage en plus'],['Linge & blanchisserie','Lavage, repassage ou linge'],['Préparation de la villa','Préparer les espaces'],['Assistance technique','Un souci à signaler'],['Demande urgente','Une situation nécessitant une réponse rapide'],['Autre service','Une demande sur mesure']]],['Quand ?',[['Dès que possible','Selon disponibilité'],['Aujourd’hui','Pour la journée'],['À une date précise','Je préciserai le moment'],['Régulièrement','À organiser pendant le séjour']]],['Que faut-il savoir ?',[['Demande simple','Quelques précisions suffisent'],['À coordonner avec la villa','Prévenir l’équipe sur place'],['Prioritaire','Merci de me recontacter rapidement'],['Je ne sais pas','Aidez-moi à préciser']]]]},
  other:{label:'SUR MESURE',steps:[['Qu’avez-vous en tête ?',[['Une surprise','Pour quelqu’un ou le groupe'],['Une occasion spéciale','Un moment à organiser'],['Une demande particulière','Quelque chose de précis'],['J’ai besoin d’idées','Aidez-moi à imaginer']]]]}
  };
- let state={cat:'',step:0,answers:[],chosen:[],detail:'',message:'',itemIndex:0,itemAnswers:{}};
+ let state={cat:'',step:0,answers:[],chosen:[],detail:'',message:'',itemIndex:0,itemAnswers:{},itemDetails:{}};
  function esc(v){return String(v).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
  function selectedItems(){return Array.isArray(state.answers[0])?state.answers[0]:[];}
  function currentItem(){return selectedItems()[state.itemIndex]||'';}
- function openCat(key){state={cat:key,step:0,answers:[],chosen:[],detail:'',message:'',itemIndex:0,itemAnswers:{}};$('#malagoExperienceFlow').classList.add('is-open');draw();$('#malagoExperienceFlow').scrollIntoView({behavior:'smooth',block:'nearest'});}
+ function openCat(key){state={cat:key,step:0,answers:[],chosen:[],detail:'',message:'',itemIndex:0,itemAnswers:{},itemDetails:{}};$('#malagoExperienceFlow').classList.add('is-open');draw();$('#malagoExperienceFlow').scrollIntoView({behavior:'smooth',block:'nearest'});}
  function draw(){const d=DATA[state.cat],selecting=state.step===0,item=currentItem(),s=selecting?d.steps[0]:d.steps[state.step];state.chosen=selecting?(Array.isArray(state.answers[0])?state.answers[0].slice():[]):(state.itemAnswers[item]&&state.itemAnswers[item][state.step]?[state.itemAnswers[item][state.step]]:[]);const totalItems=selectedItems().length;$('#malagoFlowCrumbs').innerHTML='<strong>'+esc(d.label)+'</strong> &nbsp; / &nbsp; '+(selecting?'Choix des envies':('Envie '+(state.itemIndex+1)+' / '+totalItems+' · Étape '+state.step+' / '+(d.steps.length-1)));
  const heading=selecting?s[0]:(item+' — '+s[0]);const lead=selecting?'Sélectionnez toutes les envies qui vous intéressent. Chacune aura ensuite ses propres questions.':'Précisons cette envie avant de passer à la suivante.';
  $('#malagoFlowBody').innerHTML='<div class="eyebrow">'+esc(d.label)+(selecting?'':' · '+esc(item))+'</div><h2>'+esc(heading)+'</h2><p class="malagoFlowLead">'+esc(lead)+'</p><div class="malagoFlowOptions">'+s[1].map((o,i)=>'<button class="malagoFlowOption '+(state.chosen.includes(o[0])?'is-selected':'')+'" style="--option-i:'+i+'" data-malago-option="'+i+'" type="button" aria-pressed="'+state.chosen.includes(o[0])+'"><b>'+esc(o[0])+'</b><small>'+esc(o[1])+'</small></button>').join('')+'</div>'+(!selecting&&state.itemIndex===totalItems-1&&state.step===d.steps.length-1?'<div class="malagoFlowField"><label>Un détail global à préciser ? (facultatif)</label><textarea id="malagoFlowDetail" placeholder="Dates, horaires, budget ou préférences…">'+esc(state.detail)+'</textarea></div>':'')+'<div class="malagoFlowRow"><button class="malagoFlowBack" id="malagoFlowBack" type="button">'+(selecting?'← Catégories':state.step===1&&state.itemIndex===0?'← Modifier mes envies':'← Retour')+'</button><button class="malagoFlowNext" id="malagoFlowNext" type="button">'+(selecting?'Continuer avec mes envies →':state.itemIndex<totalItems-1&&state.step===d.steps.length-1?'Passer à l’envie suivante →':state.step===d.steps.length-1?'Préparer ma demande →':'Continuer →')+'</button></div>';
  $('#malagoFlowBody').querySelectorAll('[data-malago-option]').forEach(b=>b.onclick=()=>pick(+b.dataset.malagoOption));$('#malagoFlowBack').onclick=back;$('#malagoFlowNext').onclick=next;}
  function pick(i){const d=DATA[state.cat],val=d.steps[state.step][1][i][0];if(state.step===0){const selected=new Set(selectedItems());if(selected.has(val))selected.delete(val);else selected.add(val);state.answers[0]=[...selected];state.chosen=state.answers[0].slice();draw();return;}state.itemAnswers[currentItem()]={...(state.itemAnswers[currentItem()]||{}),[state.step]:val};state.chosen=[val];draw();}
- function next(){const d=DATA[state.cat];if(state.step===0){if(!selectedItems().length){window.alert('Choisissez au moins une envie pour continuer.');return;}if(d.steps.length===1){summary();return;}state.itemIndex=0;state.step=1;draw();return;}if(!state.chosen.length){window.alert('Choisissez une réponse pour cette envie.');return;}state.itemAnswers[currentItem()]={...(state.itemAnswers[currentItem()]||{}),[state.step]:state.chosen[0]};const detail=$('#malagoFlowDetail');if(detail)state.detail=detail.value.trim();if(state.step<d.steps.length-1){state.step++;draw();return;}if(state.itemIndex<selectedItems().length-1){state.itemIndex++;state.step=1;draw();return;}summary();}
+ function next(){const d=DATA[state.cat];if(state.step===0){if(!selectedItems().length){window.alert('Choisissez au moins une envie pour continuer.');return;}if(selectedItems().length>12){window.alert('Vous pouvez envoyer jusqu’à 12 demandes distinctes à la fois. Retirez une envie ou envoyez-les en plusieurs fois.');return;}if(d.steps.length===1){summary();return;}state.itemIndex=0;state.step=1;draw();return;}if(!state.chosen.length){window.alert('Choisissez une réponse pour cette envie.');return;}state.itemAnswers[currentItem()]={...(state.itemAnswers[currentItem()]||{}),[state.step]:state.chosen[0]};const detail=$('#malagoFlowDetail');if(detail)state.detail=detail.value.trim();if(state.step<d.steps.length-1){state.step++;draw();return;}if(state.itemIndex<selectedItems().length-1){state.itemIndex++;state.step=1;draw();return;}summary();}
  function back(){if(state.step===0){$('#malagoExperienceFlow').classList.remove('is-open');$('#malagoExperienceCategories').scrollIntoView({behavior:'smooth',block:'start'});return;}if(state.step===1&&state.itemIndex===0){state.step=0;draw();return;}if(state.step>1){state.step--;draw();return;}state.itemIndex--;state.step=DATA[state.cat].steps.length-1;draw();}
  function requestCategory(itemOverride){
   const items=itemOverride?[itemOverride]:selectedItems();
@@ -1106,6 +1137,7 @@ document.getElementById('activityClose').addEventListener('click',closeActivity)
     return 'other';
   }
   if(state.cat==='food')return 'restaurant';
+  if(state.cat==='sport'&&/beach club/i.test(item))return 'beach_club';
   if(state.cat==='chill')return /beach club/i.test(item)?'beach_club':'restaurant';
   if(state.cat==='villa'){
     if(choices.some(x=>/chef|petit-déjeuner|petit déjeuner/i.test(x)))return 'chef';
@@ -1125,57 +1157,66 @@ document.getElementById('activityClose').addEventListener('click',closeActivity)
   if(state.cat==='events')return 'event';
   return 'other';
  }
- async function summary(){
-  const d=DATA[state.cat];
-  const lines=['Catégorie : '+d.label];
-  selectedItems().forEach((item,idx)=>{
-    lines.push('',(idx+1)+'. '+item);
-    const answers=state.itemAnswers[item]||{};
-    d.steps.slice(1).forEach((s,j)=>lines.push(s[0]+' '+(answers[j+1]||'À préciser')));
-  });
-  if(state.detail)lines.push('Précision générale : '+state.detail);
-  const stay=window.MALAGO_CLIENT_STAY||{};
-  state.message=['Demande Villa Magos'+(stay.guest_name?' · '+stay.guest_name:''),'',...lines,'','Merci de nous proposer les options disponibles.','Cette demande n’est pas une réservation confirmée.'].join('\n');
-  $('#malagoFlowCrumbs').innerHTML='<strong>'+esc(d.label)+'</strong> &nbsp; / &nbsp; RÉCAPITULATIF';
-  const body=$('#malagoFlowBody');
-  const token=window.MALAGO_CLIENT_TOKEN||'';
-  if(!token){
-    body.innerHTML='<div class="malagoFlowDone"><div class="eyebrow" style="justify-content:center">ESPACE PERSONNEL</div><h2>Gardons cette envie au même endroit.</h2><p>Pour enregistrer cette demande et la retrouver plus tard, ouvrez votre lien privé Villa Magos. Cette sélection n’a pas encore été envoyée.</p><div class="malagoFlowRow"><button class="malagoFlowBack" id="malagoFlowEdit" type="button">← Modifier mes envies</button><button class="malagoFlowNext" id="malagoRequestOpenSpace" type="button">Accéder à mon espace ↗</button></div></div>';
-    $('#malagoFlowEdit').onclick=()=>{state.itemIndex=Math.max(0,selectedItems().length-1);state.step=d.steps.length>1?d.steps.length-1:0;draw();};
-    $('#malagoRequestOpenSpace').onclick=()=>{document.body.classList.add('show-client-access');const section=document.getElementById('espace-client');if(section)section.scrollIntoView({behavior:'smooth',block:'start'});};
-    return;
-  }
-  body.innerHTML='<div class="malagoFlowDone"><div class="malagoFlowCheck">…</div><div class="eyebrow" style="justify-content:center">ESPACE PERSONNEL</div><h2>Enregistrement de votre demande…</h2><p>Nous enregistrons votre demande dans votre espace personnel.</p><div class="malagoFlowRecap" style="white-space:pre-line"></div><div class="malagoFlowRow"><button class="malagoFlowBack" id="malagoFlowEdit" type="button">← Modifier</button><button class="malagoFlowNext" id="malagoFlowMyRequests" type="button">Enregistrement…</button></div></div>';
-  body.querySelector('.malagoFlowRecap').textContent=state.message;
-  const saveButton=document.getElementById('malagoFlowMyRequests');
-  saveButton.disabled=true;saveButton.textContent='Enregistrement…';
-  try{
-    const d=DATA[state.cat];
-    const requests=selectedItems().map(item=>{
-      const answers=state.itemAnswers[item]||{};
-      const itemAnswers=d.steps.slice(1).map((step,j)=>{const raw=answers[j+1]||'À préciser';return {question:step[0],answer:Array.isArray(raw)?raw.join(', '):String(raw)}});
-      const description=['Demande Villa Magos · '+d.label,'Prestation : '+item,...itemAnswers.map(answer=>answer.question+' : '+answer.answer),state.detail?'Précision générale : '+state.detail:'','Merci de nous proposer les options disponibles.','Cette demande n’est pas une réservation confirmée.'].filter(Boolean).join('\n');
-      return {category:requestCategory(item),description,details:{category_key:state.cat,category_label:d.label,items:[{name:item,answers:itemAnswers}],general_note:state.detail||''}};
-    });
-    const response=await fetch('/api/client/requests',{method:'POST',cache:'no-store',headers:{'Authorization':'Bearer '+token,'Content-Type':'application/json'},body:JSON.stringify({requests})});
-    let data={};try{data=await response.json()}catch{}
-    if(!response.ok)throw new Error(data.error||'Impossible d’enregistrer les demandes.');
-    body.querySelector('.malagoFlowCheck').textContent='✓';
-    body.querySelector('h2').textContent='C’est bien enregistré.';
-    body.querySelector('p').textContent=(data.requests&&data.requests.length>1?data.requests.length+' demandes distinctes sont maintenant dans votre espace personnel.':'Votre demande est maintenant dans votre espace personnel.')+' Elles ne sont pas encore des réservations confirmées.';
-    saveButton.disabled=false;saveButton.textContent='Voir mes demandes ↗';
-    saveButton.onclick=()=>{const section=document.getElementById('espace-client');if(section)section.scrollIntoView({behavior:'smooth',block:'start'});};
-    document.getElementById('malagoFlowEdit').onclick=()=>{state.itemIndex=Math.max(0,selectedItems().length-1);state.step=d.steps.length>1?d.steps.length-1:0;draw();};
-    const refresh=document.getElementById('clientPortalRefresh');if(refresh)refresh.click();
-  }catch(error){
-    body.querySelector('.malagoFlowCheck').textContent='!';
-    body.querySelector('h2').textContent='La demande n’a pas encore été enregistrée.';
-    body.querySelector('p').textContent=(error.message||'Une erreur est survenue.')+' Réessayez, votre sélection est conservée.';
-    saveButton.disabled=false;saveButton.textContent='Réessayer';saveButton.onclick=()=>summary();
-    document.getElementById('malagoFlowEdit').onclick=()=>{state.itemIndex=Math.max(0,selectedItems().length-1);state.step=d.steps.length>1?d.steps.length-1:0;draw();};
-  }
+
+ function fieldHtml(field,item,values){
+  const [key,label,type='text',required=false,options=[]]=field;
+  const id='filter-'+Math.random().toString(36).slice(2);
+  const value=values[key]||'';
+  const common=' data-filter-item="'+esc(item)+'" data-filter-key="'+esc(key)+'" '+(required?'required':'');
+  let control='';
+  if(type==='select')control='<select id="'+id+'"'+common+'><option value="">À préciser</option>'+options.map(o=>'<option value="'+esc(o)+'"'+(value===o?' selected':'')+'>'+esc(o)+'</option>').join('')+'</select>';
+  else if(type==='textarea')control='<textarea id="'+id+'"'+common+' rows="2" placeholder="À préciser si utile">'+esc(value)+'</textarea>';
+  else control='<input id="'+id+'" type="'+type+'"'+common+' value="'+esc(value)+'" '+(type==='number'?'min="0" max="99"':'')+' placeholder="'+(type==='text'?'À préciser':'')+'">';
+  return '<div class="malagoFlowField"><label for="'+id+'">'+esc(label)+(required?' *':'')+'</label>'+control+'</div>';
  }
- 
+ async function summary(){
+  const d=DATA[state.cat],body=$('#malagoFlowBody'),token=window.MALAGO_CLIENT_TOKEN||'';
+  const lines=['Catégorie : '+d.label];
+  selectedItems().forEach((item,idx)=>{lines.push('',(idx+1)+'. '+item);const answers=state.itemAnswers[item]||{};d.steps.slice(1).forEach((s,j)=>lines.push(s[0]+' : '+(answers[j+1]||'À préciser')));});
+  if(state.detail)lines.push('Précision générale : '+state.detail);
+  state.message=['Demande Villa Magos'+(window.MALAGO_CLIENT_STAY&&window.MALAGO_CLIENT_STAY.guest_name?' · '+window.MALAGO_CLIENT_STAY.guest_name:''),'',...lines,'','Merci de nous proposer les options disponibles.','Cette demande n’est pas une réservation confirmée.'].join('\n');
+  $('#malagoFlowCrumbs').innerHTML='<strong>'+esc(d.label)+'</strong> &nbsp; / &nbsp; RÉCAPITULATIF';
+  if(!token){
+   body.innerHTML='<div class="malagoFlowDone"><div class="eyebrow" style="justify-content:center">ESPACE PERSONNEL</div><h2>Gardons cette envie au même endroit.</h2><p>Pour enregistrer cette demande et la retrouver plus tard, ouvrez votre lien privé Villa Magos. Cette sélection n’a pas encore été envoyée.</p><div class="malagoFlowRow"><button class="malagoFlowBack" id="malagoFlowEdit" type="button">← Modifier mes envies</button><button class="malagoFlowNext" id="malagoRequestOpenSpace" type="button">Accéder à mon espace ↗</button></div></div>';
+   $('#malagoFlowEdit').onclick=()=>{state.itemIndex=Math.max(0,selectedItems().length-1);state.step=d.steps.length>1?d.steps.length-1:0;draw();};
+   $('#malagoRequestOpenSpace').onclick=()=>{document.body.classList.add('show-client-access');const section=document.getElementById('espace-client');if(section)section.scrollIntoView({behavior:'smooth',block:'start'});};return;
+  }
+  const cards=selectedItems().map((item,idx)=>{
+   const category=requestCategory(item),fields=FILTERS[category]||FILTERS.other,values=state.itemDetails[item]||{};
+   const previous=Object.values(state.itemAnswers[item]||{}).map((v,j)=>'<li>'+esc((d.steps[j+1]||['Précision'])[0])+': '+esc(Array.isArray(v)?v.join(', '):String(v||'À préciser'))+'</li>').join('');
+   return '<section class="malagoFilterCard"><div class="eyebrow">PRESTATION '+(idx+1)+' · '+esc(categoryLabel(category))+'</div><h3>'+esc(item)+'</h3>'+(previous?'<ul class="malagoFilterAnswers">'+previous+'</ul>':'')+'<div class="malagoFilterGrid">'+fields.map(f=>fieldHtml(f,item,values)).join('')+'</div></section>';
+  }).join('');
+  body.innerHTML='<div class="malagoFlowDone malagoFlowReview"><div class="eyebrow">DERNIÈRES PRÉCISIONS</div><h2>Affinons votre demande.</h2><p>Renseignez les éléments que vous connaissez. Vous pourrez préciser le reste avec votre concierge. Les tarifs et disponibilités seront vérifiés avant toute confirmation.</p><form id="malagoDetailsForm">'+cards+'<div class="malagoFlowField"><label for="malagoFlowDetail">Autres précisions (facultatif)</label><textarea id="malagoFlowDetail" rows="3" placeholder="Budget global, contraintes, préférences…">'+esc(state.detail)+'</textarea></div><div class="malagoFlowRow"><button class="malagoFlowBack" id="malagoFlowEdit" type="button">← Modifier mes choix</button><button class="malagoFlowNext" id="malagoFlowSubmit" type="submit">Envoyer '+selectedItems().length+' demande'+(selectedItems().length>1?'s':'')+' ↗</button></div><p class="malagoFlowFine">Une demande n’est pas une réservation. Nous confirmerons séparément la disponibilité réelle du prestataire.</p><div id="malagoFlowSubmitMessage" role="status" aria-live="polite"></div></form></div>';
+  const detailForm=$('#malagoDetailsForm');
+  detailForm.addEventListener('input',e=>{const el=e.target;if(el.dataset.filterItem){state.itemDetails[el.dataset.filterItem]=state.itemDetails[el.dataset.filterItem]||{};state.itemDetails[el.dataset.filterItem][el.dataset.filterKey]=el.value;}if(el.id==='malagoFlowDetail')state.detail=el.value;});
+  detailForm.addEventListener('change',e=>{const el=e.target;if(el.dataset.filterItem){state.itemDetails[el.dataset.filterItem]=state.itemDetails[el.dataset.filterItem]||{};state.itemDetails[el.dataset.filterItem][el.dataset.filterKey]=el.value;}});
+  $('#malagoFlowEdit').onclick=()=>{state.itemIndex=Math.max(0,selectedItems().length-1);state.step=d.steps.length>1?d.steps.length-1:0;draw();};
+  detailForm.addEventListener('submit',async e=>{e.preventDefault();state.detail=$('#malagoFlowDetail').value.trim();await submitRequests();});
+ }
+ function categoryLabel(category){return ({car_rental:'Location de voiture',airport_transfer:'Transfert aéroport',chauffeur:'Chauffeur privé',restaurant:'Restaurant',activity:'Activité',chef:'Chef privé',groceries:'Courses livrées',beach_club:'Beach club',wellness:'Bien-être',family:'Famille & enfants',decoration:'Décoration',bartender:'Barman privé',dj:'DJ privé',event:'Événement privé',villa_services:'Services à la villa',other:'Autre demande'})[category]||category;}
+ async function submitRequests(){
+  const d=DATA[state.cat],body=$('#malagoFlowBody'),saveButton=$('#malagoFlowSubmit'),notice=$('#malagoFlowSubmitMessage');
+  if(!window.MALAGO_CLIENT_TOKEN){notice.textContent='Ouvrez votre lien privé Villa Magos pour enregistrer la demande.';return;}
+  saveButton.disabled=true;saveButton.textContent='Enregistrement…';notice.textContent='';
+  try{
+   const requests=selectedItems().map(item=>{
+    const answers=state.itemAnswers[item]||{},category=requestCategory(item);
+    const itemAnswers=d.steps.slice(1).map((step,j)=>{const raw=answers[j+1]||'À préciser';return {question:step[0],answer:Array.isArray(raw)?raw.join(', '):String(raw)}});
+    const filterAnswers=Object.entries(state.itemDetails[item]||{}).filter(([,v])=>String(v||'').trim()).map(([key,value])=>({question:(FILTERS[category]||FILTERS.other).find(f=>f[0]===key)?.[1]||key,answer:String(value)}));
+    const allAnswers=[...itemAnswers,...filterAnswers];
+    const description=['Demande Villa Magos · '+d.label,'Prestation : '+item,...allAnswers.map(a=>a.question+' : '+a.answer),state.detail?'Précision générale : '+state.detail:'','Merci de nous proposer les options disponibles.','Cette demande n’est pas une réservation confirmée.'].filter(Boolean).join('\n');
+    return {category,description,details:{category_key:state.cat,category_label:d.label,items:[{name:item,answers:allAnswers}],general_note:state.detail||''}};
+   });
+   const response=await fetch('/api/client/requests',{method:'POST',cache:'no-store',headers:{'Authorization':'Bearer '+window.MALAGO_CLIENT_TOKEN,'Content-Type':'application/json'},body:JSON.stringify({requests})});
+   let data={};try{data=await response.json()}catch{}
+   if(!response.ok)throw new Error(data.error||'Impossible d’enregistrer les demandes.');
+   body.querySelector('h2').textContent='C’est bien enregistré.';
+   body.querySelector('p').textContent=(data.requests&&data.requests.length>1?data.requests.length+' demandes distinctes sont maintenant dans votre espace personnel.':'Votre demande est maintenant dans votre espace personnel.')+' Elles ne sont pas encore des réservations confirmées.';
+   const form=$('#malagoDetailsForm');if(form)form.querySelectorAll('input,select,textarea,button').forEach(el=>el.disabled=true);
+   saveButton.textContent='Voir mes demandes ↗';saveButton.disabled=false;saveButton.type='button';saveButton.onclick=()=>{const section=document.getElementById('espace-client');if(section)section.scrollIntoView({behavior:'smooth',block:'start'});};
+   const refresh=document.getElementById('clientPortalRefresh');if(refresh)refresh.click();
+  }catch(error){notice.textContent=(error.message||'Une erreur est survenue.')+' Réessayez ; vos réponses sont conservées.';saveButton.disabled=false;saveButton.textContent='Réessayer';}
+ }
  $('#malagoExperienceCategories').addEventListener('click',e=>{const b=e.target.closest('[data-malago-cat]');if(b)openCat(b.dataset.malagoCat);});
  $('#malagoFlowClose').addEventListener('click',()=>{$('#malagoExperienceFlow').classList.remove('is-open');$('#malagoExperienceCategories').scrollIntoView({behavior:'smooth',block:'start'});});
 })();
@@ -1266,7 +1307,34 @@ for(const item of items){
       showInvalid("Ce lien est absent, invalide ou expiré. Contactez votre interlocuteur Malago pour recevoir un nouveau lien sécurisé.");
     }
   }
-  form.addEventListener("submit",async event=>{event.preventDefault();submit.disabled=true;submit.innerHTML="Envoi en cours…";message.hidden=true;try{await api("/api/client/requests",{method:"POST",body:JSON.stringify({category:document.getElementById("clientPortalCategory").value,description:document.getElementById("clientPortalDescription").value.trim()})});form.reset();notify("Votre demande est enregistrée. Elle n’est pas encore une réservation confirmée.","success");await load()}catch(error){notify(error.message||"Impossible d’envoyer votre demande.","error")}finally{submit.disabled=false;submit.innerHTML="Envoyer ma demande <span>↗</span>"}});
+
+  const categorySelect=document.getElementById("clientPortalCategory"),categoryFilters=document.getElementById("clientPortalCategoryFilters");
+  function renderCategoryFilters(){
+    const category=categorySelect.value,fields=(window.VM_REQUEST_FILTERS&&window.VM_REQUEST_FILTERS[category])||[];
+    categoryFilters.replaceChildren();
+    if(!fields.length)return;
+    const head=document.createElement("div");head.className="clientPortalFilterHeading";head.textContent="Quelques précisions utiles";categoryFilters.append(head);
+    const grid=document.createElement("div");grid.className="clientPortalFilterGrid";
+    fields.forEach(([key,label,type='text',required=false,options=[]])=>{
+      const wrap=document.createElement("div");wrap.className="clientPortalField";
+      const id="client-filter-"+key,lab=document.createElement("label");lab.htmlFor=id;lab.textContent=label;wrap.append(lab);
+      let control;
+      if(type==="select"){control=document.createElement("select");const empty=document.createElement("option");empty.value="";empty.textContent="À préciser";control.append(empty);options.forEach(option=>{const opt=document.createElement("option");opt.value=option;opt.textContent=option;control.append(opt)});}
+      else if(type==="textarea"){control=document.createElement("textarea");control.rows=2;control.placeholder="À préciser si utile";}
+      else{control=document.createElement("input");control.type=type;control.placeholder=type==="text"?"À préciser":"";if(type==="number"){control.min="0";control.max="99";}}
+      control.id=id;control.dataset.filterKey=key;if(required)control.required=true;wrap.append(control);grid.append(wrap);
+    });
+    categoryFilters.append(grid);
+  }
+  categorySelect.addEventListener("change",renderCategoryFilters);renderCategoryFilters();
+  form.addEventListener("submit",async event=>{event.preventDefault();submit.disabled=true;submit.innerHTML="Envoi en cours…";message.hidden=true;try{
+    const category=categorySelect.value,fields=(window.VM_REQUEST_FILTERS&&window.VM_REQUEST_FILTERS[category])||[];
+    const answers=fields.map(([key,label])=>({question:label,answer:categoryFilters.querySelector('[data-filter-key="'+key+'"]')?.value||""})).filter(x=>x.answer.trim());
+    const description=[document.getElementById("clientPortalDescription").value.trim(),...answers.map(x=>x.question+" : "+x.answer)].filter(Boolean).join("\n")||("Demande : "+(labels[category]||category));
+    await api("/api/client/requests",{method:"POST",body:JSON.stringify({category,description,details:{category_key:category,category_label:labels[category]||category,items:[{name:labels[category]||category,answers}],general_note:document.getElementById("clientPortalDescription").value.trim()}})});
+    form.reset();renderCategoryFilters();notify("Votre demande est enregistrée. Elle n’est pas encore une réservation confirmée.","success");await load();
+  }catch(error){notify(error.message||"Impossible d’envoyer votre demande.","error")}finally{submit.disabled=false;submit.innerHTML="Envoyer ma demande <span>↗</span>"}});
+
   document.getElementById("clientPortalRefresh").addEventListener("click",load);
   document.querySelectorAll('a[href="#espace-client"]').forEach(link=>link.addEventListener("click",event=>{
     if(!token){
