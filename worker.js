@@ -411,6 +411,20 @@ async function adminJson(request, env) {
   return null;
 }
 
+function isIsoCalendarDate(value) {
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(String(value || ""))) return false;
+  const date = new Date(String(value) + "T00:00:00.000Z");
+  return Number.isFinite(date.getTime()) && date.toISOString().slice(0,10) === value;
+}
+function isCalendarTime(value) {
+  return !value || /^(?:[01]\d|2[0-3]):[0-5]\d$/.test(String(value));
+}
+async function ensureStayEventsTable(db) {
+  await db.prepare("CREATE TABLE IF NOT EXISTS stay_events (id TEXT PRIMARY KEY, stay_id TEXT NOT NULL, title TEXT NOT NULL, event_date TEXT NOT NULL, start_time TEXT, end_time TEXT, location TEXT, notes TEXT, event_type TEXT NOT NULL DEFAULT 'personal' CHECK(event_type IN ('personal','idea','service')), status TEXT NOT NULL DEFAULT 'personal' CHECK(status IN ('personal','idea','requested','pending','confirmed','cancelled')), linked_request_id TEXT, created_at TEXT NOT NULL DEFAULT (datetime('now')), updated_at TEXT NOT NULL DEFAULT (datetime('now')))").run();
+  await db.prepare("CREATE INDEX IF NOT EXISTS idx_stay_events_stay_date ON stay_events(stay_id,event_date,start_time)").run();
+  await db.prepare("CREATE INDEX IF NOT EXISTS idx_stay_events_date ON stay_events(event_date,start_time)").run();
+}
+
 
 export default {
   async fetch(request, env) {
@@ -469,10 +483,58 @@ export default {
       }
     }
     if (url.pathname.startsWith("/api/client/")) {
-      if (!["GET","POST"].includes(request.method)) return json({error:"Méthode non autorisée."},405,headers);
+      if (!["GET","POST","PATCH","DELETE"].includes(request.method)) return json({error:"Méthode non autorisée."},405,headers);
       const auth = await resolveStayToken(request,env);
       if (auth.error) return json({error:auth.error},auth.status,headers);
       try {
+        const eventMatch = url.pathname.match(/^\/api\/client\/events(?:\/([0-9a-f-]{36}))?$/i);
+        if (eventMatch) {
+          await ensureStayEventsTable(env.DB);
+          const eventId = eventMatch[1] || "";
+          if (request.method === "GET" && !eventId) {
+            const result = await env.DB.prepare("SELECT id,title,event_date,start_time,end_time,location,notes,event_type,status,created_at,updated_at FROM stay_events WHERE stay_id=? ORDER BY event_date ASC, COALESCE(start_time,'99:99') ASC, created_at ASC").bind(auth.stayId).all();
+            return json({events:result.results || []},200,headers);
+          }
+          if (request.method === "POST" && !eventId) {
+            const parsed=await readJson(request);if(parsed.error)return json({error:parsed.error},parsed.status,headers);
+            const body=parsed.body||{},title=sanitize(body.title,120),eventDate=sanitize(body.event_date,10),startTime=sanitize(body.start_time,5),endTime=sanitize(body.end_time,5),location=sanitize(body.location,180),notes=sanitize(body.notes,2000);
+            const eventType=body.event_type==="idea"?"idea":body.event_type==="personal"?"personal":"";
+            if(!title)return json({error:"Donne un titre à cet événement."},400,headers);
+            if(!isIsoCalendarDate(eventDate))return json({error:"Choisis une date valide."},400,headers);
+            if(!isCalendarTime(startTime)||!isCalendarTime(endTime))return json({error:"L’horaire indiqué est invalide."},400,headers);
+            if(startTime&&endTime&&endTime<=startTime)return json({error:"L’heure de fin doit être postérieure à l’heure de début."},400,headers);
+            if(!eventType)return json({error:"Choisis un type d’événement valide."},400,headers);
+            const stay=await env.DB.prepare("SELECT start_date,end_date FROM stays WHERE id=? AND status='active' LIMIT 1").bind(auth.stayId).first();
+            if((stay?.start_date&&eventDate<stay.start_date)||(stay?.end_date&&eventDate>stay.end_date))return json({error:"La date doit être comprise dans les dates de votre séjour."},400,headers);
+            const id=crypto.randomUUID(),status=eventType==="idea"?"idea":"personal";
+            await env.DB.prepare("INSERT INTO stay_events (id,stay_id,title,event_date,start_time,end_time,location,notes,event_type,status) VALUES (?,?,?,?,?,?,?,?,?,?)").bind(id,auth.stayId,title,eventDate,startTime||null,endTime||null,location||null,notes||null,eventType,status).run();
+            return json({ok:true,event:{id,title,event_date:eventDate,start_time:startTime||null,end_time:endTime||null,location:location||null,notes:notes||null,event_type:eventType,status}},201,headers);
+          }
+          if(request.method==="PATCH"&&eventId){
+            const current=await env.DB.prepare("SELECT id,title,event_date,start_time,end_time,location,notes,event_type,status FROM stay_events WHERE id=? AND stay_id=? LIMIT 1").bind(eventId,auth.stayId).first();
+            if(!current)return json({error:"Événement introuvable."},404,headers);
+            if(current.status==="confirmed"||current.event_type==="service")return json({error:"Une prestation confirmée doit être modifiée avec l’aide de Malago."},409,headers);
+            const parsed=await readJson(request);if(parsed.error)return json({error:parsed.error},parsed.status,headers);
+            const body=parsed.body||{},title=sanitize(body.title===undefined?current.title:body.title,120),eventDate=sanitize(body.event_date===undefined?current.event_date:body.event_date,10),startTime=sanitize(body.start_time===undefined?current.start_time:body.start_time,5),endTime=sanitize(body.end_time===undefined?current.end_time:body.end_time,5),location=sanitize(body.location===undefined?current.location:body.location,180),notes=sanitize(body.notes===undefined?current.notes:body.notes,2000),rawType=body.event_type===undefined?current.event_type:body.event_type,eventType=rawType==="idea"?"idea":rawType==="personal"?"personal":"";
+            if(!title)return json({error:"Donne un titre à cet événement."},400,headers);
+            if(!isIsoCalendarDate(eventDate))return json({error:"Choisis une date valide."},400,headers);
+            if(!isCalendarTime(startTime)||!isCalendarTime(endTime))return json({error:"L’horaire indiqué est invalide."},400,headers);
+            if(startTime&&endTime&&endTime<=startTime)return json({error:"L’heure de fin doit être postérieure à l’heure de début."},400,headers);
+            if(!eventType)return json({error:"Type d’événement invalide."},400,headers);
+            const stay=await env.DB.prepare("SELECT start_date,end_date FROM stays WHERE id=? AND status='active' LIMIT 1").bind(auth.stayId).first();
+            if((stay?.start_date&&eventDate<stay.start_date)||(stay?.end_date&&eventDate>stay.end_date))return json({error:"La date doit être comprise dans les dates de votre séjour."},400,headers);
+            const status=eventType==="idea"?"idea":"personal";
+            await env.DB.prepare("UPDATE stay_events SET title=?,event_date=?,start_time=?,end_time=?,location=?,notes=?,event_type=?,status=?,updated_at=datetime('now') WHERE id=? AND stay_id=?").bind(title,eventDate,startTime||null,endTime||null,location||null,notes||null,eventType,status,eventId,auth.stayId).run();
+            return json({ok:true,event:{id:eventId,title,event_date:eventDate,start_time:startTime||null,end_time:endTime||null,location:location||null,notes:notes||null,event_type:eventType,status}},200,headers);
+          }
+          if(request.method==="DELETE"&&eventId){
+            const current=await env.DB.prepare("SELECT status,event_type FROM stay_events WHERE id=? AND stay_id=? LIMIT 1").bind(eventId,auth.stayId).first();
+            if(!current)return json({error:"Événement introuvable."},404,headers);
+            if(current.status==="confirmed"||current.event_type==="service")return json({error:"Une prestation confirmée doit être annulée avec l’aide de Malago."},409,headers);
+            await env.DB.prepare("DELETE FROM stay_events WHERE id=? AND stay_id=?").bind(eventId,auth.stayId).run();return json({ok:true,id:eventId},200,headers);
+          }
+          return json({error:"Route ou méthode invalide pour cet événement."},405,headers);
+        }
         if (request.method === "GET" && url.pathname === "/api/client/requests") {
           const stay = await env.DB.prepare(
             "SELECT property_name, guest_name, start_date, end_date FROM stays WHERE id=? AND status='active' LIMIT 1"
@@ -510,6 +572,11 @@ export default {
       if (denied) return json(JSON.parse(await denied.text()),denied.status,headers);
       if (!env?.DB) return json({error:"Base de données non configurée."},503,headers);
       try {
+        if (request.method === "GET" && url.pathname === "/api/admin/calendar") {
+          await ensureStayEventsTable(env.DB);
+          const result=await env.DB.prepare("SELECT e.id,e.stay_id,e.title,e.event_date,e.start_time,e.end_time,e.location,e.notes,e.event_type,e.status,e.created_at,e.updated_at,s.property_name,s.guest_name,s.guest_email,s.start_date AS stay_start_date,s.end_date AS stay_end_date FROM stay_events e JOIN stays s ON s.id=e.stay_id ORDER BY e.event_date ASC, COALESCE(e.start_time,'99:99') ASC LIMIT 1000").all();
+          return json({events:result.results||[]},200,headers);
+        }
         if (request.method === "POST" && url.pathname === "/api/admin/stays") {
           const parsed=await readJson(request);
           if (parsed.error) return json({error:parsed.error},parsed.status,headers);
@@ -576,6 +643,12 @@ export default {
     // Team-only interface for creating individual Villa Magos stay links. API actions still require the admin bearer token.
     if (request.method === "GET" && url.pathname === "/villa-magos/admin") {
       if (env?.ASSETS) return env.ASSETS.fetch(new Request(new URL("/villa-magos-admin.html", url), { method: "GET", headers: request.headers }));
+      return new Response("Malago assets unavailable",{status:503,headers:{...headers,"Content-Type":"text/plain;charset=UTF-8"}});
+    }
+
+    // Team-only calendar; API data remains protected by adminJson.
+    if (request.method === "GET" && url.pathname === "/villa-magos/calendrier") {
+      if (env?.ASSETS) return env.ASSETS.fetch(new Request(new URL("/villa-magos-calendar-admin.html", url), { method: "GET", headers: request.headers }));
       return new Response("Malago assets unavailable",{status:503,headers:{...headers,"Content-Type":"text/plain;charset=UTF-8"}});
     }
 
