@@ -356,7 +356,47 @@ ${question}`;
     return "";
   }
 }
-function json(data,status=200,headers={}) {
+async function sendMalagoEmail(env,{to,subject,text}) {
+  const apiKey=clean(env?.RESEND_API_KEY);
+  const from=clean(env?.MALAGO_EMAIL_FROM);
+  if(!apiKey||!from||!to)return {sent:false,reason:"email_not_configured"};
+  try {
+    const response=await fetch("https://api.resend.com/emails",{
+      method:"POST",
+      headers:{"Authorization":"Bearer "+apiKey,"Content-Type":"application/json"},
+      body:JSON.stringify({from,to:[to],subject,text})
+    });
+    if(!response.ok) {
+      const detail=(await response.text()).slice(0,300);
+      console.error("Malago email provider error",response.status,detail);
+      return {sent:false,reason:"provider_error"};
+    }
+    return {sent:true};
+  } catch(error) {
+    console.error("Malago email delivery error",error);
+    return {sent:false,reason:"delivery_error"};
+  }
+}
+async function notifyNewClientRequest(env,{requestId,category,description,stayId}) {
+  const to=clean(env?.MALAGO_REQUESTS_EMAIL)||"Malagoagency@gmail.com";
+  return sendMalagoEmail(env,{
+    to,
+    subject:"Nouvelle demande client Malago",
+    text:[
+      "Une nouvelle demande vient d’être enregistrée dans Malago.",
+      "",
+      "Référence : "+requestId,
+      "Catégorie : "+category,
+      "Séjour : "+stayId,
+      "",
+      "Demande :",
+      description,
+      "",
+      "Ouvrez l’espace équipe Malago pour la traiter. Cette demande n’est pas une réservation confirmée."
+    ].join("\n")
+  });
+}
+\nfunction json(data,status=200,headers={}) {
   return new Response(JSON.stringify(data),{status,headers:{"Content-Type":"application/json; charset=utf-8","Cache-Control":"no-store",...headers}});
 }
 
@@ -582,7 +622,9 @@ export default {
             env.DB.prepare("INSERT INTO client_requests (id,stay_id,category,description,status) VALUES (?,?,?,?,'received')").bind(id,auth.stayId,category,description),
             env.DB.prepare("INSERT INTO client_request_events (id,request_id,event_type,details) VALUES (?,?,?,?)").bind(crypto.randomUUID(),id,"received","Demande créée par le client")
           ]);
-          return json({ok:true,request:{id,category,description,status:"received"},message:"Demande enregistrée. Elle n’est pas une réservation confirmée."},201,headers);
+          // Email is best-effort: a provider outage must never undo a saved client request.
+          const emailResult=await notifyNewClientRequest(env,{requestId:id,category,description,stayId:auth.stayId});
+          return json({ok:true,request:{id,category,description,status:"received"},message:"Demande enregistrée. Elle n’est pas une réservation confirmée.",notification:emailResult.sent?"email_sent":"email_pending_configuration"},201,headers);
         }
       } catch (error) {
         const requestId=crypto.randomUUID(); console.error("Client requests API error",requestId,error);
