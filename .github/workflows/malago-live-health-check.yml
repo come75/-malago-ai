@@ -98,7 +98,7 @@ jobs:
               "filterCombination": "and",
               "filters": [
                 {
-                  "key": "\$workers.scriptName",
+                  "key": "\\$workers.scriptName",
                   "operation": "eq",
                   "type": "string",
                   "value": "test"
@@ -134,5 +134,23 @@ jobs:
             returnedEvents: (.result.events.count // ((.result.events.events // []) | length)),
             returnedRows: ((.result.events.events // []) | length),
             eventFieldNames: (if ((.result.events.events // []) | length) > 0 and ((.result.events.events[0] | type) == "object") then (.result.events.events[0] | keys) else [] end),
+            metadataFieldNames: (if ((.result.events.events // []) | length) > 0 and ((.result.events.events[0]["$metadata"] | type) == "object") then (.result.events.events[0]["$metadata"] | keys) else [] end),
+            workerFieldNames: (if ((.result.events.events // []) | length) > 0 and ((.result.events.events[0]["$workers"] | type) == "object") then (.result.events.events[0]["$workers"] | keys) else [] end),
+            errorLikeEvents: ([
+              .result.events.events[]?
+              | select(
+                  ((.[ "$metadata"].level? // "" | tostring | ascii_downcase) | test("error|fatal|exception"))
+                  or (.[ "$metadata"].error? != null and (.[ "$metadata"].error? | tostring) != "")
+                  or ((.[ "$workers"].outcome? // "" | tostring | ascii_downcase) | test("exception|error"))
+                )
+            ] | length),
             statistics: (.result.statistics // null)
-          }' cloudflare-logs.json
+          }' cloudflare-logs.json > cloudflare-summary.json
+
+          cat cloudflare-summary.json
+          error_count="$(jq -r '.errorLikeEvents // 0' cloudflare-summary.json)"
+          if [ "$error_count" -gt 0 ]; then
+            echo "::warning::Cloudflare telemetry contains ${error_count} event(s) matching common error indicators in the last 24 hours. This is a diagnostic heuristic; inspect Cloudflare Observability before treating it as confirmed Worker failures."
+          else
+            echo "No events matched the current common error indicators. This does not prove that no runtime errors occurred."
+          fi
