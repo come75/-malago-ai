@@ -143,7 +143,7 @@ jobs:
               | select(
                   ((.["$metadata"].level? // "" | tostring | ascii_downcase) | test("error|fatal|exception"))
                   or (.["$metadata"].error? != null and (.["$metadata"].error? | tostring) != "")
-                  or ((.["$workers"].outcome? // "" | tostring | ascii_downcase) | test("exception|error"))
+                  or ((.["$workers"].outcome? // "unknown" | tostring | ascii_downcase) != "ok")
                 )
             ] | length),
             statistics: (.result.statistics // null)
