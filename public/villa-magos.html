@@ -1162,6 +1162,8 @@ for(const item of items){
  title.textContent=labels[item.category]||"Demande Malago";
  const d=new Date(item.created_at);date.className="clientPortalDate";date.textContent=Number.isNaN(d.getTime())?"":d.toLocaleDateString("fr-FR",{day:"numeric",month:"short",year:"numeric"});
  badge.className="clientPortalStatus "+item.status;badge.textContent=statuses[item.status]||"En traitement";desc.className="clientPortalDescription";desc.textContent=item.description||"";left.append(title,date);top.append(left,badge);article.append(top,desc);
+ const proposalEvents=(item.history||[]).filter(event=>event.event_type==="proposal"&&event.proposal);
+ const latestProposal=proposalEvents[proposalEvents.length-1]||null;
  for(const event of (item.history||[])){
   if(event.event_type==="proposal"&&event.proposal){
    const p=event.proposal,box=document.createElement("div");box.className="clientPortalProposal";box.style.cssText="margin-top:14px;padding:16px;border:1px solid #c5a46d;border-radius:12px;background:#fffaf0";
@@ -1171,7 +1173,7 @@ for(const item of items){
    if(p.price){const price=document.createElement("p");price.style.fontWeight="700";price.textContent="Prix proposé : "+p.price+" "+(p.currency||"EUR");box.append(price)}
    if(p.availability){const avail=document.createElement("p");avail.textContent="Disponibilité annoncée : "+p.availability;box.append(avail)}
    if(p.conditions){const cond=document.createElement("p");cond.textContent="Conditions : "+p.conditions;box.append(cond)}
-   if(item.status==="quoted"){
+   if(item.status==="quoted"&&event===latestProposal){
     const row=document.createElement("div");row.style.cssText="display:flex;gap:8px;flex-wrap:wrap;margin-top:12px";
     for(const [decision,label] of [["accept","Accepter la proposition"],["decline","Refuser"]]){
      const b=document.createElement("button");b.type="button";b.textContent=label;b.className=decision==="accept"?"clientPortalSubmit":"clientPortalSecondary";b.style.cssText="padding:10px 14px;border-radius:99px;cursor:pointer;border:1px solid #b8a47f;background:"+(decision==="accept"?"#20221d":"transparent")+";color:"+(decision==="accept"?"white":"#20221d");
