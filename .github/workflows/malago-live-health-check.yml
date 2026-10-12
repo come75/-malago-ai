@@ -136,6 +136,8 @@ jobs:
             eventFieldNames: (if ((.result.events.events // []) | length) > 0 and ((.result.events.events[0] | type) == "object") then (.result.events.events[0] | keys) else [] end),
             metadataFieldNames: (if ((.result.events.events // []) | length) > 0 and ((.result.events.events[0]["$metadata"] | type) == "object") then (.result.events.events[0]["$metadata"] | keys) else [] end),
             workerFieldNames: (if ((.result.events.events // []) | length) > 0 and ((.result.events.events[0]["$workers"] | type) == "object") then (.result.events.events[0]["$workers"] | keys) else [] end),
+            levels: ([.result.events.events[]? | (.["$metadata"].level // "unknown" | tostring)] | group_by(.) | map({level: .[0], count: length})),
+            outcomes: ([.result.events.events[]? | (.["$workers"].outcome // "unknown" | tostring)] | group_by(.) | map({outcome: .[0], count: length})),
             errorLikeEvents: ([
               .result.events.events[]?
               | select(
