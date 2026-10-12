@@ -1199,7 +1199,8 @@ function renderChefWizard(){
  $('#chefReview').onclick=()=>{sync();state.chefReview=true;renderChefWizard();};
  $('#chefBack').onclick=()=>{state.itemIndex=Math.max(0,items.length-1);state.step=Math.max(1,DATA[state.cat].steps.length-1);draw();};
 }
-function renderDetailWizard(){\n if(selectedItems().length===1&&requestCategory(selectedItems()[0])==='chef'){renderChefWizard();return;}
+function renderDetailWizard(){
+ if(selectedItems().length===1&&requestCategory(selectedItems()[0])==='chef'){renderChefWizard();return;}
  const body=$('#malagoFlowBody'),items=selectedItems(),fields=state.detailFields||(state.detailFields=buildDetailFields()),index=state.detailIndex||0,total=fields.length;
  $('#malagoFlowCrumbs').innerHTML='<strong>'+esc(DATA[state.cat].label)+'</strong> &nbsp; / &nbsp; '+(index<total?'PRÉCISIONS '+(index+1)+' / '+total:'RÉCAPITULATIF');
  if(index>=total){
