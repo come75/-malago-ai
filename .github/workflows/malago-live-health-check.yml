@@ -150,9 +150,28 @@ jobs:
           }' cloudflare-logs.json > cloudflare-summary.json
 
           cat cloudflare-summary.json
+
+          returned_events="$(jq -r '.returnedEvents // 0' cloudflare-summary.json)"
           error_count="$(jq -r '.errorLikeEvents // 0' cloudflare-summary.json)"
+          info_count="$(jq -r '[.levels[]? | select((.level | ascii_downcase) == "info") | .count] | add // 0' cloudflare-summary.json)"
+          ok_count="$(jq -r '[.outcomes[]? | select((.outcome | ascii_downcase) == "ok") | .count] | add // 0' cloudflare-summary.json)"
+
+          {
+            echo "### Malago Worker telemetry"
+            echo
+            echo "- Worker: `test`"
+            echo "- Window: last 24 hours"
+            echo "- Events returned: ${returned_events}"
+            echo "- Info-level events: ${info_count}"
+            echo "- Successful outcomes: ${ok_count}"
+            echo "- Events matching error indicators: ${error_count}"
+            echo
+            echo "_The error count is a heuristic over returned telemetry events, not a guarantee that all possible runtime errors are captured._"
+          } >> "$GITHUB_STEP_SUMMARY"
+
           if [ "$error_count" -gt 0 ]; then
-            echo "::warning::Cloudflare telemetry contains ${error_count} event(s) matching common error indicators in the last 24 hours. This is a diagnostic heuristic; inspect Cloudflare Observability before treating it as confirmed Worker failures."
-          else
-            echo "No events matched the current common error indicators. This does not prove that no runtime errors occurred."
+            echo "::error::Cloudflare telemetry contains ${error_count} event(s) matching common error indicators in the last 24 hours."
+            exit 1
           fi
+
+          echo "No events matched the current common error indicators. This does not prove that no runtime errors occurred."
