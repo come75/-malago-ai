@@ -356,6 +356,47 @@ ${question}`;
     return "";
   }
 }
+async function sendMalagoEmail(env,{to,subject,text}) {
+  const apiKey=clean(env?.RESEND_API_KEY);
+  const from=clean(env?.MALAGO_EMAIL_FROM);
+  if(!apiKey||!from||!to)return {sent:false,reason:"email_not_configured"};
+  try {
+    const response=await fetch("https://api.resend.com/emails",{
+      method:"POST",
+      headers:{"Authorization":"Bearer "+apiKey,"Content-Type":"application/json"},
+      body:JSON.stringify({from,to:[to],subject,text})
+    });
+    if(!response.ok) {
+      const detail=(await response.text()).slice(0,300);
+      console.error("Malago email provider error",response.status,detail);
+      return {sent:false,reason:"provider_error"};
+    }
+    return {sent:true};
+  } catch(error) {
+    console.error("Malago email delivery error",error);
+    return {sent:false,reason:"delivery_error"};
+  }
+}
+async function notifyNewClientRequest(env,{requestId,category,description,stayId}) {
+  const to=clean(env?.MALAGO_REQUESTS_EMAIL)||"Malagoagency@gmail.com";
+  return sendMalagoEmail(env,{
+    to,
+    subject:"Nouvelle demande client Malago",
+    text:[
+      "Une nouvelle demande vient d’être enregistrée dans Malago.",
+      "",
+      "Référence : "+requestId,
+      "Catégorie : "+category,
+      "Séjour : "+stayId,
+      "",
+      "Demande :",
+      description,
+      "",
+      "Ouvrez l’espace équipe Malago pour la traiter. Cette demande n’est pas une réservation confirmée."
+    ].join("\n")
+  });
+}
+
 function json(data,status=200,headers={}) {
   return new Response(JSON.stringify(data),{status,headers:{"Content-Type":"application/json; charset=utf-8","Cache-Control":"no-store",...headers}});
 }
@@ -373,7 +414,7 @@ const REQUEST_STATUS_TRANSITIONS = {
   declined: new Set(),
   cancelled: new Set()
 };
-const REQUEST_CATEGORIES = new Set(["car_rental","airport_transfer","restaurant","activity","chef","other"]);
+const REQUEST_CATEGORIES = new Set(["car_rental","airport_transfer","chauffeur","restaurant","activity","chef","groceries","beach_club","wellness","family","decoration","bartender","dj","event","villa_services","other"]);
 async function sha256Hex(value) {
   const digest = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(value));
   return [...new Uint8Array(digest)].map(b => b.toString(16).padStart(2,"0")).join("");
@@ -409,6 +450,83 @@ async function adminJson(request, env) {
   if (!clean(env?.MALAGO_ADMIN_TOKEN)) return json({error:"Secret MALAGO_ADMIN_TOKEN non configuré."},503);
   if (!adminAuthorized(request,env)) return json({error:"Authentification administrateur requise."},401);
   return null;
+}
+
+function isIsoCalendarDate(value) {
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(String(value || ""))) return false;
+  const date = new Date(String(value) + "T00:00:00.000Z");
+  return Number.isFinite(date.getTime()) && date.toISOString().slice(0,10) === value;
+}
+function isCalendarTime(value) {
+  return !value || /^(?:[01]\d|2[0-3]):[0-5]\d$/.test(String(value));
+}
+function parseStructuredDetails(value) {
+  if (!value) return null;
+  try { const data=JSON.parse(value); return data && typeof data==="object" && !Array.isArray(data) ? data : null; } catch (_) { return null; }
+}
+async function ensureStayEventsTable(db) {
+  await db.prepare("CREATE TABLE IF NOT EXISTS stay_events (id TEXT PRIMARY KEY, stay_id TEXT NOT NULL, title TEXT NOT NULL, event_date TEXT NOT NULL, start_time TEXT, end_time TEXT, location TEXT, notes TEXT, event_type TEXT NOT NULL DEFAULT 'personal' CHECK(event_type IN ('personal','idea','service')), status TEXT NOT NULL DEFAULT 'personal' CHECK(status IN ('personal','idea','requested','pending','confirmed','cancelled')), linked_request_id TEXT, created_at TEXT NOT NULL DEFAULT (datetime('now')), updated_at TEXT NOT NULL DEFAULT (datetime('now')))").run();
+  await db.prepare("CREATE INDEX IF NOT EXISTS idx_stay_events_stay_date ON stay_events(stay_id,event_date,start_time)").run();
+  await db.prepare("CREATE INDEX IF NOT EXISTS idx_stay_events_date ON stay_events(event_date,start_time)").run();
+}
+
+async function ensureStayNotificationTables(db) {
+  await db.prepare("CREATE TABLE IF NOT EXISTS stay_preferences (stay_id TEXT PRIMARY KEY, reminders_enabled INTEGER NOT NULL DEFAULT 1, remind_day_before INTEGER NOT NULL DEFAULT 1, remind_hours_before INTEGER NOT NULL DEFAULT 1, reminder_portal INTEGER NOT NULL DEFAULT 1, reminder_email INTEGER NOT NULL DEFAULT 1, updated_at TEXT NOT NULL DEFAULT (datetime('now')))").run();
+  await db.prepare("CREATE TABLE IF NOT EXISTS stay_notifications (id TEXT PRIMARY KEY, stay_id TEXT NOT NULL, event_id TEXT NOT NULL, reminder_type TEXT NOT NULL CHECK(reminder_type IN ('day_before','hours_before')), message TEXT NOT NULL, email_sent INTEGER NOT NULL DEFAULT 0, created_at TEXT NOT NULL DEFAULT (datetime('now')), read_at TEXT, UNIQUE(event_id,reminder_type))").run();
+  await db.prepare("CREATE INDEX IF NOT EXISTS idx_stay_notifications_stay ON stay_notifications(stay_id,created_at)").run();
+}
+function localDateTimeParts(date, timeZone) {
+  const parts = new Intl.DateTimeFormat("en-GB", {timeZone,year:"numeric",month:"2-digit",day:"2-digit",hour:"2-digit",minute:"2-digit",hourCycle:"h23"}).formatToParts(date);
+  return Object.fromEntries(parts.filter(p=>p.type!=="literal").map(p=>[p.type,p.value]));
+}
+function localDateTimeToUtc(dateValue,timeValue) {
+  const [year,month,day]=String(dateValue).split("-").map(Number),[hour,minute]=String(timeValue||"09:00").split(":").map(Number);
+  const target=Date.UTC(year,month-1,day,hour,minute);let guess=target;
+  for(let i=0;i<4;i++){
+    const parts=localDateTimeParts(new Date(guess),"Europe/Madrid");
+    const actual=Date.UTC(Number(parts.year),Number(parts.month)-1,Number(parts.day),Number(parts.hour),Number(parts.minute));
+    const diff=target-actual;if(!diff)break;guess+=diff;
+  }
+  return guess;
+}
+function boolPref(value, fallback=true) {
+  if(value===undefined||value===null)return fallback?1:0;
+  return value===true||value===1||value==="1"?1:0;
+}
+async function processStayReminders(env) {
+  if(!env?.DB)return {processed:0,reason:"db_unavailable"};
+  await ensureStayEventsTable(env.DB);await ensureStayNotificationTables(env.DB);
+  const now=new Date(),local=localDateTimeParts(now,"Europe/Madrid"),today=local.year+"-"+local.month+"-"+local.day;
+  const tomorrowDate=new Date(Number(local.year),Number(local.month)-1,Number(local.day)+1,12);
+  const tomorrow=tomorrowDate.getFullYear()+"-"+String(tomorrowDate.getMonth()+1).padStart(2,"0")+"-"+String(tomorrowDate.getDate()).padStart(2,"0");
+  const result=await env.DB.prepare("SELECT e.id,e.stay_id,e.title,e.event_date,e.start_time,e.location,e.status,e.event_type,s.guest_name,s.guest_email,s.property_name FROM stay_events e JOIN stays s ON s.id=e.stay_id WHERE e.status='confirmed' AND e.event_date>=? AND e.event_date<=? ORDER BY e.event_date,e.start_time LIMIT 500").bind(today,tomorrow).all();
+  let processed=0;
+  for(const event of result.results||[]){
+    let prefs=await env.DB.prepare("SELECT reminders_enabled,remind_day_before,remind_hours_before,reminder_portal,reminder_email FROM stay_preferences WHERE stay_id=? LIMIT 1").bind(event.stay_id).first();
+    if(!prefs)prefs={reminders_enabled:1,remind_day_before:1,remind_hours_before:1,reminder_portal:1,reminder_email:1};
+    if(!prefs.reminders_enabled)continue;
+    let untilStart=null;
+    if(event.start_time)untilStart=localDateTimeToUtc(event.event_date,event.start_time)-now.getTime();
+    const due=[];
+    if(prefs.remind_day_before&&event.event_date===tomorrow&&Number(local.hour)>=8&&Number(local.hour)<=10)due.push("day_before");
+    if(prefs.remind_hours_before&&untilStart!==null&&untilStart>=2*60*60*1000&&untilStart<4*60*60*1000)due.push("hours_before");
+    for(const type of due){
+      const message=type==="day_before"?"Rappel pour demain : "+event.title+(event.start_time?" à "+event.start_time:"")+".":"Votre événement approche : "+event.title+(event.start_time?" à "+event.start_time:"")+".";
+      await env.DB.prepare("INSERT OR IGNORE INTO stay_notifications (id,stay_id,event_id,reminder_type,message) VALUES (?,?,?,?,?)").bind(crypto.randomUUID(),event.stay_id,event.id,type,message).run();
+      processed++;
+    }
+    const notifications=await env.DB.prepare("SELECT id,reminder_type,message,email_sent FROM stay_notifications WHERE event_id=?").bind(event.id).all();
+    for(const item of notifications.results||[]){
+      if(!prefs.reminder_email||!event.guest_email||item.email_sent)continue;
+      const validWindow=item.reminder_type==="day_before"
+        ? event.event_date===tomorrow&&Number(local.hour)>=9&&Number(local.hour)<=18
+        : untilStart!==null&&untilStart>0&&untilStart<=4*60*60*1000;
+      if(!validWindow)continue;
+      const mail=await sendMalagoEmail(env,{to:event.guest_email,subject:item.reminder_type==="day_before"?"Villa Magos · Rappel pour demain":"Villa Magos · Votre événement approche",text:["Bonjour"+(event.guest_name?" "+event.guest_name:"")+",","",item.message,"","Séjour : "+(event.property_name||"Villa Magos"),"Date : "+event.event_date+(event.start_time?" · "+event.start_time:""),event.location?"Lieu : "+event.location:"","","Retrouvez votre programme dans votre espace privé Villa Magos.","","Malago · Votre concierge privé"].filter(Boolean).join("\n")});
+      if(mail.sent)await env.DB.prepare("UPDATE stay_notifications SET email_sent=1 WHERE id=?").bind(item.id).run();
+    }
+  }
+  return {processed};
 }
 
 
@@ -469,10 +587,95 @@ export default {
       }
     }
     if (url.pathname.startsWith("/api/client/")) {
-      if (!["GET","POST"].includes(request.method)) return json({error:"Méthode non autorisée."},405,headers);
+      if (!["GET","POST","PATCH","DELETE"].includes(request.method)) return json({error:"Méthode non autorisée."},405,headers);
       const auth = await resolveStayToken(request,env);
       if (auth.error) return json({error:auth.error},auth.status,headers);
       try {
+        if(request.method==="GET"&&url.pathname==="/api/client/preferences"){
+          await ensureStayNotificationTables(env.DB);
+          await env.DB.prepare("INSERT OR IGNORE INTO stay_preferences (stay_id) VALUES (?)").bind(auth.stayId).run();
+          const prefs=await env.DB.prepare("SELECT reminders_enabled,remind_day_before,remind_hours_before,reminder_portal,reminder_email FROM stay_preferences WHERE stay_id=? LIMIT 1").bind(auth.stayId).first();
+          const stay=await env.DB.prepare("SELECT guest_email FROM stays WHERE id=? AND status='active' LIMIT 1").bind(auth.stayId).first();
+          return json({preferences:{reminders_enabled:Boolean(prefs?.reminders_enabled),remind_day_before:Boolean(prefs?.remind_day_before),remind_hours_before:Boolean(prefs?.remind_hours_before),reminder_portal:Boolean(prefs?.reminder_portal),reminder_email:Boolean(prefs?.reminder_email)},email_configured:Boolean(stay?.guest_email)},200,headers);
+        }
+        if(request.method==="PATCH"&&url.pathname==="/api/client/preferences"){
+          await ensureStayNotificationTables(env.DB);
+          const parsed=await readJson(request);if(parsed.error)return json({error:parsed.error},parsed.status,headers);
+          const body=parsed.body||{},enabled=boolPref(body.reminders_enabled),dayBefore=boolPref(body.remind_day_before),hoursBefore=boolPref(body.remind_hours_before),portal=boolPref(body.reminder_portal),email=boolPref(body.reminder_email);
+          await env.DB.prepare("INSERT INTO stay_preferences (stay_id,reminders_enabled,remind_day_before,remind_hours_before,reminder_portal,reminder_email,updated_at) VALUES (?,?,?,?,?,?,datetime('now')) ON CONFLICT(stay_id) DO UPDATE SET reminders_enabled=excluded.reminders_enabled,remind_day_before=excluded.remind_day_before,remind_hours_before=excluded.remind_hours_before,reminder_portal=excluded.reminder_portal,reminder_email=excluded.reminder_email,updated_at=datetime('now')").bind(auth.stayId,enabled,dayBefore,hoursBefore,portal,email).run();
+          return json({ok:true,preferences:{reminders_enabled:Boolean(enabled),remind_day_before:Boolean(dayBefore),remind_hours_before:Boolean(hoursBefore),reminder_portal:Boolean(portal),reminder_email:Boolean(email)}},200,headers);
+        }
+        if(request.method==="GET"&&url.pathname==="/api/client/notifications"){
+          await ensureStayNotificationTables(env.DB);
+          const prefs=await env.DB.prepare("SELECT reminders_enabled,reminder_portal FROM stay_preferences WHERE stay_id=? LIMIT 1").bind(auth.stayId).first();
+          if(prefs&&(!prefs.reminders_enabled||!prefs.reminder_portal))return json({notifications:[]},200,headers);
+          const result=await env.DB.prepare("SELECT id,event_id,reminder_type,message,created_at,read_at FROM stay_notifications WHERE stay_id=? AND read_at IS NULL ORDER BY created_at DESC LIMIT 30").bind(auth.stayId).all();
+          return json({notifications:result.results||[]},200,headers);
+        }
+        const notificationReadMatch=url.pathname.match(/^\/api\/client\/notifications\/([0-9a-f-]{36})\/read$/i);
+        if(request.method==="POST"&&notificationReadMatch){
+          await ensureStayNotificationTables(env.DB);
+          const result=await env.DB.prepare("UPDATE stay_notifications SET read_at=datetime('now') WHERE id=? AND stay_id=?").bind(notificationReadMatch[1],auth.stayId).run();
+          if(!result.meta?.changes)return json({error:"Rappel introuvable."},404,headers);
+          return json({ok:true},200,headers);
+        }
+                const eventMatch = url.pathname.match(/^\/api\/client\/events(?:\/([0-9a-f-]{36}))?$/i);
+        if (eventMatch) {
+          await ensureStayEventsTable(env.DB);
+          const eventId = eventMatch[1] || "";
+          if (request.method === "GET" && !eventId) {
+            const result = await env.DB.prepare("SELECT id,title,event_date,start_time,end_time,location,notes,event_type,status,created_at,updated_at FROM stay_events WHERE stay_id=? ORDER BY event_date ASC, COALESCE(start_time,'99:99') ASC, created_at ASC").bind(auth.stayId).all();
+            return json({events:result.results || []},200,headers);
+          }
+          if (request.method === "POST" && !eventId) {
+            const parsed=await readJson(request);if(parsed.error)return json({error:parsed.error},parsed.status,headers);
+            const body=parsed.body||{},title=sanitize(body.title,120),eventDate=sanitize(body.event_date,10),startTime=sanitize(body.start_time,5),endTime=sanitize(body.end_time,5),location=sanitize(body.location,180),notes=sanitize(body.notes,2000);
+            const eventType=body.event_type==="idea"?"idea":body.event_type==="personal"?"personal":"";
+            if(!title)return json({error:"Donne un titre à cet événement."},400,headers);
+            if(!isIsoCalendarDate(eventDate))return json({error:"Choisis une date valide."},400,headers);
+            if(!isCalendarTime(startTime)||!isCalendarTime(endTime))return json({error:"L’horaire indiqué est invalide."},400,headers);
+            if(startTime&&endTime&&endTime<=startTime)return json({error:"L’heure de fin doit être postérieure à l’heure de début."},400,headers);
+            if(!eventType)return json({error:"Choisis un type d’événement valide."},400,headers);
+            const stay=await env.DB.prepare("SELECT start_date,end_date FROM stays WHERE id=? AND status='active' LIMIT 1").bind(auth.stayId).first();
+            if((stay?.start_date&&eventDate<stay.start_date)||(stay?.end_date&&eventDate>stay.end_date))return json({error:"La date doit être comprise dans les dates de votre séjour."},400,headers);
+            const id=crypto.randomUUID(),status=eventType==="idea"?"idea":"personal";
+            await env.DB.prepare("INSERT INTO stay_events (id,stay_id,title,event_date,start_time,end_time,location,notes,event_type,status) VALUES (?,?,?,?,?,?,?,?,?,?)").bind(id,auth.stayId,title,eventDate,startTime||null,endTime||null,location||null,notes||null,eventType,status).run();
+            return json({ok:true,event:{id,title,event_date:eventDate,start_time:startTime||null,end_time:endTime||null,location:location||null,notes:notes||null,event_type:eventType,status}},201,headers);
+          }
+          if(request.method==="PATCH"&&eventId){
+            const current=await env.DB.prepare("SELECT id,title,event_date,start_time,end_time,location,notes,event_type,status FROM stay_events WHERE id=? AND stay_id=? LIMIT 1").bind(eventId,auth.stayId).first();
+            if(!current)return json({error:"Événement introuvable."},404,headers);
+            if(current.status==="confirmed"||current.event_type==="service")return json({error:"Une prestation confirmée doit être modifiée avec l’aide de Malago."},409,headers);
+            const parsed=await readJson(request);if(parsed.error)return json({error:parsed.error},parsed.status,headers);
+            const body=parsed.body||{},title=sanitize(body.title===undefined?current.title:body.title,120),eventDate=sanitize(body.event_date===undefined?current.event_date:body.event_date,10),startTime=sanitize(body.start_time===undefined?current.start_time:body.start_time,5),endTime=sanitize(body.end_time===undefined?current.end_time:body.end_time,5),location=sanitize(body.location===undefined?current.location:body.location,180),notes=sanitize(body.notes===undefined?current.notes:body.notes,2000),rawType=body.event_type===undefined?current.event_type:body.event_type,eventType=rawType==="idea"?"idea":rawType==="personal"?"personal":"";
+            if(!title)return json({error:"Donne un titre à cet événement."},400,headers);
+            if(!isIsoCalendarDate(eventDate))return json({error:"Choisis une date valide."},400,headers);
+            if(!isCalendarTime(startTime)||!isCalendarTime(endTime))return json({error:"L’horaire indiqué est invalide."},400,headers);
+            if(startTime&&endTime&&endTime<=startTime)return json({error:"L’heure de fin doit être postérieure à l’heure de début."},400,headers);
+            if(!eventType)return json({error:"Type d’événement invalide."},400,headers);
+            const stay=await env.DB.prepare("SELECT start_date,end_date FROM stays WHERE id=? AND status='active' LIMIT 1").bind(auth.stayId).first();
+            if((stay?.start_date&&eventDate<stay.start_date)||(stay?.end_date&&eventDate>stay.end_date))return json({error:"La date doit être comprise dans les dates de votre séjour."},400,headers);
+            const status=eventType==="idea"?"idea":"personal";
+            await ensureStayNotificationTables(env.DB);
+            await env.DB.batch([
+              env.DB.prepare("UPDATE stay_events SET title=?,event_date=?,start_time=?,end_time=?,location=?,notes=?,event_type=?,status=?,updated_at=datetime('now') WHERE id=? AND stay_id=?").bind(title,eventDate,startTime||null,endTime||null,location||null,notes||null,eventType,status,eventId,auth.stayId),
+              env.DB.prepare("DELETE FROM stay_notifications WHERE event_id=?").bind(eventId)
+            ]);
+            return json({ok:true,event:{id:eventId,title,event_date:eventDate,start_time:startTime||null,end_time:endTime||null,location:location||null,notes:notes||null,event_type:eventType,status}},200,headers);
+          }
+          if(request.method==="DELETE"&&eventId){
+            const current=await env.DB.prepare("SELECT status,event_type FROM stay_events WHERE id=? AND stay_id=? LIMIT 1").bind(eventId,auth.stayId).first();
+            if(!current)return json({error:"Événement introuvable."},404,headers);
+            if(current.status==="confirmed"||current.event_type==="service")return json({error:"Une prestation confirmée doit être annulée avec l’aide de Malago."},409,headers);
+            await ensureStayNotificationTables(env.DB);
+            await env.DB.batch([
+              env.DB.prepare("DELETE FROM stay_notifications WHERE event_id=?").bind(eventId),
+              env.DB.prepare("DELETE FROM stay_events WHERE id=? AND stay_id=?").bind(eventId,auth.stayId)
+            ]);
+            return json({ok:true,id:eventId},200,headers);
+          }
+          return json({error:"Route ou méthode invalide pour cet événement."},405,headers);
+        }
         if (request.method === "GET" && url.pathname === "/api/client/requests") {
           const stay = await env.DB.prepare(
             "SELECT property_name, guest_name, start_date, end_date FROM stays WHERE id=? AND status='active' LIMIT 1"
@@ -480,24 +683,66 @@ export default {
           const result = await env.DB.prepare(
             "SELECT id, category, description, status, created_at, updated_at FROM client_requests WHERE stay_id=? ORDER BY created_at DESC LIMIT 100"
           ).bind(auth.stayId).all();
-          return json({stay:stay || null,requests:result.results || []},200,headers);
+          const requests = result.results || [];
+          for (const item of requests) {
+            const history = await env.DB.prepare("SELECT event_type,details,created_at FROM client_request_events WHERE request_id=? ORDER BY created_at ASC LIMIT 100").bind(item.id).all();
+            item.history = (history.results || []).map(event => {
+              let proposal = null, structuredDetails = null;
+              if (event.event_type === "proposal") { try { proposal = JSON.parse(event.details || "{}"); } catch {} }
+              if (event.event_type === "structured_details") { structuredDetails = parseStructuredDetails(event.details); item.structured_details=structuredDetails; }
+              return {event_type:event.event_type,details:["proposal","structured_details"].includes(event.event_type) ? "" : event.details,created_at:event.created_at,proposal,structured_details:structuredDetails};
+            });
+          }
+          return json({stay:stay || null,requests},200,headers);
+        }
+        const decisionMatch=url.pathname.match(/^\/api\/client\/requests\/([0-9a-f-]+)\/decision$/i);
+        if (request.method === "POST" && decisionMatch) {
+          const parsed=await readJson(request);if(parsed.error)return json({error:parsed.error},parsed.status,headers);
+          const decision=sanitize(parsed.body?.decision,20),requestId=decisionMatch[1];
+          if(!["accept","decline"].includes(decision))return json({error:"Choix invalide."},400,headers);
+          const current=await env.DB.prepare("SELECT r.id,r.status,r.category,r.description,s.property_name,s.guest_name FROM client_requests r JOIN stays s ON s.id=r.stay_id WHERE r.id=? AND r.stay_id=? LIMIT 1").bind(requestId,auth.stayId).first();
+          if(!current)return json({error:"Demande introuvable."},404,headers);
+          if(current.status!=="quoted")return json({error:"Aucune proposition en attente de réponse pour cette demande."},409,headers);
+          const nextStatus=decision==="accept"?"accepted_by_customer":"declined";
+          const detail=decision==="accept"?"Le client accepte la proposition. En attente de confirmation finale du prestataire.":"Le client refuse la proposition.";
+          await env.DB.batch([
+            env.DB.prepare("UPDATE client_requests SET status=?,updated_at=datetime('now') WHERE id=? AND stay_id=?").bind(nextStatus,requestId,auth.stayId),
+            env.DB.prepare("INSERT INTO client_request_events (id,request_id,event_type,details) VALUES (?,?,?,?)").bind(crypto.randomUUID(),requestId,"customer_decision",detail)
+          ]);
+          await sendMalagoEmail(env,{
+            to:clean(env?.MALAGO_REQUESTS_EMAIL)||"Malagoagency@gmail.com",
+            subject:decision==="accept"?"Un client accepte une proposition Malago":"Un client refuse une proposition Malago",
+            text:["Une réponse client vient d’être enregistrée.","","Référence : "+requestId,"Séjour : "+(current.property_name||auth.stayId),"Client : "+(current.guest_name||"Non renseigné"),"Catégorie : "+current.category,"Décision : "+(decision==="accept"?"Proposition acceptée, confirmation prestataire encore requise":"Proposition refusée"),"","Demande : "+current.description].join("\n")
+          });
+          return json({ok:true,id:requestId,status:nextStatus,message:decision==="accept"?"Votre accord est enregistré. La prestation n’est pas encore confirmée.":"Votre refus est enregistré."},200,headers);
         }
         if (request.method === "POST" && url.pathname === "/api/client/requests") {
           const parsed = await readJson(request);
           if (parsed.error) return json({error:parsed.error},parsed.status,headers);
-          const body = parsed.body || {};
-          const category = sanitize(body.category,40);
-          const description = sanitize(body.description,3000);
-          if (!REQUEST_CATEGORIES.has(category)) return json({error:"Catégorie de demande invalide."},400,headers);
-          if (description.length < 3) return json({error:"Précise ta demande en quelques mots."},400,headers);
-          const id = crypto.randomUUID();
-          await env.DB.batch([
-            env.DB.prepare("INSERT INTO client_requests (id,stay_id,category,description,status) VALUES (?,?,?,?,'received')").bind(id,auth.stayId,category,description),
-            env.DB.prepare("INSERT INTO client_request_events (id,request_id,event_type,details) VALUES (?,?,?,?)").bind(crypto.randomUUID(),id,"received","Demande créée par le client")
-          ]);
-          return json({ok:true,request:{id,category,description,status:"received"},message:"Demande enregistrée. Elle n’est pas une réservation confirmée."},201,headers);
-        }
-      } catch (error) {
+          const body=parsed.body||{};
+          const inputs=Array.isArray(body.requests)?body.requests:[body];
+          if(!inputs.length||inputs.length>12)return json({error:"Une demande peut contenir jusqu’à 12 prestations distinctes."},400,headers);
+          const normalized=[];
+          for(const item of inputs){
+            const category=sanitize(item.category,40),description=sanitize(item.description,3000);
+            if(!REQUEST_CATEGORIES.has(category))return json({error:"Catégorie de demande invalide."},400,headers);
+            if(description.length<3)return json({error:"Précise chaque demande en quelques mots."},400,headers);
+            const structuredDetails=item.details&&typeof item.details==="object"&&!Array.isArray(item.details)?item.details:null;
+            const structuredJson=structuredDetails?JSON.stringify(structuredDetails):"";
+            if(structuredJson.length>8000)return json({error:"Les précisions structurées sont trop volumineuses."},413,headers);
+            normalized.push({id:crypto.randomUUID(),category,description,structuredDetails,structuredJson});
+          }
+          const operations=[];
+          for(const item of normalized){
+            operations.push(env.DB.prepare("INSERT INTO client_requests (id,stay_id,category,description,status) VALUES (?,?,?,?,'received')").bind(item.id,auth.stayId,item.category,item.description));
+            operations.push(env.DB.prepare("INSERT INTO client_request_events (id,request_id,event_type,details) VALUES (?,?,?,?)").bind(crypto.randomUUID(),item.id,"received","Demande créée par le client"));
+            if(item.structuredJson)operations.push(env.DB.prepare("INSERT INTO client_request_events (id,request_id,event_type,details) VALUES (?,?,?,?)").bind(crypto.randomUUID(),item.id,"structured_details",item.structuredJson));
+          }
+          await env.DB.batch(operations);
+          const notifications=await Promise.all(normalized.map(item=>notifyNewClientRequest(env,{requestId:item.id,category:item.category,description:item.description,stayId:auth.stayId})));
+          const saved=normalized.map(item=>({id:item.id,category:item.category,description:item.description,status:"received",structured_details:item.structuredDetails}));
+          return json({ok:true,request:saved.length===1?saved[0]:undefined,requests:saved,message:saved.length===1?"Demande enregistrée. Elle n’est pas une réservation confirmée.":saved.length+" demandes distinctes enregistrées. Elles ne sont pas des réservations confirmées.",notifications_sent:notifications.filter(item=>item.sent).length},201,headers);
+        }      } catch (error) {
         const requestId=crypto.randomUUID(); console.error("Client requests API error",requestId,error);
         return json({error:"Impossible de traiter la demande.",requestId},500,headers);
       }
@@ -510,6 +755,11 @@ export default {
       if (denied) return json(JSON.parse(await denied.text()),denied.status,headers);
       if (!env?.DB) return json({error:"Base de données non configurée."},503,headers);
       try {
+        if (request.method === "GET" && url.pathname === "/api/admin/calendar") {
+          await ensureStayEventsTable(env.DB);
+          const result=await env.DB.prepare("SELECT e.id,e.stay_id,e.title,e.event_date,e.start_time,e.end_time,e.location,e.notes,e.event_type,e.status,e.created_at,e.updated_at,s.property_name,s.guest_name,s.guest_email,s.start_date AS stay_start_date,s.end_date AS stay_end_date FROM stay_events e JOIN stays s ON s.id=e.stay_id ORDER BY e.event_date ASC, COALESCE(e.start_time,'99:99') ASC LIMIT 1000").all();
+          return json({events:result.results||[]},200,headers);
+        }
         if (request.method === "POST" && url.pathname === "/api/admin/stays") {
           const parsed=await readJson(request);
           if (parsed.error) return json({error:parsed.error},parsed.status,headers);
@@ -522,6 +772,9 @@ export default {
           const days=30;
           if (!propertyName) return json({error:"property_name est obligatoire."},400,headers);
           if (guestEmail && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(guestEmail)) return json({error:"Adresse e-mail invalide."},400,headers);
+          if (startDate && !isIsoCalendarDate(startDate)) return json({error:"Date d’arrivée invalide."},400,headers);
+          if (endDate && !isIsoCalendarDate(endDate)) return json({error:"Date de départ invalide."},400,headers);
+          if (startDate && endDate && endDate < startDate) return json({error:"La date de départ doit être égale ou postérieure à la date d’arrivée."},400,headers);
           const id=crypto.randomUUID();
           const rawToken=[...crypto.getRandomValues(new Uint8Array(32))].map(b=>b.toString(16).padStart(2,"0")).join("");
           const tokenHash=await sha256Hex(rawToken);
@@ -541,8 +794,45 @@ export default {
           return json({ok:true,revoked:result.meta?.changes || 0},200,headers);
         }
         if (request.method === "GET" && url.pathname === "/api/admin/requests") {
-          const result=await env.DB.prepare("SELECT r.id,r.stay_id,s.property_name,s.guest_name,r.category,r.description,r.status,r.created_at,r.updated_at FROM client_requests r JOIN stays s ON s.id=r.stay_id ORDER BY r.created_at DESC LIMIT 200").all();
-          return json({requests:result.results||[]},200,headers);
+          const result=await env.DB.prepare("SELECT r.id,r.stay_id,s.property_name,s.guest_name,s.guest_email,s.start_date AS stay_start_date,s.end_date AS stay_end_date,r.category,r.description,r.status,r.created_at,r.updated_at FROM client_requests r JOIN stays s ON s.id=r.stay_id ORDER BY r.created_at DESC LIMIT 200").all();
+          const requests=result.results||[],ids=requests.map(item=>item.id);
+          if(ids.length){
+            const placeholders=ids.map(()=>"?").join(",");
+            const extra=await env.DB.prepare("SELECT request_id,details FROM client_request_events WHERE event_type='structured_details' AND request_id IN ("+placeholders+") ORDER BY created_at DESC").bind(...ids).all();
+            const detailMap=new Map();
+            for(const row of extra.results||[])if(!detailMap.has(row.request_id))detailMap.set(row.request_id,parseStructuredDetails(row.details));
+            for(const item of requests)item.structured_details=detailMap.get(item.id)||null;
+          }
+          return json({requests},200,headers);
+        }
+        const proposalMatch=url.pathname.match(/^\/api\/admin\/requests\/([0-9a-f-]+)\/proposal$/i);
+        if (request.method === "POST" && proposalMatch) {
+          const parsed=await readJson(request);
+          if(parsed.error)return json({error:parsed.error},parsed.status,headers);
+          const body=parsed.body||{},requestId=proposalMatch[1];
+          const message=sanitize(body.message,2000),partnerName=sanitize(body.partner_name,160),price=sanitize(body.price,100),currency=sanitize(body.currency||"EUR",8),conditions=sanitize(body.conditions,1200),availability=sanitize(body.availability,300);
+          const proposedDate=sanitize(body.proposed_date,10),proposedStart=sanitize(body.proposed_start_time,5),proposedEnd=sanitize(body.proposed_end_time,5),proposalLocation=sanitize(body.proposal_location,180);
+          if(message.length<5)return json({error:"Ajoute le détail de la proposition du prestataire."},400,headers);
+          if(price&&!/^[0-9]+([.,][0-9]{1,2})?$/.test(price))return json({error:"Le prix doit être un montant simple, par exemple 180 ou 180,50."},400,headers);
+          if(proposedDate&&!isIsoCalendarDate(proposedDate))return json({error:"La date proposée est invalide."},400,headers);
+          if(!isCalendarTime(proposedStart)||!isCalendarTime(proposedEnd))return json({error:"L’horaire proposé est invalide."},400,headers);
+          if(proposedStart&&proposedEnd&&proposedEnd<=proposedStart)return json({error:"L’heure de fin doit être postérieure à l’heure de début."},400,headers);
+          if(!proposedDate&&(proposedStart||proposedEnd))return json({error:"Ajoute une date si tu renseignes un horaire."},400,headers);
+          const current=await env.DB.prepare("SELECT r.id,r.status,s.guest_email,s.guest_name,s.property_name,s.start_date,s.end_date FROM client_requests r JOIN stays s ON s.id=r.stay_id WHERE r.id=?").bind(requestId).first();
+          if(!current)return json({error:"Demande introuvable."},404,headers);
+          if(proposedDate&&((current.start_date&&proposedDate<current.start_date)||(current.end_date&&proposedDate>current.end_date)))return json({error:"La date proposée doit être comprise dans le séjour."},400,headers);
+          if(current.status!=="quoted"&&!REQUEST_STATUS_TRANSITIONS[current.status]?.has("quoted"))return json({error:"Cette demande ne peut pas recevoir de proposition dans son état actuel."},409,headers);
+          const proposal={message,partner_name:partnerName||"",price:price||null,currency,conditions:conditions||"",availability:availability||"",proposed_date:proposedDate||"",proposed_start_time:proposedStart||"",proposed_end_time:proposedEnd||"",proposal_location:proposalLocation||"",provider_confirmed:false};
+          await env.DB.batch([
+            env.DB.prepare("UPDATE client_requests SET status='quoted',updated_at=datetime('now') WHERE id=?").bind(requestId),
+            env.DB.prepare("INSERT INTO client_request_events (id,request_id,event_type,details) VALUES (?,?,?,?)").bind(crypto.randomUUID(),requestId,"proposal",JSON.stringify(proposal))
+          ]);
+          if(current.guest_email) await sendMalagoEmail(env,{
+            to:current.guest_email,
+            subject:"Une proposition vous attend — Villa Magos × Malago",
+            text:["Bonjour"+(current.guest_name?" "+current.guest_name:"")+",","","Malago a ajouté une proposition à votre demande.","","Séjour : "+(current.property_name||"Villa Magos"),"Référence : "+requestId,"Proposition : "+message,partnerName?"Prestataire : "+partnerName:"",price?"Prix proposé : "+price+" "+currency:"",availability?"Disponibilité annoncée : "+availability:"",proposedDate?"Date proposée : "+proposedDate:"",proposedStart?"Début : "+proposedStart:"",proposedEnd?"Fin : "+proposedEnd:"",proposalLocation?"Lieu : "+proposalLocation:"",conditions?"Conditions : "+conditions:"","","Connectez-vous à votre espace privé Villa Magos pour consulter la proposition et l’accepter ou la refuser.","","Votre accord ne vaut pas confirmation finale tant que le prestataire n’a pas confirmé la prestation."].filter(Boolean).join("\n")
+          });
+          return json({ok:true,id:requestId,status:"quoted",proposal},200,headers);
         }
         const statusMatch=url.pathname.match(/^\/api\/admin\/requests\/([0-9a-f-]+)\/status$/i);
         if (request.method === "POST" && statusMatch) {
@@ -553,17 +843,28 @@ export default {
           if (!REQUEST_STATUSES.has(nextStatus)) return json({error:"Statut invalide."},400,headers);
           if (nextStatus==="confirmed" && note.length<5) return json({error:"Pour confirmer, ajoute une note attestant la confirmation réelle du prestataire."},400,headers);
           const requestId=statusMatch[1];
-          const current=await env.DB.prepare("SELECT status FROM client_requests WHERE id=?").bind(requestId).first();
+          const current=await env.DB.prepare("SELECT status,stay_id,category FROM client_requests WHERE id=?").bind(requestId).first();
           if (!current) return json({error:"Demande introuvable."},404,headers);
           if (current.status===nextStatus) return json({ok:true,id:requestId,status:nextStatus,unchanged:true},200,headers);
-          if (!REQUEST_STATUS_TRANSITIONS[current.status]?.has(nextStatus)) {
-            return json({error:"Transition de statut interdite.",current_status:current.status,requested_status:nextStatus},409,headers);
-          }
-          const eventDetails=current.status+" -> "+nextStatus+(note ? " | "+note : "");
-          await env.DB.batch([
+          if (!REQUEST_STATUS_TRANSITIONS[current.status]?.has(nextStatus)) return json({error:"Transition de statut interdite.",current_status:current.status,requested_status:nextStatus},409,headers);
+          const eventDetails=current.status+" -> "+nextStatus+(note ? " | "+note : ""),ops=[
             env.DB.prepare("UPDATE client_requests SET status=?,updated_at=datetime('now') WHERE id=?").bind(nextStatus,requestId),
             env.DB.prepare("INSERT INTO client_request_events (id,request_id,event_type,details) VALUES (?,?,?,?)").bind(crypto.randomUUID(),requestId,"status_changed",eventDetails)
-          ]);
+          ];
+          if(nextStatus==="confirmed"){
+            await ensureStayEventsTable(env.DB);
+            const proposalEvent=await env.DB.prepare("SELECT details FROM client_request_events WHERE request_id=? AND event_type='proposal' ORDER BY created_at DESC LIMIT 1").bind(requestId).first();
+            const proposal=parseStructuredDetails(proposalEvent?.details);
+            if(proposal?.proposed_date&&isIsoCalendarDate(proposal.proposed_date)){
+              const categoryLabel={car_rental:"Location de voiture",airport_transfer:"Transfert chauffeur",chauffeur:"Chauffeur privé",restaurant:"Restaurant",activity:"Expérience",chef:"Chef privé",groceries:"Courses livrées",beach_club:"Plage / beach club",wellness:"Bien-être",family:"Famille & enfants",decoration:"Décoration & fleurs",bartender:"Barman privé",dj:"DJ privé",event:"Événement privé",villa_services:"Service à la villa",other:"Service Villa Magos"};
+              const eventTitle=sanitize((categoryLabel[current.category]||"Service Villa Magos")+(proposal.partner_name?" · "+proposal.partner_name:""),120);
+              const existing=await env.DB.prepare("SELECT id FROM stay_events WHERE linked_request_id=? LIMIT 1").bind(requestId).first();
+              if(existing)ops.push(env.DB.prepare("UPDATE stay_events SET title=?,event_date=?,start_time=?,end_time=?,location=?,notes=?,event_type='service',status='confirmed',updated_at=datetime('now') WHERE id=?").bind(eventTitle,proposal.proposed_date,proposal.proposed_start_time||null,proposal.proposed_end_time||null,proposal.proposal_location||null,proposal.message||proposal.conditions||null,existing.id));
+              else ops.push(env.DB.prepare("INSERT INTO stay_events (id,stay_id,title,event_date,start_time,end_time,location,notes,event_type,status,linked_request_id) VALUES (?,?,?,?,?,?,?,?,'service','confirmed',?)").bind(crypto.randomUUID(),current.stay_id,eventTitle,proposal.proposed_date,proposal.proposed_start_time||null,proposal.proposed_end_time||null,proposal.proposal_location||null,proposal.message||proposal.conditions||null,requestId));
+            }
+          }
+          if(nextStatus==="cancelled"){await ensureStayEventsTable(env.DB);ops.push(env.DB.prepare("UPDATE stay_events SET status='cancelled',updated_at=datetime('now') WHERE linked_request_id=?").bind(requestId));}
+          await env.DB.batch(ops);
           return json({ok:true,id:requestId,status:nextStatus},200,headers);
         }
       } catch (error) {
@@ -576,6 +877,12 @@ export default {
     // Team-only interface for creating individual Villa Magos stay links. API actions still require the admin bearer token.
     if (request.method === "GET" && url.pathname === "/villa-magos/admin") {
       if (env?.ASSETS) return env.ASSETS.fetch(new Request(new URL("/villa-magos-admin.html", url), { method: "GET", headers: request.headers }));
+      return new Response("Malago assets unavailable",{status:503,headers:{...headers,"Content-Type":"text/plain;charset=UTF-8"}});
+    }
+
+    // Team-only calendar; API data remains protected by adminJson.
+    if (request.method === "GET" && url.pathname === "/villa-magos/calendrier") {
+      if (env?.ASSETS) return env.ASSETS.fetch(new Request(new URL("/villa-magos-calendar-admin.html", url), { method: "GET", headers: request.headers }));
       return new Response("Malago assets unavailable",{status:503,headers:{...headers,"Content-Type":"text/plain;charset=UTF-8"}});
     }
 
@@ -620,5 +927,9 @@ export default {
       }
     }
     return new Response("Malago",{status:404,headers:{...headers,"Content-Type":"text/plain;charset=UTF-8"}});
+  },
+  async scheduled(controller, env, ctx) {
+    try { await processStayReminders(env); }
+    catch(error) { console.error("Villa Magos reminder job failed",error); }
   }
 };
