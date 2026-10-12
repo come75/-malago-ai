@@ -508,7 +508,7 @@ async function processStayReminders(env) {
     let untilStart=null;
     if(event.start_time)untilStart=localDateTimeToUtc(event.event_date,event.start_time)-now.getTime();
     const due=[];
-    if(prefs.remind_day_before&&event.event_date===tomorrow&&Number(local.hour)===9)due.push("day_before");
+    if(prefs.remind_day_before&&event.event_date===tomorrow&&Number(local.hour)>=8&&Number(local.hour)<=10)due.push("day_before");
     if(prefs.remind_hours_before&&untilStart!==null&&untilStart>=2*60*60*1000&&untilStart<4*60*60*1000)due.push("hours_before");
     for(const type of due){
       const message=type==="day_before"?"Rappel pour demain : "+event.title+(event.start_time?" à "+event.start_time:"")+".":"Votre événement approche : "+event.title+(event.start_time?" à "+event.start_time:"")+".";
