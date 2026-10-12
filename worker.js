@@ -542,7 +542,32 @@ export default {
           const result = await env.DB.prepare(
             "SELECT id, category, description, status, created_at, updated_at FROM client_requests WHERE stay_id=? ORDER BY created_at DESC LIMIT 100"
           ).bind(auth.stayId).all();
-          return json({stay:stay || null,requests:result.results || []},200,headers);
+          const requests = result.results || [];
+          for (const item of requests) {
+            const history = await env.DB.prepare("SELECT event_type,details,created_at FROM client_request_events WHERE request_id=? ORDER BY created_at ASC LIMIT 100").bind(item.id).all();
+            item.history = (history.results || []).map(event => {
+              let proposal = null;
+              if (event.event_type === "proposal") { try { proposal = JSON.parse(event.details || "{}"); } catch {} }
+              return {event_type:event.event_type,details:event.event_type === "proposal" ? "" : event.details,created_at:event.created_at,proposal};
+            });
+          }
+          return json({stay:stay || null,requests},200,headers);
+        }
+        const decisionMatch=url.pathname.match(/^\\/api\\/client\\/requests\\/([0-9a-f-]+)\\/decision$/i);
+        if (request.method === "POST" && decisionMatch) {
+          const parsed=await readJson(request);if(parsed.error)return json({error:parsed.error},parsed.status,headers);
+          const decision=sanitize(parsed.body?.decision,20),requestId=decisionMatch[1];
+          if(!["accept","decline"].includes(decision))return json({error:"Choix invalide."},400,headers);
+          const current=await env.DB.prepare("SELECT id,status FROM client_requests WHERE id=? AND stay_id=? LIMIT 1").bind(requestId,auth.stayId).first();
+          if(!current)return json({error:"Demande introuvable."},404,headers);
+          if(current.status!=="quoted")return json({error:"Aucune proposition en attente de réponse pour cette demande."},409,headers);
+          const nextStatus=decision==="accept"?"accepted_by_customer":"declined";
+          const detail=decision==="accept"?"Le client accepte la proposition. En attente de confirmation finale du prestataire.":"Le client refuse la proposition.";
+          await env.DB.batch([
+            env.DB.prepare("UPDATE client_requests SET status=?,updated_at=datetime('now') WHERE id=? AND stay_id=?").bind(nextStatus,requestId,auth.stayId),
+            env.DB.prepare("INSERT INTO client_request_events (id,request_id,event_type,details) VALUES (?,?,?,?)").bind(crypto.randomUUID(),requestId,"customer_decision",detail)
+          ]);
+          return json({ok:true,id:requestId,status:nextStatus,message:decision==="accept"?"Votre accord est enregistré. La prestation n’est pas encore confirmée.":"Votre refus est enregistré."},200,headers);
         }
         if (request.method === "POST" && url.pathname === "/api/client/requests") {
           const parsed = await readJson(request);
@@ -613,6 +638,24 @@ export default {
         if (request.method === "GET" && url.pathname === "/api/admin/requests") {
           const result=await env.DB.prepare("SELECT r.id,r.stay_id,s.property_name,s.guest_name,r.category,r.description,r.status,r.created_at,r.updated_at FROM client_requests r JOIN stays s ON s.id=r.stay_id ORDER BY r.created_at DESC LIMIT 200").all();
           return json({requests:result.results||[]},200,headers);
+        }
+        const proposalMatch=url.pathname.match(/^\\/api\\/admin\\/requests\\/([0-9a-f-]+)\\/proposal$/i);
+        if (request.method === "POST" && proposalMatch) {
+          const parsed=await readJson(request);
+          if(parsed.error)return json({error:parsed.error},parsed.status,headers);
+          const body=parsed.body||{},requestId=proposalMatch[1];
+          const message=sanitize(body.message,2000),price=sanitize(body.price,100),currency=sanitize(body.currency||"EUR",8),conditions=sanitize(body.conditions,1200),availability=sanitize(body.availability,300);
+          if(message.length<5)return json({error:"Ajoute le détail de la proposition du prestataire."},400,headers);
+          if(price&&!/^[0-9]+([.,][0-9]{1,2})?$/.test(price))return json({error:"Le prix doit être un montant simple, par exemple 180 ou 180,50."},400,headers);
+          const current=await env.DB.prepare("SELECT id,status FROM client_requests WHERE id=?").bind(requestId).first();
+          if(!current)return json({error:"Demande introuvable."},404,headers);
+          if(current.status!=="quoted"&&!REQUEST_STATUS_TRANSITIONS[current.status]?.has("quoted"))return json({error:"Cette demande ne peut pas recevoir de proposition dans son état actuel."},409,headers);
+          const proposal={message,price:price||null,currency,conditions:conditions||"",availability:availability||"",provider_confirmed:false};
+          await env.DB.batch([
+            env.DB.prepare("UPDATE client_requests SET status='quoted',updated_at=datetime('now') WHERE id=?").bind(requestId),
+            env.DB.prepare("INSERT INTO client_request_events (id,request_id,event_type,details) VALUES (?,?,?,?)").bind(crypto.randomUUID(),requestId,"proposal",JSON.stringify(proposal))
+          ]);
+          return json({ok:true,id:requestId,status:"quoted",proposal},200,headers);
         }
         const statusMatch=url.pathname.match(/^\/api\/admin\/requests\/([0-9a-f-]+)\/status$/i);
         if (request.method === "POST" && statusMatch) {
