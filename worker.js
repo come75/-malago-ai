@@ -466,6 +466,13 @@ function parseStructuredDetails(value) {
 }
 async function ensureStayEventsTable(db) {
   await db.prepare("CREATE TABLE IF NOT EXISTS stay_events (id TEXT PRIMARY KEY, stay_id TEXT NOT NULL, title TEXT NOT NULL, event_date TEXT NOT NULL, start_time TEXT, end_time TEXT, location TEXT, notes TEXT, event_type TEXT NOT NULL DEFAULT 'personal' CHECK(event_type IN ('personal','idea','service')), status TEXT NOT NULL DEFAULT 'personal' CHECK(status IN ('personal','idea','requested','pending','confirmed','cancelled')), linked_request_id TEXT, created_at TEXT NOT NULL DEFAULT (datetime('now')), updated_at TEXT NOT NULL DEFAULT (datetime('now')))").run();
+  // CREATE TABLE IF NOT EXISTS does not migrate databases created by earlier versions.
+  // Add the link column explicitly so existing calendars can attach confirmed services to requests.
+  const columns = await db.prepare("PRAGMA table_info(stay_events)").all();
+  if (!(columns.results || []).some(column => column.name === "linked_request_id")) {
+    await db.prepare("ALTER TABLE stay_events ADD COLUMN linked_request_id TEXT").run();
+  }
+  await db.prepare("CREATE INDEX IF NOT EXISTS idx_stay_events_linked_request ON stay_events(linked_request_id)").run();
   await db.prepare("CREATE INDEX IF NOT EXISTS idx_stay_events_stay_date ON stay_events(stay_id,event_date,start_time)").run();
   await db.prepare("CREATE INDEX IF NOT EXISTS idx_stay_events_date ON stay_events(event_date,start_time)").run();
 }
