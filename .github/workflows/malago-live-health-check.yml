@@ -32,9 +32,21 @@ jobs:
           for attempt in $(seq 1 12); do
             echo "Health check attempt ${attempt}/12"
             if curl --connect-timeout 10 --max-time 20 --fail --silent --show-error "$HEALTH_URL" -o health.json; then
-              if jq -e '.ok == true and ((.guideRecords | tonumber) > 0) and ((.resourceRecords | tonumber) > 0)' health.json >/dev/null; then
+              # Accept the V7/Notion response schema or the legacy V6 data schema.
+              # Keep missing/null numeric fields safe so schema changes produce a clear failure, not a jq parse error.
+              if jq -e '
+                .ok == true
+                and .aiConfigured == true
+                and (
+                  ((.notionRecords // 0) | tonumber) > 0
+                  or (
+                    ((.guideRecords // 0) | tonumber) > 0
+                    and ((.resourceRecords // 0) | tonumber) > 0
+                  )
+                )
+              ' health.json >/dev/null; then
                 echo "Health endpoint returned a valid response:"
-                jq '{ok, aiConfigured, model, guideRecords, resourceRecords, dateMadrid}' health.json
+                jq '{ok, version, aiConfigured, notionConfigured, model, notionRecords, guideRecords, resourceRecords, notionError, dateMadrid}' health.json
                 healthy="true"
                 break
               fi
