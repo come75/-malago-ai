@@ -98,7 +98,7 @@ jobs:
               "filterCombination": "and",
               "filters": [
                 {
-                  "key": "\$workers.scriptName",
+                  "key": "\\$workers.scriptName",
                   "operation": "eq",
                   "type": "string",
                   "value": "test"
@@ -131,7 +131,8 @@ jobs:
           echo "Cloudflare logs query succeeded for Worker test (last 24 hours)."
           jq '{
             success,
-            resultKeys: (.result | if type == "object" then keys else ["result is not an object"] end),
-            returnedEvents: ((.result.events // []) | length),
-            sampleEvent: ((.result.events // [])[0] // null)
+            resultType: (.result | type),
+            resultKeys: (.result | if type == "object" then keys else [] end),
+            returnedEvents: (if (.result | type) == "object" and (.result.events | type) == "array" then (.result.events | length) else 0 end),
+            sampleEvent: (if (.result | type) == "object" and (.result.events | type) == "array" then (.result.events[0] // null) else null end)
           }' cloudflare-logs.json
