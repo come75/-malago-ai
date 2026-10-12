@@ -1,0 +1,59 @@
+name: Malago live health check
+
+on:
+  push:
+    branches:
+      - main
+  schedule:
+    - cron: "*/30 * * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: malago-live-health-check
+  cancel-in-progress: true
+
+jobs:
+  check-live-worker:
+    name: Check deployed Cloudflare Worker
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Check live health endpoint
+        shell: bash
+        run: |
+          set -euo pipefail
+          BASE_URL="https://test.malago.workers.dev"
+          HEALTH_URL="${BASE_URL}/health"
+          healthy="false"
+
+          for attempt in $(seq 1 12); do
+            echo "Health check attempt ${attempt}/12"
+            if curl --connect-timeout 10 --max-time 20 --fail --silent --show-error "$HEALTH_URL" -o health.json; then
+              if jq -e '.ok == true and ((.guideRecords | tonumber) > 0) and ((.resourceRecords | tonumber) > 0)' health.json >/dev/null; then
+                echo "Health endpoint returned a valid response:"
+                jq '{ok, aiConfigured, model, guideRecords, resourceRecords, dateMadrid}' health.json
+                healthy="true"
+                break
+              fi
+              echo "Health endpoint responded, but its payload did not pass validation:"
+              cat health.json
+            fi
+            sleep 10
+          done
+
+          if [ "$healthy" != "true" ]; then
+            echo "::error::The live Worker health check failed after 12 attempts."
+            exit 1
+          fi
+
+      - name: Check live website responds
+        shell: bash
+        run: |
+          set -euo pipefail
+          curl --connect-timeout 10 --max-time 30 --fail --silent --show-error \
+            --output /dev/null \
+            --write-out "Website HTTP status: %{http_code}\n" \
+            "https://test.malago.workers.dev/"
