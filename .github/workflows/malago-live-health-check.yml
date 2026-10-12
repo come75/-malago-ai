@@ -68,6 +68,8 @@ jobs:
             --write-out "Website HTTP status: %{http_code}\n" \
             "https://test.malago.workers.dev/"
 
+      # CLOUDFLARE_API_TOKEN should be scoped to this account and use the minimum
+      # Cloudflare permission required by the telemetry query endpoint: Workers Observability Write.
       - name: Query Cloudflare Worker logs
         shell: bash
         env:
