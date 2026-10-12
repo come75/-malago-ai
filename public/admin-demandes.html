@@ -33,7 +33,7 @@ input:focus,select:focus,textarea:focus{outline:0;border-color:#EE8405;box-shado
 .empty{border-color:rgba(23,25,21,.2);background:#faf8f1;color:#686b62}
 .foot{font-size:10px;color:#85877d}
 @media(max-width:800px){.top{padding:17px 15px}.topin{align-items:flex-start;flex-direction:column;gap:9px}main{padding:28px 15px 44px}.brand{font-size:17px}.brand small{font-size:8px}}
-</style></head>
+.structuredDetails{border:1px solid rgba(197,164,109,.4);background:#fffaf0;border-radius:11px;padding:14px;margin:12px 0}.structuredDetails h4{font-family:Georgia,serif;font-size:18px;font-weight:400;margin:0 0 9px}.structuredDetails h5{font-size:12px;margin:13px 0 5px}.structuredDetails p{font-size:11px;line-height:1.65;margin:5px 0;color:#56594f}.proposalSchedule{grid-column:1/-1;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}.proposalSchedule>div{min-width:0}.proposalSchedule input{width:100%;min-width:0}@media(max-width:600px){.proposalSchedule{grid-template-columns:1fr 1fr}}</style></head>
 <body>
 <header class="top"><div class="topin"><a class="brand" href="/villa-magos">Villa Magos <i>×</i> Malago <small>/ Équipe</small></a><div class="secure"><span class="secure-dot"></span> Outil interne · Accès administrateur</div></div></header>
 <main>
@@ -78,9 +78,11 @@ const priceField=field("Prix proposé (facultatif)","Ex. 180,00","text");
 const availabilityField=field("Disponibilité","Ex. samedi à 19 h","text");
 const conditionsField=field("Conditions","Durée, acompte, annulation…","textarea");
 const currencyField=field("Devise","EUR","text");currencyField.input.value="EUR";
+const proposedDateField=field("Date proposée","", "date"),proposedStartField=field("Heure de début","", "time"),proposedEndField=field("Heure de fin","", "time"),proposalLocationField=field("Lieu de la prestation","Villa, restaurant, point de départ…","text");
+const schedule=document.createElement("div");schedule.className="proposalSchedule";schedule.append(proposedDateField.wrap,proposedStartField.wrap,proposedEndField.wrap,proposalLocationField.wrap);
 const sendProposal=document.createElement("button");sendProposal.className="btn";sendProposal.textContent="Envoyer la proposition au client";sendProposal.style.gridColumn="1/-1";
-proposalForm.append(proposalTitle,messageField.wrap,partnerField.wrap,priceField.wrap,availabilityField.wrap,conditionsField.wrap,currencyField.wrap,sendProposal);
-proposalForm.addEventListener("submit",async e=>{e.preventDefault();sendProposal.disabled=true;try{await api("/api/admin/requests/"+encodeURIComponent(item.id)+"/proposal",{method:"POST",body:JSON.stringify({message:messageField.input.value.trim(),partner_name:partnerField.input.value.trim(),price:priceField.input.value.trim(),availability:availabilityField.input.value.trim(),conditions:conditionsField.input.value.trim(),currency:currencyField.input.value.trim()||"EUR"})});await load()}catch(err){alert(err.message||"Impossible d’envoyer la proposition")}finally{sendProposal.disabled=false}});
+proposalForm.append(proposalTitle,messageField.wrap,partnerField.wrap,priceField.wrap,availabilityField.wrap,conditionsField.wrap,currencyField.wrap,schedule,sendProposal);
+proposalForm.addEventListener("submit",async e=>{e.preventDefault();sendProposal.disabled=true;try{await api("/api/admin/requests/"+encodeURIComponent(item.id)+"/proposal",{method:"POST",body:JSON.stringify({message:messageField.input.value.trim(),partner_name:partnerField.input.value.trim(),price:priceField.input.value.trim(),availability:availabilityField.input.value.trim(),conditions:conditionsField.input.value.trim(),currency:currencyField.input.value.trim()||"EUR",proposed_date:proposedDateField.input.value,proposed_start_time:proposedStartField.input.value,proposed_end_time:proposedEndField.input.value,proposal_location:proposalLocationField.input.value.trim()})});await load()}catch(err){alert(err.message||"Impossible d’envoyer la proposition")}finally{sendProposal.disabled=false}});
 card.append(proposalForm);list.append(card)}}
 if(token)connect();
 })();
