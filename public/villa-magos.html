@@ -818,6 +818,7 @@ html.client-portal-mode .wrap{width:min(1040px,calc(100% - 48px))}
 }
 html:not(.client-portal-mode) body:not(.show-client-access) .clientPortalSection{display:none!important}
 </style>
+  <link rel="stylesheet" href="/villa-magos-calendar.css">
 </head>
 <body class="villa-home-pool">
 <header class="topbar"><div class="wrap"><a class="brand brandFeaturing" href="#top" aria-label="Villa Magos × Malago"><img class="brandVillaLogo" src="/img/villa-magos-logo.PNG" alt="Villa Magos Málaga" width="144" height="45" loading="eager" decoding="async"><span class="brandFeaturingX" aria-hidden="true">×</span><img class="brandMalagoLogo" src="/img/malago-logo.webp" alt="Malago" width="260" height="93" loading="eager" decoding="async"></a><nav class="nav"><a href="#experiences">Expériences</a><a href="#experiences">Expériences</a><a href="#villa">La villa</a><a href="#experiences">Préparer mon séjour</a></nav><a class="navcta" id="clientSpaceNavLink" href="#espace-client">Espace client ↗</a></div></header>
@@ -874,7 +875,7 @@ html:not(.client-portal-mode) body:not(.show-client-access) .clientPortalSection
 <section class="clientPortalSection" id="espace-client">
   <div class="wrap">
     <div class="clientPortalIntro">
-      <div><div class="eyebrow">Villa Magos × Malago · Accès privé</div><h2 id="clientPortalIntroTitle">Vos demandes,<br><em>au même endroit.</em></h2><p>Retrouvez ici chaque envie envoyée depuis les expériences ci-dessus et suivez son avancement.</p></div>
+      <div><div class="eyebrow">Villa Magos × Malago · Accès privé</div><h2 id="clientPortalIntroTitle">Votre séjour,<br><em>au même endroit.</em></h2><p>Retrouvez votre programme, vos envies et chaque demande envoyée à votre concierge Malago.</p></div>
       <div class="clientPortalBrandNote"><span class="clientPortalLock" aria-hidden="true">↗</span><span>Un espace personnel<br>réservé à nos voyageurs</span></div>
     </div>
     <div id="clientPortalAccess" class="clientPortalAccess"><div class="clientPortalAccessMark" aria-hidden="true">✳</div><div><div class="clientPortalKicker">Votre concierge privé</div><h3>Bienvenue dans votre espace personnel.</h3><p>Pour protéger vos informations, vos demandes ne sont accessibles qu’avec le lien privé transmis par l’équipe Malago. Ouvrez ce lien depuis votre message pour retrouver votre séjour.</p><a class="btn btnGold" href="https://wa.me/34613384566?text=Bonjour%20Malago%2C%20je%20souhaite%20recevoir%20mon%20lien%20priv%C3%A9%20pour%20l%E2%80%99espace%20client." target="_blank" rel="noopener">Recevoir mon lien privé <span>↗</span></a></div></div>
@@ -1168,7 +1169,7 @@ document.getElementById('activityClose').addEventListener('click',closeActivity)
     const portalTitle=document.getElementById("clientPortalWelcomeName");
     if(portalTitle&&firstName)portalTitle.textContent="Bonjour "+firstName+".";
     const nav=document.getElementById("clientSpaceNavLink");
-    if(nav&&token)nav.textContent="Mes demandes ↗";
+    if(nav&&token){nav.textContent="Mon séjour ↗";nav.href="#mon-sejour";}
   }
   async function init(){
     if(!token){showAccess();return}
@@ -1197,5 +1198,6 @@ document.getElementById('activityClose').addEventListener('click',closeActivity)
   init();
 })();
 </script>
+  <script src="/villa-magos-calendar.js" defer></script>
 </body>
 </html>
