@@ -553,7 +553,7 @@ export default {
           }
           return json({stay:stay || null,requests},200,headers);
         }
-        const decisionMatch=url.pathname.match(/^\\/api\\/client\\/requests\\/([0-9a-f-]+)\\/decision$/i);
+        const decisionMatch=url.pathname.match(/^\/api\/client\/requests\/([0-9a-f-]+)\/decision$/i);
         if (request.method === "POST" && decisionMatch) {
           const parsed=await readJson(request);if(parsed.error)return json({error:parsed.error},parsed.status,headers);
           const decision=sanitize(parsed.body?.decision,20),requestId=decisionMatch[1];
@@ -639,7 +639,7 @@ export default {
           const result=await env.DB.prepare("SELECT r.id,r.stay_id,s.property_name,s.guest_name,r.category,r.description,r.status,r.created_at,r.updated_at FROM client_requests r JOIN stays s ON s.id=r.stay_id ORDER BY r.created_at DESC LIMIT 200").all();
           return json({requests:result.results||[]},200,headers);
         }
-        const proposalMatch=url.pathname.match(/^\\/api\\/admin\\/requests\\/([0-9a-f-]+)\\/proposal$/i);
+        const proposalMatch=url.pathname.match(/^\/api\/admin\/requests\/([0-9a-f-]+)\/proposal$/i);
         if (request.method === "POST" && proposalMatch) {
           const parsed=await readJson(request);
           if(parsed.error)return json({error:parsed.error},parsed.status,headers);
