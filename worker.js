@@ -474,10 +474,13 @@ export default {
       if (auth.error) return json({error:auth.error},auth.status,headers);
       try {
         if (request.method === "GET" && url.pathname === "/api/client/requests") {
+          const stay = await env.DB.prepare(
+            "SELECT property_name, guest_name, start_date, end_date FROM stays WHERE id=? AND status='active' LIMIT 1"
+          ).bind(auth.stayId).first();
           const result = await env.DB.prepare(
             "SELECT id, category, description, status, created_at, updated_at FROM client_requests WHERE stay_id=? ORDER BY created_at DESC LIMIT 100"
           ).bind(auth.stayId).all();
-          return json({requests:result.results || []},200,headers);
+          return json({stay:stay || null,requests:result.results || []},200,headers);
         }
         if (request.method === "POST" && url.pathname === "/api/client/requests") {
           const parsed = await readJson(request);
