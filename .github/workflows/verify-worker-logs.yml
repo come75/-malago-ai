@@ -42,7 +42,6 @@ jobs:
         run: |
           set -euo pipefail
           LOG_FILE="$RUNNER_TEMP/malago-worker-tail.jsonl"
-          SUMMARY_FILE="$RUNNER_TEMP/malago-worker-log-summary.txt"
           : > "$LOG_FILE"
 
           npx --yes wrangler@4 tail test --format json --sampling-rate 1 >"$LOG_FILE" 2>&1 &
@@ -53,8 +52,13 @@ jobs:
           }
           trap cleanup EXIT
 
-          # Wait for tail to connect before generating a known request.
           sleep 12
+          if ! kill -0 "$TAIL_PID" 2>/dev/null; then
+            echo "::error::Cloudflare tail process exited before the test request."
+            grep -Ei 'error|failed|denied|unauthorized|permission|unknown|invalid|tail' "$LOG_FILE" | tail -n 8 | sed -E 's/(Bearer )[A-Za-z0-9._-]+/\1[REDACTED]/g' || true
+            exit 1
+          fi
+
           HTTP_CODE="$(curl --silent --show-error --output "$RUNNER_TEMP/health.json" --write-out '%{http_code}' https://test.malago.workers.dev/health || true)"
           echo "Health endpoint HTTP status: ${HTTP_CODE:-unknown}"
           test "$HTTP_CODE" = "200" || { echo "::error::Worker health endpoint did not return HTTP 200"; exit 1; }
@@ -64,7 +68,6 @@ jobs:
           trap - EXIT
 
           # Never print raw Worker logs: they may contain user or operational data.
-          # Report only counts and whether the known health invocation appeared.
           node --input-type=module <<'NODE'
           import fs from 'node:fs';
           const raw = fs.readFileSync(process.env.RUNNER_TEMP + '/malago-worker-tail.jsonl', 'utf8');
@@ -80,12 +83,17 @@ jobs:
               if (Array.isArray(item.exceptions)) exceptions += item.exceptions.length;
             } catch {}
           }
-          console.log('Cloudflare tail returned structured log records: ' + parsed);
+          console.log('Cloudflare tail output lines: ' + lines.length);
+          console.log('Structured log records: ' + parsed);
           console.log('Records matching the test /health request: ' + healthMatches);
           console.log('Error outcomes observed: ' + errors);
           console.log('Exceptions observed: ' + exceptions);
           if (parsed === 0 || healthMatches === 0) {
             console.error('::error::No real Cloudflare log record for the test invocation was retrieved.');
+            const diagnostic = lines.filter(x => /error|failed|denied|unauthorized|permission|unknown|invalid|connected|tail/i.test(x)).slice(-8);
+            for (const line of diagnostic) {
+              console.error(line.replace(/(Bearer )[A-Za-z0-9._-]+/g, '$1[REDACTED]').slice(0, 300));
+            }
             process.exit(1);
           }
           NODE
