@@ -806,7 +806,7 @@ export default {
           const parsed=await readJson(request);
           if(parsed.error)return json({error:parsed.error},parsed.status,headers);
           const body=parsed.body||{},requestId=proposalMatch[1];
-          const message=sanitize(body.message,2000),price=sanitize(body.price,100),currency=sanitize(body.currency||"EUR",8),conditions=sanitize(body.conditions,1200),availability=sanitize(body.availability,300);
+          const message=sanitize(body.message,2000),partnerName=sanitize(body.partner_name,160),price=sanitize(body.price,100),currency=sanitize(body.currency||"EUR",8),conditions=sanitize(body.conditions,1200),availability=sanitize(body.availability,300);
           const proposedDate=sanitize(body.proposed_date,10),proposedStart=sanitize(body.proposed_start_time,5),proposedEnd=sanitize(body.proposed_end_time,5),proposalLocation=sanitize(body.proposal_location,180);
           if(message.length<5)return json({error:"Ajoute le détail de la proposition du prestataire."},400,headers);
           if(price&&!/^[0-9]+([.,][0-9]{1,2})?$/.test(price))return json({error:"Le prix doit être un montant simple, par exemple 180 ou 180,50."},400,headers);
@@ -818,7 +818,7 @@ export default {
           if(!current)return json({error:"Demande introuvable."},404,headers);
           if(proposedDate&&((current.start_date&&proposedDate<current.start_date)||(current.end_date&&proposedDate>current.end_date)))return json({error:"La date proposée doit être comprise dans le séjour."},400,headers);
           if(current.status!=="quoted"&&!REQUEST_STATUS_TRANSITIONS[current.status]?.has("quoted"))return json({error:"Cette demande ne peut pas recevoir de proposition dans son état actuel."},409,headers);
-          const proposal={message,price:price||null,currency,conditions:conditions||"",availability:availability||"",proposed_date:proposedDate||"",proposed_start_time:proposedStart||"",proposed_end_time:proposedEnd||"",proposal_location:proposalLocation||"",provider_confirmed:false};
+          const proposal={message,partner_name:partnerName||"",price:price||null,currency,conditions:conditions||"",availability:availability||"",proposed_date:proposedDate||"",proposed_start_time:proposedStart||"",proposed_end_time:proposedEnd||"",proposal_location:proposalLocation||"",provider_confirmed:false};
           await env.DB.batch([
             env.DB.prepare("UPDATE client_requests SET status='quoted',updated_at=datetime('now') WHERE id=?").bind(requestId),
             env.DB.prepare("INSERT INTO client_request_events (id,request_id,event_type,details) VALUES (?,?,?,?)").bind(crypto.randomUUID(),requestId,"proposal",JSON.stringify(proposal))
@@ -826,7 +826,7 @@ export default {
           if(current.guest_email) await sendMalagoEmail(env,{
             to:current.guest_email,
             subject:"Une proposition vous attend — Villa Magos × Malago",
-            text:["Bonjour"+(current.guest_name?" "+current.guest_name:"")+",","","Malago a ajouté une proposition à votre demande.","","Séjour : "+(current.property_name||"Villa Magos"),"Référence : "+requestId,"Proposition : "+message,price?"Prix proposé : "+price+" "+currency:"",availability?"Disponibilité annoncée : "+availability:"",proposedDate?"Date proposée : "+proposedDate:"",proposedStart?"Début : "+proposedStart:"",proposedEnd?"Fin : "+proposedEnd:"",proposalLocation?"Lieu : "+proposalLocation:"",conditions?"Conditions : "+conditions:"","","Connectez-vous à votre espace privé Villa Magos pour consulter la proposition et l’accepter ou la refuser.","","Votre accord ne vaut pas confirmation finale tant que le prestataire n’a pas confirmé la prestation."].filter(Boolean).join("\n")
+            text:["Bonjour"+(current.guest_name?" "+current.guest_name:"")+",","","Malago a ajouté une proposition à votre demande.","","Séjour : "+(current.property_name||"Villa Magos"),"Référence : "+requestId,"Proposition : "+message,partnerName?"Prestataire : "+partnerName:"",price?"Prix proposé : "+price+" "+currency:"",availability?"Disponibilité annoncée : "+availability:"",proposedDate?"Date proposée : "+proposedDate:"",proposedStart?"Début : "+proposedStart:"",proposedEnd?"Fin : "+proposedEnd:"",proposalLocation?"Lieu : "+proposalLocation:"",conditions?"Conditions : "+conditions:"","","Connectez-vous à votre espace privé Villa Magos pour consulter la proposition et l’accepter ou la refuser.","","Votre accord ne vaut pas confirmation finale tant que le prestataire n’a pas confirmé la prestation."].filter(Boolean).join("\n")
           });
           return json({ok:true,id:requestId,status:"quoted",proposal},200,headers);
         }
@@ -853,7 +853,7 @@ export default {
             const proposal=parseStructuredDetails(proposalEvent?.details);
             if(proposal?.proposed_date&&isIsoCalendarDate(proposal.proposed_date)){
               const categoryLabel={car_rental:"Location de voiture",airport_transfer:"Transfert chauffeur",restaurant:"Restaurant",activity:"Expérience",chef:"Chef privé",other:"Service Villa Magos"};
-              const eventTitle=sanitize(categoryLabel[current.category]||"Service Villa Magos",120);
+              const eventTitle=sanitize((categoryLabel[current.category]||"Service Villa Magos")+(proposal.partner_name?" · "+proposal.partner_name:""),120);
               const existing=await env.DB.prepare("SELECT id FROM stay_events WHERE linked_request_id=? LIMIT 1").bind(requestId).first();
               if(existing)ops.push(env.DB.prepare("UPDATE stay_events SET title=?,event_date=?,start_time=?,end_time=?,location=?,notes=?,event_type='service',status='confirmed',updated_at=datetime('now') WHERE id=?").bind(eventTitle,proposal.proposed_date,proposal.proposed_start_time||null,proposal.proposed_end_time||null,proposal.proposal_location||null,proposal.message||proposal.conditions||null,existing.id));
               else ops.push(env.DB.prepare("INSERT INTO stay_events (id,stay_id,title,event_date,start_time,end_time,location,notes,event_type,status,linked_request_id) VALUES (?,?,?,?,?,?,?,?,'service','confirmed',?)").bind(crypto.randomUUID(),current.stay_id,eventTitle,proposal.proposed_date,proposal.proposed_start_time||null,proposal.proposed_end_time||null,proposal.proposal_location||null,proposal.message||proposal.conditions||null,requestId));
