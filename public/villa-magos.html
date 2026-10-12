@@ -1112,7 +1112,7 @@ document.getElementById('activityClose').addEventListener('click',closeActivity)
     $('#malagoRequestOpenSpace').onclick=()=>{document.body.classList.add('show-client-access');const section=document.getElementById('espace-client');if(section)section.scrollIntoView({behavior:'smooth',block:'start'});};
     return;
   }
-  body.innerHTML='<div class="malagoFlowDone"><div class="malagoFlowCheck">✓</div><div class="eyebrow" style="justify-content:center">ESPACE PERSONNEL</div><h2>Votre demande est enregistrée.</h2><p>Vous pourrez la retrouver dans « Mes demandes ». Malago doit encore vérifier les disponibilités et confirmer toute réservation.</p><div class="malagoFlowRecap" style="white-space:pre-line"></div><div class="malagoFlowRow"><button class="malagoFlowBack" id="malagoFlowEdit" type="button">← Modifier</button><button class="malagoFlowNext" id="malagoFlowMyRequests" type="button">Voir mes demandes ↗</button></div></div>';
+  body.innerHTML='<div class="malagoFlowDone"><div class="malagoFlowCheck">…</div><div class="eyebrow" style="justify-content:center">ESPACE PERSONNEL</div><h2>Enregistrement de votre demande…</h2><p>Nous enregistrons votre demande dans votre espace personnel.</p><div class="malagoFlowRecap" style="white-space:pre-line"></div><div class="malagoFlowRow"><button class="malagoFlowBack" id="malagoFlowEdit" type="button">← Modifier</button><button class="malagoFlowNext" id="malagoFlowMyRequests" type="button">Enregistrement…</button></div></div>';
   body.querySelector('.malagoFlowRecap').textContent=state.message;
   const saveButton=document.getElementById('malagoFlowMyRequests');
   saveButton.disabled=true;saveButton.textContent='Enregistrement…';
@@ -1120,6 +1120,7 @@ document.getElementById('activityClose').addEventListener('click',closeActivity)
     const response=await fetch('/api/client/requests',{method:'POST',cache:'no-store',headers:{'Authorization':'Bearer '+token,'Content-Type':'application/json'},body:JSON.stringify({category:requestCategory(),description:state.message})});
     let data={};try{data=await response.json()}catch{}
     if(!response.ok)throw new Error(data.error||'Impossible d’enregistrer la demande.');
+    body.querySelector('.malagoFlowCheck').textContent='✓';
     body.querySelector('h2').textContent='C’est bien enregistré.';
     body.querySelector('p').textContent='Votre demande est maintenant dans votre espace personnel. Elle n’est pas encore une réservation confirmée.';
     saveButton.disabled=false;saveButton.textContent='Voir mes demandes ↗';
@@ -1127,6 +1128,7 @@ document.getElementById('activityClose').addEventListener('click',closeActivity)
     document.getElementById('malagoFlowEdit').onclick=()=>{state.itemIndex=Math.max(0,selectedItems().length-1);state.step=d.steps.length>1?d.steps.length-1:0;draw();};
     const refresh=document.getElementById('clientPortalRefresh');if(refresh)refresh.click();
   }catch(error){
+    body.querySelector('.malagoFlowCheck').textContent='!';
     body.querySelector('h2').textContent='La demande n’a pas encore été enregistrée.';
     body.querySelector('p').textContent=(error.message||'Une erreur est survenue.')+' Réessayez, votre sélection est conservée.';
     saveButton.disabled=false;saveButton.textContent='Réessayer';saveButton.onclick=()=>summary();
