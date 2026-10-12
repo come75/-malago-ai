@@ -1137,6 +1137,7 @@ document.getElementById('activityClose').addEventListener('click',closeActivity)
     return 'other';
   }
   if(state.cat==='food')return 'restaurant';
+  if(state.cat==='sport'&&/beach club/i.test(item))return 'beach_club';
   if(state.cat==='chill')return /beach club/i.test(item)?'beach_club':'restaurant';
   if(state.cat==='villa'){
     if(choices.some(x=>/chef|petit-déjeuner|petit déjeuner/i.test(x)))return 'chef';
