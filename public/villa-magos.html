@@ -1094,23 +1094,26 @@ document.getElementById('activityClose').addEventListener('click',closeActivity)
  function pick(i){const d=DATA[state.cat],val=d.steps[state.step][1][i][0];if(state.step===0){const selected=new Set(selectedItems());if(selected.has(val))selected.delete(val);else selected.add(val);state.answers[0]=[...selected];state.chosen=state.answers[0].slice();draw();return;}state.itemAnswers[currentItem()]={...(state.itemAnswers[currentItem()]||{}),[state.step]:val};state.chosen=[val];draw();}
  function next(){const d=DATA[state.cat];if(state.step===0){if(!selectedItems().length){window.alert('Choisissez au moins une envie pour continuer.');return;}if(d.steps.length===1){summary();return;}state.itemIndex=0;state.step=1;draw();return;}if(!state.chosen.length){window.alert('Choisissez une réponse pour cette envie.');return;}state.itemAnswers[currentItem()]={...(state.itemAnswers[currentItem()]||{}),[state.step]:state.chosen[0]};const detail=$('#malagoFlowDetail');if(detail)state.detail=detail.value.trim();if(state.step<d.steps.length-1){state.step++;draw();return;}if(state.itemIndex<selectedItems().length-1){state.itemIndex++;state.step=1;draw();return;}summary();}
  function back(){if(state.step===0){$('#malagoExperienceFlow').classList.remove('is-open');$('#malagoExperienceCategories').scrollIntoView({behavior:'smooth',block:'start'});return;}if(state.step===1&&state.itemIndex===0){state.step=0;draw();return;}if(state.step>1){state.step--;draw();return;}state.itemIndex--;state.step=DATA[state.cat].steps.length-1;draw();}
- function requestCategory(){
-  const items=selectedItems();
+ function requestCategory(itemOverride){
+  const items=itemOverride?[itemOverride]:selectedItems();
+  const answersFor=item=>Object.values(state.itemAnswers[item]||{}).map(v=>Array.isArray(v)?v.join(' '):String(v||''));
+  const choicesFor=item=>[item,...answersFor(item)];
+  const item=items[0]||'',choices=choicesFor(item);
   if(state.cat==='transport'){
-    if(items.includes('Transfert aéroport'))return 'airport_transfer';
-    if(items.includes('Louer une voiture'))return 'car_rental';
-    if(items.includes('Chauffeur privé')||items.includes('Taxi haut de gamme'))return 'chauffeur';
+    if(/transfert aéroport/i.test(item))return 'airport_transfer';
+    if(/louer une voiture|véhicule/i.test(item))return 'car_rental';
+    if(/chauffeur|taxi/i.test(item))return 'chauffeur';
     return 'other';
   }
   if(state.cat==='food')return 'restaurant';
-  if(state.cat==='chill')return items.includes('Beach club tranquille')?'beach_club':'restaurant';
+  if(state.cat==='chill')return /beach club/i.test(item)?'beach_club':'restaurant';
   if(state.cat==='villa'){
-    if(items.some(x=>/chef|petit-déjeuner|petit déjeuner/i.test(x)))return 'chef';
-    if(items.some(x=>/courses/i.test(x)))return 'groceries';
-    if(items.some(x=>/barman|bar/i.test(x)))return 'bartender';
-    if(items.some(x=>/DJ/i.test(x)))return 'dj';
-    if(items.some(x=>/décoration/i.test(x)))return 'decoration';
-    if(items.some(x=>/soirée|organisation complète/i.test(x)))return 'event';
+    if(choices.some(x=>/chef|petit-déjeuner|petit déjeuner/i.test(x)))return 'chef';
+    if(choices.some(x=>/courses/i.test(x)))return 'groceries';
+    if(choices.some(x=>/barman|bar à cocktails|bar/i.test(x)))return 'bartender';
+    if(choices.some(x=>/DJ|musique et lumière/i.test(x)))return 'dj';
+    if(choices.some(x=>/décoration|fleurs/i.test(x)))return 'decoration';
+    if(choices.some(x=>/soirée|organisation complète/i.test(x)))return 'event';
   }
   if(state.cat==='courses')return 'groceries';
   if(state.cat==='beach')return 'beach_club';
@@ -1148,13 +1151,18 @@ document.getElementById('activityClose').addEventListener('click',closeActivity)
   saveButton.disabled=true;saveButton.textContent='Enregistrement…';
   try{
     const d=DATA[state.cat];
-    const structuredDetails={category_key:state.cat,category_label:d.label,items:selectedItems().map(item=>{const answers=state.itemAnswers[item]||{};return {name:item,answers:d.steps.slice(1).map((step,j)=>{const raw=answers[j+1]||'À préciser';return {question:step[0],answer:Array.isArray(raw)?raw.join(', '):String(raw)}})}}),general_note:state.detail||''};
-    const response=await fetch('/api/client/requests',{method:'POST',cache:'no-store',headers:{'Authorization':'Bearer '+token,'Content-Type':'application/json'},body:JSON.stringify({category:requestCategory(),description:state.message,details:structuredDetails})});
+    const requests=selectedItems().map(item=>{
+      const answers=state.itemAnswers[item]||{};
+      const itemAnswers=d.steps.slice(1).map((step,j)=>{const raw=answers[j+1]||'À préciser';return {question:step[0],answer:Array.isArray(raw)?raw.join(', '):String(raw)}});
+      const description=['Demande Villa Magos · '+d.label,'Prestation : '+item,...itemAnswers.map(answer=>answer.question+' : '+answer.answer),state.detail?'Précision générale : '+state.detail:'','Merci de nous proposer les options disponibles.','Cette demande n’est pas une réservation confirmée.'].filter(Boolean).join('\n');
+      return {category:requestCategory(item),description,details:{category_key:state.cat,category_label:d.label,items:[{name:item,answers:itemAnswers}],general_note:state.detail||''}};
+    });
+    const response=await fetch('/api/client/requests',{method:'POST',cache:'no-store',headers:{'Authorization':'Bearer '+token,'Content-Type':'application/json'},body:JSON.stringify({requests})});
     let data={};try{data=await response.json()}catch{}
-    if(!response.ok)throw new Error(data.error||'Impossible d’enregistrer la demande.');
+    if(!response.ok)throw new Error(data.error||'Impossible d’enregistrer les demandes.');
     body.querySelector('.malagoFlowCheck').textContent='✓';
     body.querySelector('h2').textContent='C’est bien enregistré.';
-    body.querySelector('p').textContent='Votre demande est maintenant dans votre espace personnel. Elle n’est pas encore une réservation confirmée.';
+    body.querySelector('p').textContent=(data.requests&&data.requests.length>1?data.requests.length+' demandes distinctes sont maintenant dans votre espace personnel.':'Votre demande est maintenant dans votre espace personnel.')+' Elles ne sont pas encore des réservations confirmées.';
     saveButton.disabled=false;saveButton.textContent='Voir mes demandes ↗';
     saveButton.onclick=()=>{const section=document.getElementById('espace-client');if(section)section.scrollIntoView({behavior:'smooth',block:'start'});};
     document.getElementById('malagoFlowEdit').onclick=()=>{state.itemIndex=Math.max(0,selectedItems().length-1);state.step=d.steps.length>1?d.steps.length-1:0;draw();};
