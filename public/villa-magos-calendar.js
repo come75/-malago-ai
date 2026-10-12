@@ -13,8 +13,10 @@
   const eventsOn=v=>state.events.filter(e=>e.event_date===v&&e.status!=="cancelled").sort((a,b)=>(a.start_time||"99:99").localeCompare(b.start_time||"99:99"));
   const timeText=e=>e.start_time&&e.end_time?e.start_time+" – "+e.end_time:e.start_time?"À partir de "+e.start_time:"Horaire à préciser";
   const card=document.createElement("section");card.className="clientPortalCard vmCalendarCard";card.id="mon-sejour";
+  const preferenceDefaults={reminders_enabled:true,remind_day_before:true,remind_hours_before:true,reminder_portal:true,reminder_email:true};
   card.innerHTML=
     '<div class="vmCalendarTop"><div><div class="clientPortalCardKicker">Votre programme privé</div><h3>Mon séjour</h3><p class="clientPortalSub" id="vmStayDates">Votre séjour, vos envies et vos rendez-vous au même endroit.</p></div><span class="vmCalendarBadge"><i></i> Votre agenda</span></div>'+
+    '<section class="vmReminderSettings"><div><div class="clientPortalCardKicker">Ne rien manquer</div><h4>Mes rappels</h4><p>Recevez un rappel la veille et quelques heures avant vos rendez-vous confirmés.</p></div><div class="vmReminderChoices"><label><input type="checkbox" id="vmRemindersEnabled" checked> Activer les rappels</label><label><input type="checkbox" id="vmRemindDayBefore" checked> La veille</label><label><input type="checkbox" id="vmRemindHoursBefore" checked> Quelques heures avant</label><label><input type="checkbox" id="vmReminderPortal" checked> Dans mon espace privé</label><label><input type="checkbox" id="vmReminderEmail" checked> Par e-mail</label><button type="button" id="vmSaveReminders">Enregistrer mes préférences</button><span id="vmReminderStatus" role="status"></span></div><div id="vmNotifications" class="vmNotifications" aria-live="polite"></div></section>'+
     '<div class="vmCalendarActions"><div class="vmCalendarSwitch" role="group" aria-label="Affichage du calendrier"><button type="button" data-mode="month" class="is-active">Mois</button><button type="button" data-mode="agenda">Agenda</button></div><button type="button" class="vmCalendarAdd" id="vmAddEvent">+ Ajouter à mon séjour</button></div>'+
     '<div class="vmCalendarMonth" id="vmMonthView"><div class="vmCalendarMonthNav"><button type="button" id="vmPrevMonth" aria-label="Mois précédent">←</button><h4 id="vmMonthTitle"></h4><button type="button" id="vmNextMonth" aria-label="Mois suivant">→</button></div><div class="vmCalendarGrid vmCalendarWeekdays" aria-hidden="true"><span>Lun</span><span>Mar</span><span>Mer</span><span>Jeu</span><span>Ven</span><span>Sam</span><span>Dim</span></div><div class="vmCalendarGrid vmCalendarDays" id="vmCalendarDays"></div><div class="vmCalendarSelected"><div class="vmCalendarSelectedHead"><div><div class="clientPortalCardKicker">Programme du jour</div><h4 id="vmSelectedDate"></h4></div><span id="vmSelectedCount"></span></div><div id="vmDayEvents"></div></div></div>'+
     '<div id="vmAgendaView" class="vmAgendaView" hidden></div>'+
@@ -46,6 +48,30 @@
   q("#vmAddEvent").addEventListener("click",()=>openForm(null,state.selectedDate));q("#vmCancelEdit").addEventListener("click",()=>{form.hidden=true;state.editingId="";});q("#vmDiscardEvent").addEventListener("click",()=>{form.hidden=true;state.editingId="";});
   q("#vmPrevMonth").addEventListener("click",()=>{state.month=new Date(state.month.getFullYear(),state.month.getMonth()-1,1);render();});q("#vmNextMonth").addEventListener("click",()=>{state.month=new Date(state.month.getFullYear(),state.month.getMonth()+1,1);render();});
   card.querySelectorAll("[data-mode]").forEach(b=>b.addEventListener("click",()=>{state.mode=b.dataset.mode;render();}));
-  async function boot(){if(card.dataset.loaded==="1")return;card.dataset.loaded="1";state.stay=window.MALAGO_CLIENT_STAY||state.stay;if(state.stay?.start_date||state.stay?.end_date)q("#vmStayDates").textContent="Votre séjour"+(state.stay.start_date?" du "+formatDate(state.stay.start_date):"")+(state.stay.end_date?" au "+formatDate(state.stay.end_date):"")+".";setDateBounds();try{const data=await api("/api/client/events");state.events=Array.isArray(data.events)?data.events:[];const start=(state.stay?.start_date)||dateKey(new Date()),d=parseDate(start);state.selectedDate=start;state.month=new Date(d.getFullYear(),d.getMonth(),1);render();}catch(e){showError(e.message||"Le calendrier est temporairement indisponible.");}}
+  async function loadReminderSettings(){
+    try{
+      const data=await api("/api/client/preferences"),prefs=Object.assign({},preferenceDefaults,data.preferences||{});
+      [["#vmRemindersEnabled","reminders_enabled"],["#vmRemindDayBefore","remind_day_before"],["#vmRemindHoursBefore","remind_hours_before"],["#vmReminderPortal","reminder_portal"],["#vmReminderEmail","reminder_email"]].forEach(([selector,key])=>q(selector).checked=Boolean(prefs[key]));
+      if(!data.email_configured){q("#vmReminderEmail").disabled=true;q("#vmReminderStatus").textContent="L’e-mail de séjour n’est pas renseigné dans la réservation.";}
+      renderNotifications();
+    }catch(e){q("#vmReminderStatus").textContent=e.message||"Préférences indisponibles.";}
+  }
+  async function renderNotifications(){
+    const target=q("#vmNotifications");target.replaceChildren();
+    try{const data=await api("/api/client/notifications");const items=Array.isArray(data.notifications)?data.notifications:[];
+      if(!items.length)return;
+      const title=document.createElement("h5");title.textContent="Vos rappels";target.append(title);
+      items.forEach(item=>{const row=document.createElement("div");row.className="vmNotification";const text=document.createElement("span");text.textContent=item.message;const read=document.createElement("button");read.type="button";read.textContent="Lu";read.addEventListener("click",async()=>{try{await api("/api/client/notifications/"+encodeURIComponent(item.id)+"/read",{method:"POST"});row.remove();}catch(e){showError(e.message);}});row.append(text,read);target.append(row);});
+    }catch(e){/* Reminders must not block the calendar. */}
+  }
+  q("#vmSaveReminders").addEventListener("click",async()=>{
+    const button=q("#vmSaveReminders"),status=q("#vmReminderStatus");
+    const payload={reminders_enabled:q("#vmRemindersEnabled").checked,remind_day_before:q("#vmRemindDayBefore").checked,remind_hours_before:q("#vmRemindHoursBefore").checked,reminder_portal:q("#vmReminderPortal").checked,reminder_email:q("#vmReminderEmail").checked};
+    button.disabled=true;status.textContent="Enregistrement…";
+    try{await api("/api/client/preferences",{method:"PATCH",body:JSON.stringify(payload)});status.textContent="Préférences enregistrées.";await renderNotifications();}
+    catch(e){status.textContent=e.message||"Impossible d’enregistrer vos préférences.";}
+    finally{button.disabled=false;}
+  });
+  async function boot(){if(card.dataset.loaded==="1")return;card.dataset.loaded="1";state.stay=window.MALAGO_CLIENT_STAY||state.stay;if(state.stay?.start_date||state.stay?.end_date)q("#vmStayDates").textContent="Votre séjour"+(state.stay.start_date?" du "+formatDate(state.stay.start_date):"")+(state.stay.end_date?" au "+formatDate(state.stay.end_date):"")+".";setDateBounds();try{const data=await api("/api/client/events");state.events=Array.isArray(data.events)?data.events:[];const start=(state.stay?.start_date)||dateKey(new Date()),d=parseDate(start);state.selectedDate=start;state.month=new Date(d.getFullYear(),d.getMonth(),1);render();await loadReminderSettings();}catch(e){showError(e.message||"Le calendrier est temporairement indisponible.");}}
   const observer=new MutationObserver(()=>{if(!host.hidden)boot();});observer.observe(host,{attributes:true,attributeFilter:["hidden"]});if(!host.hidden)boot();
 })();
