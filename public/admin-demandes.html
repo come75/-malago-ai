@@ -73,13 +73,14 @@ const proposalForm=document.createElement("form");proposalForm.className="contro
 const proposalTitle=document.createElement("h4");proposalTitle.textContent="Réponse du prestataire → proposition client";proposalTitle.style.gridColumn="1/-1";
 function field(labelText,placeholder,type="text"){const wrap=document.createElement("div"),label=document.createElement("label"),input=document.createElement(type==="textarea"?"textarea":"input");label.textContent=labelText;input.placeholder=placeholder;if(type==="textarea"){input.rows=3;input.maxLength=2000}else{input.type=type;input.maxLength=type==="number"?100:1200}wrap.append(label,input);return {wrap,input}}
 const messageField=field("Réponse / proposition (obligatoire)","Disponibilité, prestation comprise, retour du partenaire…","textarea");
+const partnerField=field("Prestataire contacté (facultatif)","Nom du partenaire / entreprise","text");
 const priceField=field("Prix proposé (facultatif)","Ex. 180,00","text");
 const availabilityField=field("Disponibilité","Ex. samedi à 19 h","text");
 const conditionsField=field("Conditions","Durée, acompte, annulation…","textarea");
 const currencyField=field("Devise","EUR","text");currencyField.input.value="EUR";
 const sendProposal=document.createElement("button");sendProposal.className="btn";sendProposal.textContent="Envoyer la proposition au client";sendProposal.style.gridColumn="1/-1";
-proposalForm.append(proposalTitle,messageField.wrap,priceField.wrap,availabilityField.wrap,conditionsField.wrap,currencyField.wrap,sendProposal);
-proposalForm.addEventListener("submit",async e=>{e.preventDefault();sendProposal.disabled=true;try{await api("/api/admin/requests/"+encodeURIComponent(item.id)+"/proposal",{method:"POST",body:JSON.stringify({message:messageField.input.value.trim(),price:priceField.input.value.trim(),availability:availabilityField.input.value.trim(),conditions:conditionsField.input.value.trim(),currency:currencyField.input.value.trim()||"EUR"})});await load()}catch(err){alert(err.message||"Impossible d’envoyer la proposition")}finally{sendProposal.disabled=false}});
+proposalForm.append(proposalTitle,messageField.wrap,partnerField.wrap,priceField.wrap,availabilityField.wrap,conditionsField.wrap,currencyField.wrap,sendProposal);
+proposalForm.addEventListener("submit",async e=>{e.preventDefault();sendProposal.disabled=true;try{await api("/api/admin/requests/"+encodeURIComponent(item.id)+"/proposal",{method:"POST",body:JSON.stringify({message:messageField.input.value.trim(),partner_name:partnerField.input.value.trim(),price:priceField.input.value.trim(),availability:availabilityField.input.value.trim(),conditions:conditionsField.input.value.trim(),currency:currencyField.input.value.trim()||"EUR"})});await load()}catch(err){alert(err.message||"Impossible d’envoyer la proposition")}finally{sendProposal.disabled=false}});
 card.append(proposalForm);list.append(card)}}
 if(token)connect();
 })();
