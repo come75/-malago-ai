@@ -1316,7 +1316,7 @@ function renderChefWizard(){
  if(!Array.isArray(values.service_choices))values.service_choices=[];
  if(typeof values.advised!=='boolean')values.advised=false;
  const mealTypes=['Petit-déjeuner','Brunch','Déjeuner','Dîner privé','Occasion spéciale'];
- const cuisineTypes=['Méditerranéenne','Poissons et fruits de mer','Italienne','Espagnole','Végétarienne / végétalienne','Cuisine internationale','Autre'];
+ const cuisineTypes=['Méditerranéenne','Poissons et fruits de mer','Italienne','Espagnole','Végétarienne / végétalienne','Cuisine internationale','Viande','Sushi','Snacking','Asiatique','Dessert','Autre'];
  const serviceTypes=['Préparation des repas','Service à table','Courses et approvisionnement','Rangement après le repas'];
  const checkboxes=(name,label,options,selected)=>'<fieldset class="malagoFlowField"><legend>'+label+'</legend><div class="malagoChoiceGrid">'+options.map((v,i)=>'<label class="malagoChoice"><input type="checkbox" data-chef-check="'+name+'" value="'+esc(v)+'" '+(selected.includes(v)?'checked':'')+'><span>'+esc(v)+'</span></label>').join('')+'</div></fieldset>';
  const field=(key,label,type='text',placeholder='Facultatif')=>'<div class="malagoFlowField"><label for="chef-'+key+'">'+label+'</label>'+(type==='textarea'?'<textarea id="chef-'+key+'" data-chef-common="'+key+'" rows="3" placeholder="'+placeholder+'">'+esc(values[key]||'')+'</textarea>':'<input id="chef-'+key+'" data-chef-common="'+key+'" type="'+type+'" value="'+esc(values[key]||'')+'" placeholder="'+placeholder+'">')+'</div>';
