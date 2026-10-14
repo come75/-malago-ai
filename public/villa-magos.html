@@ -95,7 +95,7 @@
 .villaStory{position:relative;height:400svh;background:#0b0d0b;color:#fff;isolation:isolate}
 .villaStoryPin{position:sticky;top:0;height:100svh;min-height:560px;overflow:hidden;background:#10110f}
 .villaStoryFrames,.villaStoryVignette{position:absolute;inset:0}
-.malagoFlowRow.bartenderTimeRow{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;background:transparent!important;padding:0!important;margin:14px 0}.malagoFlowRow.bartenderTimeRow .malagoFlowField{min-width:0;margin:0}.malagoFlowRow.bartenderTimeRow input{width:100%;min-width:0;box-sizing:border-box}@media(max-width:520px){.malagoFlowRow.bartenderTimeRow{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.malagoFlowRow.bartenderTimeRow label{font-size:14px}}.villaStoryFrame{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center 50%;opacity:0;transform:scale(1.018);transition:opacity .85s ease,transform 1.5s cubic-bezier(.2,.7,.2,1);will-change:opacity,transform}
+.malagoFlowRow.bartenderTimeRow{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;background:transparent!important;padding:0!important;margin:14px 0}.malagoFlowRow.bartenderTimeRow .malagoFlowField{min-width:0;margin:0}.malagoFlowRow.bartenderTimeRow input{width:100%;min-width:0;box-sizing:border-box}@media(max-width:520px){.malagoFlowRow.bartenderTimeRow{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.malagoFlowRow.bartenderTimeRow label{font-size:14px}}.villaStoryFrame[data-slide="0"]{display:none!important}.villaStoryFrame{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center 50%;opacity:0;transform:scale(1.018);transition:opacity .85s ease,transform 1.5s cubic-bezier(.2,.7,.2,1);will-change:opacity,transform}
 .villaStoryFrame[data-scene="pool"]{opacity:1;transform:scale(1)}
 .villaStoryPin[data-scene="chef"] .villaStoryFrame[data-scene="chef"],
 .villaStoryPin[data-scene="barman"] .villaStoryFrame[data-scene="barman"],
@@ -978,7 +978,7 @@ html:not(.client-portal-mode) body:not(.show-client-access) .clientPortalSection
 <section class="villaStory villaHomeCarousel villaSingleHero" id="villa" aria-label="Bienvenue à La Villa Magos">
   <div class="villaStoryPin" data-scene="pool" role="region" aria-roledescription="carrousel" aria-label="La Villa Magos et les expériences Malago" tabindex="0">
     <div class="villaStoryFrames">
-      <!-- Première photo retirée à la demande : la piscine n’est plus la photo d’ouverture. -->
+      <img class="villaStoryFrame is-active" data-slide="0" src="/media/villa-magos-piscine.WEBP" alt="Piscine et extérieur de La Villa Magos" fetchpriority="high">
       <img class="villaStoryFrame" data-slide="1" src="/media/villa-magos-chef.PNG" alt="Chef en cuisine pour une expérience privée" loading="lazy">
       <img class="villaStoryFrame" data-slide="2" src="/media/villa-magos-barman.PNG" alt="Barman préparant des cocktails" loading="lazy">
       <img class="villaStoryFrame" data-slide="3" src="/media/villa-magos-dj.PNG" alt="DJ en soirée" loading="lazy">
