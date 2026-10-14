@@ -1362,7 +1362,7 @@ function renderBartenderDetailWizard(){
  if(!Array.isArray(a.selectedDates))a.selectedDates=[];if(!a.scheduleByDate||typeof a.scheduleByDate!=='object'||Array.isArray(a.scheduleByDate))a.scheduleByDate={};
  a.selectedDates=a.selectedDates.filter(x=>stayDays.includes(x));if(a.service==='Une seule soirée'&&stayDays.length)a.selectedDates=[stayDays[0]];
  const dayName=d=>{const x=dayDate(d);return x?x.toLocaleDateString('fr-FR',{weekday:'short',day:'numeric',month:'short'}):d;};
- const dayTime=(d,k,l,def)=>{const z=a.scheduleByDate[d]||(a.scheduleByDate[d]={timeStart:a.timeStart||'19:00',timeEnd:a.timeEnd||'01:00',duration:a.duration||'6 heures'});return '<div class="malagoFlowField"><label>'+l+'</label><input type="'+(k==='duration'?'text':'time')+'" data-bartender-day-field="'+k+'" data-day="'+d+'" value="'+esc(z[k]||def)+'"></div>';};
+ const dayTime=(d,k,l,def)=>{const z=a.scheduleByDate[d]||(a.scheduleByDate[d]={timeStart:a.timeStart||'19:00',timeEnd:a.timeEnd||'01:00',duration:a.duration||'6 heures'});if(k==='duration')return '<div class="malagoFlowField"><label>'+l+'</label><select data-bartender-day-field="duration" data-day="'+d+'">'+['2 heures','3 heures','4 heures','6 heures','8 heures','Toute la soirée','À définir'].map(v=>'<option '+((z.duration||def)===v?'selected':'')+'>'+v+'</option>').join('')+'</select></div>';return '<div class="malagoFlowField"><label>'+l+'</label><input type="time" data-bartender-day-field="'+k+'" data-day="'+d+'" value="'+esc(z[k]||def)+'"></div>';};
  const step=a.step;$('#malagoFlowCrumbs').innerHTML='<strong>À LA VILLA</strong> &nbsp; / &nbsp; BARMAN PRIVÉ · '+(step<7?'ÉTAPE '+(step+1)+' / 7':'RÉCAPITULATIF');
  let h='';
  if(step===0){
