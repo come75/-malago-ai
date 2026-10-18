@@ -1291,7 +1291,7 @@ function saveDetailValue(entry,value){const key=entry.field[0];state.itemDetails
 function renderSeaWizard(){
  const body=$('#malagoFlowBody'),items=selectedItems(),index=state.seaFlow?.index||0;
  const item=items[index],values=(state.itemDetails[item]||(state.itemDetails[item]={}));
- const isBoat=/bateau|yacht/i.test(item),isYacht=/yacht/i.test(get('boat_type')),isJet=/jet.?ski/i.test(item),isExcursion=/excursion/i.test(item),isParty=/boat party/i.test(item),isFishing=/pêch/i.test(item),isWildlife=/dauphins|baleines/i.test(item);
+ const isBoat=/bateau|yacht/i.test(item),isYacht=/yacht/i.test(String((state.itemDetails[item]||{}).boat_type||'')),isJet=/jet.?ski/i.test(item),isExcursion=/excursion/i.test(item),isParty=/boat party/i.test(item),isFishing=/pêch/i.test(item),isWildlife=/dauphins|baleines/i.test(item);
  const escv=v=>esc(String(v??''));
  const get=(k)=>values[k]??'';
  const field=(key,label,type='text',placeholder='À préciser si utile')=>'<div class="malagoFlowField"><label for="sea-'+key+'">'+label+'</label><input id="sea-'+key+'" data-sea-field="'+key+'" type="'+type+'" value="'+escv(get(key))+'" placeholder="'+escv(placeholder)+'"></div>';
