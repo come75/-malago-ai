@@ -1189,7 +1189,7 @@ document.getElementById('activityClose').addEventListener('click',closeActivity)
  ['Quelle ambiance imaginez-vous ?',[['Chic & calme','Élégant et détendu'],['Festive','Musique et énergie'],['En famille','Convivial pour tous'],['Surprenez-moi','Proposez-moi une idée']]]
  ]},
  sea:{label:'EN MER',steps:[
- ['Qu’est-ce qui vous tente ?',[['Louer un bateau','Une sortie en mer'],['Un yacht','Une expérience premium'],['Jet-ski','Faire le plein de sensations'],['Boat party','Faire la fête sur l’eau'],['Pêcher','Une sortie de pêche'],['Une excursion','Explorer la côte'],['Voir les dauphins / baleines','Selon saison et conditions']]],
+ ['Qu’est-ce qui vous tente ?',[['Bateau / yacht','Choisissez le type de bateau qui vous correspond'],['Jet-ski','Faire le plein de sensations'],['Boat party','Faire la fête sur l’eau'],['Pêcher','Une sortie de pêche'],['Une excursion','Explorer la côte'],['Voir les dauphins / baleines','Selon saison et conditions']]],
  ['Avec qui partez-vous ?',[['1–2 personnes','Petit comité'],['3–6 personnes','Un petit groupe'],['7–12 personnes','Famille ou amis'],['13 personnes ou plus','Groupe plus important']]],
  ['Quel moment ?',[['Aujourd’hui','Selon disponibilité'],['Demain','Préparer la sortie'],['Pendant le séjour','On s’adapte'],['Je ne sais pas encore','Aidez-moi à choisir']]]
  ]},
@@ -1291,7 +1291,7 @@ function saveDetailValue(entry,value){const key=entry.field[0];state.itemDetails
 function renderSeaWizard(){
  const body=$('#malagoFlowBody'),items=selectedItems(),index=state.seaFlow?.index||0;
  const item=items[index],values=(state.itemDetails[item]||(state.itemDetails[item]={}));
- const isBoat=/Louer un bateau/i.test(item),isYacht=/yacht/i.test(item),isJet=/jet.?ski/i.test(item),isExcursion=/excursion/i.test(item),isParty=/boat party/i.test(item),isFishing=/pêch/i.test(item),isWildlife=/dauphins|baleines/i.test(item);
+ const isBoat=/bateau|yacht/i.test(item),isYacht=/yacht/i.test(get('boat_type')),isJet=/jet.?ski/i.test(item),isExcursion=/excursion/i.test(item),isParty=/boat party/i.test(item),isFishing=/pêch/i.test(item),isWildlife=/dauphins|baleines/i.test(item);
  const escv=v=>esc(String(v??''));
  const get=(k)=>values[k]??'';
  const field=(key,label,type='text',placeholder='À préciser si utile')=>'<div class="malagoFlowField"><label for="sea-'+key+'">'+label+'</label><input id="sea-'+key+'" data-sea-field="'+key+'" type="'+type+'" value="'+escv(get(key))+'" placeholder="'+escv(placeholder)+'"></div>';
@@ -1307,7 +1307,8 @@ function renderSeaWizard(){
   html+=radio('participants','Combien de personnes souhaitent pratiquer ?',['1 personne','2 personnes','3 à 4 personnes','5 personnes ou plus','Autre']);
   if(get('participants')==='Autre')html+=field('participants_other','Précisez le nombre de personnes','text','Ex. 6 personnes');
   html+=radio('jet_formula','Quelle formule recherchez-vous ?',['Accompagnement / encadrement','Location si autorisée par le prestataire','Besoin de conseil']);
- }else if(isBoat||isYacht){
+ }else if(isBoat){
+  html+=radio('boat_type','Quel type de bateau recherchez-vous ?',['Bateau','Yacht','Je souhaite être conseillé']);
   html+=radio('format','Quel type de sortie préférez-vous ?',['Privée','Partagée, si disponible','Sans préférence']);
   html+=multi('preferences','Qu’aimeriez-vous privilégier ?',preferences);
   if(isYacht)html+=area('onboard','Attentes particulières à bord (facultatif)','Boissons, repas, occasion spéciale…');
@@ -1351,7 +1352,7 @@ function renderSeaWizard(){
 function renderSeaWizardSummary(){
  const body=$('#malagoFlowBody'),items=selectedItems();
  $('#malagoFlowCrumbs').innerHTML='<strong>EN MER</strong> &nbsp; / &nbsp; RÉCAPITULATIF';
- const labels={participants:'Nombre de participants',participants_other:'Nombre de personnes (autre)',jet_formula:'Formule souhaitée',format:'Type de sortie',preferences:'Préférences',onboard:'Attentes à bord',excursion_type:'Expérience souhaitée',dive_experience:'Expérience en plongée',dive_notes:'Précisions plongée',excursion_notes:'Précisions excursion',party_mood:'Ambiance',guests:'Nombre d’invités',party_notes:'Musique / boissons',fishing_type:'Type de pêche',equipment:'Matériel',fishing_notes:'Précisions pêche',wildlife_type:'Observation souhaitée',wildlife_notes:'Précisions observation',date:'Date souhaitée',time:'Heure souhaitée',duration:'Durée souhaitée',budget:'Budget approximatif',notes:'Précisions',notes_general:'Autres précisions'};
+ const labels={boat_type:'Type de bateau recherché',participants:'Nombre de participants',participants_other:'Nombre de personnes (autre)',jet_formula:'Formule souhaitée',format:'Type de sortie',preferences:'Préférences',onboard:'Attentes à bord',excursion_type:'Expérience souhaitée',dive_experience:'Expérience en plongée',dive_notes:'Précisions plongée',excursion_notes:'Précisions excursion',party_mood:'Ambiance',guests:'Nombre d’invités',party_notes:'Musique / boissons',fishing_type:'Type de pêche',equipment:'Matériel',fishing_notes:'Précisions pêche',wildlife_type:'Observation souhaitée',wildlife_notes:'Précisions observation',date:'Date souhaitée',time:'Heure souhaitée',duration:'Durée souhaitée',budget:'Budget approximatif',notes:'Précisions',notes_general:'Autres précisions'};
  const cards=items.map((item,i)=>{const v=state.itemDetails[item]||{};return '<section class="malagoFilterCard"><div class="eyebrow">ACTIVITÉ '+(i+1)+' · EN MER</div><h3>'+esc(item)+'</h3><ul class="malagoFilterAnswers">'+Object.entries(v).filter(([,value])=>Array.isArray(value)?value.length>0:String(value??'').trim()!=='').map(([key,value])=>'<li><strong>'+esc(labels[key]||key)+':</strong> '+esc(Array.isArray(value)?value.join(', '):String(value))+'</li>').join('')+'</ul><button type="button" class="malagoFlowBack" data-sea-edit="'+i+'">Modifier cette activité</button></section>';}).join('');
  body.innerHTML='<div class="malagoFlowDone malagoFlowReview"><div class="eyebrow">EN MER · RÉCAPITULATIF</div><h2>Vérifiez votre demande.</h2><p>Chaque activité conserve ses propres réponses, sa date, son horaire et sa durée. Les prestations et conditions seront confirmées par le partenaire.</p>'+cards+'<div class="malagoFlowRow"><button class="malagoFlowBack" id="seaSummaryBack" type="button">← Retour</button><button class="malagoFlowNext" id="malagoFlowSubmit" type="button">Préparer ma demande ↗</button></div><p class="malagoFlowFine">Cette demande n’est pas une réservation confirmée. Aucune réservation ne sera effectuée par cette maquette.</p><div id="malagoFlowSubmitMessage" role="status" aria-live="polite"></div></div>';
  body.querySelectorAll('[data-sea-edit]').forEach(b=>b.onclick=()=>{state.seaFlow.index=+b.dataset.seaEdit;renderSeaWizard();});
