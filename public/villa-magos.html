@@ -1238,7 +1238,7 @@ document.getElementById('activityClose').addEventListener('click',closeActivity)
  $('#malagoFlowBody').innerHTML='<div class="eyebrow">'+esc(d.label)+(selecting?'':' · '+esc(item))+'</div><h2>'+esc(heading)+'</h2><p class="malagoFlowLead">'+esc(lead)+'</p><div class="malagoFlowOptions">'+s[1].map((o,i)=>'<button class="malagoFlowOption '+(state.chosen.includes(o[0])?'is-selected':'')+'" style="--option-i:'+i+'" data-malago-option="'+i+'" type="button" aria-pressed="'+state.chosen.includes(o[0])+'"><b>'+esc(o[0])+'</b><small>'+esc(o[1])+'</small></button>').join('')+'</div>'+(!selecting&&state.itemIndex===totalItems-1&&state.step===d.steps.length-1?'<div class="malagoFlowField"><label>Un détail global à préciser ? (facultatif)</label><textarea id="malagoFlowDetail" placeholder="Dates, horaires, budget ou préférences…">'+esc(state.detail)+'</textarea></div>':'')+'<div class="malagoFlowRow"><button class="malagoFlowBack" id="malagoFlowBack" type="button">'+(selecting?'← Catégories':state.step===1&&state.itemIndex===0?'← Modifier mes envies':'← Retour')+'</button><button class="malagoFlowNext" id="malagoFlowNext" type="button">'+(selecting?'Continuer avec mes envies →':state.itemIndex<totalItems-1&&state.step===d.steps.length-1?'Passer à l’envie suivante →':state.step===d.steps.length-1?'Préparer ma demande →':'Continuer →')+'</button></div>';
  $('#malagoFlowBody').querySelectorAll('[data-malago-option]').forEach(b=>b.onclick=()=>pick(+b.dataset.malagoOption));$('#malagoFlowBack').onclick=back;$('#malagoFlowNext').onclick=next;}
  function pick(i){const d=DATA[state.cat],val=d.steps[state.step][1][i][0];if(state.step===0){const selected=new Set(selectedItems());if(selected.has(val))selected.delete(val);else selected.add(val);state.answers[0]=[...selected];state.chosen=state.answers[0].slice();draw();return;}state.itemAnswers[currentItem()]={...(state.itemAnswers[currentItem()]||{}),[state.step]:val};state.chosen=[val];draw();}
- function next(){const d=DATA[state.cat];if(state.step===0){if(!selectedItems().length){window.alert('Choisissez au moins une envie pour continuer.');return;}if(selectedItems().length>12){window.alert('Vous pouvez envoyer jusqu’à 12 demandes distinctes à la fois. Retirez une envie ou envoyez-les en plusieurs fois.');return;}if(state.cat==='villa'&&selectedItems().length===1&&/chef|petit.?déjeuner|brunch/i.test(selectedItems()[0])){state.itemIndex=0;state.chefReview=false;renderChefWizard();return;}if(state.cat==='villa'&&selectedItems().length===1&&/barman|bar/i.test(selectedItems()[0])){state.itemIndex=0;state.bartenderDetail=null;renderBartenderDetailWizard();return;}if(state.cat==='villa'&&selectedItems().length===1&&/courses/i.test(selectedItems()[0])){state.itemIndex=0;state.detailFields=buildDetailFields();state.detailIndex=0;renderDetailWizard();return;}if(d.steps.length===1){summary();return;}state.itemIndex=0;state.step=1;draw();return;}if(!state.chosen.length){window.alert('Choisissez une réponse pour cette envie.');return;}state.itemAnswers[currentItem()]={...(state.itemAnswers[currentItem()]||{}),[state.step]:state.chosen[0]};const detail=$('#malagoFlowDetail');if(detail)state.detail=detail.value.trim();if(state.step<d.steps.length-1){state.step++;draw();return;}if(state.itemIndex<selectedItems().length-1){state.itemIndex++;state.step=1;draw();return;}summary();}
+ function next(){const d=DATA[state.cat];if(state.step===0){if(!selectedItems().length){window.alert('Choisissez au moins une envie pour continuer.');return;}if(selectedItems().length>12){window.alert('Vous pouvez envoyer jusqu’à 12 demandes distinctes à la fois. Retirez une envie ou envoyez-les en plusieurs fois.');return;}if(state.cat==='villa'&&selectedItems().length===1&&/chef|petit.?déjeuner|brunch/i.test(selectedItems()[0])){state.itemIndex=0;state.chefReview=false;renderChefWizard();return;}if(state.cat==='villa'&&selectedItems().length===1&&/barman|bar/i.test(selectedItems()[0])){state.itemIndex=0;state.bartenderDetail=null;renderBartenderDetailWizard();return;}if(state.cat==='villa'&&selectedItems().length===1&&/courses/i.test(selectedItems()[0])){state.itemIndex=0;state.detailFields=buildDetailFields();state.detailIndex=0;renderDetailWizard();return;}if(state.cat==='villa'&&selectedItems().length===1&&/une ambiance/i.test(selectedItems()[0])){state.itemIndex=0;state.ambienceFlow={step:0,category:'',subtype:'',services:[],answers:{}};renderAmbienceWizard();return;}if(d.steps.length===1){summary();return;}state.itemIndex=0;state.step=1;draw();return;}if(!state.chosen.length){window.alert('Choisissez une réponse pour cette envie.');return;}state.itemAnswers[currentItem()]={...(state.itemAnswers[currentItem()]||{}),[state.step]:state.chosen[0]};const detail=$('#malagoFlowDetail');if(detail)state.detail=detail.value.trim();if(state.step<d.steps.length-1){state.step++;draw();return;}if(state.itemIndex<selectedItems().length-1){state.itemIndex++;state.step=1;draw();return;}summary();}
  function back(){if(state.step===0){$('#malagoExperienceFlow').classList.remove('is-open');$('#malagoExperienceCategories').scrollIntoView({behavior:'smooth',block:'start'});return;}if(state.step===1&&state.itemIndex===0){state.step=0;draw();return;}if(state.step>1){state.step--;draw();return;}state.itemIndex--;state.step=DATA[state.cat].steps.length-1;draw();}
  function requestCategory(itemOverride){
   const items=itemOverride?[itemOverride]:selectedItems();
@@ -1286,6 +1286,68 @@ document.getElementById('activityClose').addEventListener('click',closeActivity)
  }
  function buildDetailFields(){return selectedItems().flatMap(item=>{const category=requestCategory(item);return (FILTERS[category]||FILTERS.other).map(field=>({item,category,field}));});}
 function saveDetailValue(entry,value){const key=entry.field[0];state.itemDetails[entry.item]=state.itemDetails[entry.item]||{};state.itemDetails[entry.item][key]=value;}
+
+function renderAmbienceWizard(){
+ const body=$('#malagoFlowBody'),items=selectedItems();
+ const item=items[0]||'Une ambiance';
+ const a=state.ambienceFlow||(state.ambienceFlow={step:0,category:'',subtype:'',services:[],answers:{}});
+ const categories=['Fêtes et événements','Décoration et mise en scène','Une demande particulière ?'];
+ const subtypes={
+  'Fêtes et événements':['Anniversaire','Fête entre amis ou en famille','Réception privée','Événement professionnel','Célébration particulière','Autre événement'],
+  'Décoration et mise en scène':['Décoration de la villa','Décoration de table','Fleurs et compositions florales','Mise en scène personnalisée'],
+  'Une demande particulière ?':['Décrire ma demande']
+ };
+ const serviceMap={
+  'Anniversaire':['Gâteau','Décoration','DJ / musique','Barman / cocktails','Autre'],
+  'Fête entre amis ou en famille':['Chef privé / repas','Boissons','Décoration','DJ / musique','Barman / cocktails','Autre'],
+  'Réception privée':['Chef privé / repas','Boissons','Barman / cocktails','Décoration','DJ / musique','Sonorisation et éclairage','Tables et chaises','Paperboard / projecteur','Autre'],
+  'Événement professionnel':['Réunion / présentation','Repas / chef privé ou traiteur','Boissons et pauses-café','Barman / cocktails','Sonorisation et éclairage','Décoration / mise en scène','Tables et chaises','Paperboard / projecteur','Autre'],
+  'Célébration particulière':['Décoration / fleurs','Chef privé / repas','Gâteau','Boissons / barman','DJ / musique','Autre'],
+  'Autre événement':['Chef privé / repas','Boissons','Barman / cocktails','Décoration','DJ / musique','Sonorisation et éclairage','Mobilier / matériel de présentation','Autre'],
+  'Décoration de la villa':['Salon','Espaces intérieurs','Terrasse','Piscine','Fleurs','Éclairage d’ambiance','Bougies','Autre'],
+  'Décoration de table':['Repas','Réception','Fleurs / centre de table','Vaisselle / accessoires','Bougies','Autre'],
+  'Fleurs et compositions florales':['Bouquets','Compositions florales','Décoration de table','Décoration des espaces','Autre'],
+  'Mise en scène personnalisée':['Thème personnalisé','Éclairage d’ambiance','Bougies','Fleurs','Accessoires décoratifs','Autre'],
+  'Décrire ma demande':[]
+ };
+ const escv=v=>esc(String(v??''));
+ const options=(key,arr,multi=true)=>'<div class="malagoFlowOptions">'+arr.map((v,i)=>'<button type="button" class="malagoFlowOption '+((multi?(a[key]||[]).includes(v):a[key]===v)?'is-selected':'')+'" data-ambience-choice="'+escv(v)+'" data-ambience-key="'+key+'" style="--option-i:'+i+'"><b>'+escv(v)+'</b></button>').join('')+'</div>';
+ const field=(key,label,type='text',placeholder='À préciser si utile')=>'<div class="malagoFlowField"><label for="ambience-'+key+'">'+label+'</label><input id="ambience-'+key+'" data-ambience-field="'+key+'" type="'+type+'" value="'+escv(a.answers[key]||'')+'" placeholder="'+escv(placeholder)+'"></div>';
+ const textarea=(key,label,placeholder)=>'<div class="malagoFlowField"><label for="ambience-'+key+'">'+label+'</label><textarea id="ambience-'+key+'" data-ambience-field="'+key+'" rows="3" placeholder="'+escv(placeholder)+'">'+escv(a.answers[key]||'')+'</textarea></div>';
+ const nav=(back,next)=>'<div class="malagoFlowRow"><button class="malagoFlowBack" id="ambienceBack" type="button">← '+back+'</button><button class="malagoFlowNext" id="ambienceNext" type="button">'+next+' →</button></div>';
+ $('#malagoFlowCrumbs').innerHTML='<strong>À LA VILLA</strong> &nbsp; / &nbsp; UNE AMBIANCE · ÉTAPE '+(a.step+1)+' / 4';
+ let html='';
+ if(a.step===0) html='<div class="eyebrow">À LA VILLA · UNE AMBIANCE</div><h2>Quelle expérience souhaitez-vous organiser ?</h2><p class="malagoFlowLead">Choisissez le type de demande. Vous pourrez ensuite préciser les prestations utiles.</p>'+options('category',categories,false)+nav('Retour','Continuer');
+ if(a.step===1) html='<div class="eyebrow">À LA VILLA · '+escv(a.category)+'</div><h2>Précisons votre projet.</h2><p class="malagoFlowLead">Sélectionnez la catégorie qui correspond le mieux à votre envie.</p>'+options('subtype',subtypes[a.category]||['Autre demande'],false)+nav('Retour','Continuer');
+ if(a.step===2){
+  const services=serviceMap[a.subtype]||[];
+  html='<div class="eyebrow">À LA VILLA · '+escv(a.subtype)+'</div><h2>Que souhaitez-vous prévoir ?</h2><p class="malagoFlowLead">Sélectionnez plusieurs services si nécessaire. Les informations communes ne seront demandées qu’une seule fois.</p>';
+  if(services.length)html+=options('services',services,true);
+  if(a.subtype==='Anniversaire')html+=options('birthdayType',['Anniversaire adulte','Anniversaire enfant','Anniversaire de mariage'],false);
+  if(a.subtype==='Fête entre amis ou en famille')html+=options('partyFormat',['Repas entre proches','Soirée festive','Journée à la villa','Autre'],false);
+  html+=field('date','Date souhaitée','date')+field('time','Heure de début','time')+field('duration','Durée approximative','text','Ex. : 3 heures, soirée')+field('budget','Budget approximatif','text','Facultatif')+(a.category==='Fêtes et événements'?field('guests','Nombre d’invités','number','À préciser si nécessaire'):'');
+  if(a.subtype==='Anniversaire')html+=field('age','Âge de la personne concernée','number','À préciser si nécessaire');
+  if(a.subtype==='Célébration particulière')html+=options('celebrationType',['Fiançailles','Baby shower / gender reveal','Baptême / communion','Réunion de famille','Autre célébration'],false);
+  if(a.category==='Décoration et mise en scène')html+=options('decorSpaces',['Salon','Espaces intérieurs','Terrasse','Piscine','Table'],true)+options('style',['Chic et élégant','Naturel','Coloré','Minimaliste','Thème personnalisé','À conseiller'],false);
+  html+=textarea('description','Précisions complémentaires (facultatif)','Décrivez votre idée, vos préférences ou ce qui reste à définir…')+nav('Retour','Voir le récapitulatif');
+ }
+ if(a.step===3){
+  const rows=[['Type de demande',a.category],['Sous-catégorie',a.subtype],['Services',(a.services||[]).join(', ')||'À définir']];
+  if(a.birthdayType)rows.push(['Type d’anniversaire',a.birthdayType]);
+  if(a.partyFormat)rows.push(['Format',a.partyFormat]);
+  if(a.celebrationType)rows.push(['Célébration',a.celebrationType]);
+  if(a.category==='Décoration et mise en scène'){rows.push(['Espaces',(a.decorSpaces||[]).join(', ')||'À préciser']);if(a.style)rows.push(['Style',a.style]);}
+  [['Date souhaitée','date'],['Heure de début','time'],['Durée approximative','duration'],['Budget approximatif','budget'],['Nombre d’invités','guests'],['Âge','age'],['Précisions','description']].forEach(([label,key])=>{if(a.answers[key])rows.push([label,a.answers[key]]);});
+  html='<div class="eyebrow">À LA VILLA · RÉCAPITULATIF</div><h2>Vérifiez votre demande.</h2><p class="malagoFlowLead">Vous pourrez revenir modifier les informations avant l’envoi.</p><section class="malagoFilterCard"><ul class="malagoFilterAnswers">'+rows.map(([k,v])=>'<li><strong>'+escv(k)+' :</strong> '+escv(v)+'</li>').join('')+'</ul></section><div class="malagoFlowRow"><button class="malagoFlowBack" id="ambienceBack" type="button">← Modifier ma demande</button><button class="malagoFlowNext" id="malagoFlowSubmit" type="button">Envoyer ma demande ↗</button></div><p class="malagoFlowFine">Votre demande n’est pas une réservation confirmée.</p><div id="malagoFlowSubmitMessage" role="status" aria-live="polite"></div>';
+ }
+ body.innerHTML=html;
+ body.querySelectorAll('[data-ambience-choice]').forEach(b=>b.onclick=()=>{const k=b.dataset.ambienceKey,v=b.dataset.ambienceChoice;if(['services','decorSpaces'].includes(k)){a[k]=Array.isArray(a[k])?a[k]:[];a[k]=a[k].includes(v)?a[k].filter(x=>x!==v):[...a[k],v];}else a[k]=v;renderAmbienceWizard();});
+ body.querySelectorAll('[data-ambience-field]').forEach(el=>el.addEventListener('input',()=>{a.answers[el.dataset.ambienceField]=el.value;}));
+ const back=$('#ambienceBack');if(back)back.onclick=()=>{if(a.step===0){state.step=0;draw();return;}a.step--;renderAmbienceWizard();};
+ const next=$('#ambienceNext');if(next)next.onclick=()=>{if(a.step===0&&!a.category){window.alert('Choisissez un type de demande pour continuer.');return;}if(a.step===1&&!a.subtype){window.alert('Choisissez une sous-catégorie pour continuer.');return;}if(a.step===2){body.querySelectorAll('[data-ambience-field]').forEach(el=>a.answers[el.dataset.ambienceField]=el.value);a.step=3;renderAmbienceWizard();return;}a.step++;renderAmbienceWizard();};
+ const submit=$('#malagoFlowSubmit');if(submit)submit.onclick=submitRequests;
+}
+
 function renderChefWizard(){
  const body=$('#malagoFlowBody'),items=selectedItems(),item=items[0];
  if(!item)return;
@@ -1405,7 +1467,7 @@ function renderDetailWizard(){
  if(index>=total){
   const cards=items.map((item,i)=>{const category=requestCategory(item),fs=FILTERS[category]||FILTERS.other,values=state.itemDetails[item]||{};return '<section class="malagoFilterCard"><div class="eyebrow">PRESTATION '+(i+1)+' · '+esc(categoryLabel(category))+'</div><h3>'+esc(item)+'</h3><ul class="malagoFilterAnswers">'+fs.map(f=>'<li><strong>'+esc(f[1])+':</strong> '+esc(values[f[0]]||'À préciser')+'</li>').join('')+'</ul></section>';}).join('');
   body.innerHTML='<div class="malagoFlowDone malagoFlowReview"><div class="eyebrow">DERNIÈRES PRÉCISIONS</div><h2>Votre demande prend forme.</h2><p>Vérifiez vos choix avant l’envoi. Vous pourrez préciser le reste avec votre concierge.</p>'+cards+'<div class="malagoFlowField"><label for="malagoFlowDetail">Une précision globale ? (facultatif)</label><textarea id="malagoFlowDetail" rows="3" placeholder="Préférences ou contraintes…">'+esc(state.detail)+'</textarea></div><div class="malagoFlowRow"><button class="malagoFlowBack" id="malagoFlowEdit" type="button">← Modifier mes choix</button><button class="malagoFlowNext" id="malagoFlowSubmit" type="button">Envoyer '+items.length+' demande'+(items.length>1?'s':'')+' ↗</button></div><p class="malagoFlowFine">Une demande n’est pas une réservation confirmée.</p><div id="malagoFlowSubmitMessage" role="status" aria-live="polite"></div></div>';
-  $('#malagoFlowDetail').addEventListener('input',e=>state.detail=e.target.value);$('#malagoFlowEdit').onclick=()=>{state.detailIndex=Math.max(0,total-1);renderDetailWizard();};$('#malagoFlowSubmit').onclick=submitRequests;return;
+  $('#malagoFlowDetail').addEventListener('input',e=>state.detail=e.target.value);$('#malagoFlowEdit').onclick=()=>{if(state.ambienceFlow){state.ambienceFlow.step=2;renderAmbienceWizard();return;}state.detailIndex=Math.max(0,total-1);renderDetailWizard();};$('#malagoFlowSubmit').onclick=submitRequests;return;
  }
  const entry=fields[index],[key,label,type='text',required=false,options=[]]=entry.field,value=((state.itemDetails[entry.item]||{})[key])||'';
  let control='';
@@ -1430,7 +1492,7 @@ function categoryLabel(category){return ({car_rental:'Location de voiture',airpo
   if(!window.MALAGO_CLIENT_TOKEN){notice.textContent='Ouvrez votre lien privé Villa Magos pour enregistrer la demande.';return;}
   saveButton.disabled=true;saveButton.textContent='Enregistrement…';notice.textContent='';
   try{
-   const requests=selectedItems().map(item=>{
+   const requests=state.ambienceFlow?(()=>{const a=state.ambienceFlow;const details=[['Type de demande',a.category],['Sous-catégorie',a.subtype],['Services sélectionnés',(a.services||[]).join(', ')||'À définir'],['Type d’anniversaire',a.birthdayType],['Format',a.partyFormat],['Type de célébration',a.celebrationType],['Espaces à décorer',(a.decorSpaces||[]).join(', ')],['Style',a.style],...Object.entries(a.answers||{}).map(([k,v])=>[({date:'Date souhaitée',time:'Heure de début',duration:'Durée approximative',budget:'Budget approximatif',guests:'Nombre d’invités',age:'Âge',description:'Précisions'}[k]||k),v])].filter(([,v])=>String(v||'').trim()).map(([question,answer])=>({question,answer:String(answer)}));const category=a.category==='Décoration et mise en scène'?'decoration':a.category==='Fêtes et événements'?'event':'other';const description=['Demande Villa Magos · À la villa · Une ambiance',...details.map(x=>x.question+' : '+x.answer),'Merci de nous proposer les options disponibles.','Cette demande n’est pas une réservation confirmée.'].join('\\n');return [{category,description,details:{category_key:'villa',category_label:'À la villa · Une ambiance',items:[{name:a.subtype,answers:details}],general_note:''}}];})():selectedItems().map(item=>{
     const answers=state.itemAnswers[item]||{},category=requestCategory(item);
     const itemAnswers=d.steps.slice(1).map((step,j)=>{const raw=answers[j+1]||'À préciser';return {question:step[0],answer:Array.isArray(raw)?raw.join(', '):String(raw)}});
     const filterAnswers=Object.entries(state.itemDetails[item]||{}).filter(([,v])=>String(v||'').trim()).map(([key,value])=>({question:(FILTERS[category]||FILTERS.other).find(f=>f[0]===key)?.[1]||key,answer:String(value)}));
