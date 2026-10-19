@@ -1281,7 +1281,26 @@ function renderFlowOptions(s,selecting){
   else control='<input id="'+id+'" type="'+type+'"'+common+' value="'+esc(value)+'" '+(type==='number'?'min="0" max="99"':'')+' placeholder="'+(type==='text'?'À préciser':'')+'">';
   return '<div class="malagoFlowField"><label for="'+id+'">'+esc(label)+(required?' *':'')+'</label>'+control+'</div>';
  }
- function buildDetailFields(){return selectedItems().flatMap(item=>{const category=requestCategory(item);return (FILTERS[category]||FILTERS.other).filter(field=>!(state.cat==='comfort'&&field[0]==='service')).map(field=>({item,category,field}));});}
+ function detailFieldsForItem(item,category){
+ const fields=FILTERS[category]||FILTERS.other;
+ if(state.cat!=='comfort')return fields;
+ if(category==='villa_services')return fields.filter(([key])=>key!=='service');
+ if(category!=='family')return fields;
+ const babysitting=/baby-sitting/i.test(item);
+ const equipment=/lit bébé|chaise haute|poussette|siège auto|rehausseur|jeux/i.test(item);
+ const otherFamily=/autre besoin famille/i.test(item);
+ return fields.filter(([key])=>{
+  if(key==='service')return false;
+  if(key==='start_time'||key==='end_time')return babysitting||otherFamily;
+  if(key==='children_count')return babysitting||otherFamily;
+  if(key==='ages')return babysitting||equipment||otherFamily;
+  if(key==='language')return babysitting;
+  if(key==='equipment')return /jeux|autre besoin famille/i.test(item);
+  if(key==='budget')return babysitting||otherFamily;
+  return true;
+ });
+}
+function buildDetailFields(){return selectedItems().flatMap(item=>{const category=requestCategory(item);return detailFieldsForItem(item,category).map(field=>({item,category,field}));});}
 function saveDetailValue(entry,value){const key=entry.field[0];state.itemDetails[entry.item]=state.itemDetails[entry.item]||{};state.itemDetails[entry.item][key]=value;}
 
 
@@ -1577,7 +1596,7 @@ function renderDetailWizard(){
  const body=$('#malagoFlowBody'),items=selectedItems(),fields=state.detailFields||(state.detailFields=buildDetailFields()),index=state.detailIndex||0,total=fields.length;
  $('#malagoFlowCrumbs').innerHTML='<strong>'+esc(DATA[state.cat].label)+'</strong> &nbsp; / &nbsp; '+(index<total?'PRÉCISIONS '+(index+1)+' / '+total:'RÉCAPITULATIF');
  if(index>=total){
-  const cards=items.map((item,i)=>{const category=requestCategory(item),fs=FILTERS[category]||FILTERS.other,values=state.itemDetails[item]||{};return '<section class="malagoFilterCard"><div class="eyebrow">PRESTATION '+(i+1)+' · '+esc(categoryLabel(category))+'</div><h3>'+esc(item)+'</h3><ul class="malagoFilterAnswers">'+fs.map(f=>'<li><strong>'+esc(f[1])+':</strong> '+esc(values[f[0]]||(state.cat==='comfort'&&f[0]==='service'?item:'')||'À préciser')+'</li>').join('')+'</ul></section>';}).join('');
+  const cards=items.map((item,i)=>{const category=requestCategory(item),fs=detailFieldsForItem(item,category),values=state.itemDetails[item]||{};return '<section class="malagoFilterCard"><div class="eyebrow">PRESTATION '+(i+1)+' · '+esc(categoryLabel(category))+'</div><h3>'+esc(item)+'</h3><ul class="malagoFilterAnswers">'+fs.map(f=>'<li><strong>'+esc(f[1])+':</strong> '+esc(values[f[0]]||(state.cat==='comfort'&&f[0]==='service'?item:'')||'À préciser')+'</li>').join('')+'</ul></section>';}).join('');
   body.innerHTML='<div class="malagoFlowDone malagoFlowReview"><div class="eyebrow">DERNIÈRES PRÉCISIONS</div><h2>Votre demande prend forme.</h2><p>Vérifiez vos choix avant l’envoi. Vous pourrez préciser le reste avec votre concierge.</p>'+cards+'<div class="malagoFlowField"><label for="malagoFlowDetail">Une précision globale ? (facultatif)</label><textarea id="malagoFlowDetail" rows="3" placeholder="Préférences ou contraintes…">'+esc(state.detail)+'</textarea></div><div class="malagoFlowRow"><button class="malagoFlowBack" id="malagoFlowEdit" type="button">← Modifier mes choix</button><button class="malagoFlowNext" id="malagoFlowSubmit" type="button">Envoyer '+items.length+' demande'+(items.length>1?'s':'')+' ↗</button></div><p class="malagoFlowFine">Une demande n’est pas une réservation confirmée.</p><div id="malagoFlowSubmitMessage" role="status" aria-live="polite"></div></div>';
   $('#malagoFlowDetail').addEventListener('input',e=>state.detail=e.target.value);$('#malagoFlowEdit').onclick=()=>{if(state.ambienceFlow){state.ambienceFlow.step=2;renderAmbienceWizard();return;}state.detailIndex=Math.max(0,total-1);renderDetailWizard();};$('#malagoFlowSubmit').onclick=submitRequests;return;
  }
