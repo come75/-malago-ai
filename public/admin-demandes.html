@@ -50,7 +50,7 @@ input:focus,select:focus,textarea:focus{outline:0;border-color:#EE8405;box-shado
 (() => {
 const KEY="malago_admin_token";
 const statuses=[["received","Reçue"],["in_review","En cours d’examen"],["awaiting_customer","Attente client"],["quoted","Proposition envoyée"],["accepted_by_customer","Acceptée par le client"],["confirmed","Confirmée"],["declined","Indisponible / refusée"],["cancelled","Annulée"]];
-const categoryLabels={car_rental:"Location de voiture",airport_transfer:"Transfert aéroport",chauffeur:"Chauffeur & transferts",restaurant:"Restaurant",activity:"Activité ou sortie",chef:"Chef privé",groceries:"Courses livrées",beach_club:"Plages & beach clubs",wellness:"Massages & bien-être",family:"Famille & enfants",decoration:"Décoration, fleurs & cadeaux",bartender:"Barman privé",dj:"DJ privé",event:"Événement privé",villa_services:"Services à la villa",other:"Autre demande"};
+const categoryLabels={car_rental:"Location de voiture",airport_transfer:"Transfert aéroport",chauffeur:"Chauffeur & transferts",restaurant:"Restaurant",bar:"Bars & cocktails",activity:"Activité ou sortie",chef:"Chef privé",groceries:"Courses livrées",beach_club:"Plages & beach clubs",wellness:"Massages & bien-être",family:"Famille & enfants",decoration:"Décoration, fleurs & cadeaux",bartender:"Barman privé",dj:"DJ privé",event:"Événement privé",villa_services:"Services à la villa",other:"Autre demande"};
   const statusLabels=Object.fromEntries(statuses);
 const login=document.getElementById("login"),app=document.getElementById("app"),list=document.getElementById("list");
 let token="";
