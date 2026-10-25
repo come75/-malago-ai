@@ -2,6 +2,8 @@
  * Draft localization. Native-speaker review is required before production use.
  */
 window.MALAGO_UI_TRANSLATIONS = {
+  "LA VILLA MAGOS × MALAGO": {en:"VILLA MAGOS × MALAGO",fr:"LA VILLA MAGOS × MALAGO",es:"VILLA MAGOS × MALAGO",de:"VILLA MAGOS × MALAGO",it:"VILLA MAGOS × MALAGO",nl:"VILLA MAGOS × MALAGO",ru:"VILLA MAGOS × MALAGO",pt:"VILLA MAGOS × MALAGO",ar:"فيلا ماغوس × مالاغو",zh:"Villa Magos × Malago"},
+  "Bien plus qu’un<br><em>simple logement.</em>": {en:"More than just<br><em>a place to stay.</em>",fr:"Bien plus qu’un<br><em>simple logement.</em>",es:"Mucho más que<br><em>un alojamiento.</em>",de:"Mehr als nur<br><em>eine Unterkunft.</em>",it:"Molto più di<br><em>un alloggio.</em>",nl:"Meer dan alleen<br><em>een accommodatie.</em>",ru:"Больше, чем просто<br><em>место для проживания.</em>",pt:"Muito mais do que<br><em>um alojamento.</em>",ar:"أكثر من مجرد<br><em>مكان للإقامة.</em>",zh:"不只是<br><em>一个住宿的地方。</em>"},
   "Que souhaitez-vous demander ?": {en:"What would you like to request?",fr:"Que souhaitez-vous demander ?",es:"¿Qué te gustaría solicitar?",de:"Was möchten Sie anfragen?",it:"Cosa desideri richiedere?",nl:"Wat wilt u aanvragen?",ru:"Что вы хотели бы запросить?",pt:"O que gostaria de solicitar?",ar:"ما الذي تود طلبه؟",zh:"您想提出什么需求？"},
   "Date": {en:"Date",fr:"Date",es:"Fecha",de:"Datum",it:"Data",nl:"Datum",ru:"Дата",pt:"Data",ar:"التاريخ",zh:"日期"},
   "Date souhaitée": {en:"Preferred date",fr:"Date souhaitée",es:"Fecha deseada",de:"Wunschdatum",it:"Data desiderata",nl:"Gewenste datum",ru:"Желаемая дата",pt:"Data pretendida",ar:"التاريخ المطلوب",zh:"期望日期"},
