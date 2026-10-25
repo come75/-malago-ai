@@ -1,0 +1,124 @@
+{
+  "_meta": {
+    "locale": "de",
+    "localeName": "Deutsch",
+    "role": "target-draft",
+    "status": "draft",
+    "scope": "phase-1-navigation-and-category-catalogue",
+    "reviewRequired": true,
+    "note": "Erster KI-gestützter Lokalisierungsentwurf. Professionelle muttersprachliche Prüfung erforderlich. Nicht in die Anwendung eingebunden; keine vollständige Abdeckung."
+  },
+  "navigation": {
+    "experiences": "Erlebnisse",
+    "villa": "Die Villa",
+    "services": "Unsere Services",
+    "contactMalago": "Malago kontaktieren",
+    "languageLabel": "Sprache"
+  },
+  "home": {
+    "hero": {
+      "eyebrow": "Ihr Aufenthalt an der Costa del Sol",
+      "title": "Was würde Ihren Aufenthalt besonders machen?",
+      "description": "Alles beginnt mit einer Idee. Wählen Sie aus, was Ihnen gefällt, und überlassen Sie Ihrem Concierge die Organisation der Details.",
+      "primaryAction": "Erlebnisse entdecken"
+    },
+    "whatsappIntro": "Wählen Sie Ihre Erlebnisse und erhalten Sie unsere Vorschläge über WhatsApp.",
+    "disclaimer": "Alle Services unterliegen der Bestätigung durch den Anbieter, der Verfügbarkeit und den geltenden Bedingungen."
+  },
+  "categories": {
+    "villa": {
+      "title": "In der Villa",
+      "description": "Privatkoch, Einkäufe, Barservice, DJ, Dekoration oder ein komplett organisiertes Event."
+    },
+    "servicesComfort": {
+      "title": "Service & Komfort",
+      "description": "Reinigung, Wäsche, Vorbereitung der Villa, Unterstützung und Familienbedarf."
+    },
+    "wellness": {
+      "title": "Massage & Wellness",
+      "description": "Massagen, Yoga, Fitness und Anwendungen in der Villa."
+    },
+    "transport": {
+      "title": "Unterwegs",
+      "description": "Mietwagen, privater Chauffeur, Transfers und Premium-Taxis."
+    },
+    "sea": {
+      "title": "Auf dem Meer",
+      "description": "Boote, Yachten, Jetskis, Angeln und Bootsausflüge."
+    },
+    "beaches": {
+      "title": "Strände & Beachclubs",
+      "description": "Sonnenliegen, Cabanas, lebhafte Strandtage und familienfreundliche Beachclubs."
+    },
+    "dining": {
+      "title": "Essen gehen",
+      "description": "Tapas, Restaurants, gehobene Küche, Brunch und Desserts."
+    },
+    "drinks": {
+      "title": "Drinks & Nachtleben",
+      "description": "Cocktailbars, Rooftops, Beachclubs und lokale Empfehlungen."
+    },
+    "nature": {
+      "title": "Natur & Tiere",
+      "description": "Reiten, Wandern und Beobachtung von Meerestieren."
+    },
+    "sport": {
+      "title": "Sport & Clubs",
+      "description": "Golf, Padel, Tennis, Personal Training und Gruppenaktivitäten."
+    },
+    "other": {
+      "title": "Andere Wünsche",
+      "description": "Sie haben etwas anderes im Sinn? Sagen Sie uns, was Sie benötigen."
+    }
+  },
+  "common": {
+    "chooseExperience": "Erlebnis auswählen",
+    "choose": "Auswählen …",
+    "notSureYet": "Noch nicht sicher",
+    "toBeConfirmed": "Noch zu bestätigen",
+    "optional": "Optional",
+    "back": "Zurück",
+    "next": "Weiter",
+    "close": "Schließen",
+    "edit": "Bearbeiten",
+    "reviewRequest": "Anfrage prüfen",
+    "sendRequest": "Anfrage senden",
+    "openWhatsApp": "WhatsApp öffnen",
+    "contactDirectly": "Malago direkt kontaktieren"
+  },
+  "request": {
+    "date": {
+      "label": "Wunschdatum"
+    },
+    "time": {
+      "label": "Gewünschte Uhrzeit"
+    },
+    "guests": {
+      "label": "Anzahl der Personen"
+    },
+    "budget": {
+      "label": "Budget (optional)"
+    },
+    "notes": {
+      "label": "Weitere Angaben (optional)",
+      "placeholder": "Teilen Sie uns Ihre Wünsche oder besonderen Anforderungen mit …"
+    },
+    "review": {
+      "notice": "In der Zusammenfassung Ihrer Anfrage erscheinen nur die von Ihnen angegebenen Informationen.",
+      "editAction": "Anfrage bearbeiten"
+    },
+    "whatsapp": {
+      "notice": "WhatsApp öffnet sich mit einer vorausgefüllten Nachricht. Sie können sie prüfen und selbst senden."
+    },
+    "status": {
+      "notConfirmed": "Ihre Anfrage ist erst bestätigt, wenn der Anbieter sie angenommen hat."
+    }
+  },
+  "validation": {
+    "requiredField": "Bitte füllen Sie dieses Feld aus.",
+    "chooseOption": "Bitte wählen Sie eine Option.",
+    "chooseEventType": "Bitte wählen Sie eine Art von Veranstaltung.",
+    "chooseAtmosphereAndPackage": "Bitte wählen Sie eine Atmosphäre und ein Paket.",
+    "chooseBoatType": "Bitte wählen Sie einen Bootstyp."
+  }
+}
