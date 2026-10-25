@@ -88,7 +88,17 @@ Le code actuel propose anglais, français, espagnol et allemand. L’objectif an
 - Le mode de validation native et les personnes/prestataires chargés de l’approbation finale.
 - Le routage souhaité par langue et les exigences SEO associées.
 
+### Avancement documentaire et fondation — 25 octobre 2026
+- Glossaire initial créé : `docs/LOCALISATION_GLOSSAIRE.md`. Les équivalents proposés restent à valider par des professionnels natifs ; ce n’est pas une approbation de traduction.
+- Inventaire des surfaces créé : `docs/LOCALISATION_INVENTAIRE.md`. Il couvre la navigation, les catégories, les parcours dynamiques, les formulaires, le récapitulatif, WhatsApp, les erreurs, l’accessibilité, le SEO et le RTL.
+- Première ressource anglaise créée : `locales/en.json`, phase 1 (navigation, catégories et messages communs prioritaires). Elle n’est pas encore chargée par l’application et n’est pas un inventaire exhaustif.
+- Schéma de ressources documenté dans `docs/LOCALISATION_SCHEMA.md`.
+- Validateur statique ajouté dans `scripts/validate-locales.mjs`. Le mode standard vérifie les ressources présentes ; `--strict-all-languages` doit échouer tant que les dix fichiers de locale ne sont pas présents.
+- Commits de fondation sur `v7-real-site` : `b9c135ec2615486f9a7d898ca136a9635fb10494`, `07ace4199e02b6b1d591146b82aef566501521e6`, `a37b2b6d213d1b1a6935320d8e406b2604411dfd`, `c9b489fd5d2c6d36ee2ab18eaeecaf15875ec9d6`, `78a783e6a92f7df88d285bf79324754328c28bb8`.
+
 ### Non effectué
-- Aucun code applicatif modifié.
+- Le moteur de localisation n’est pas raccordé à `public/villa-magos.html` ; le comportement de l’interface n’a pas été modifié.
+- Les fichiers des neuf locales cibles ne sont pas encore créés.
 - Aucun test navigateur/iPhone exécuté.
+- Aucun test de script exécuté dans un environnement Node n’est revendiqué.
 - Aucun déploiement effectué.
