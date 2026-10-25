@@ -954,13 +954,15 @@ html:not(.client-portal-mode) body:not(.show-client-access) .clientPortalSection
 
 <style id="malago-language-styles">
 .headerActions{display:flex;align-items:center;gap:10px;margin-left:auto}
+.languageControl{position:relative;display:flex;align-items:center}
 #malagoLanguageSwitcher{max-width:125px;min-height:40px;border:1px solid rgba(228,206,158,.32);border-radius:99px;padding:0 12px;background:#171814;color:#f5f0e5;font:inherit;font-size:11px;cursor:pointer}
+#malagoLanguageButton{display:none;min-width:40px;min-height:40px;border:1px solid rgba(228,206,158,.32);border-radius:50%;background:#171814;color:#f5f0e5;font-size:19px;cursor:pointer}
 .languageLabel{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0)}
-@media(max-width:700px){.headerActions{gap:6px}.headerActions .navcta{padding:10px 11px;font-size:10px}#malagoLanguageSwitcher{max-width:98px;padding:0 7px;font-size:10px}}
+@media(max-width:700px){.headerActions{gap:6px}.headerActions .navcta{padding:10px 11px;font-size:10px}.languageControl{position:relative}#malagoLanguageButton{display:inline-flex;align-items:center;justify-content:center}#malagoLanguageSwitcher{display:none;position:absolute;z-index:1000;right:0;top:calc(100% + 8px);width:170px;max-width:none;min-height:44px;padding:0 10px;font-size:13px;box-shadow:0 12px 32px rgba(0,0,0,.45)}.languageControl.is-open #malagoLanguageSwitcher{display:block}}
 </style>
 </head>
 <body class="villa-home-pool">
-<header class="topbar"><div class="wrap"><a class="brand brandFeaturing" href="#top" aria-label="Villa Magos × Malago"><img class="brandVillaLogo" src="/img/villa-magos-logo.PNG" alt="Villa Magos Málaga" width="144" height="45" loading="eager" decoding="async"><span class="brandFeaturingX" aria-hidden="true">×</span><img class="brandMalagoLogo" src="/img/malago-logo.webp" alt="Malago" width="260" height="93" loading="eager" decoding="async"></a><nav class="nav"><a href="#experiences">Expériences</a><a href="#experiences">Expériences</a><a href="#villa">La villa</a><a href="#experiences">Nos services</a></nav><div class="headerActions"><label class="languageLabel" for="malagoLanguageSwitcher">Language</label><select id="malagoLanguageSwitcher" aria-label="Choose language"><option value="en">English</option><option value="fr">Français</option><option value="es">Español</option><option value="de">Deutsch</option><option value="it">Italiano</option><option value="nl">Nederlands</option><option value="ru">Русский</option><option value="pt">Português</option><option value="ar">العربية</option><option value="zh">中文</option></select><a class="navcta" href="https://wa.me/34613384566?text=Hello%20Malago%2C%20I%20would%20like%20to%20discover%20your%20services.">Contact Malago ↗</a></div></div></header>
+<header class="topbar"><div class="wrap"><a class="brand brandFeaturing" href="#top" aria-label="Villa Magos × Malago"><img class="brandVillaLogo" src="/img/villa-magos-logo.PNG" alt="Villa Magos Málaga" width="144" height="45" loading="eager" decoding="async"><span class="brandFeaturingX" aria-hidden="true">×</span><img class="brandMalagoLogo" src="/img/malago-logo.webp" alt="Malago" width="260" height="93" loading="eager" decoding="async"></a><nav class="nav"><a href="#experiences">Expériences</a><a href="#experiences">Expériences</a><a href="#villa">La villa</a><a href="#experiences">Nos services</a></nav><div class="headerActions"><div class="languageControl"><button type="button" id="malagoLanguageButton" aria-label="Choose language" aria-expanded="false" aria-controls="malagoLanguageSwitcher">🌐</button><label class="languageLabel" for="malagoLanguageSwitcher">Language</label><select id="malagoLanguageSwitcher" aria-label="Choose language"><option value="en">English</option><option value="fr">Français</option><option value="es">Español</option><option value="de">Deutsch</option><option value="it">Italiano</option><option value="nl">Nederlands</option><option value="ru">Русский</option><option value="pt">Português</option><option value="ar">العربية</option><option value="zh">中文</option></select></div><a class="navcta" href="https://wa.me/34613384566?text=Hello%20Malago%2C%20I%20would%20like%20to%20discover%20your%20services.">Contact Malago ↗</a></div></div></header>
 <main id="top">
 
 <section class="malagoExperienceHero" id="experiences" aria-label="Choisissez votre expérience">
@@ -1077,20 +1079,8 @@ document.getElementById('activityClose').addEventListener('click',closeActivity)
     });
     if(animate) root.classList.add('is-copy-changing');
     const lang=document.getElementById('malagoLanguageSwitcher')?.value||'en';
-    const localizeHTML=(html)=>{
-      const box=document.createElement('div');
-      box.innerHTML=html;
-      const walker=document.createTreeWalker(box,NodeFilter.SHOW_TEXT);
-      const nodes=[];
-      while(walker.nextNode()) nodes.push(walker.currentNode);
-      nodes.forEach(node=>{
-        const raw=node.nodeValue;
-        if(raw.trim()&&window.MALAGO_T) node.nodeValue=raw.replace(raw.trim(),window.MALAGO_T(raw.trim(),lang));
-      });
-      return box.innerHTML;
-    };
     kicker.textContent=window.MALAGO_T?window.MALAGO_T(copy[active].kicker,lang):copy[active].kicker;
-    title.innerHTML=localizeHTML(copy[active].title);
+    title.innerHTML=window.MALAGO_T?window.MALAGO_T(copy[active].title,lang):copy[active].title;
     text.textContent=window.MALAGO_T?window.MALAGO_T(copy[active].text,lang):copy[active].text;
     cta.textContent=window.MALAGO_T?window.MALAGO_T(copy[active].cta,lang):copy[active].cta;
     cta.href='#experiences';
@@ -1132,6 +1122,25 @@ document.getElementById('activityClose').addEventListener('click',closeActivity)
   if(reduced.addEventListener) reduced.addEventListener('change',start);
   const languageSelect=document.getElementById('malagoLanguageSwitcher');
   if(languageSelect) languageSelect.addEventListener('change',()=>setTimeout(()=>render(active,false),0));
+  const languageControl=document.querySelector('.languageControl');
+  const languageButton=document.getElementById('malagoLanguageButton');
+  if(languageControl&&languageButton&&languageSelect){
+    languageButton.addEventListener('click',()=>{
+      const opened=languageControl.classList.toggle('is-open');
+      languageButton.setAttribute('aria-expanded',opened?'true':'false');
+      if(opened) languageSelect.focus();
+    });
+    document.addEventListener('click',event=>{
+      if(!languageControl.contains(event.target)){
+        languageControl.classList.remove('is-open');
+        languageButton.setAttribute('aria-expanded','false');
+      }
+    });
+    languageSelect.addEventListener('change',()=>{
+      languageControl.classList.remove('is-open');
+      languageButton.setAttribute('aria-expanded','false');
+    });
+  }
   render(0,false);
   start();
 })();
