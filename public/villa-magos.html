@@ -1812,5 +1812,41 @@ grid.querySelectorAll('[data-new-cat]').forEach(b=>b.onclick=()=>{cat=C.find(x=>
 })();
 </script>
 
+<style id="MALAGO_CAROUSEL_COPY_ALIGNMENT_2026">
+/* Alignement uniforme du texte du carrousel sur mobile, indépendamment de la diapositive. */
+@media (max-width: 700px) {
+  .villaHomeCarousel .villaStoryCopy {
+    top: calc(43% + 18px) !important;
+    bottom: auto !important;
+    left: 22px !important;
+    right: 22px !important;
+    width: auto !important;
+    max-width: none !important;
+    height: auto !important;
+    max-height: none !important;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    justify-content: flex-start !important;
+    overflow: visible !important;
+  }
+  .villaHomeCarousel .villaStoryCopy .villaStoryKicker {
+    margin-bottom: 11px !important;
+  }
+  .villaHomeCarousel .villaStoryCopy h2 {
+    max-width: 100% !important;
+    margin: 0 0 11px !important;
+    font-size: clamp(32px, 8.4vw, 40px) !important;
+    line-height: 1.02 !important;
+    text-wrap: balance !important;
+  }
+  .villaHomeCarousel .villaStoryCopy p {
+    max-width: 100% !important;
+    margin: 0 0 16px !important;
+    font-size: 13px !important;
+    line-height: 1.5 !important;
+  }
+}
+</style>
 </body>
 </html>
