@@ -660,6 +660,11 @@ window.MALAGO_UI_TRANSLATIONS = {
   "Séville": {"en":"Seville","fr":"Séville","es":"Sevilla","de":"Sevilla","it":"Siviglia","nl":"Sevilla","ru":"Севилья","pt":"Sevilha","ar":"إشبيلية","zh":"塞维利亚"},
   "Activités": {"en":"Activities","fr":"Activités","es":"Actividades","de":"Aktivitäten","it":"Attività","nl":"Activiteiten","ru":"Мероприятия","pt":"Atividades","ar":"الأنشطة","zh":"活动"},
   "Boîte de nuit": {"en":"Nightclub","fr":"Boîte de nuit","es":"Discoteca","de":"Nachtclub","it":"Discoteca","nl":"Nachtclub","ru":"Ночной клуб","pt":"Discoteca","ar":"ملهى ليلي","zh":"夜店"},
+  "Massage à la villa": {"en":"Massage at the villa","fr":"Massage à la villa","es":"Masaje en la villa","de":"Massage in der Villa","it":"Massaggio in villa","nl":"Massage in de villa","ru":"Массаж на вилле","pt":"Massagem na villa","ar":"تدليك في الفيلا","zh":"别墅内按摩"},
+  "Selon disponibilité": {"en":"Subject to availability","fr":"Selon disponibilité","es":"Según disponibilidad","de":"Je nach Verfügbarkeit","it":"In base alla disponibilità","nl":"Afhankelijk van beschikbaarheid","ru":"При наличии возможности","pt":"Sujeito a disponibilidade","ar":"حسب التوافر","zh":"视供应情况而定"},
+  "Aidez-moi à choisir": {"en":"Help me choose","fr":"Aidez-moi à choisir","es":"Ayúdeme a elegir","de":"Helfen Sie mir bei der Auswahl","it":"Aiutatemi a scegliere","nl":"Help me kiezen","ru":"Помогите мне выбрать","pt":"Ajude-me a escolher","ar":"ساعدوني في الاختيار","zh":"请帮我选择"},
+  "Activités nautiques": {"en":"Water activities","fr":"Activités nautiques","es":"Actividades náuticas","de":"Wassersportaktivitäten","it":"Attività nautiche","nl":"Watersportactiviteiten","ru":"Водные развлечения","pt":"Atividades náuticas","ar":"الأنشطة البحرية","zh":"水上活动"},
+  "À organiser ensemble": {"en":"Let's organise it together","fr":"À organiser ensemble","es":"Organicémoslo juntos","de":"Gemeinsam organisieren","it":"Organizziamo insieme","nl":"Samen organiseren","ru":"Организуем вместе","pt":"Vamos organizar em conjunto","ar":"لننظم ذلك معًا","zh":"一起安排"},
 };
 
 /* Build aliases from the canonical English label so translated form text works
