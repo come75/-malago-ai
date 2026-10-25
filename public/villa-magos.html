@@ -1930,7 +1930,7 @@ const direct=new Set(['Surprenez-moi','Conseil plages','Boat party','Pêche','Ac
 const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const wa=msg=>'https://wa.me/'+WA+'?text='+encodeURIComponent(msg);
 const grid=$('#malagoExperienceCategories'); if(!grid)return;
-grid.innerHTML=C.map((c,i)=>'<button class="malagoExperienceTile" data-new-cat="'+c.key+'" style="--tile-i:'+i+';--tile-image:url(\\'/media/villa-magos-piscine.WEBP\\')"><span class="tileNum">'+String(i+1).padStart(2,'0')+' / '+esc(c.title.toUpperCase())+'</span><div><h2>'+esc(c.title)+'</h2><p>Choisissez le service qui vous ferait plaisir.</p><div class="tileBottom"><span class="tileArrow">↗</span></div></div></button>').join('');
+grid.innerHTML=C.map((c,i)=>'<button class="malagoExperienceTile" data-new-cat="'+c.key+'" style="--tile-i:'+i+';--tile-image:url(/media/villa-magos-piscine.WEBP)"><span class="tileNum">'+String(i+1).padStart(2,'0')+' / '+esc(c.title.toUpperCase())+'</span><div><h2>'+esc(c.title)+'</h2><p>Choisissez le service qui vous ferait plaisir.</p><div class="tileBottom"><span class="tileArrow">↗</span></div></div></button>').join('');
 const old=$('#malagoExperienceFlow');if(old)old.hidden=true;
 const root=document.createElement('section');root.id='malagoNewFlow';root.setAttribute('aria-live','polite');root.innerHTML='<div class="mnf-head"><div><div class="mnf-kicker" id="mnfKicker"></div><div class="mnf-note" id="mnfStep"></div></div><button class="mnf-secondary" type="button" id="mnfClose">Fermer ×</button></div><div id="mnfContent"></div>';grid.after(root);
 let cat,item,stage='services',a={},night={};
