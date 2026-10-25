@@ -1910,6 +1910,14 @@ grid.querySelectorAll('[data-new-cat]').forEach(b=>b.onclick=()=>{cat=C.find(x=>
  ar: {"Time":"الوقت","Allergies / intolerances":"الحساسيات / حالات عدم التحمل","Decoration type":"نوع الديكور","Budget":"الميزانية","Please choose an event type.":"يرجى اختيار نوع الفعالية.","Please choose an atmosphere and package.":"يرجى اختيار الأجواء والباقة.","Please choose a boat type.":"يرجى اختيار نوع القارب.","Please choose a package.":"يرجى اختيار باقة.","Please choose an option.":"يرجى اختيار أحد الخيارات.","Please choose Quad or Buggy.":"يرجى اختيار دراجة رباعية أو باغي.","Hello Malago":"مرحبًا Malago","I would like to discover your services":"أرغب في التعرّف على خدماتكم","Services subject to confirmation":"الخدمات تتطلب التأكيد"},
  zh: {"Time":"时间","Allergies / intolerances":"过敏/不耐受情况","Decoration type":"装饰类型","Budget":"预算","Please choose an event type.":"请选择活动类型。","Please choose an atmosphere and package.":"请选择氛围和套餐。","Please choose a boat type.":"请选择船只类型。","Please choose a package.":"请选择套餐。","Please choose an option.":"请选择一个选项。","Please choose Quad or Buggy.":"请选择四轮摩托或越野车。","Hello Malago":"您好，Malago","I would like to discover your services":"我想了解你们的服务","Services subject to confirmation":"服务需经确认"}
  };
+ const MALAGO_EXTRA_LABELS = {
+ it: {"Time":"Orario","Allergies / intolerances":"Allergie / intolleranze","Decoration type":"Tipo di decorazione","Please choose an event type.":"Seleziona il tipo di evento.","Please choose an option.":"Seleziona un’opzione."},
+ nl: {"Time":"Tijd","Allergies / intolerances":"Allergieën / intoleranties","Decoration type":"Type decoratie","Please choose an event type.":"Kies een type evenement.","Please choose an option.":"Kies een optie."},
+ ru: {"Time":"Время","Allergies / intolerances":"Аллергии / непереносимости","Decoration type":"Тип декора","Please choose an event type.":"Выберите тип мероприятия.","Please choose an option.":"Выберите вариант."},
+ pt: {"Time":"Hora","Allergies / intolerances":"Alergias / intolerâncias","Decoration type":"Tipo de decoração","Please choose an event type.":"Selecione o tipo de evento.","Please choose an option.":"Selecione uma opção."},
+ ar: {"Time":"الوقت","Allergies / intolerances":"الحساسيات / حالات عدم التحمل","Decoration type":"نوع الديكور","Please choose an event type.":"يرجى اختيار نوع الفعالية.","Please choose an option.":"يرجى اختيار أحد الخيارات."},
+ zh: {"Time":"时间","Allergies / intolerances":"过敏/不耐受情况","Decoration type":"装饰类型","Please choose an event type.":"请选择活动类型。","Please choose an option.":"请选择一个选项。"}
+ };
  const base={en:{},fr:{},es:{},de:{}};
  function mapFor(lang){return lang==='en'?D.en:lang==='fr'?D.fr:lang==='es'?D.es:D.de}
  const originalText=new WeakMap(),originalAttrs=new WeakMap();
@@ -1921,6 +1929,7 @@ grid.querySelectorAll('[data-new-cat]').forEach(b=>b.onclick=()=>{cat=C.find(x=>
   if(extra&&extra[en]&&extra[en][lang])return extra[en][lang];
   if(MALAGO_CORE_EXTRA[lang]&&MALAGO_CORE_EXTRA[lang][en])return MALAGO_CORE_EXTRA[lang][en];
   if(MALAGO_CORE_PATCH[lang]&&MALAGO_CORE_PATCH[lang][en])return MALAGO_CORE_PATCH[lang][en];
+  if(MALAGO_EXTRA_LABELS[lang]&&MALAGO_EXTRA_LABELS[lang][en])return MALAGO_EXTRA_LABELS[lang][en];
   if(lang==='fr')return D.fr[en]||value;
   return (D[lang]&&D[lang][en])||value;
  }
