@@ -28,3 +28,12 @@ La couverture de traduction complète n'est pas atteinte. Ajouter des options au
 - Contrôle effectué : les 6 scripts intégrés présents dans le HTML passent une vérification syntaxique JavaScript via compilation statique ; `public/localisation-formulaires.js` passe également cette vérification.
 - Aucun test navigateur, mobile/iPhone, test fonctionnel de changement de langue ou test de bout en bout n'a été effectué. Aucun déploiement n'est confirmé. Les traductions restent des brouillons à relire par des locuteurs natifs.
 - La branche `villa-magos-premium` n'a pas été modifiée par ces actions.
+
+
+### Complément après audit des textes visibles
+
+- Le dictionnaire a été étendu à 298 entrées pour couvrir davantage de textes de la vitrine, des titres numérotés, des descriptions et des fragments de texte coupés par le HTML.
+- Dernier commit du dictionnaire : `d3c6d3550ee5ef95948b6c46a90eef45dc90c819`.
+- Après relecture GitHub, le fichier de traduction se compile toujours sans erreur de syntaxe JavaScript et le HTML contient toujours le chargement du fichier, les dix options de langue et le réglage RTL arabe.
+- Le contrôle statique n'est pas un test de rendu : certaines chaînes dynamiques hors de la vitrine et des formulaires recensés peuvent encore manquer. La couverture intégrale reste à vérifier par un audit systématique des scripts et un test interactif.
+- Tentative de mise à jour de la page Notion de passation existante : échec de l'outil avec `validation_error`. La passation Notion n'a donc pas été modifiée ; ce journal GitHub est la trace de continuité pour cette session.
