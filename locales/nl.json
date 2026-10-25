@@ -1,0 +1,124 @@
+{
+  "_meta": {
+    "locale": "nl",
+    "localeName": "Nederlands",
+    "role": "target-draft",
+    "status": "draft",
+    "scope": "phase-1-navigation-and-category-catalogue",
+    "reviewRequired": true,
+    "note": "Eerste AI-ondersteunde lokalisatieversie. Professionele controle door een moedertaalspreker vereist. Niet gekoppeld aan de applicatie; dekking is niet volledig."
+  },
+  "navigation": {
+    "experiences": "Ervaringen",
+    "villa": "De villa",
+    "services": "Onze services",
+    "contactMalago": "Contact opnemen met Malago",
+    "languageLabel": "Taal"
+  },
+  "home": {
+    "hero": {
+      "eyebrow": "Uw verblijf aan de Costa del Sol",
+      "title": "Wat zou uw verblijf bijzonder maken?",
+      "description": "Alles begint met een idee. Kies wat u aanspreekt en laat uw concierge de details regelen.",
+      "primaryAction": "Ontdek de ervaringen"
+    },
+    "whatsappIntro": "Kies uw ervaringen en ontvang onze voorstellen via WhatsApp.",
+    "disclaimer": "Alle services zijn afhankelijk van bevestiging door de aanbieder, beschikbaarheid en de toepasselijke voorwaarden."
+  },
+  "categories": {
+    "villa": {
+      "title": "In de villa",
+      "description": "Privékok, boodschappen, bardienst, DJ, decoratie of een volledig georganiseerd evenement."
+    },
+    "servicesComfort": {
+      "title": "Service & comfort",
+      "description": "Schoonmaak, linnengoed, voorbereiding van de villa, assistentie en gezinsbehoeften."
+    },
+    "wellness": {
+      "title": "Massage & wellness",
+      "description": "Massages, yoga, fitness en behandelingen in de villa."
+    },
+    "transport": {
+      "title": "Vervoer",
+      "description": "Autoverhuur, privéchauffeur, transfers en premiumtaxi’s."
+    },
+    "sea": {
+      "title": "Op zee",
+      "description": "Boten, jachten, jetski’s, vissen en boottochten."
+    },
+    "beaches": {
+      "title": "Stranden & beachclubs",
+      "description": "Ligbedden, cabana’s, levendige stranddagen en gezinsvriendelijke beachclubs."
+    },
+    "dining": {
+      "title": "Uit eten",
+      "description": "Tapas, restaurants, fine dining, brunch en desserts."
+    },
+    "drinks": {
+      "title": "Een drankje doen",
+      "description": "Cocktailbars, rooftops, beachclubs en lokale tips."
+    },
+    "nature": {
+      "title": "Natuur & dieren",
+      "description": "Paardrijden, wandelen en het spotten van zeedieren."
+    },
+    "sport": {
+      "title": "Sport & clubs",
+      "description": "Golf, padel, tennis, personal training en groepsactiviteiten."
+    },
+    "other": {
+      "title": "Iets anders",
+      "description": "Heeft u iets anders in gedachten? Vertel ons wat u nodig heeft."
+    }
+  },
+  "common": {
+    "chooseExperience": "Kies een ervaring",
+    "choose": "Kiezen…",
+    "notSureYet": "Weet ik nog niet",
+    "toBeConfirmed": "Nog te bevestigen",
+    "optional": "Optioneel",
+    "back": "Terug",
+    "next": "Verder",
+    "close": "Sluiten",
+    "edit": "Bewerken",
+    "reviewRequest": "Uw aanvraag bekijken",
+    "sendRequest": "Aanvraag versturen",
+    "openWhatsApp": "WhatsApp openen",
+    "contactDirectly": "Rechtstreeks contact opnemen met Malago"
+  },
+  "request": {
+    "date": {
+      "label": "Gewenste datum"
+    },
+    "time": {
+      "label": "Gewenste tijd"
+    },
+    "guests": {
+      "label": "Aantal personen"
+    },
+    "budget": {
+      "label": "Budget (optioneel)"
+    },
+    "notes": {
+      "label": "Aanvullende informatie (optioneel)",
+      "placeholder": "Deel uw voorkeuren of speciale wensen…"
+    },
+    "review": {
+      "notice": "Alleen de informatie die u verstrekt, verschijnt in het overzicht van uw aanvraag.",
+      "editAction": "Aanvraag bewerken"
+    },
+    "whatsapp": {
+      "notice": "WhatsApp opent met een vooraf ingevuld bericht. U kunt het bekijken en zelf verzenden."
+    },
+    "status": {
+      "notConfirmed": "Uw aanvraag is pas bevestigd nadat de aanbieder deze heeft geaccepteerd."
+    }
+  },
+  "validation": {
+    "requiredField": "Vul dit veld in.",
+    "chooseOption": "Kies een optie.",
+    "chooseEventType": "Kies een type evenement.",
+    "chooseAtmosphereAndPackage": "Kies een sfeer en een pakket.",
+    "chooseBoatType": "Kies een boottype."
+  }
+}
