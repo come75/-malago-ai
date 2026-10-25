@@ -1766,6 +1766,142 @@ grid.querySelectorAll('[data-new-cat]').forEach(b=>b.onclick=()=>{cat=C.find(x=>
  de:{
  "Choose your experiences and receive our ":"Wähle deine Erlebnisse und erhalte unsere ","proposals on WhatsApp":"Vorschläge über WhatsApp","Experiences":"Erlebnisse","The villa":"Die Villa","Our services":"Unsere Services","Contact Malago ↗":"Malago kontaktieren ↗","Experience the Costa del Sol":"Die Costa del Sol erleben","What would make your stay special?":"Was möchten Sie erleben?","Start with an idea. Choose what you love and let your concierge take care of the rest.":"Eine Idee genügt. Wählen Sie, worauf Sie Lust haben, und Ihr Concierge kümmert sich um den Rest.","AT THE VILLA":"IN DER VILLA","At the villa":"In der Villa","Private chef, groceries, bar, DJ, decoration or a fully organised event.":"Privatkoch, Einkäufe, Bar, DJ, Dekoration oder ein komplett organisiertes Event.","SERVICES & COMFORT":"SERVICE & KOMFORT","Services & comfort":"Service & Komfort","Housekeeping, linen, villa preparation, assistance and family needs.":"Reinigung, Wäsche, Vorbereitung der Villa, Unterstützung und Familienbedarf.","MASSAGES & WELLNESS":"MASSAGEN & WELLNESS","Massages & wellness":"Massagen & Wellness","Massage, yoga, fitness and treatments at the villa.":"Massagen, Yoga, Fitness und Anwendungen in der Villa.","GETTING AROUND":"MOBILITÄT","Getting around":"Mobilität","Car rental, private driver, transfers or premium taxi.":"Mietwagen, Privatfahrer, Transfers oder Premium-Taxi.","AT SEA":"AUF DEM MEER","At sea":"Auf dem Meer","Boats, yachts, jet skis, fishing or boat parties.":"Boote, Yachten, Jetskis, Angeln oder Bootspartys.","BEACHES & BEACH CLUBS":"STRÄNDE & BEACH CLUBS","Beaches & beach clubs":"Strände & Beach Clubs","Sunbeds, cabanas, fun days out or family-friendly beach clubs.":"Liegestühle, Cabanas, gesellige Tage oder familienfreundliche Beach Clubs.","DINING OUT":"ESSEN GEHEN","Dining out":"Essen gehen","Tapas, restaurants, fine dining, brunch or dessert.":"Tapas, Restaurants, gehobene Küche, Brunch oder Dessert.","DRINKS & NIGHTLIFE":"DRINKS & NACHTLEBEN","Drinks & nightlife":"Drinks & Nachtleben","Cocktail bars, rooftops, beach clubs and local favourites.":"Cocktailbars, Rooftops, Beach Clubs und lokale Empfehlungen.","NATURE & ANIMALS":"NATUR & TIERE","Nature & animals":"Natur & Tiere","Horse riding, hiking and wildlife watching at sea.":"Reiten, Wandern und Beobachtung von Meerestieren.","SPORT & CLUBS":"SPORT & CLUBS","Golf, padel, personal trainers and group activities.":"Golf, Padel, Personal Trainer und Gruppenaktivitäten.","SOMETHING ELSE":"SONSTIGER WUNSCH","Something else":"Sonstiger Wunsch","Choose an experience ↗":"Erlebnis auswählen ↗","Private guide for guests of Villa Magos · Churriana, Málaga":"Privater Guide für Gäste der Villa Magos · Churriana, Málaga","Services are subject to provider confirmation, availability and terms.":"Leistungen vorbehaltlich Bestätigung, Verfügbarkeit und Bedingungen der Anbieter.","WhatsApp · Enquiries":"WhatsApp · Anfragen"
  }};
+ const MALAGO_CORE_EXTRA = {
+ it: {
+ "Choose your experiences and receive our ":"Scegli le tue esperienze e ricevi le nostre ",
+ "proposals on WhatsApp":"proposte su WhatsApp","Experiences":"Esperienze","The villa":"La villa","Our services":"I nostri servizi","Contact Malago ↗":"Contatta Malago ↗",
+ "Experience the Costa del Sol":"Vivi la Costa del Sol","What would make your stay special?":"Come vorresti rendere speciale il tuo soggiorno?","What would you like?":"Cosa ti piacerebbe fare?",
+ "Start with an idea. Choose what you love and let your concierge take care of the rest.":"Parti da un’idea. Scegli ciò che preferisci e lascia che il tuo concierge organizzi il resto.",
+ "AT THE VILLA":"IN VILLA","At the villa":"In villa","Private chef, groceries, bar, DJ, decoration or a fully organised event.":"Chef privato, spesa, bar, DJ, decorazioni o un evento organizzato in ogni dettaglio.",
+ "SERVICES & COMFORT":"SERVIZI E COMFORT","Services & comfort":"Servizi e comfort","Housekeeping, linen, villa preparation, assistance and family needs.":"Pulizie, biancheria, preparazione della villa, assistenza ed esigenze della famiglia.",
+ "MASSAGES & WELLNESS":"MASSAGGI E BENESSERE","Massages & wellness":"Massaggi e benessere","Massage, yoga, fitness and treatments at the villa.":"Massaggi, yoga, fitness e trattamenti in villa.",
+ "GETTING AROUND":"SPOSTARSI","Getting around":"Spostarsi","Car rental, private driver, transfers or premium taxi.":"Noleggio auto, autista privato, transfer o taxi premium.",
+ "AT SEA":"IN MARE","At sea":"In mare","Boats, yachts, jet skis, fishing or boat parties.":"Barche, yacht, moto d’acqua, pesca o feste in barca.",
+ "BEACHES & BEACH CLUBS":"SPIAGGE E BEACH CLUB","Beaches & beach clubs":"Spiagge e beach club","Sunbeds, cabanas, fun days out or family-friendly beach clubs.":"Lettini, cabane, giornate divertenti o beach club adatti alle famiglie.",
+ "DINING OUT":"MANGIARE FUORI","Dining out":"Mangiare fuori","Tapas, restaurants, fine dining, brunch or dessert.":"Tapas, ristoranti, alta cucina, brunch o dessert.",
+ "DRINKS & NIGHTLIFE":"DRINK E VITA NOTTURNA","Drinks & nightlife":"Drink e vita notturna","Cocktail bars, rooftops, beach clubs and local favourites.":"Cocktail bar, rooftop, beach club e indirizzi del posto.",
+ "NATURE & ANIMALS":"NATURA E ANIMALI","Nature & animals":"Natura e animali","Horse riding, hiking and wildlife watching at sea.":"Equitazione, escursioni a piedi e osservazione della fauna marina.",
+ "SPORT & CLUBS":"SPORT E CLUB","Sport & clubs":"Sport e club","Golf, padel, personal trainers and group activities.":"Golf, padel, personal trainer e attività di gruppo.",
+ "SOMETHING ELSE":"ALTRO","Something else":"Altro","Choose an experience ↗":"Scegli un’esperienza ↗",
+ "Private guide for guests of Villa Magos · Churriana, Málaga":"Guida privata per gli ospiti di Villa Magos · Churriana, Málaga",
+ "Services are subject to provider confirmation, availability and terms.":"I servizi sono soggetti a conferma del fornitore, disponibilità e condizioni.",
+ "WhatsApp · Enquiries":"WhatsApp · Informazioni","Which specific service do you need?":"Di quale servizio specifico hai bisogno?","Choose…":"Scegli…","Review your request":"Riepilogo della richiesta",
+ "WhatsApp will open with your message pre-filled. You can review and send it yourself.":"WhatsApp si aprirà con un messaggio precompilato che potrai controllare e inviare.",
+ "← Edit":"← Modifica","Open WhatsApp ↗":"Apri WhatsApp ↗","← Services":"← Servizi","Contact Malago directly":"Contatta direttamente Malago","Review your request →":"Riepiloga la richiesta →",
+ "Only the information you provide will appear in the summary.":"Nel riepilogo appariranno solo le informazioni che hai inserito."
+ },
+ nl: {
+ "Choose your experiences and receive our ":"Kies je ervaringen en ontvang onze ","proposals on WhatsApp":"voorstellen via WhatsApp","Experiences":"Ervaringen","The villa":"De villa","Our services":"Onze diensten","Contact Malago ↗":"Neem contact op met Malago ↗",
+ "Experience the Costa del Sol":"Beleef de Costa del Sol","What would make your stay special?":"Wat zou je verblijf bijzonder maken?","What would you like?":"Waar heb je zin in?",
+ "Start with an idea. Choose what you love and let your concierge take care of the rest.":"Begin met een idee. Kies wat je leuk vindt en laat je conciërge de rest regelen.",
+ "AT THE VILLA":"IN DE VILLA","At the villa":"In de villa","Private chef, groceries, bar, DJ, decoration or a fully organised event.":"Privékok, boodschappen, bar, dj, decoratie of een volledig georganiseerd evenement.",
+ "SERVICES & COMFORT":"SERVICE & COMFORT","Services & comfort":"Service & comfort","Housekeeping, linen, villa preparation, assistance and family needs.":"Schoonmaak, linnengoed, voorbereiding van de villa, hulp en behoeften van het gezin.",
+ "MASSAGES & WELLNESS":"MASSAGES & WELLNESS","Massages & wellness":"Massages & wellness","Massage, yoga, fitness and treatments at the villa.":"Massage, yoga, fitness en behandelingen in de villa.",
+ "GETTING AROUND":"VERVOER","Getting around":"Vervoer","Car rental, private driver, transfers or premium taxi.":"Autohuur, privéchauffeur, transfers of premium taxi.",
+ "AT SEA":"OP ZEE","At sea":"Op zee","Boats, yachts, jet skis, fishing or boat parties.":"Boten, jachten, jetski’s, vissen of bootfeesten.",
+ "BEACHES & BEACH CLUBS":"STRANDEN & BEACHCLUBS","Beaches & beach clubs":"Stranden & beachclubs","Sunbeds, cabanas, fun days out or family-friendly beach clubs.":"Ligbedden, cabana’s, leuke dagjes uit of gezinsvriendelijke beachclubs.",
+ "DINING OUT":"UIT ETEN","Dining out":"Uit eten","Tapas, restaurants, fine dining, brunch or dessert.":"Tapas, restaurants, verfijnd dineren, brunch of dessert.",
+ "DRINKS & NIGHTLIFE":"DRINKS & NACHTLEVEN","Drinks & nightlife":"Drinks & nachtleven","Cocktail bars, rooftops, beach clubs and local favourites.":"Cocktailbars, rooftops, beachclubs en lokale favorieten.",
+ "NATURE & ANIMALS":"NATUUR & DIEREN","Nature & animals":"Natuur & dieren","Horse riding, hiking and wildlife watching at sea.":"Paardrijden, wandelen en zeedieren spotten.",
+ "SPORT & CLUBS":"SPORT & CLUBS","Sport & clubs":"Sport & clubs","Golf, padel, personal trainers and group activities.":"Golf, padel, personal trainers en groepsactiviteiten.",
+ "SOMETHING ELSE":"IETS ANDERS","Something else":"Iets anders","Choose an experience ↗":"Kies een ervaring ↗",
+ "Private guide for guests of Villa Magos · Churriana, Málaga":"Privégids voor gasten van Villa Magos · Churriana, Málaga",
+ "Services are subject to provider confirmation, availability and terms.":"Diensten zijn afhankelijk van bevestiging door de aanbieder, beschikbaarheid en voorwaarden.",
+ "WhatsApp · Enquiries":"WhatsApp · Informatie","Which specific service do you need?":"Welke specifieke dienst heb je nodig?","Choose…":"Kies…","Review your request":"Controleer je aanvraag",
+ "WhatsApp will open with your message pre-filled. You can review and send it yourself.":"WhatsApp opent met een vooraf ingevuld bericht dat je kunt controleren en zelf versturen.",
+ "← Edit":"← Bewerken","Open WhatsApp ↗":"Open WhatsApp ↗","← Services":"← Diensten","Contact Malago directly":"Neem rechtstreeks contact op met Malago","Review your request →":"Bekijk je aanvraag →",
+ "Only the information you provide will appear in the summary.":"Alleen de informatie die je invult, verschijnt in het overzicht."
+ },
+ ru: {
+ "Choose your experiences and receive our ":"Выберите впечатления и получите наши ","proposals on WhatsApp":"предложения в WhatsApp","Experiences":"Впечатления","The villa":"Вилла","Our services":"Наши услуги","Contact Malago ↗":"Связаться с Malago ↗",
+ "Experience the Costa del Sol":"Откройте для себя Коста-дель-Соль","What would make your stay special?":"Что сделает ваш отдых особенным?","What would you like?":"Что бы вы хотели?",
+ "Start with an idea. Choose what you love and let your concierge take care of the rest.":"Начните с идеи. Выберите то, что вам нравится, а обо всём остальном позаботится ваш консьерж.",
+ "AT THE VILLA":"НА ВИЛЛЕ","At the villa":"На вилле","Private chef, groceries, bar, DJ, decoration or a fully organised event.":"Личный шеф-повар, продукты, бармен, диджей, декор или мероприятие под ключ.",
+ "SERVICES & COMFORT":"УСЛУГИ И КОМФОРТ","Services & comfort":"Услуги и комфорт","Housekeeping, linen, villa preparation, assistance and family needs.":"Уборка, бельё, подготовка виллы, помощь и потребности семьи.",
+ "MASSAGES & WELLNESS":"МАССАЖ И WELLNESS","Massages & wellness":"Массаж и wellness","Massage, yoga, fitness and treatments at the villa.":"Массаж, йога, фитнес и процедуры на вилле.",
+ "GETTING AROUND":"ТРАНСПОРТ","Getting around":"Транспорт","Car rental, private driver, transfers or premium taxi.":"Аренда автомобиля, личный водитель, трансфер или премиальное такси.",
+ "AT SEA":"НА МОРЕ","At sea":"На море","Boats, yachts, jet skis, fishing or boat parties.":"Лодки, яхты, гидроциклы, рыбалка или вечеринки на борту.",
+ "BEACHES & BEACH CLUBS":"ПЛЯЖИ И ПЛЯЖНЫЕ КЛУБЫ","Beaches & beach clubs":"Пляжи и пляжные клубы","Sunbeds, cabanas, fun days out or family-friendly beach clubs.":"Шезлонги, кабаны, яркие дни отдыха и пляжные клубы для всей семьи.",
+ "DINING OUT":"РЕСТОРАНЫ","Dining out":"Рестораны","Tapas, restaurants, fine dining, brunch or dessert.":"Тапас, рестораны, высокая кухня, бранч или десерты.",
+ "DRINKS & NIGHTLIFE":"БАРЫ И НОЧНАЯ ЖИЗНЬ","Drinks & nightlife":"Бары и ночная жизнь","Cocktail bars, rooftops, beach clubs and local favourites.":"Коктейль-бары, террасы на крышах, пляжные клубы и любимые местные места.",
+ "NATURE & ANIMALS":"ПРИРОДА И ЖИВОТНЫЕ","Nature & animals":"Природа и животные","Horse riding, hiking and wildlife watching at sea.":"Верховая езда, пешие маршруты и наблюдение за морской фауной.",
+ "SPORT & CLUBS":"СПОРТ И КЛУБЫ","Sport & clubs":"Спорт и клубы","Golf, padel, personal trainers and group activities.":"Гольф, падел, персональные тренеры и групповые занятия.",
+ "SOMETHING ELSE":"ДРУГОЕ","Something else":"Другое","Choose an experience ↗":"Выбрать впечатление ↗",
+ "Private guide for guests of Villa Magos · Churriana, Málaga":"Персональный гид для гостей Villa Magos · Чурриана, Малага",
+ "Services are subject to provider confirmation, availability and terms.":"Услуги предоставляются после подтверждения поставщиком, при наличии возможности и на его условиях.",
+ "WhatsApp · Enquiries":"WhatsApp · Запросы","Which specific service do you need?":"Какая именно услуга вам нужна?","Choose…":"Выберите…","Review your request":"Проверьте запрос",
+ "WhatsApp will open with your message pre-filled. You can review and send it yourself.":"WhatsApp откроется с готовым текстом сообщения. Вы сможете проверить его и отправить самостоятельно.",
+ "← Edit":"← Изменить","Open WhatsApp ↗":"Открыть WhatsApp ↗","← Services":"← Услуги","Contact Malago directly":"Связаться с Malago напрямую","Review your request →":"Проверить запрос →",
+ "Only the information you provide will appear in the summary.":"В сводку попадёт только указанная вами информация."
+ },
+ pt: {
+ "Choose your experiences and receive our ":"Escolha as suas experiências e receba as nossas ","proposals on WhatsApp":"propostas por WhatsApp","Experiences":"Experiências","The villa":"A villa","Our services":"Os nossos serviços","Contact Malago ↗":"Contactar a Malago ↗",
+ "Experience the Costa del Sol":"Descubra a Costa del Sol","What would make your stay special?":"O que tornaria a sua estadia especial?","What would you like?":"O que gostaria de fazer?",
+ "Start with an idea. Choose what you love and let your concierge take care of the rest.":"Comece com uma ideia. Escolha o que mais lhe agrada e deixe o seu concierge tratar do resto.",
+ "AT THE VILLA":"NA VILLA","At the villa":"Na villa","Private chef, groceries, bar, DJ, decoration or a fully organised event.":"Chef privado, compras, bar, DJ, decoração ou um evento organizado de ponta a ponta.",
+ "SERVICES & COMFORT":"SERVIÇOS E CONFORTO","Services & comfort":"Serviços e conforto","Housekeeping, linen, villa preparation, assistance and family needs.":"Limpeza, roupa de cama, preparação da villa, assistência e necessidades da família.",
+ "MASSAGES & WELLNESS":"MASSAGENS E BEM-ESTAR","Massages & wellness":"Massagens e bem-estar","Massage, yoga, fitness and treatments at the villa.":"Massagens, ioga, fitness e tratamentos na villa.",
+ "GETTING AROUND":"DESLOCAÇÕES","Getting around":"Deslocações","Car rental, private driver, transfers or premium taxi.":"Aluguer de automóvel, motorista privado, transfers ou táxi premium.",
+ "AT SEA":"NO MAR","At sea":"No mar","Boats, yachts, jet skis, fishing or boat parties.":"Barcos, iates, motas de água, pesca ou festas a bordo.",
+ "BEACHES & BEACH CLUBS":"PRAIAS E BEACH CLUBS","Beaches & beach clubs":"Praias e beach clubs","Sunbeds, cabanas, fun days out or family-friendly beach clubs.":"Espreguiçadeiras, cabanas, dias animados ou beach clubs para toda a família.",
+ "DINING OUT":"COMER FORA","Dining out":"Comer fora","Tapas, restaurants, fine dining, brunch or dessert.":"Tapas, restaurantes, alta gastronomia, brunch ou sobremesas.",
+ "DRINKS & NIGHTLIFE":"BARES E VIDA NOTURNA","Drinks & nightlife":"Bares e vida noturna","Cocktail bars, rooftops, beach clubs and local favourites.":"Bares de cocktails, rooftops, beach clubs e locais favoritos.",
+ "NATURE & ANIMALS":"NATUREZA E ANIMAIS","Nature & animals":"Natureza e animais","Horse riding, hiking and wildlife watching at sea.":"Passeios a cavalo, caminhadas e observação da vida marinha.",
+ "SPORT & CLUBS":"DESPORTO E CLUBES","Sport & clubs":"Desporto e clubes","Golf, padel, personal trainers and group activities.":"Golfe, padel, personal trainers e atividades de grupo.",
+ "SOMETHING ELSE":"OUTRO PEDIDO","Something else":"Outro pedido","Choose an experience ↗":"Escolher uma experiência ↗",
+ "Private guide for guests of Villa Magos · Churriana, Málaga":"Guia privado para os hóspedes da Villa Magos · Churriana, Málaga",
+ "Services are subject to provider confirmation, availability and terms.":"Os serviços estão sujeitos à confirmação do prestador, disponibilidade e condições.",
+ "WhatsApp · Enquiries":"WhatsApp · Informações","Which specific service do you need?":"De que serviço específico precisa?","Choose…":"Escolha…","Review your request":"Reveja o seu pedido",
+ "WhatsApp will open with your message pre-filled. You can review and send it yourself.":"O WhatsApp abrirá com uma mensagem pré-preenchida que poderá rever e enviar.",
+ "← Edit":"← Editar","Open WhatsApp ↗":"Abrir WhatsApp ↗","← Services":"← Serviços","Contact Malago directly":"Contactar diretamente a Malago","Review your request →":"Rever o seu pedido →",
+ "Only the information you provide will appear in the summary.":"O resumo incluirá apenas as informações que indicar."
+ },
+ ar: {
+ "Choose your experiences and receive our ":"اختر تجاربك واحصل على ","proposals on WhatsApp":"مقترحاتنا عبر واتساب","Experiences":"التجارب","The villa":"الفيلا","Our services":"خدماتنا","Contact Malago ↗":"تواصل مع Malago ↗",
+ "Experience the Costa del Sol":"اكتشف كوستا ديل سول","What would make your stay special?":"ما الذي يجعل إقامتك مميزة؟","What would you like?":"ما الذي ترغب في القيام به؟",
+ "Start with an idea. Choose what you love and let your concierge take care of the rest.":"ابدأ بفكرة، واختر ما يناسبك واترك لبوابك الخاص تنظيم الباقي.",
+ "AT THE VILLA":"في الفيلا","At the villa":"في الفيلا","Private chef, groceries, bar, DJ, decoration or a fully organised event.":"طاهٍ خاص، مشتريات، نادل، دي جي، ديكور أو تنظيم فعالية متكاملة.",
+ "SERVICES & COMFORT":"الخدمات والراحة","Services & comfort":"الخدمات والراحة","Housekeeping, linen, villa preparation, assistance and family needs.":"التنظيف، المفروشات، تجهيز الفيلا، المساعدة واحتياجات الأسرة.",
+ "MASSAGES & WELLNESS":"التدليك والعافية","Massages & wellness":"التدليك والعافية","Massage, yoga, fitness and treatments at the villa.":"تدليك ويوغا ولياقة وعلاجات في الفيلا.",
+ "GETTING AROUND":"التنقل","Getting around":"التنقل","Car rental, private driver, transfers or premium taxi.":"تأجير سيارات، سائق خاص، نقل من وإلى المطار أو تاكسي فاخر.",
+ "AT SEA":"في البحر","At sea":"في البحر","Boats, yachts, jet skis, fishing or boat parties.":"قوارب ويخوت ودراجات مائية وصيد ورحلات احتفالية بالقارب.",
+ "BEACHES & BEACH CLUBS":"الشواطئ ونوادي الشاطئ","Beaches & beach clubs":"الشواطئ ونوادي الشاطئ","Sunbeds, cabanas, fun days out or family-friendly beach clubs.":"كراسي استلقاء وكبائن وأيام ممتعة ونوادٍ شاطئية مناسبة للعائلات.",
+ "DINING OUT":"تناول الطعام خارجًا","Dining out":"تناول الطعام خارجًا","Tapas, restaurants, fine dining, brunch or dessert.":"تاباس ومطاعم راقية وبرنش وحلويات.",
+ "DRINKS & NIGHTLIFE":"المشروبات والحياة الليلية","Drinks & nightlife":"المشروبات والحياة الليلية","Cocktail bars, rooftops, beach clubs and local favourites.":"بارات كوكتيل وشرفات على الأسطح ونوادٍ شاطئية وأماكن محلية مفضلة.",
+ "NATURE & ANIMALS":"الطبيعة والحيوانات","Nature & animals":"الطبيعة والحيوانات","Horse riding, hiking and wildlife watching at sea.":"ركوب الخيل والمشي لمسافات طويلة ومراقبة الحياة البحرية.",
+ "SPORT & CLUBS":"الرياضة والنوادي","Sport & clubs":"الرياضة والنوادي","Golf, padel, personal trainers and group activities.":"غولف وبادل ومدربون شخصيون وأنشطة جماعية.",
+ "SOMETHING ELSE":"طلب آخر","Something else":"طلب آخر","Choose an experience ↗":"اختر تجربة ↗",
+ "Private guide for guests of Villa Magos · Churriana, Málaga":"دليل خاص لضيوف Villa Magos · تشوريانا، مالقة",
+ "Services are subject to provider confirmation, availability and terms.":"تخضع الخدمات لتأكيد مقدم الخدمة والتوافر والشروط.",
+ "WhatsApp · Enquiries":"واتساب · الاستفسارات","Which specific service do you need?":"ما الخدمة المحددة التي تحتاج إليها؟","Choose…":"اختر…","Review your request":"راجع طلبك",
+ "WhatsApp will open with your message pre-filled. You can review and send it yourself.":"سيفتح واتساب برسالة مُعدّة مسبقًا، ويمكنك مراجعتها وإرسالها بنفسك.",
+ "← Edit":"← تعديل","Open WhatsApp ↗":"افتح واتساب ↗","← Services":"← الخدمات","Contact Malago directly":"تواصل مع Malago مباشرة","Review your request →":"راجع طلبك →",
+ "Only the information you provide will appear in the summary.":"سيظهر في الملخص ما أدخلته من معلومات فقط."
+ },
+ zh: {
+ "Choose your experiences and receive our ":"选择您感兴趣的体验，获取我们的","proposals on WhatsApp":"WhatsApp 推荐方案","Experiences":"体验项目","The villa":"别墅","Our services":"我们的服务","Contact Malago ↗":"联系 Malago ↗",
+ "Experience the Costa del Sol":"探索太阳海岸","What would make your stay special?":"怎样让您的住宿更特别？","What would you like?":"您想体验什么？",
+ "Start with an idea. Choose what you love and let your concierge take care of the rest.":"从一个想法开始。选择您喜欢的体验，其余事宜交给您的私人礼宾服务。",
+ "AT THE VILLA":"别墅内","At the villa":"别墅内","Private chef, groceries, bar, DJ, decoration or a fully organised event.":"私人厨师、采购、调酒师、DJ、装饰或全程活动策划。",
+ "SERVICES & COMFORT":"服务与舒适","Services & comfort":"服务与舒适","Housekeeping, linen, villa preparation, assistance and family needs.":"清洁、布草、别墅布置、协助服务及家庭需求。",
+ "MASSAGES & WELLNESS":"按摩与健康","Massages & wellness":"按摩与健康","Massage, yoga, fitness and treatments at the villa.":"别墅内按摩、瑜伽、健身及护理。",
+ "GETTING AROUND":"出行交通","Getting around":"出行交通","Car rental, private driver, transfers or premium taxi.":"租车、私人司机、接送服务或高端出租车。",
+ "AT SEA":"海上活动","At sea":"海上活动","Boats, yachts, jet skis, fishing or boat parties.":"游船、游艇、水上摩托、钓鱼或船上派对。",
+ "BEACHES & BEACH CLUBS":"海滩与海滩俱乐部","Beaches & beach clubs":"海滩与海滩俱乐部","Sunbeds, cabanas, fun days out or family-friendly beach clubs.":"日光躺椅、凉亭、休闲一日游或适合家庭的海滩俱乐部。",
+ "DINING OUT":"外出用餐","Dining out":"外出用餐","Tapas, restaurants, fine dining, brunch or dessert.":"西班牙小吃、餐厅、高级料理、早午餐或甜点。",
+ "DRINKS & NIGHTLIFE":"酒吧与夜生活","Drinks & nightlife":"酒吧与夜生活","Cocktail bars, rooftops, beach clubs and local favourites.":"鸡尾酒吧、屋顶露台、海滩俱乐部及当地热门去处。",
+ "NATURE & ANIMALS":"自然与动物","Nature & animals":"自然与动物","Horse riding, hiking and wildlife watching at sea.":"骑马、徒步及海上野生动物观赏。",
+ "SPORT & CLUBS":"运动与俱乐部","Sport & clubs":"运动与俱乐部","Golf, padel, personal trainers and group activities.":"高尔夫、板式网球、私人教练及团体活动。",
+ "SOMETHING ELSE":"其他需求","Something else":"其他需求","Choose an experience ↗":"选择体验 ↗",
+ "Private guide for guests of Villa Magos · Churriana, Málaga":"为 Villa Magos 客人提供的私人指南 · Churriana，马拉加",
+ "Services are subject to provider confirmation, availability and terms.":"所有服务均需服务提供方确认，并受其可用情况及条款限制。",
+ "WhatsApp · Enquiries":"WhatsApp · 咨询","Which specific service do you need?":"您需要哪项具体服务？","Choose…":"请选择…","Review your request":"确认您的需求",
+ "WhatsApp will open with your message pre-filled. You can review and send it yourself.":"WhatsApp 将打开一条预填消息，您可以检查后自行发送。",
+ "← Edit":"← 修改","Open WhatsApp ↗":"打开 WhatsApp ↗","← Services":"← 服务","Contact Malago directly":"直接联系 Malago","Review your request →":"查看需求 →",
+ "Only the information you provide will appear in the summary.":"摘要中只会显示您填写的信息。"
+ }
+ };
+
  const base={en:{},fr:{},es:{},de:{}};
  function mapFor(lang){return lang==='en'?D.en:lang==='fr'?D.fr:lang==='es'?D.es:D.de}
  const originalText=new WeakMap(),originalAttrs=new WeakMap();
@@ -1775,6 +1911,8 @@ grid.querySelectorAll('[data-new-cat]').forEach(b=>b.onclick=()=>{cat=C.find(x=>
   const en=D.en[value]||value;
   if(lang==='en')return en;
   if(lang==='fr')return D.fr[en]||value;
+  if(MALAGO_CORE_EXTRA[lang]&&MALAGO_CORE_EXTRA[lang][en])return MALAGO_CORE_EXTRA[lang][en];
+  if(extra&&extra[en]&&extra[en][lang])return extra[en][lang];
   return (D[lang]&&D[lang][en])||value;
  }
  function translateText(node,lang){
