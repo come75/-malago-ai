@@ -692,7 +692,7 @@ body.form-visible .mobileCta{
 .malagoExperienceHero{background:#10110f;color:#fff;padding:clamp(76px,8vw,112px) 0 58px;position:relative;overflow:hidden}
 .malagoExperienceHero:before{content:"";position:absolute;inset:0;pointer-events:none;background:radial-gradient(ellipse at 86% 0%,rgba(197,164,109,.09),transparent 38%)}
 .malagoExperienceHero .wrap{position:relative;z-index:1}
-.malagoExperienceIntro{display:grid;grid-template-columns:1.15fr .85fr;gap:36px;align-items:end;margin-bottom:28px}
+.malagoExperienceIntro{display:flex;flex-direction:column;align-items:center;text-align:center;gap:0;margin-bottom:28px}.malagoExperienceIntro>div{width:100%}.malagoExperienceIntro h1{margin-left:auto;margin-right:auto}
 .malagoExperienceIntro h1{font:clamp(40px,5.7vw,70px)/.98 Georgia,serif;letter-spacing:-.045em;font-weight:400;max-width:720px;margin:20px 0 0;color:#fff}
 .malagoExperienceIntro h1 em{font-weight:400;color:var(--gold2)}
 .malagoExperienceIntro p{font-size:13px;line-height:1.75;color:#b8b0a3;max-width:340px;margin:0 0 5px}
@@ -946,8 +946,9 @@ html:not(.client-portal-mode) body:not(.show-client-access) .clientPortalSection
 
 
 /* Accroche d'accueil : plus visible que le texte secondaire, sans concurrencer le titre */
-.malagoExperienceIntro > p{font-size:clamp(1.8rem,3vw,2.2rem);line-height:1.35;font-weight:500;max-width:800px;margin-top:18px;color:#e4ce9e}
-@media(max-width:700px){.malagoExperienceIntro > p{font-size:1.5rem;line-height:1.4;margin-top:16px}}
+.malagoExperienceIntro > p{font-family:"Trebuchet MS",Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;font-size:clamp(1.8rem,3vw,2.2rem);line-height:1.35;font-weight:600;letter-spacing:-.025em;text-align:center;max-width:900px;margin:24px auto 0;color:#fff}
+.malagoExperienceIntro > p strong,.malagoExperienceIntro > p .malagoAccent{color:#f28c28}
+@media(max-width:700px){.malagoExperienceIntro > p{font-size:1.5rem;line-height:1.4;margin:20px auto 0;text-align:center}}
 </style>
   <link rel="stylesheet" href="/villa-magos-calendar.css">
 
