@@ -205,7 +205,7 @@ Cet inventaire reproduit les libellés et options actuellement codés en frança
 
 ## État
 
-- 17 catégories de demande repérées.
+- 17 catégories de demande et 157 champs répertoriés dans le tableau `VM_REQUEST_FILTERS`.
 - Les libellés et options sont actuellement définis dans le code HTML, séparément du catalogue `locales/*.json`.
 - Les textes des écrans intermédiaires et certains parcours spéciaux (navigation des expériences, boîte de nuit, voyages express, validation et récapitulatif) sont également codés dans le JavaScript et doivent faire partie de l'inventaire global.
 - Ne pas déclarer la localisation complète avant d'avoir raccordé les catalogues, traduit les chaînes dynamiques et testé les dix langues.
