@@ -1,0 +1,124 @@
+{
+  "_meta": {
+    "locale": "en",
+    "localeName": "English",
+    "role": "editorial-source",
+    "status": "draft",
+    "scope": "phase-1-navigation-and-category-catalogue",
+    "reviewRequired": true,
+    "note": "Initial source catalogue only. Not wired into the live page and not proof of full coverage."
+  },
+  "navigation": {
+    "experiences": "Experiences",
+    "villa": "The villa",
+    "services": "Our services",
+    "contactMalago": "Contact Malago",
+    "languageLabel": "Language"
+  },
+  "home": {
+    "hero": {
+      "eyebrow": "Your stay on the Costa del Sol",
+      "title": "What would make your stay special?",
+      "description": "Start with an idea. Choose what you love, and let your concierge help arrange the details.",
+      "primaryAction": "Explore experiences"
+    },
+    "whatsappIntro": "Choose your experiences and receive our proposals on WhatsApp.",
+    "disclaimer": "All services are subject to provider confirmation, availability and applicable terms."
+  },
+  "categories": {
+    "villa": {
+      "title": "At the villa",
+      "description": "Private chef, groceries, bar service, DJ, decoration or a fully planned event."
+    },
+    "servicesComfort": {
+      "title": "Services & comfort",
+      "description": "Housekeeping, linen, villa preparation, assistance and family needs."
+    },
+    "wellness": {
+      "title": "Massage & wellness",
+      "description": "Massage, yoga, fitness and treatments at the villa."
+    },
+    "transport": {
+      "title": "Getting around",
+      "description": "Car rental, private driver, transfers and premium taxis."
+    },
+    "sea": {
+      "title": "At sea",
+      "description": "Boats, yachts, jet skis, fishing and boat trips."
+    },
+    "beaches": {
+      "title": "Beaches & beach clubs",
+      "description": "Sunbeds, cabanas, lively days out and family-friendly beach clubs."
+    },
+    "dining": {
+      "title": "Dining out",
+      "description": "Tapas, restaurants, fine dining, brunch and desserts."
+    },
+    "drinks": {
+      "title": "Drinks & nightlife",
+      "description": "Cocktail bars, rooftops, beach clubs and local recommendations."
+    },
+    "nature": {
+      "title": "Nature & wildlife",
+      "description": "Horse riding, hiking and wildlife watching at sea."
+    },
+    "sport": {
+      "title": "Sports & clubs",
+      "description": "Golf, padel, tennis, personal training and group activities."
+    },
+    "other": {
+      "title": "Something else",
+      "description": "Have something else in mind? Tell us what you need."
+    }
+  },
+  "common": {
+    "chooseExperience": "Choose an experience",
+    "choose": "Choose…",
+    "notSureYet": "Not sure yet",
+    "toBeConfirmed": "To be confirmed",
+    "optional": "Optional",
+    "back": "Back",
+    "next": "Continue",
+    "close": "Close",
+    "edit": "Edit",
+    "reviewRequest": "Review your request",
+    "sendRequest": "Send request",
+    "openWhatsApp": "Open WhatsApp",
+    "contactDirectly": "Contact Malago directly"
+  },
+  "request": {
+    "date": {
+      "label": "Preferred date"
+    },
+    "time": {
+      "label": "Preferred time"
+    },
+    "guests": {
+      "label": "Number of guests"
+    },
+    "budget": {
+      "label": "Budget (optional)"
+    },
+    "notes": {
+      "label": "Additional details (optional)",
+      "placeholder": "Share any preferences or requirements…"
+    },
+    "review": {
+      "notice": "Only the information you provide will appear in your request summary.",
+      "editAction": "Edit request"
+    },
+    "whatsapp": {
+      "notice": "WhatsApp will open with your message pre-filled. You can review it and send it yourself."
+    },
+    "status": {
+      "notConfirmed": "Your request is not confirmed until the provider has accepted it."
+    }
+  },
+  "validation": {
+    "requiredField": "Please complete this field.",
+    "chooseOption": "Please choose an option.",
+    "chooseEventType": "Please choose an event type.",
+    "chooseAtmosphereAndPackage": "Please choose an atmosphere and package.",
+    "chooseBoatType": "Please choose a boat type."
+  }
+}
