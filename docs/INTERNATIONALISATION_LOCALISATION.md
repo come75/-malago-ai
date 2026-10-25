@@ -96,9 +96,15 @@ Le code actuel propose anglais, français, espagnol et allemand. L’objectif an
 - Validateur statique ajouté dans `scripts/validate-locales.mjs`. Le mode standard vérifie les ressources présentes ; `--strict-all-languages` doit échouer tant que les dix fichiers de locale ne sont pas présents.
 - Commits de fondation sur `v7-real-site` : `b9c135ec2615486f9a7d898ca136a9635fb10494`, `07ace4199e02b6b1d591146b82aef566501521e6`, `a37b2b6d213d1b1a6935320d8e406b2604411dfd`, `c9b489fd5d2c6d36ee2ab18eaeecaf15875ec9d6`, `78a783e6a92f7df88d285bf79324754328c28bb8`.
 
+### Ressources de phase 1 créées — 25 octobre 2026
+- Chaque locale cible est explicitement marquée `status: draft` et `reviewRequired: true`.
+- Les contenus localisés sont des premiers jets rédactionnels ; ils n’ont pas été validés par un réviseur natif.
+- Les variantes régionales du portugais, de l’arabe et du chinois restent à décider ; le fichier `pt.json` ne doit pas être considéré comme une validation du marché cible.
+- Contrôle statique des dix fichiers après écriture : 61 clés par fichier, aucune chaîne vide, aucune différence de clés par rapport à `en.json`, et `_meta.locale` cohérent avec le nom du fichier.
+
 ### Non effectué
 - Le moteur de localisation n’est pas raccordé à `public/villa-magos.html` ; le comportement de l’interface n’a pas été modifié.
-- Les fichiers des neuf locales cibles ne sont pas encore créés.
+- Les neuf ressources cibles de phase 1 ont maintenant été créées : `locales/fr.json`, `locales/es.json`, `locales/de.json`, `locales/it.json`, `locales/nl.json`, `locales/ru.json`, `locales/pt.json`, `locales/ar.json` et `locales/zh.json`. Elles contiennent chacune les 61 clés du catalogue source actuel, mais restent des brouillons assistés par IA et ne couvrent pas tous les textes de l’application.
 - Aucun test navigateur/iPhone exécuté.
-- Aucun test de script exécuté dans un environnement Node n’est revendiqué.
+- Vérification via GitHub après création : les dix fichiers JSON se relisent et se parsèrent ; chacun contient 61 chaînes non vides, avec parité des clés et code de locale cohérent. Cette vérification statique via l’intégration n’est pas l’exécution de `scripts/validate-locales.mjs` sous Node.
 - Aucun déploiement effectué.
