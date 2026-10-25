@@ -2,6 +2,7 @@
  * Draft localization. Native-speaker review is required before production use.
  */
 window.MALAGO_UI_TRANSLATIONS = {
+  "Que souhaitez-vous demander ?": {en:"What would you like to request?",fr:"Que souhaitez-vous demander ?",es:"¿Qué te gustaría solicitar?",de:"Was möchten Sie anfragen?",it:"Cosa desideri richiedere?",nl:"Wat wilt u aanvragen?",ru:"Что вы хотели бы запросить?",pt:"O que gostaria de solicitar?",ar:"ما الذي تود طلبه؟",zh:"您想提出什么需求？"},
   "Date": {en:"Date",fr:"Date",es:"Fecha",de:"Datum",it:"Data",nl:"Datum",ru:"Дата",pt:"Data",ar:"التاريخ",zh:"日期"},
   "Date souhaitée": {en:"Preferred date",fr:"Date souhaitée",es:"Fecha deseada",de:"Wunschdatum",it:"Data desiderata",nl:"Gewenste datum",ru:"Желаемая дата",pt:"Data pretendida",ar:"التاريخ المطلوب",zh:"期望日期"},
   "Date du trajet": {en:"Travel date",fr:"Date du trajet",es:"Fecha del trayecto",de:"Fahrtdatum",it:"Data del trasferimento",nl:"Ritdatum",ru:"Дата поездки",pt:"Data da viagem",ar:"تاريخ الرحلة",zh:"行程日期"},
