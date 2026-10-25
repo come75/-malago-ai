@@ -18,3 +18,13 @@ La couverture de traduction complète n'est pas atteinte. Ajouter des options au
 - Aucun test navigateur/iPhone ni test interactif de bout en bout.
 - Aucun déploiement vérifié.
 - Les traductions ne sont pas validées par des locuteurs natifs.
+
+## Avancement du 25 octobre 2026 — intégration initiale en développement
+
+- Nouveau fichier `public/localisation-formulaires.js` créé pour fournir des traductions aux libellés/options dynamiques et à une partie des textes de vitrine dans les dix langues.
+- `public/villa-magos.html` mis à jour pour charger ce fichier, proposer les dix langues dans le sélecteur, accepter les dix codes de langue et appliquer `dir="rtl"` en arabe.
+- Dictionnaire de traduction : 257 entrées repérées à la lecture statique. Les 214 chaînes uniques de libellés/options extraites des 17 catégories du tableau `VM_REQUEST_FILTERS` sont couvertes par une entrée du dictionnaire.
+- Le catalogue couvre aussi une première partie des textes de navigation, descriptions des catégories, titre et métadonnées. Cela ne prouve pas que toutes les chaînes du site sont traduites : les parcours spéciaux, le portail client, les états et messages générés par d'autres scripts nécessitent encore un audit.
+- Contrôle effectué : les 6 scripts intégrés présents dans le HTML passent une vérification syntaxique JavaScript via compilation statique ; `public/localisation-formulaires.js` passe également cette vérification.
+- Aucun test navigateur, mobile/iPhone, test fonctionnel de changement de langue ou test de bout en bout n'a été effectué. Aucun déploiement n'est confirmé. Les traductions restent des brouillons à relire par des locuteurs natifs.
+- La branche `villa-magos-premium` n'a pas été modifiée par ces actions.
