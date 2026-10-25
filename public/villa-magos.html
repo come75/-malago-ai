@@ -960,7 +960,7 @@ html:not(.client-portal-mode) body:not(.show-client-access) .clientPortalSection
 </style>
 </head>
 <body class="villa-home-pool">
-<header class="topbar"><div class="wrap"><a class="brand brandFeaturing" href="#top" aria-label="Villa Magos × Malago"><img class="brandVillaLogo" src="/img/villa-magos-logo.PNG" alt="Villa Magos Málaga" width="144" height="45" loading="eager" decoding="async"><span class="brandFeaturingX" aria-hidden="true">×</span><img class="brandMalagoLogo" src="/img/malago-logo.webp" alt="Malago" width="260" height="93" loading="eager" decoding="async"></a><nav class="nav"><a href="#experiences">Expériences</a><a href="#experiences">Expériences</a><a href="#villa">La villa</a><a href="#experiences">Nos services</a></nav><div class="headerActions"><label class="languageLabel" for="malagoLanguageSwitcher">Language</label><select id="malagoLanguageSwitcher" aria-label="Choose language"><option value="en">English</option><option value="fr">Français</option><option value="es">Español</option><option value="de">Deutsch</option></select><a class="navcta" href="https://wa.me/34613384566?text=Hello%20Malago%2C%20I%20would%20like%20to%20discover%20your%20services.">Contact Malago ↗</a></div></div></header>
+<header class="topbar"><div class="wrap"><a class="brand brandFeaturing" href="#top" aria-label="Villa Magos × Malago"><img class="brandVillaLogo" src="/img/villa-magos-logo.PNG" alt="Villa Magos Málaga" width="144" height="45" loading="eager" decoding="async"><span class="brandFeaturingX" aria-hidden="true">×</span><img class="brandMalagoLogo" src="/img/malago-logo.webp" alt="Malago" width="260" height="93" loading="eager" decoding="async"></a><nav class="nav"><a href="#experiences">Expériences</a><a href="#experiences">Expériences</a><a href="#villa">La villa</a><a href="#experiences">Nos services</a></nav><div class="headerActions"><label class="languageLabel" for="malagoLanguageSwitcher">Language</label><select id="malagoLanguageSwitcher" aria-label="Choose language"><option value="en">English</option><option value="fr">Français</option><option value="es">Español</option><option value="de">Deutsch</option><option value="it">Italiano</option><option value="nl">Nederlands</option><option value="ru">Русский</option><option value="pt">Português</option><option value="ar">العربية</option><option value="zh">中文</option></select><a class="navcta" href="https://wa.me/34613384566?text=Hello%20Malago%2C%20I%20would%20like%20to%20discover%20your%20services.">Contact Malago ↗</a></div></div></header>
 <main id="top">
 
 <section class="malagoExperienceHero" id="experiences" aria-label="Choisissez votre expérience">
@@ -1748,6 +1748,7 @@ grid.querySelectorAll('[data-new-cat]').forEach(b=>b.onclick=()=>{cat=C.find(x=>
 })();
 </script>
 
+<script src="/localisation-formulaires.js"></script>
 <script id="malago-language-system">
 (function(){
  const select=document.getElementById('malagoLanguageSwitcher');
@@ -1769,10 +1770,12 @@ grid.querySelectorAll('[data-new-cat]').forEach(b=>b.onclick=()=>{cat=C.find(x=>
  function mapFor(lang){return lang==='en'?D.en:lang==='fr'?D.fr:lang==='es'?D.es:D.de}
  const originalText=new WeakMap(),originalAttrs=new WeakMap();
  function translated(value,lang){
+  const extra=window.MALAGO_UI_TRANSLATIONS;
+  if(extra&&extra[value]&&extra[value][lang])return extra[value][lang];
   const en=D.en[value]||value;
   if(lang==='en')return en;
   if(lang==='fr')return D.fr[en]||value;
-  return D[lang][en]||value;
+  return (D[lang]&&D[lang][en])||value;
  }
  function translateText(node,lang){
   if(!node||!node.nodeValue||!node.nodeValue.trim())return;
@@ -1790,21 +1793,21 @@ grid.querySelectorAll('[data-new-cat]').forEach(b=>b.onclick=()=>{cat=C.find(x=>
   });
  }
  function apply(lang){
-  lang=['en','fr','es','de'].includes(lang)?lang:'en';
-  document.documentElement.lang=lang;
+  lang=['en','fr','es','de','it','nl','ru','pt','ar','zh'].includes(lang)?lang:'en';
+  document.documentElement.lang=lang;document.documentElement.dir=lang==='ar'?'rtl':'ltr';
   document.querySelectorAll('body *').forEach(el=>{
    if(el===select||el.closest('#malagoLanguageSwitcher'))return;
    if(el.childNodes.length)el.childNodes.forEach(n=>{if(n.nodeType===3)translateText(n,lang)});
    translateAttributes(el,lang);
   });
-  document.title=lang==='en'?'Villa Magos × Malago — Your stay, beautifully arranged':lang==='fr'?'La Villa Magos × Malago — Vos envies, parfaitement orchestrées':lang==='es'?'Villa Magos × Malago — Una estancia a tu medida':'Villa Magos × Malago — Ihr Aufenthalt, perfekt gestaltet';
+  document.title=translated('La Villa Magos × Malago — Vos envies, parfaitement orchestrées',lang);
   const meta=document.querySelector('meta[name="description"]');
-  if(meta)meta.content=lang==='en'?'Private concierge for Villa Magos guests in Churriana, Málaga.':lang==='fr'?'Le concierge privé des hôtes de la Villa Magos à Churriana, Málaga.':lang==='es'?'Conserjería privada para los huéspedes de Villa Magos en Churriana, Málaga.':'Privater Concierge für Gäste der Villa Magos in Churriana, Málaga.';
+  if(meta)meta.content=translated('Le concierge privé des hôtes de la Villa Magos à Churriana, Málaga.',lang);
   select.value=lang;
   try{localStorage.setItem('malago-language',lang)}catch(e){}
  }
  const saved=(()=>{try{return localStorage.getItem('malago-language')}catch(e){return null}})();
- const initial=saved&&['en','fr','es','de'].includes(saved)?saved:'en';
+ const initial=saved&&['en','fr','es','de','it','nl','ru','pt','ar','zh'].includes(saved)?saved:'en';
  select.addEventListener('change',()=>apply(select.value));
  apply(initial);
  const observer=new MutationObserver(records=>{const lang=select.value;records.forEach(r=>{r.addedNodes&&r.addedNodes.forEach(n=>{if(n.nodeType===3)translateText(n,lang);else if(n.nodeType===1){if(n.childNodes)n.childNodes.forEach(c=>{if(c.nodeType===3)translateText(c,lang)});translateAttributes(n,lang);n.querySelectorAll&&n.querySelectorAll('*').forEach(el=>{el.childNodes.forEach(c=>{if(c.nodeType===3)translateText(c,lang)});translateAttributes(el,lang);});}});});});
