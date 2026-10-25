@@ -1768,7 +1768,7 @@ if(cat.key==='wellness'){if(item==='Massage à la maison')return [field('massage
 if(cat.key==='activities'&&item==='Quad et buggy')return [field('vehicle','Choix','select',['Quad','Buggy']),p,d,h];
 return [];
 }
-function sf(k,l,opts){return '<div class="mnf-field"><label>'+esc(flowText(l))+'</label><select data-key="'+k+'"><option value="">'+esc(flowText('Choisissez…'))+'</option>'+opts.map(o=>'<option value="'+esc(o)+'">'+esc(flowText(o))+'</option>').join('')+'</select></div>;}
+function sf(k,l,opts){return '<div class="mnf-field"><label>'+esc(flowText(l))+'</label><select data-key="'+k+'"><option value="">'+esc(flowText('Choisissez…'))+'</option>'+opts.map(o=>'<option value="'+esc(o)+'">'+esc(flowText(o))+'</option>').join('')+'</select></div>';}
 function render(){
 const c=$('#mnfContent');$('#mnfKicker').textContent=categoryText(cat.title).toUpperCase();$('#mnfStep').textContent=stage==='services'?flowText('Choisissez un service'):stage==='review'?flowText('Récapitulatif'):flowText('Précisez votre demande');
 if(stage==='services'){c.innerHTML='<h2 class="mnf-title">'+esc(categoryText(cat.title))+'</h2><div class="mnf-services">'+cat.items.map(x=>'<button class="mnf-service" data-service="'+esc(x)+'" type="button">'+esc(categoryText(x))+' ↗</button>').join('')+'</div><div class="mnf-actions"><button class="mnf-secondary" id="mnfBack">'+esc(flowText('← Catégories'))+'</button></div>';c.querySelectorAll('[data-service]').forEach(b=>b.onclick=()=>choose(b.dataset.service));$('#mnfBack').onclick=()=>{close();grid.scrollIntoView({behavior:'smooth',block:'start'});};return;}
