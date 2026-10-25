@@ -1320,7 +1320,30 @@ function draw(){const d=DATA[state.cat],selecting=state.step===0,item=currentIte
   return '<div class="malagoFlowField"><label for="'+id+'">'+esc(label)+(required?' *':'')+'</label>'+control+'</div>';
  }
  function detailFieldsForItem(item,category){
- const fields=FILTERS[category]||FILTERS.other;
+ let fields=(FILTERS[category]||FILTERS.other).map(field=>field.slice());
+ if(state.cat==='transport'){
+  const answers=state.itemAnswers[item]||{};
+  if(category==='car_rental'&&item==='Louer une voiture'){
+   // Le type de véhicule a déjà été choisi dans les questions du parcours.
+   fields=fields.filter(([key])=>key!=='vehicle_type');
+  }
+  if(category==='car_rental'&&item==='Plusieurs véhicules'){
+   fields=fields.filter(([key])=>key!=='vehicle_type');
+   fields.push(['vehicle_count','Nombre total de véhicules','number']);
+   fields.push(['fleet_composition','Répartition souhaitée des véhicules','textarea']);
+  }
+  if(category==='airport_transfer'){
+   const route=answers[1]||'';
+   if(route==='Aller-retour'){
+    fields.push(['return_date','Date du trajet retour','date']);
+    fields.push(['return_time','Heure du trajet retour','time']);
+   }
+   if(route==='Autre trajet'){
+    fields.push(['origin','Lieu de départ','text']);
+    fields.push(['destination','Lieu d’arrivée','text']);
+   }
+  }
+ }
  if(state.cat!=='comfort')return fields;
  if(category==='villa_services')return fields.filter(([key])=>key!=='service');
  if(category!=='family')return fields;
