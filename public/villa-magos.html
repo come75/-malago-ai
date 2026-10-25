@@ -944,6 +944,10 @@ html:not(.client-portal-mode) body:not(.show-client-access) .clientPortalSection
   #malagoExperienceFlow .malagoFlowNext,#malagoExperienceFlow .malagoFlowBack{padding:12px 13px!important;}
 }
 
+
+/* Accroche d'accueil : plus visible que le texte secondaire, sans concurrencer le titre */
+#malagoWelcomeTitle + p{font-size:clamp(1.12rem,1.8vw,1.35rem);line-height:1.55;font-weight:500;max-width:760px;margin-top:18px}
+@media(max-width:700px){#malagoWelcomeTitle + p{font-size:1.12rem;line-height:1.55;margin-top:16px}}
 </style>
   <link rel="stylesheet" href="/villa-magos-calendar.css">
 
@@ -960,7 +964,7 @@ html:not(.client-portal-mode) body:not(.show-client-access) .clientPortalSection
 
 <section class="malagoExperienceHero" id="experiences" aria-label="Choisissez votre expérience">
  <div class="wrap">
-  <div class="malagoExperienceIntro"><div><div class="eyebrow">À vivre sur la Costa del Sol</div><h1 id="malagoWelcomeTitle">Qu’est-ce qui vous ferait <em>plaisir&nbsp;?</em></h1></div><p>Une envie suffit pour commencer. Choisissez, découvrez la suite, et laissez votre concierge organiser le reste.</p></div>
+  <div class="malagoExperienceIntro"><div><div class="eyebrow">À vivre sur la Costa del Sol</div><h1 id="malagoWelcomeTitle">Qu’est-ce qui vous ferait <em>plaisir&nbsp;?</em></h1></div><p>Choisissez vos expériences et recevez nos propositions sur WhatsApp.</p></div>
   <div class="malagoExperienceGrid" id="malagoExperienceCategories">
    <button class="malagoExperienceTile" data-malago-cat="villa" style="--tile-i:0;--tile-image:url('/media/villa-magos-piscine.WEBP')"><span class="tileNum">01 / À LA VILLA</span><div><h2>À la villa</h2><p>Chef, courses, bar, DJ, décoration ou soirée de A à Z.</p><div class="tileBottom"><span class="tileArrow">↗</span></div></div></button>
    <button class="malagoExperienceTile" data-malago-cat="comfort" style="--tile-i:1;--tile-image:url('https://images.unsplash.com/photo-1631049307264-da0ec9d70304?auto=format&fit=crop&w=800&q=80')"><span class="tileNum">02 / SERVICES & CONFORT</span><div><h2>Services & confort</h2><p>Ménage, linge, préparation de la villa, assistance et besoins familiaux.</p><div class="tileBottom"><span class="tileArrow">↗</span></div></div></button>
