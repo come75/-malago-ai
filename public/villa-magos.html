@@ -1885,5 +1885,88 @@ for(const item of items){
 })();
 </script>
   <script src="/villa-magos-calendar.js" defer></script>
+<style id="MALAGO_CATEGORIES_REFONTE_2026">
+#malagoExperienceCategories{grid-template-columns:repeat(3,minmax(0,1fr))}
+#malagoExperienceCategories .malagoExperienceTile{min-height:190px;text-align:left;padding:20px;display:flex;flex-direction:column;justify-content:space-between;gap:20px}
+#malagoNewFlow{display:none;margin:24px auto 0;max-width:900px;padding:clamp(18px,3vw,30px);border:1px solid rgba(228,206,158,.25);border-radius:22px;background:#171814;color:#f5f0e5}
+#malagoNewFlow.is-open{display:block}
+#malagoNewFlow .mnf-head,#malagoNewFlow .mnf-actions{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap}
+#malagoNewFlow .mnf-kicker{font-size:11px;letter-spacing:.15em;text-transform:uppercase;color:#d7bd83}
+#malagoNewFlow .mnf-title{font-size:clamp(24px,4vw,36px);margin:14px 0 20px}
+#malagoNewFlow .mnf-services,#malagoNewFlow .mnf-fields{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+#malagoNewFlow .mnf-service,#malagoNewFlow .mnf-actions button,#malagoNewFlow .mnf-actions a{min-height:50px;padding:13px 16px;border:1px solid #e4ce9e;border-radius:12px;background:#24251f;color:#f5f0e5;text-align:left;font:inherit;cursor:pointer}
+#malagoNewFlow .mnf-actions button,#malagoNewFlow .mnf-actions a{display:inline-flex;align-items:center;justify-content:center;background:#e4ce9e;color:#211f19;text-decoration:none;border-radius:999px;font-weight:650}
+#malagoNewFlow .mnf-actions .mnf-secondary{background:transparent;color:#f5f0e5;border-color:#77715f}
+#malagoNewFlow .mnf-service:hover{background:#e4ce9e;color:#211f19}
+#malagoNewFlow .mnf-field{display:flex;flex-direction:column;gap:7px;min-width:0}
+#malagoNewFlow .mnf-field label{font-size:13px;color:#e9dfc8}
+#malagoNewFlow .mnf-field input,#malagoNewFlow .mnf-field select,#malagoNewFlow .mnf-field textarea{box-sizing:border-box;width:100%;min-height:48px;padding:12px;border:1px solid #77715f;border-radius:10px;background:#f8f5ed;color:#222;font:inherit;font-size:16px}
+#malagoNewFlow .mnf-field textarea{min-height:84px}
+#malagoNewFlow .mnf-summary{white-space:pre-wrap;line-height:1.65;overflow-wrap:anywhere;padding:16px;border:1px solid rgba(228,206,158,.25);border-radius:14px;background:#20211c}
+#malagoNewFlow .mnf-note{font-size:13px;color:#bdb8aa;line-height:1.5}
+@media(max-width:760px){#malagoExperienceCategories{grid-template-columns:repeat(2,minmax(0,1fr))}#malagoNewFlow .mnf-services,#malagoNewFlow .mnf-fields{grid-template-columns:1fr}}
+@media(max-width:420px){#malagoExperienceCategories{grid-template-columns:1fr}#malagoExperienceCategories .malagoExperienceTile{min-height:140px}}
+</style>
+<script id="MALAGO_CATEGORIES_REFONTE_2026_SCRIPT">
+(function(){
+'use strict';
+const WA='34613384566', $=s=>document.querySelector(s);
+const C=[
+['Services & conforts','Ménage supplémentaire|Baby-sitting|Linge et blanchisserie','comfort'],
+['À la villa','Un chef|Des courses|Un traiteur|Un DJ|Un événement|Une décoration','villa'],
+['Boire un verre','Bar à vin|Bar à cocktails|Un rooftop|Karaoké|Irish pub|Live music|Au bord de l’eau','drinks'],
+['Sport','Golf|Padel|Coach privé|Tennis|Futsal|Tournoi de volley','sport'],
+['Nature et animaux','Balade à cheval|Randonnée|Dauphins / baleines|Aquarium|Zoo','nature'],
+['Sortir manger','Tapas|Restaurant|Gastronomique|Brunch|Desserts et pâtisseries|Surprenez-moi','food'],
+['Plages et beach clubs','Conseil plages|Beach club','beach'],
+['En mer','Bateau / yacht|Jet-ski|Boat party|Pêche|Activités nautiques|Dauphins / baleines','sea'],
+['Me déplacer','Louer une voiture|Chauffeur privé|Taxi / VTC','transport'],
+['Massage et bien-être','Massage à la maison|Coiffure|Les ongles|Esthétique personnalisée','wellness'],
+['Boîte de nuit','Choisir une boîte de nuit','nightlife'],
+['Excursion','Caminito del Rey|Nerja|Ronda|Séville|Grenade|Cordoue|Cadix|Tarifa|Gibraltar|Marbella|Voyages express','excursion'],
+['Activités','Flamenco|Bachata|Salsa|Autres danses|Quad et buggy|Musée|Visite historique|Visites gourmandes|Bowling|Karting','activities']
+].map(x=>({title:x[0],items:x[1].split('|'),key:x[2]}));
+const direct=new Set(['Surprenez-moi','Conseil plages','Boat party','Pêche','Activités nautiques','Dauphins / baleines','Caminito del Rey','Nerja','Ronda','Séville','Grenade','Cordoue','Cadix','Tarifa','Gibraltar','Marbella','Flamenco','Bachata','Salsa','Musée','Visite historique','Visites gourmandes','Bowling','Karting']);
+const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const wa=msg=>'https://wa.me/'+WA+'?text='+encodeURIComponent(msg);
+const grid=$('#malagoExperienceCategories'); if(!grid)return;
+grid.innerHTML=C.map((c,i)=>'<button class="malagoExperienceTile" data-new-cat="'+c.key+'" style="--tile-i:'+i+';--tile-image:url(\\'/media/villa-magos-piscine.WEBP\\')"><span class="tileNum">'+String(i+1).padStart(2,'0')+' / '+esc(c.title.toUpperCase())+'</span><div><h2>'+esc(c.title)+'</h2><p>Choisissez le service qui vous ferait plaisir.</p><div class="tileBottom"><span class="tileArrow">↗</span></div></div></button>').join('');
+const old=$('#malagoExperienceFlow');if(old)old.hidden=true;
+const root=document.createElement('section');root.id='malagoNewFlow';root.setAttribute('aria-live','polite');root.innerHTML='<div class="mnf-head"><div><div class="mnf-kicker" id="mnfKicker"></div><div class="mnf-note" id="mnfStep"></div></div><button class="mnf-secondary" type="button" id="mnfClose">Fermer ×</button></div><div id="mnfContent"></div>';grid.after(root);
+let cat,item,stage='services',a={},night={};
+function close(){root.classList.remove('is-open');}
+$('#mnfClose').onclick=close;
+function contact(service,extra=''){window.open(wa('Bonjour Malago, je souhaite des informations concernant : '+service+(extra?'\\n'+extra:'')+'. Merci !'),'_blank','noopener');}
+function field(k,l,t='text',opts=null){return {k,l,t,opts};}
+function fields(){
+const d=field('date','Date souhaitée','date'),h=field('time','Heure souhaitée','time'),p=field('people','Nombre de personnes','number'),diet=field('diet','Préférences alimentaires','textarea'),all=field('allergies','Allergies / intolérances','textarea');
+if(cat.key==='comfort')return [d,h];
+if(cat.key==='villa'){if(item==='Un chef')return [field('meals','Organisation des repas','textarea'),p,diet,all,field('notes','Précisions (facultatif)','textarea')];if(item==='Des courses')return [d,h];if(item==='Un traiteur')return [field('cuisine','Type de cuisine'),d,h];if(item==='Un DJ')return [field('music','Type de musique'),d,h];if(item==='Un événement')return [field('event','Type d’événement','select',['Anniversaire','Fête','Événement professionnel','Autre']),field('eventOther','Précisez le type d’événement','textarea'),d,h];return [field('decoration','Type de décoration'),d,h];}
+if(cat.key==='drinks'||cat.key==='sport')return [p,d,h];
+if(cat.key==='nature')return item==='Dauphins / baleines'?[d,h]:[p,d,h];
+if(cat.key==='food'){if(item==='Restaurant')return [field('cuisine','Type de cuisine'),field('cuisineOther','Précisez la cuisine ou vos envies','textarea'),p,diet,all,d,h];if(item==='Tapas'||item==='Gastronomique'||item==='Brunch'||item==='Desserts et pâtisseries')return [p,diet,all,d,h];}
+if(cat.key==='beach'&&item==='Beach club')return [field('mood','Ambiance','select',['Chill','Festif']),field('booking','Choix','select',['Transat','Bed','Table','Entrée']),p,d,h];
+if(cat.key==='sea'){if(item==='Bateau / yacht')return [field('boat','Type d’embarcation','select',['Bateau sans permis','Bateau avec permis','Yacht']),d,h];if(item==='Jet-ski')return [p,field('jetskis','Nombre de jet-skis','number'),d,h];}
+if(cat.key==='transport'){if(item==='Louer une voiture')return [field('cars','Nombre de voitures','number'),field('style','Style de voiture'),d,h,field('budget','Budget par voiture')];if(item==='Chauffeur privé')return [field('vehicle','Véhicule souhaité'),d,h];}
+if(cat.key==='wellness'){if(item==='Massage à la maison')return [field('massage','Formule','select',['Petit groupe','Une personne','Autres']),field('massageOther','Précisez votre demande','textarea'),d,h];if(item==='Coiffure')return [field('hair','Pour','select',['Homme','Femme','Les deux']),d,h];return [d,h,field('notes','Précisions (facultatif)','textarea')];}
+if(cat.key==='activities'&&item==='Quad et buggy')return [field('vehicle','Choix','select',['Quad','Buggy']),p,d,h];
+return [];
+}
+function sf(k,l,opts){return '<div class="mnf-field"><label>'+esc(l)+'</label><select data-key="'+k+'"><option value="">Choisissez…</option>'+opts.map(o=>'<option>'+esc(o)+'</option>').join('')+'</select></div>';}
+function render(){
+const c=$('#mnfContent');$('#mnfKicker').textContent=cat.title.toUpperCase();$('#mnfStep').textContent=stage==='services'?'Choisissez un service':stage==='review'?'Récapitulatif':'Précisez votre demande';
+if(stage==='services'){c.innerHTML='<h2 class="mnf-title">'+esc(cat.title)+'</h2><div class="mnf-services">'+cat.items.map(x=>'<button class="mnf-service" data-service="'+esc(x)+'" type="button">'+esc(x)+' ↗</button>').join('')+'</div><div class="mnf-actions"><button class="mnf-secondary" id="mnfBack">← Catégories</button></div>';c.querySelectorAll('[data-service]').forEach(b=>b.onclick=()=>choose(b.dataset.service));$('#mnfBack').onclick=()=>{close();grid.scrollIntoView({behavior:'smooth',block:'start'});};return;}
+if(stage==='night'){c.innerHTML='<h2 class="mnf-title">Boîte de nuit</h2><div class="mnf-fields">'+sf('destination','Destination',['Malaga','Marbella','Torremolinos'])+sf('music','Style musical',['Techno','Reggaeton','Hip-hop','Afro','International','À préciser'])+'</div><div id="nightMore"></div><div class="mnf-actions"><button class="mnf-secondary" id="mnfBack">← Retour</button><button id="nightNext">Continuer →</button></div>';const update=()=>{night.destination=c.querySelector('[data-key=destination]').value;night.music=c.querySelector('[data-key=music]').value;$('#nightMore').innerHTML=night.music==='À préciser'?'<div class="mnf-field"><label>Précisez le style</label><textarea data-key="notes"></textarea></div>':night.music?sf('format','Entrée ou table',['Entrée','Table']):'';};c.querySelectorAll('select').forEach(x=>x.onchange=update);$('#mnfBack').onclick=()=>{stage='services';render();};$('#nightNext').onclick=()=>{night.destination=c.querySelector('[data-key=destination]').value;night.music=c.querySelector('[data-key=music]').value;night.format=c.querySelector('[data-key=format]')?.value||'';night.notes=c.querySelector('[data-key=notes]')?.value||'';if(!night.destination||!night.music){alert('Choisissez une destination et un style musical.');return;}stage='nightdate';render();};return;}
+if(stage==='nightdate'){c.innerHTML='<h2 class="mnf-title">Date souhaitée</h2>'+input(field('date','Date souhaitée','date'))+'<div class="mnf-actions"><button class="mnf-secondary" id="mnfBack">← Retour</button><button id="nightReview">Voir le récapitulatif →</button></div>';$('#mnfBack').onclick=()=>{stage='night';render();};$('#nightReview').onclick=()=>{night.date=c.querySelector('[data-key=date]').value;if(!night.date){alert('Choisissez une date.');return;}stage='review';render();};return;}
+if(stage==='travel'){c.innerHTML='<h2 class="mnf-title">Voyages express</h2><div class="mnf-services">'+['Tanger','Algarve','Ibiza','Lanzarote','Autres demandes'].map(x=>'<button class="mnf-service" data-travel="'+x+'">'+x+'</button>').join('')+'</div><div id="travelOther"></div><div class="mnf-actions"><button class="mnf-secondary" id="mnfBack">← Retour</button></div>';c.querySelectorAll('[data-travel]').forEach(b=>b.onclick=()=>{if(b.dataset.travel!=='Autres demandes')contact('Voyage express — '+b.dataset.travel);else{$('#travelOther').innerHTML='<div class="mnf-field"><label>Précisez votre demande (facultatif)</label><textarea id="travelNotes"></textarea></div><div class="mnf-actions"><button id="travelSend">Contacter sur WhatsApp ↗</button></div>';$('#travelSend').onclick=()=>contact('Voyages express — autres demandes',$('#travelNotes').value);}});$('#mnfBack').onclick=()=>{stage='services';render();};return;}
+if(stage==='review'){let lines=['Bonjour Malago,','Je souhaite organiser une demande.','Service : '+(cat.key==='nightlife'?'Boîte de nuit':item)];if(cat.key==='nightlife'){lines.push('Destination : '+night.destination,'Style musical : '+night.music);if(night.notes)lines.push('Précisions : '+night.notes);if(night.format)lines.push('Formule : '+night.format);lines.push('Date : '+night.date);}else Object.entries(a).forEach(([k,v])=>{if(String(v||'').trim())lines.push((labels[k]||k)+' : '+v);});lines.push('Merci !');const msg=lines.join('\\n');c.innerHTML='<h2 class="mnf-title">Vérifiez votre demande</h2><div class="mnf-summary">'+esc(msg)+'</div><p class="mnf-note">WhatsApp s’ouvrira avec le message prérempli. Vous pourrez le vérifier et l’envoyer vous-même.</p><div class="mnf-actions"><button class="mnf-secondary" id="mnfEdit">← Modifier</button><a href="'+wa(msg)+'" target="_blank" rel="noopener">Ouvrir WhatsApp ↗</a></div>';$('#mnfEdit').onclick=()=>{stage=cat.key==='nightlife'?'nightdate':'form';render();};return;}
+const fs=fields();c.innerHTML='<h2 class="mnf-title">'+esc(item)+'</h2><div class="mnf-fields">'+fs.map(input).join('')+'</div><div class="mnf-actions"><button class="mnf-secondary" id="mnfBack">← Services</button><button id="mnfReview">Voir le récapitulatif →</button></div><p class="mnf-note">Seules les informations renseignées seront reprises dans le récapitulatif.</p>';c.querySelectorAll('[data-key]').forEach(el=>{el.value=a[el.dataset.key]||'';el.oninput=el.onchange=()=>{a[el.dataset.key]=el.value;};});$('#mnfBack').onclick=()=>{stage='services';render();};$('#mnfReview').onclick=()=>{c.querySelectorAll('[data-key]').forEach(el=>a[el.dataset.key]=el.value);if(item==='Un événement'&&!a.event){alert('Choisissez le type d’événement.');return;}if(item==='Beach club'&&(!a.mood||!a.booking)){alert('Choisissez l’ambiance et la formule.');return;}if(item==='Bateau / yacht'&&!a.boat){alert('Choisissez le type d’embarcation.');return;}if(item==='Massage à la maison'&&!a.massage){alert('Choisissez une formule.');return;}if(item==='Coiffure'&&!a.hair){alert('Choisissez une option.');return;}if(item==='Quad et buggy'&&!a.vehicle){alert('Choisissez Quad ou Buggy.');return;}if(a.massage!=='Autres')delete a.massageOther;if(a.event!=='Autre')delete a.eventOther;stage='review';render();};
+}
+const labels={date:'Date',time:'Heure',people:'Nombre de personnes',diet:'Préférences alimentaires',allergies:'Allergies / intolérances',meals:'Organisation des repas',notes:'Précisions',cuisine:'Type de cuisine',cuisineOther:'Précisions cuisine / envies',music:'Type de musique',event:'Type d’événement',eventOther:'Précisions événement',decoration:'Type de décoration',mood:'Ambiance',booking:'Choix',boat:'Type d’embarcation',jetskis:'Nombre de jet-skis',cars:'Nombre de voitures',style:'Style de voiture',budget:'Budget par voiture',vehicle:'Véhicule souhaité',massage:'Formule',massageOther:'Précisions',hair:'Pour'};
+function input(f){if(f.opts)return sf(f.k,f.l,f.opts).replace('<select ','<select data-key="'+f.k+'" ');return '<div class="mnf-field"><label>'+esc(f.l)+'</label>'+(f.t==='textarea'?'<textarea data-key="'+f.k+'"></textarea>':'<input data-key="'+f.k+'" type="'+f.t+'" '+(f.t==='number'?'min="1" max="99"':'')+'></div>');}
+function choose(x){item=x;a={};if(direct.has(x)){contact(x);return;}if(x==='Choisir une boîte de nuit'){stage='night';render();return;}if(x==='Voyages express'){stage='travel';render();return;}stage='form';render();}
+grid.querySelectorAll('[data-new-cat]').forEach(b=>b.onclick=()=>{cat=C.find(x=>x.key===b.dataset.newCat);item=null;a={};night={};stage='services';root.classList.add('is-open');root.scrollIntoView({behavior:'smooth',block:'start'});render();});
+})();
+</script>
 </body>
 </html>
