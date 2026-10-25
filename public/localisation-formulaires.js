@@ -462,3 +462,15 @@ window.MALAGO_UI_TRANSLATIONS = {
   "Continuer": {en:"Continue",fr:"Continuer",es:"Continuar",de:"Weiter",it:"Continua",nl:"Doorgaan",ru:"Продолжить",pt:"Continuar",ar:"متابعة",zh:"继续"},
   "Précédent": {en:"Previous",fr:"Précédent",es:"Anterior",de:"Zurück",it:"Precedente",nl:"Vorige",ru:"Назад",pt:"Anterior",ar:"السابق",zh:"上一步"}
 };
+
+/* Build aliases from the canonical English label so translated form text works
+ * whether a component renders its French source label or its English label. */
+(function(){
+  const dict = window.MALAGO_UI_TRANSLATIONS || {};
+  Object.keys(dict).forEach(function(source){
+    const entry = dict[source];
+    if (!entry || !entry.en) return;
+    const english = entry.en;
+    if (!dict[english]) dict[english] = entry;
+  });
+})();
