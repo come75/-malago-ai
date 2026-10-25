@@ -1233,6 +1233,32 @@ function renderFlowOptions(s,selecting){
 }
  function flowStep(cat,item,step){
   const base=DATA[cat]?.steps?.[step];
+  if(cat==='transport' && step>0){
+    const transportSteps={
+      'Louer une voiture':[
+        ['Quel style de voiture recherchez-vous ?',[['Citadine','Simple et pratique'],['SUV','Confort et espace'],['Cabriolet','Profiter du soleil'],['Sportive','Une expérience à part'],['Premium','Confort haut de gamme'],['Surprenez-moi','Selon mes envies'],['Pas de préférence','Je veux une solution']]],
+        ['Quand en avez-vous besoin ?',[['Aujourd’hui','Au plus vite'],['Demain','Pour le lendemain'],['Tout le séjour','Besoin continu'],['Quelques jours','Une partie du séjour'],['Dates à préciser','Je les donnerai ensuite']]]
+      ],
+      'Chauffeur privé':[
+        ['Quel type de service souhaitez-vous ?',[['Trajet ponctuel','Un trajet avec départ et arrivée'],['Mise à disposition','Un chauffeur pendant quelques heures'],['Plusieurs jours','Un service à organiser sur le séjour'],['À conseiller','Aidez-moi à choisir']]],
+        ['Quand en avez-vous besoin ?',[['Aujourd’hui','Selon disponibilité'],['Demain','Pour le lendemain'],['Pendant le séjour','Dates à préciser ensuite']]]
+      ],
+      'Taxi haut de gamme':[
+        ['Quel type de trajet ?',[['Trajet simple','Un déplacement ponctuel'],['Aller-retour','Un retour à organiser également'],['Plusieurs trajets','Plusieurs déplacements pendant le séjour'],['À conseiller','Aidez-moi à choisir']]],
+        ['Quand en avez-vous besoin ?',[['Aujourd’hui','Selon disponibilité'],['Demain','Pour le lendemain'],['Pendant le séjour','Dates à préciser ensuite']]]
+      ],
+      'Transfert aéroport':[
+        ['Quel transfert souhaitez-vous ?',[['Aéroport → Villa Magos','À l’arrivée'],['Villa Magos → Aéroport','Au départ'],['Aller-retour','Arrivée et départ'],['Autre trajet','Autres lieux de départ ou d’arrivée']]],
+        ['Combien de personnes voyagent ?',[['1–2 personnes','Petit véhicule possible'],['3–4 personnes','Petit groupe'],['5–7 personnes','Groupe avec bagages'],['8 personnes ou plus','Véhicule adapté au groupe']]]
+      ],
+      'Plusieurs véhicules':[
+        ['Quel besoin pour votre groupe ?',[['Véhicules identiques','Même catégorie si disponible'],['Catégories différentes','Plusieurs types de véhicules'],['À conseiller','Aidez-nous à organiser le groupe']]],
+        ['Quand en avez-vous besoin ?',[['Aujourd’hui','Au plus vite'],['Demain','Pour le lendemain'],['Tout le séjour','Besoin continu'],['Quelques jours','Une partie du séjour'],['Dates à préciser','Je les donnerai ensuite']]]
+      ]
+    };
+    const steps=transportSteps[item];
+    if(steps)return steps[step-1]||['',[]];
+  }
   if(cat!=='villa'||step!==1)return base||['',[]];
   const options={
    'Un chef':[['Chef privé','Repas préparé à la villa'],['Petit-déjeuner / brunch','Petit-déjeuner ou brunch'],['Déjeuner / dîner','Un repas à préciser'],['Plusieurs repas','Organiser plusieurs repas'],['À définir','Être conseillé']],
