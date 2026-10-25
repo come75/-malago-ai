@@ -460,8 +460,9 @@ window.MALAGO_UI_TRANSLATIONS = {
   "Retour": {en:"Back",fr:"Retour",es:"Volver",de:"Zurück",it:"Indietro",nl:"Terug",ru:"Назад",pt:"Voltar",ar:"رجوع",zh:"返回"},
   "Suivant": {en:"Next",fr:"Suivant",es:"Siguiente",de:"Weiter",it:"Avanti",nl:"Volgende",ru:"Далее",pt:"Seguinte",ar:"التالي",zh:"下一步"},
   "Continuer": {en:"Continue",fr:"Continuer",es:"Continuar",de:"Weiter",it:"Continua",nl:"Doorgaan",ru:"Продолжить",pt:"Continuar",ar:"متابعة",zh:"继续"},
-  "Précédent": {en:"Previous",fr:"Précédent",es:"Anterior",de:"Zurück",it:"Precedente",nl:"Vorige",ru:"Назад",pt:"Anterior",ar:"السابق",zh:"上一步"}
-};
+  "Précédent": {en:"Previous",fr:"Précédent",es:"Anterior",de:"Zurück",it:"Precedente",nl:"Vorige",ru:"Назад",pt:"Anterior",ar:"السابق",zh:"上一步"},
+  "Zone / adresse souhaitée": {en:"Preferred area / address",fr:"Zone / adresse souhaitée",es:"Zona / dirección deseada",de:"Gewünschter Bereich / Adresse",it:"Zona / indirizzo desiderato",nl:"Gewenste zone / adres",ru:"Желаемый район / адрес",pt:"Zona / morada pretendida",ar:"المنطقة / العنوان المطلوب",zh:"期望区域/地址"},
+  "Préférences / précisions": {en:"Preferences / details",fr:"Préférences / précisions",es:"Preferencias / detalles",de:"Vorlieben / Angaben",it:"Preferenze / dettagli",nl:"Voorkeuren / details",ru:"Предпочтения / подробности",pt:"Preferências / detalhes",ar:"التفضيلات / التفاصيل",zh:"偏好/补充说明"};
 
 /* Build aliases from the canonical English label so translated form text works
  * whether a component renders its French source label or its English label. */
