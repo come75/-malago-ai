@@ -1,0 +1,124 @@
+{
+  "_meta": {
+    "locale": "es",
+    "localeName": "Español",
+    "role": "target-draft",
+    "status": "draft",
+    "scope": "phase-1-navigation-and-category-catalogue",
+    "reviewRequired": true,
+    "note": "Primer borrador de localización asistida por IA. Requiere revisión profesional nativa. No está conectado a la aplicación y la cobertura no es exhaustiva."
+  },
+  "navigation": {
+    "experiences": "Experiencias",
+    "villa": "La villa",
+    "services": "Nuestros servicios",
+    "contactMalago": "Contactar con Malago",
+    "languageLabel": "Idioma"
+  },
+  "home": {
+    "hero": {
+      "eyebrow": "Tu estancia en la Costa del Sol",
+      "title": "¿Qué haría que tu estancia fuera especial?",
+      "description": "Empieza con una idea. Elige lo que te apetezca y deja que tu concierge se ocupe de los detalles.",
+      "primaryAction": "Descubrir experiencias"
+    },
+    "whatsappIntro": "Elige tus experiencias y recibe nuestras propuestas por WhatsApp.",
+    "disclaimer": "Todos los servicios están sujetos a la confirmación del proveedor, su disponibilidad y las condiciones aplicables."
+  },
+  "categories": {
+    "villa": {
+      "title": "En la villa",
+      "description": "Chef privado, compra de alimentos, servicio de bar, DJ, decoración o un evento organizado de principio a fin."
+    },
+    "servicesComfort": {
+      "title": "Servicios y comodidad",
+      "description": "Limpieza, ropa de hogar, preparación de la villa, asistencia y necesidades familiares."
+    },
+    "wellness": {
+      "title": "Masajes y bienestar",
+      "description": "Masajes, yoga, fitness y tratamientos en la villa."
+    },
+    "transport": {
+      "title": "Cómo desplazarte",
+      "description": "Alquiler de coches, chófer privado, traslados y taxis premium."
+    },
+    "sea": {
+      "title": "En el mar",
+      "description": "Barcos, yates, motos de agua, pesca y excursiones en barco."
+    },
+    "beaches": {
+      "title": "Playas y beach clubs",
+      "description": "Tumbonas, camas balinesas, días animados y beach clubs para familias."
+    },
+    "dining": {
+      "title": "Salir a comer",
+      "description": "Tapas, restaurantes, alta cocina, brunch y postres."
+    },
+    "drinks": {
+      "title": "Copas y vida nocturna",
+      "description": "Bares de cócteles, rooftops, beach clubs y recomendaciones locales."
+    },
+    "nature": {
+      "title": "Naturaleza y animales",
+      "description": "Paseos a caballo, senderismo y observación de fauna marina."
+    },
+    "sport": {
+      "title": "Deporte y clubes",
+      "description": "Golf, pádel, tenis, entrenamiento personal y actividades en grupo."
+    },
+    "other": {
+      "title": "Otra idea",
+      "description": "¿Tienes algo más en mente? Cuéntanos qué necesitas."
+    }
+  },
+  "common": {
+    "chooseExperience": "Elegir una experiencia",
+    "choose": "Elegir…",
+    "notSureYet": "Aún no lo sé",
+    "toBeConfirmed": "Pendiente de confirmar",
+    "optional": "Opcional",
+    "back": "Atrás",
+    "next": "Continuar",
+    "close": "Cerrar",
+    "edit": "Editar",
+    "reviewRequest": "Revisar tu solicitud",
+    "sendRequest": "Enviar solicitud",
+    "openWhatsApp": "Abrir WhatsApp",
+    "contactDirectly": "Contactar directamente con Malago"
+  },
+  "request": {
+    "date": {
+      "label": "Fecha deseada"
+    },
+    "time": {
+      "label": "Hora deseada"
+    },
+    "guests": {
+      "label": "Número de personas"
+    },
+    "budget": {
+      "label": "Presupuesto (opcional)"
+    },
+    "notes": {
+      "label": "Detalles adicionales (opcional)",
+      "placeholder": "Cuéntanos tus preferencias o necesidades…"
+    },
+    "review": {
+      "notice": "En el resumen de tu solicitud solo aparecerá la información que nos facilites.",
+      "editAction": "Editar solicitud"
+    },
+    "whatsapp": {
+      "notice": "WhatsApp se abrirá con el mensaje ya preparado. Podrás revisarlo y enviarlo tú mismo."
+    },
+    "status": {
+      "notConfirmed": "La solicitud no estará confirmada hasta que el proveedor la acepte."
+    }
+  },
+  "validation": {
+    "requiredField": "Completa este campo, por favor.",
+    "chooseOption": "Selecciona una opción, por favor.",
+    "chooseEventType": "Selecciona un tipo de evento, por favor.",
+    "chooseAtmosphereAndPackage": "Selecciona un ambiente y un paquete, por favor.",
+    "chooseBoatType": "Selecciona un tipo de barco, por favor."
+  }
+}
