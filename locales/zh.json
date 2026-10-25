@@ -1,0 +1,124 @@
+{
+  "_meta": {
+    "locale": "zh",
+    "localeName": "中文",
+    "role": "target-draft",
+    "status": "draft",
+    "scope": "phase-1-navigation-and-category-catalogue",
+    "reviewRequired": true,
+    "note": "AI辅助本地化初稿，须由母语专业人士审校。尚未接入应用，覆盖范围并不完整。简体/繁体中文版本尚待确定。"
+  },
+  "navigation": {
+    "experiences": "体验项目",
+    "villa": "别墅",
+    "services": "我们的服务",
+    "contactMalago": "联系 Malago",
+    "languageLabel": "语言"
+  },
+  "home": {
+    "hero": {
+      "eyebrow": "您在太阳海岸的假期",
+      "title": "怎样才能让您的假期与众不同？",
+      "description": "从一个想法开始。选择您喜欢的体验，其余安排交给您的礼宾团队协助处理。",
+      "primaryAction": "探索体验项目"
+    },
+    "whatsappIntro": "选择您感兴趣的体验，通过 WhatsApp 接收我们的建议。",
+    "disclaimer": "所有服务均须由服务提供方确认，并视实际供应情况及适用条款而定。"
+  },
+  "categories": {
+    "villa": {
+      "title": "别墅内体验",
+      "description": "私人厨师、采购、酒吧服务、DJ、布置装饰或全程策划的活动。"
+    },
+    "servicesComfort": {
+      "title": "服务与舒适体验",
+      "description": "清洁、布草、别墅布置、协助服务及家庭需求。"
+    },
+    "wellness": {
+      "title": "按摩与健康",
+      "description": "在别墅享受按摩、瑜伽、健身及护理服务。"
+    },
+    "transport": {
+      "title": "出行安排",
+      "description": "租车、私人司机、接送服务及高端出租车。"
+    },
+    "sea": {
+      "title": "海上体验",
+      "description": "游船、游艇、水上摩托、钓鱼及海上观光。"
+    },
+    "beaches": {
+      "title": "海滩与海滩俱乐部",
+      "description": "日光躺椅、沙滩凉亭、热闹的海滩活动及适合家庭的海滩俱乐部。"
+    },
+    "dining": {
+      "title": "外出用餐",
+      "description": "西班牙小吃、餐厅、精致餐饮、早午餐及甜点。"
+    },
+    "drinks": {
+      "title": "酒吧与夜生活",
+      "description": "鸡尾酒吧、屋顶酒吧、海滩俱乐部及本地推荐。"
+    },
+    "nature": {
+      "title": "自然与动物",
+      "description": "骑马、徒步及海洋野生动物观赏。"
+    },
+    "sport": {
+      "title": "运动与俱乐部",
+      "description": "高尔夫、板式网球、网球、私人教练及团体活动。"
+    },
+    "other": {
+      "title": "其他需求",
+      "description": "还有其他想法吗？告诉我们您需要什么。"
+    }
+  },
+  "common": {
+    "chooseExperience": "选择体验项目",
+    "choose": "请选择…",
+    "notSureYet": "尚未确定",
+    "toBeConfirmed": "待确认",
+    "optional": "选填",
+    "back": "返回",
+    "next": "继续",
+    "close": "关闭",
+    "edit": "修改",
+    "reviewRequest": "确认您的需求",
+    "sendRequest": "提交需求",
+    "openWhatsApp": "打开 WhatsApp",
+    "contactDirectly": "直接联系 Malago"
+  },
+  "request": {
+    "date": {
+      "label": "期望日期"
+    },
+    "time": {
+      "label": "期望时间"
+    },
+    "guests": {
+      "label": "人数"
+    },
+    "budget": {
+      "label": "预算（选填）"
+    },
+    "notes": {
+      "label": "补充说明（选填）",
+      "placeholder": "请告诉我们您的偏好或特殊需求…"
+    },
+    "review": {
+      "notice": "需求摘要仅显示您提供的信息。",
+      "editAction": "修改需求"
+    },
+    "whatsapp": {
+      "notice": "系统将打开已预填消息的 WhatsApp。您可以检查内容后自行发送。"
+    },
+    "status": {
+      "notConfirmed": "服务提供方接受之前，您的需求尚未确认。"
+    }
+  },
+  "validation": {
+    "requiredField": "请填写此项。",
+    "chooseOption": "请选择一个选项。",
+    "chooseEventType": "请选择活动类型。",
+    "chooseAtmosphereAndPackage": "请选择氛围和套餐。",
+    "chooseBoatType": "请选择船只类型。"
+  }
+}
