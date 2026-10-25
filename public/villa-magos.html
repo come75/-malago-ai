@@ -1326,6 +1326,9 @@ function draw(){const d=DATA[state.cat],selecting=state.step===0,item=currentIte
   if(category==='car_rental'&&item==='Louer une voiture'){
    // Le type de véhicule a déjà été choisi dans les questions du parcours.
    fields=fields.filter(([key])=>key!=='vehicle_type');
+   const details=state.itemDetails[item]||{};
+   if(details.pickup_location==='Autre adresse')fields.push(['pickup_address','Adresse de prise en charge','text']);
+   if(details.return_location==='Autre adresse')fields.push(['return_address','Adresse de restitution','text']);
   }
   if(category==='car_rental'&&item==='Plusieurs véhicules'){
    fields=fields.filter(([key])=>key!=='vehicle_type');
@@ -1614,7 +1617,7 @@ function renderDetailWizard(){
  else if(type==='textarea')control='<div class="malagoFlowField"><label for="malagoDetailValue">Votre réponse (facultatif)</label><textarea id="malagoDetailValue" rows="3" placeholder="À préciser si utile">'+esc(value)+'</textarea></div>';
  else control='<div class="malagoFlowField"><label for="malagoDetailValue">Votre réponse (facultatif)</label><input id="malagoDetailValue" type="'+esc(type)+'" value="'+esc(value)+'" placeholder="'+(type==='text'?'Touchez pour préciser':'')+'"></div>';
  body.innerHTML='<div class="malagoFlowDone malagoFlowReview"><div class="eyebrow">'+esc(categoryLabel(entry.category))+' · '+esc(entry.item)+'</div><h2>'+esc(label)+'</h2><p class="malagoFlowLead">Choisissez une réponse pour continuer.</p>'+control+'<div class="malagoFlowRow"><button class="malagoFlowBack" id="malagoDetailBack" type="button">← Retour</button><button class="malagoFlowNext" id="malagoDetailNext" type="button">'+(index===total-1?'Voir le récapitulatif →':'Continuer →')+'</button></div></div>';
- body.querySelectorAll('[data-detail-choice]').forEach(b=>b.addEventListener('click',()=>{saveDetailValue(entry,b.dataset.detailChoice);if(type==='select'){state.detailIndex=index+1;renderDetailWizard();}else{body.querySelectorAll('[data-detail-choice]').forEach(x=>x.classList.toggle('is-selected',x===b));const custom=$('#malagoDetailCustom');if(custom)custom.value=b.dataset.detailChoice;}}));
+ body.querySelectorAll('[data-detail-choice]').forEach(b=>b.addEventListener('click',()=>{saveDetailValue(entry,b.dataset.detailChoice);if(type==='select'){if(state.cat==='transport'&&['pickup_location','return_location'].includes(key)){state.detailFields=buildDetailFields();}state.detailIndex=index+1;renderDetailWizard();}else{body.querySelectorAll('[data-detail-choice]').forEach(x=>x.classList.toggle('is-selected',x===b));const custom=$('#malagoDetailCustom');if(custom)custom.value=b.dataset.detailChoice;}}));
  const input=$('#malagoDetailValue'),custom=$('#malagoDetailCustom');if(input)input.addEventListener('input',()=>saveDetailValue(entry,input.value));if(custom)custom.addEventListener('input',()=>saveDetailValue(entry,custom.value));
  $('#malagoDetailBack').onclick=()=>{if(index===0){if(state.cat==='villa'&&items.length===1&&/courses/i.test(items[0])){state.step=0;draw();return;}state.itemIndex=Math.max(0,items.length-1);state.step=Math.max(1,DATA[state.cat].steps.length-1);draw();return;}state.detailIndex=index-1;renderDetailWizard();};
  $('#malagoDetailNext').onclick=()=>{const v=(state.itemDetails[entry.item]||{})[key]||'';if(required&&!String(v).trim()){window.alert('Choisissez ou renseignez une réponse pour continuer.');return;}if(input)saveDetailValue(entry,input.value);if(custom&&custom.value)saveDetailValue(entry,custom.value);state.detailIndex=index+1;renderDetailWizard();};
