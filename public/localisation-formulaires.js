@@ -655,6 +655,11 @@ window.MALAGO_UI_TRANSLATIONS = {
   "Lit bébé / chaise haute": {"en":"Baby cot / high chair","fr":"Lit bébé / chaise haute","es":"Cuna / trona","de":"Babybett / Hochstuhl","it":"Lettino / seggiolone","nl":"Babybedje / kinderstoel","ru":"Детская кроватка / стульчик","pt":"Berço / cadeira alta","ar":"سرير طفل / كرسي مرتفع","zh":"婴儿床 / 儿童餐椅"},
   "Une belle mise en scène": {"en":"A beautiful setting","fr":"Une belle mise en scène","es":"Una puesta en escena cuidada","de":"Eine schöne Inszenierung","it":"Una bella scenografia","nl":"Een mooie aankleding","ru":"Красивая постановка","pt":"Uma apresentação bonita","ar":"تنسيق جميل","zh":"精美布置"},
   "Quelque chose de précis": {"en":"Something specific","fr":"Quelque chose de précis","es":"Algo concreto","de":"Etwas Bestimmtes","it":"Qualcosa di preciso","nl":"Iets specifieks","ru":"Что-то конкретное","pt":"Algo específico","ar":"شيء محدد","zh":"具体事项"},
+  "Pêche": {"en":"Fishing","fr":"Pêche","es":"Pesca","de":"Angeln","it":"Pesca","nl":"Vissen","ru":"Рыбалка","pt":"Pesca","ar":"الصيد","zh":"钓鱼"},
+  "Musée": {"en":"Museum","fr":"Musée","es":"Museo","de":"Museum","it":"Museo","nl":"Museum","ru":"Музей","pt":"Museu","ar":"متحف","zh":"博物馆"},
+  "Séville": {"en":"Seville","fr":"Séville","es":"Sevilla","de":"Sevilla","it":"Siviglia","nl":"Sevilla","ru":"Севилья","pt":"Sevilha","ar":"إشبيلية","zh":"塞维利亚"},
+  "Activités": {"en":"Activities","fr":"Activités","es":"Actividades","de":"Aktivitäten","it":"Attività","nl":"Activiteiten","ru":"Мероприятия","pt":"Atividades","ar":"الأنشطة","zh":"活动"},
+  "Boîte de nuit": {"en":"Nightclub","fr":"Boîte de nuit","es":"Discoteca","de":"Nachtclub","it":"Discoteca","nl":"Nachtclub","ru":"Ночной клуб","pt":"Discoteca","ar":"ملهى ليلي","zh":"夜店"},
 };
 
 /* Build aliases from the canonical English label so translated form text works
