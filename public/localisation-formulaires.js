@@ -585,6 +585,11 @@ window.MALAGO_UI_TRANSLATIONS = {
   "Séance en duo": {"en":"Duo session","fr":"Séance en duo","es":"Sesión en pareja","de":"Sitzung zu zweit","it":"Sessione in coppia","nl":"Sessie voor twee","ru":"Занятие для двоих","pt":"Sessão a dois","ar":"جلسة لشخصين","zh":"双人体验"},
   "Une décoration": {"en":"Decoration","fr":"Une décoration","es":"Decoración","de":"Dekoration","it":"Decorazioni","nl":"Decoratie","ru":"Декор","pt":"Decoração","ar":"ديكور","zh":"装饰"},
   "Tout le séjour": {"en":"The entire stay","fr":"Tout le séjour","es":"Toda la estancia","de":"Der gesamte Aufenthalt","it":"Per tutto il soggiorno","nl":"Het hele verblijf","ru":"На весь период проживания","pt":"Toda a estadia","ar":"طوال فترة الإقامة","zh":"整个住宿期间"},
+  "Pour quels âges ?": {"en":"For which ages?","fr":"Pour quels âges ?","es":"¿Para qué edades?","de":"Für welches Alter?","it":"Per quali età?","nl":"Voor welke leeftijden?","ru":"Для какого возраста?","pt":"Para que idades?","ar":"لأي أعمار؟","zh":"适合哪些年龄？"},
+  "Besoin spécifique": {"en":"Specific need","fr":"Besoin spécifique","es":"Necesidad específica","de":"Besonderer Bedarf","it":"Esigenza specifica","nl":"Specifieke behoefte","ru":"Особая потребность","pt":"Necessidade específica","ar":"احتياج محدد","zh":"特殊需求"},
+  "Proposez une idée": {"en":"Suggest an idea","fr":"Proposez une idée","es":"Proponga una idea","de":"Machen Sie einen Vorschlag","it":"Proponete un'idea","nl":"Doe een voorstel","ru":"Предложите идею","pt":"Sugira uma ideia","ar":"اقترحوا فكرة","zh":"请推荐一个想法"},
+  "Transfert aéroport": {"en":"Airport transfer","fr":"Transfert aéroport","es":"Traslado al aeropuerto","de":"Flughafentransfer","it":"Transfer aeroportuale","nl":"Luchthaventransfer","ru":"Трансфер из аэропорта","pt":"Transfer do aeroporto","ar":"نقل من وإلى المطار","zh":"机场接送"},
+  "À définir ensemble": {"en":"To decide together","fr":"À définir ensemble","es":"A definir juntos","de":"Gemeinsam festzulegen","it":"Da definire insieme","nl":"Samen te bepalen","ru":"Определим вместе","pt":"A definir em conjunto","ar":"نحدده معًا","zh":"共同商定"},
 };
 
 /* Build aliases from the canonical English label so translated form text works
