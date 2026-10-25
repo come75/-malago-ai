@@ -36,7 +36,7 @@ Le code actuel propose anglais, français, espagnol et allemand. L’objectif an
 - Arabe — `ar` (sens d’écriture RTL à tester)
 - Chinois — `zh` (variante simplifié/traditionnel à décider)
 
-**Attention :** cette liste est une hypothèse de travail basée sur les langues citées et le nombre annoncé ; elle n’est pas marquée comme décision confirmée tant que la liste exacte et les variantes régionales ne sont pas retrouvées dans la passation. Ne pas activer les six langues supplémentaires dans l’interface avant validation de leur couverture.
+**Statut : liste des dix langues validée par l’utilisateur le 25 octobre 2026.** Les dix langues retenues sont l’anglais, le français, l’espagnol, l’allemand, l’italien, le néerlandais, le russe, le portugais, l’arabe et le chinois. Les codes de locale de base sont `en`, `fr`, `es`, `de`, `it`, `nl`, `ru`, `pt`, `ar`, `zh`. Les variantes régionales précises du portugais, de l’arabe et du chinois restent à choisir avant la révision finale des contenus ; cette précision ne remet pas en cause la validation des dix langues.
 
 ## Architecture technique cible
 
@@ -83,7 +83,7 @@ Le code actuel propose anglais, français, espagnol et allemand. L’objectif an
 - La production ne doit pas être modifiée pendant la migration sans autorisation explicite.
 
 ### À confirmer
-- La liste exacte des dix langues et les variantes régionales de portugais/chinois/arabe.
+- Les variantes régionales de portugais/chinois/arabe.
 - Si le périmètre comprend uniquement Villa Magos ou également le guide général Malago et les interfaces d’administration.
 - Le mode de validation native et les personnes/prestataires chargés de l’approbation finale.
 - Le routage souhaité par langue et les exigences SEO associées.
