@@ -1076,10 +1076,23 @@ document.getElementById('activityClose').addEventListener('click',closeActivity)
       dot.setAttribute('aria-pressed',i===active?'true':'false');
     });
     if(animate) root.classList.add('is-copy-changing');
-    kicker.textContent=copy[active].kicker;
-    title.innerHTML=copy[active].title;
-    text.textContent=copy[active].text;
-    cta.textContent=copy[active].cta;
+    const lang=document.getElementById('malagoLanguageSwitcher')?.value||'en';
+    const localizeHTML=(html)=>{
+      const box=document.createElement('div');
+      box.innerHTML=html;
+      const walker=document.createTreeWalker(box,NodeFilter.SHOW_TEXT);
+      const nodes=[];
+      while(walker.nextNode()) nodes.push(walker.currentNode);
+      nodes.forEach(node=>{
+        const raw=node.nodeValue;
+        if(raw.trim()&&window.MALAGO_T) node.nodeValue=raw.replace(raw.trim(),window.MALAGO_T(raw.trim(),lang));
+      });
+      return box.innerHTML;
+    };
+    kicker.textContent=window.MALAGO_T?window.MALAGO_T(copy[active].kicker,lang):copy[active].kicker;
+    title.innerHTML=localizeHTML(copy[active].title);
+    text.textContent=window.MALAGO_T?window.MALAGO_T(copy[active].text,lang):copy[active].text;
+    cta.textContent=window.MALAGO_T?window.MALAGO_T(copy[active].cta,lang):copy[active].cta;
     cta.href='#experiences';
     count.textContent=String(active+1).padStart(2,'0')+' / '+String(slides.length).padStart(2,'0');
     if(resumeTimer) clearTimeout(resumeTimer);
@@ -1117,6 +1130,8 @@ document.getElementById('activityClose').addEventListener('click',closeActivity)
   });
   document.addEventListener('visibilitychange',()=>document.hidden?stop():start());
   if(reduced.addEventListener) reduced.addEventListener('change',start);
+  const languageSelect=document.getElementById('malagoLanguageSwitcher');
+  if(languageSelect) languageSelect.addEventListener('change',()=>setTimeout(()=>render(active,false),0));
   render(0,false);
   start();
 })();
