@@ -698,7 +698,7 @@ body.form-visible .mobileCta{
 .malagoExperienceIntro p{font-size:13px;line-height:1.75;color:#b8b0a3;max-width:340px;margin:0 0 5px}
 .malagoExperienceGrid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
 .malagoExperienceTile{isolation:isolate;position:relative;display:flex;flex-direction:column;justify-content:space-between;min-height:clamp(210px,23vw,275px);padding:17px;text-align:left;color:#fff;border:1px solid rgba(228,206,158,.22);border-radius:16px;overflow:hidden;background:#1a1b17;transition:transform .25s,border-color .25s;animation:malagoTileIn .48s both;animation-delay:calc(var(--tile-i)*45ms)}
-.malagoExperienceTile:before{content:"";position:absolute;inset:0;z-index:-2;background:var(--tile-image) center/cover;opacity:.78;transition:transform .55s,opacity .3s}.malagoExperienceTile[data-malago-cat="comfort"]:before{background-position:center 100%}
+.malagoExperienceTile:before{content:"";position:absolute;inset:0;z-index:-2;background:var(--tile-image) center/cover;opacity:.78;transition:transform .55s,opacity .3s}.malagoExperienceTile[data-malago-cat="comfort"]:before,.malagoExperienceTile[data-new-cat="comfort"]:before{background-position:center 100%}
 .malagoExperienceTile:after{content:"";position:absolute;inset:0;z-index:-1;background:linear-gradient(180deg,rgba(0,0,0,.14),rgba(0,0,0,.16) 26%,rgba(0,0,0,.88) 100%)}
 .malagoExperienceTile:hover,.malagoExperienceTile:focus-visible{border-color:var(--gold2);transform:translateY(-3px);outline:none}
 .malagoExperienceTile:hover:before{transform:scale(1.055);opacity:.96}
