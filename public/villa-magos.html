@@ -1918,10 +1918,10 @@ grid.querySelectorAll('[data-new-cat]').forEach(b=>b.onclick=()=>{cat=C.find(x=>
   if(extra&&extra[value]&&extra[value][lang])return extra[value][lang];
   const en=D.en[value]||value;
   if(lang==='en')return en;
-  if(lang==='fr')return D.fr[en]||value;
+  if(extra&&extra[en]&&extra[en][lang])return extra[en][lang];
   if(MALAGO_CORE_EXTRA[lang]&&MALAGO_CORE_EXTRA[lang][en])return MALAGO_CORE_EXTRA[lang][en];
   if(MALAGO_CORE_PATCH[lang]&&MALAGO_CORE_PATCH[lang][en])return MALAGO_CORE_PATCH[lang][en];
-  if(extra&&extra[en]&&extra[en][lang])return extra[en][lang];
+  if(lang==='fr')return D.fr[en]||value;
   return (D[lang]&&D[lang][en])||value;
  }
  function translateText(node,lang){
