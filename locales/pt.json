@@ -1,0 +1,124 @@
+{
+  "_meta": {
+    "locale": "pt",
+    "localeName": "Português",
+    "role": "target-draft",
+    "status": "draft",
+    "scope": "phase-1-navigation-and-category-catalogue",
+    "reviewRequired": true,
+    "note": "Primeira versão de localização assistida por IA. Requer revisão profissional por falante nativo. Não está ligada à aplicação; a cobertura não é exaustiva. Variante regional ainda por definir."
+  },
+  "navigation": {
+    "experiences": "Experiências",
+    "villa": "A villa",
+    "services": "Os nossos serviços",
+    "contactMalago": "Contactar a Malago",
+    "languageLabel": "Idioma"
+  },
+  "home": {
+    "hero": {
+      "eyebrow": "A sua estadia na Costa del Sol",
+      "title": "O que tornaria a sua estadia especial?",
+      "description": "Tudo começa com uma ideia. Escolha o que lhe agrada e deixe o seu concierge tratar dos detalhes.",
+      "primaryAction": "Descobrir experiências"
+    },
+    "whatsappIntro": "Escolha as suas experiências e receba as nossas propostas por WhatsApp.",
+    "disclaimer": "Todos os serviços dependem da confirmação do prestador, da disponibilidade e das condições aplicáveis."
+  },
+  "categories": {
+    "villa": {
+      "title": "Na villa",
+      "description": "Chef privado, compras, serviço de bar, DJ, decoração ou um evento organizado de ponta a ponta."
+    },
+    "servicesComfort": {
+      "title": "Serviços e conforto",
+      "description": "Limpeza, roupa de cama e banho, preparação da villa, assistência e necessidades da família."
+    },
+    "wellness": {
+      "title": "Massagens e bem-estar",
+      "description": "Massagens, ioga, fitness e tratamentos na villa."
+    },
+    "transport": {
+      "title": "Deslocações",
+      "description": "Aluguer de automóveis, motorista privado, transfers e táxis premium."
+    },
+    "sea": {
+      "title": "No mar",
+      "description": "Barcos, iates, motas de água, pesca e passeios de barco."
+    },
+    "beaches": {
+      "title": "Praias e beach clubs",
+      "description": "Espreguiçadeiras, cabanas, dias animados e beach clubs para famílias."
+    },
+    "dining": {
+      "title": "Comer fora",
+      "description": "Tapas, restaurantes, alta cozinha, brunch e sobremesas."
+    },
+    "drinks": {
+      "title": "Bares e vida noturna",
+      "description": "Bares de cocktails, rooftops, beach clubs e recomendações locais."
+    },
+    "nature": {
+      "title": "Natureza e animais",
+      "description": "Passeios a cavalo, caminhadas e observação da vida marinha."
+    },
+    "sport": {
+      "title": "Desporto e clubes",
+      "description": "Golfe, padel, ténis, treino personalizado e atividades de grupo."
+    },
+    "other": {
+      "title": "Outro pedido",
+      "description": "Tem outra ideia em mente? Diga-nos do que precisa."
+    }
+  },
+  "common": {
+    "chooseExperience": "Escolher uma experiência",
+    "choose": "Escolher…",
+    "notSureYet": "Ainda não sei",
+    "toBeConfirmed": "A confirmar",
+    "optional": "Opcional",
+    "back": "Voltar",
+    "next": "Continuar",
+    "close": "Fechar",
+    "edit": "Editar",
+    "reviewRequest": "Rever o pedido",
+    "sendRequest": "Enviar pedido",
+    "openWhatsApp": "Abrir o WhatsApp",
+    "contactDirectly": "Contactar diretamente a Malago"
+  },
+  "request": {
+    "date": {
+      "label": "Data pretendida"
+    },
+    "time": {
+      "label": "Hora pretendida"
+    },
+    "guests": {
+      "label": "Número de pessoas"
+    },
+    "budget": {
+      "label": "Orçamento (opcional)"
+    },
+    "notes": {
+      "label": "Detalhes adicionais (opcional)",
+      "placeholder": "Partilhe as suas preferências ou necessidades…"
+    },
+    "review": {
+      "notice": "O resumo do pedido incluirá apenas as informações que fornecer.",
+      "editAction": "Editar pedido"
+    },
+    "whatsapp": {
+      "notice": "O WhatsApp abrirá com a mensagem preenchida. Poderá revê-la e enviá-la pessoalmente."
+    },
+    "status": {
+      "notConfirmed": "O pedido só fica confirmado depois de ser aceite pelo prestador."
+    }
+  },
+  "validation": {
+    "requiredField": "Preencha este campo.",
+    "chooseOption": "Escolha uma opção.",
+    "chooseEventType": "Escolha um tipo de evento.",
+    "chooseAtmosphereAndPackage": "Escolha um ambiente e um pacote.",
+    "chooseBoatType": "Escolha um tipo de embarcação."
+  }
+}
