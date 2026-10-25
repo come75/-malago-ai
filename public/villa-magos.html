@@ -1085,6 +1085,7 @@ document.getElementById('activityClose').addEventListener('click',closeActivity)
     if(resumeTimer) clearTimeout(resumeTimer);
     if(animate) resumeTimer=setTimeout(()=>root.classList.remove('is-copy-changing'),80);
   }
+  cta.addEventListener('click',e=>{e.preventDefault();const villaCategory=document.querySelector('[data-malago-cat="villa"]');if(villaCategory){villaCategory.click();}else{document.querySelector('#experiences')?.scrollIntoView({behavior:'smooth',block:'start');}});
   function stop(){if(timer){clearInterval(timer);timer=null}}
   function start(){
     stop();
