@@ -1,5 +1,6 @@
 name: Deploy Malago sea intro to test
 
+# Manual retry trigger after updating the test Account ID secret.
 on:
   push:
     branches:
