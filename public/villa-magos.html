@@ -985,13 +985,16 @@ body.malago-intro-open{overflow:hidden!important}
 @media(max-height:520px) and (orientation:landscape){#malagoWelcomeIntro .malagoIntroContent{top:16px}#malagoWelcomeIntro .malagoIntroContent h1{font-size:clamp(24px,4vw,38px)}#malagoWelcomeIntro .malagoIntroContent p{margin-top:8px}#malagoWelcomeIntro .malagoIntroContinue{margin-top:12px;min-height:40px}}
 @media(prefers-reduced-motion:reduce){#malagoWelcomeIntro,#malagoWelcomeIntro *{transition:none!important;animation:none!important}}
 </style>
+<link rel="preconnect" href="https://d2ol7oe51mr4n9.cloudfront.net" crossorigin>
+<link rel="dns-prefetch" href="//d2ol7oe51mr4n9.cloudfront.net">
+<link rel="preload" as="video" href="https://d2ol7oe51mr4n9.cloudfront.net/user_3LIbHMwUoEDn4cQX1aW4M05gMa6/cbc5ec6d-da4f-4492-b4ea-62a9954fd63c.mp4" type="video/mp4" fetchpriority="high">
 </head>
 <body class="villa-home-pool">
 
 <div id="malagoWelcomeIntro" role="dialog" aria-modal="true" aria-labelledby="malagoIntroTitle">
   <div class="malagoIntroMedia" aria-hidden="true">
     <img class="malagoIntroFinalFrame" src="https://d2ol7oe51mr4n9.cloudfront.net/user_3LIbHMwUoEDn4cQX1aW4M05gMa6/f08b7bb6-ac9e-4422-a1fa-15fc945738f2.png" alt="" fetchpriority="high" decoding="async">
-    <video class="malagoIntroVideo" autoplay muted playsinline webkit-playsinline preload="auto" poster="https://d2ol7oe51mr4n9.cloudfront.net/user_3LIbHMwUoEDn4cQX1aW4M05gMa6/f08b7bb6-ac9e-4422-a1fa-15fc945738f2.png" aria-label="Malago logo reveal">
+    <video class="malagoIntroVideo" autoplay muted playsinline webkit-playsinline preload="auto" fetchpriority="high" poster="https://d2ol7oe51mr4n9.cloudfront.net/user_3LIbHMwUoEDn4cQX1aW4M05gMa6/f08b7bb6-ac9e-4422-a1fa-15fc945738f2.png" aria-label="Malago logo reveal">
       <source src="https://d2ol7oe51mr4n9.cloudfront.net/user_3LIbHMwUoEDn4cQX1aW4M05gMa6/cbc5ec6d-da4f-4492-b4ea-62a9954fd63c.mp4" type="video/mp4">
     </video>
   </div>
@@ -2061,6 +2064,11 @@ const langSelect=document.getElementById('malagoLanguageSwitcher');if(langSelect
   const continueButton=document.getElementById('malagoIntroContinue');
   let closed=false;
   document.body.classList.add('malago-intro-open');
+  // Request playback immediately, before waiting for DOM/load events; video and CDN are preloaded in <head>.
+  video.muted=true;
+  video.playsInline=true;
+  video.setAttribute('playsinline','');
+  video.setAttribute('webkit-playsinline','');
   function showFinalFrame(){
     if(closed||intro.classList.contains('is-ended'))return;
     intro.classList.add('is-ended');
