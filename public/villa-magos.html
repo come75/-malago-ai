@@ -965,7 +965,7 @@ html:not(.client-portal-mode) body:not(.show-client-access) .clientPortalSection
 #malagoWelcomeIntro{position:fixed;inset:0;z-index:2147483000;background:#000;color:#fff;overflow:hidden;isolation:isolate;opacity:1;transition:opacity .7s ease}
 body.malago-intro-open{overflow:hidden!important}
 #malagoWelcomeIntro .malagoIntroMedia{position:absolute;inset:0;display:grid;place-items:center;background:#000}
-#malagoWelcomeIntro .malagoIntroVideo,#malagoWelcomeIntro .malagoIntroFinalFrame{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;object-position:center;background:#000}
+#malagoWelcomeIntro .malagoIntroVideo,#malagoWelcomeIntro .malagoIntroFinalFrame{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center;background:#000}
 #malagoWelcomeIntro .malagoIntroVideo{z-index:1;opacity:1;transition:opacity .9s ease}
 #malagoWelcomeIntro .malagoIntroFinalFrame{z-index:0;opacity:0;transition:opacity .9s ease}
 #malagoWelcomeIntro .malagoIntroShade{position:absolute;inset:0;z-index:2;pointer-events:none;opacity:0;background:linear-gradient(180deg,rgba(0,0,0,.52) 0%,rgba(0,0,0,.24) 26%,rgba(0,0,0,0) 55%);transition:opacity .8s ease}
@@ -980,7 +980,7 @@ body.malago-intro-open{overflow:hidden!important}
 #malagoWelcomeIntro.is-ended .malagoIntroShade{opacity:1}
 #malagoWelcomeIntro.is-ended .malagoIntroContent{opacity:1;transform:translateY(0)}
 #malagoWelcomeIntro.is-closing{opacity:0;pointer-events:none}
-@media(max-width:650px){#malagoWelcomeIntro .malagoIntroContent{top:5.2vh;left:18px;right:18px}#malagoWelcomeIntro .malagoIntroContent h1{font-size:clamp(27px,7.4vw,34px);line-height:1.08;letter-spacing:-.03em}#malagoWelcomeIntro .malagoIntroContent p{max-width:340px;margin-top:12px;font-size:14px;line-height:1.4}#malagoWelcomeIntro .malagoIntroContinue{margin-top:20px;min-width:132px;min-height:46px;padding:13px 26px}}
+@media(max-width:650px){#malagoWelcomeIntro .malagoIntroVideo,#malagoWelcomeIntro .malagoIntroFinalFrame{object-fit:cover;object-position:center}#malagoWelcomeIntro .malagoIntroShade{opacity:0;background:linear-gradient(180deg,rgba(0,0,0,.08),rgba(0,0,0,0) 60%)}#malagoWelcomeIntro .malagoIntroContent{inset:0;top:0;left:0;right:0;display:block;transform:none}#malagoWelcomeIntro .malagoIntroContent h1{position:absolute;top:32%;left:18px;right:18px;width:auto;max-width:none;font-size:clamp(27px,7.4vw,34px);line-height:1.08;letter-spacing:-.03em}#malagoWelcomeIntro .malagoIntroContent p{position:absolute;top:41.7%;left:18px;right:18px;max-width:400px;margin:0 auto;font-size:14px;line-height:1.4}#malagoWelcomeIntro .malagoIntroContinue{position:absolute;top:61.5%;left:50%;transform:translateX(-50%);margin:0;min-width:132px;min-height:46px;padding:13px 26px}#malagoWelcomeIntro .malagoIntroContinue:hover{transform:translateX(-50%) translateY(-2px)}}
 @media(max-width:380px){#malagoWelcomeIntro .malagoIntroContent{top:4.4vh;left:15px;right:15px}#malagoWelcomeIntro .malagoIntroContent h1{font-size:27px}#malagoWelcomeIntro .malagoIntroContent p{font-size:13px}}
 @media(max-height:520px) and (orientation:landscape){#malagoWelcomeIntro .malagoIntroContent{top:16px}#malagoWelcomeIntro .malagoIntroContent h1{font-size:clamp(24px,4vw,38px)}#malagoWelcomeIntro .malagoIntroContent p{margin-top:8px}#malagoWelcomeIntro .malagoIntroContinue{margin-top:12px;min-height:40px}}
 @media(prefers-reduced-motion:reduce){#malagoWelcomeIntro,#malagoWelcomeIntro *{transition:none!important;animation:none!important}}
@@ -990,9 +990,9 @@ body.malago-intro-open{overflow:hidden!important}
 
 <div id="malagoWelcomeIntro" role="dialog" aria-modal="true" aria-labelledby="malagoIntroTitle">
   <div class="malagoIntroMedia" aria-hidden="true">
-    <img class="malagoIntroFinalFrame" src="https://d2ol7oe51mr4n9.cloudfront.net/user_3LIbHMwUoEDn4cQX1aW4M05gMa6/15515e7c-2443-43bb-8b07-145e3eaef445.jpg" alt="" fetchpriority="high" decoding="async">
-    <video class="malagoIntroVideo" autoplay muted playsinline webkit-playsinline preload="auto" poster="https://d2ol7oe51mr4n9.cloudfront.net/user_3LIbHMwUoEDn4cQX1aW4M05gMa6/15515e7c-2443-43bb-8b07-145e3eaef445.jpg" aria-label="Malago logo reveal">
-      <source src="https://d2ol7oe51mr4n9.cloudfront.net/user_3LIbHMwUoEDn4cQX1aW4M05gMa6/9e1999d6-3abc-40fe-a2db-22063873f3f9.mp4" type="video/mp4">
+    <img class="malagoIntroFinalFrame" src="https://d2ol7oe51mr4n9.cloudfront.net/user_3LIbHMwUoEDn4cQX1aW4M05gMa6/f08b7bb6-ac9e-4422-a1fa-15fc945738f2.png" alt="" fetchpriority="high" decoding="async">
+    <video class="malagoIntroVideo" autoplay muted playsinline webkit-playsinline preload="auto" poster="https://d2ol7oe51mr4n9.cloudfront.net/user_3LIbHMwUoEDn4cQX1aW4M05gMa6/f08b7bb6-ac9e-4422-a1fa-15fc945738f2.png" aria-label="Malago logo reveal">
+      <source src="https://d2ol7oe51mr4n9.cloudfront.net/user_3LIbHMwUoEDn4cQX1aW4M05gMa6/cbc5ec6d-da4f-4492-b4ea-62a9954fd63c.mp4" type="video/mp4">
     </video>
   </div>
   <div class="malagoIntroShade" aria-hidden="true"></div>
