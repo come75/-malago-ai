@@ -949,6 +949,30 @@ html:not(.client-portal-mode) body:not(.show-client-access) .clientPortalSection
 .malagoExperienceIntro > p{font-family:"Trebuchet MS",Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;font-size:clamp(1.8rem,3vw,2.2rem);line-height:1.35;font-weight:600;letter-spacing:-.025em;text-align:center;max-width:900px;margin:24px auto 0;color:#fff}
 .malagoExperienceIntro > p strong,.malagoExperienceIntro > p .malagoAccent{color:#f28c28}
 @media(max-width:700px){.malagoExperienceIntro > p{font-size:1.5rem;line-height:1.4;margin:20px auto 0;text-align:center}}
+
+/* Restored Malago continuous logo-reveal intro from verified feature branch */
+#malagoWelcomeIntro{position:fixed;inset:0;z-index:2147483000;background:#000;color:#fff;overflow:hidden;isolation:isolate;opacity:1;transition:opacity .7s ease}
+body.malago-intro-open{overflow:hidden!important}
+#malagoWelcomeIntro .malagoIntroMedia{position:absolute;inset:0;display:grid;place-items:center;background:#000}
+#malagoWelcomeIntro .malagoIntroVideo,#malagoWelcomeIntro .malagoIntroFinalFrame{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center;background:#000}
+#malagoWelcomeIntro .malagoIntroVideo{z-index:1;opacity:1;transition:opacity .9s ease}
+#malagoWelcomeIntro .malagoIntroFinalFrame{z-index:0;opacity:0;transition:opacity .9s ease}
+#malagoWelcomeIntro .malagoIntroShade{position:absolute;inset:0;z-index:2;pointer-events:none;opacity:0;background:linear-gradient(180deg,rgba(0,0,0,.52) 0%,rgba(0,0,0,.24) 26%,rgba(0,0,0,0) 55%);transition:opacity .8s ease}
+#malagoWelcomeIntro .malagoIntroContent{position:absolute;z-index:3;top:clamp(26px,6.5vh,76px);left:20px;right:20px;display:flex;flex-direction:column;align-items:center;text-align:center;opacity:0;transform:translateY(16px);transition:opacity .75s ease,transform .75s ease}
+#malagoWelcomeIntro .malagoIntroContent h1{width:min(980px,100%);max-width:980px;margin:0;color:#fff;font-family:Georgia,"Times New Roman",serif;font-weight:400;font-size:clamp(29px,4.3vw,56px);line-height:1.08;letter-spacing:-.025em;text-wrap:balance;text-shadow:0 2px 24px rgba(0,0,0,.38)}
+#malagoWelcomeIntro .malagoIntroContent p{margin:16px 0 0;color:rgba(255,255,255,.9);font-size:clamp(14px,1.45vw,19px);line-height:1.45;letter-spacing:.025em;text-shadow:0 2px 18px rgba(0,0,0,.45)}
+#malagoWelcomeIntro .malagoIntroContinue{display:inline-flex;align-items:center;justify-content:center;min-width:142px;min-height:50px;margin-top:27px;padding:14px 30px;border:1px solid rgba(245,222,170,.95);border-radius:999px;background:#dfc796;color:#171915;font:700 11px/1.2 Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;letter-spacing:.15em;text-transform:uppercase;cursor:pointer;box-shadow:0 10px 35px rgba(0,0,0,.24);transition:transform .2s ease,background .2s ease}
+#malagoWelcomeIntro .malagoIntroContinue:hover{background:#f0dcae;transform:translateY(-2px)}
+#malagoWelcomeIntro .malagoIntroContinue:focus-visible{outline:2px solid #fff;outline-offset:4px}
+#malagoWelcomeIntro.is-ended .malagoIntroVideo{opacity:0}
+#malagoWelcomeIntro.is-ended .malagoIntroFinalFrame{opacity:1}
+#malagoWelcomeIntro.is-ended .malagoIntroShade{opacity:1}
+#malagoWelcomeIntro.is-ended .malagoIntroContent{opacity:1;transform:translateY(0)}
+#malagoWelcomeIntro.is-closing{opacity:0;pointer-events:none}
+@media(max-width:650px){#malagoWelcomeIntro .malagoIntroVideo,#malagoWelcomeIntro .malagoIntroFinalFrame{object-fit:cover;object-position:center}#malagoWelcomeIntro .malagoIntroShade{opacity:0;background:linear-gradient(180deg,rgba(0,0,0,.08),rgba(0,0,0,0) 60%)}#malagoWelcomeIntro .malagoIntroContent{inset:0;top:0;left:0;right:0;display:block;transform:none}#malagoWelcomeIntro .malagoIntroContent h1{position:absolute;top:32%;left:18px;right:18px;width:auto;max-width:none;font-size:clamp(27px,7.4vw,34px);line-height:1.08;letter-spacing:-.03em}#malagoWelcomeIntro .malagoIntroContent p{position:absolute;top:41.7%;left:18px;right:18px;max-width:400px;margin:0 auto;font-size:14px;line-height:1.4}#malagoWelcomeIntro .malagoIntroContinue{position:absolute;top:61.5%;left:50%;transform:translateX(-50%);margin:0;min-width:132px;min-height:46px;padding:13px 26px}#malagoWelcomeIntro .malagoIntroContinue:hover{transform:translateX(-50%) translateY(-2px)}}
+@media(max-width:380px){#malagoWelcomeIntro .malagoIntroContent{top:4.4vh;left:15px;right:15px}#malagoWelcomeIntro .malagoIntroContent h1{font-size:27px}#malagoWelcomeIntro .malagoIntroContent p{font-size:13px}}
+@media(max-height:520px) and (orientation:landscape){#malagoWelcomeIntro .malagoIntroContent{top:16px}#malagoWelcomeIntro .malagoIntroContent h1{font-size:clamp(24px,4vw,38px)}#malagoWelcomeIntro .malagoIntroContent p{margin-top:8px}#malagoWelcomeIntro .malagoIntroContinue{margin-top:12px;min-height:40px}}
+@media(prefers-reduced-motion:reduce){#malagoWelcomeIntro,#malagoWelcomeIntro *{transition:none!important;animation:none!important}}
 </style>
   <link rel="stylesheet" href="/villa-magos-calendar.css">
 
@@ -962,6 +986,21 @@ html:not(.client-portal-mode) body:not(.show-client-access) .clientPortalSection
 </style>
 </head>
 <body class="villa-home-pool">
+
+<div id="malagoWelcomeIntro" role="dialog" aria-modal="true" aria-labelledby="malagoIntroTitle">
+  <div class="malagoIntroMedia" aria-hidden="true">
+    <img class="malagoIntroFinalFrame" src="https://d2ol7oe51mr4n9.cloudfront.net/user_3LIbHMwUoEDn4cQX1aW4M05gMa6/f08b7bb6-ac9e-4422-a1fa-15fc945738f2.png" alt="" fetchpriority="high" decoding="async">
+    <video class="malagoIntroVideo" autoplay muted playsinline webkit-playsinline preload="auto" fetchpriority="high" poster="https://d2ol7oe51mr4n9.cloudfront.net/user_3LIbHMwUoEDn4cQX1aW4M05gMa6/f08b7bb6-ac9e-4422-a1fa-15fc945738f2.png" aria-label="Malago logo reveal">
+      <source src="https://d2ol7oe51mr4n9.cloudfront.net/user_3LIbHMwUoEDn4cQX1aW4M05gMa6/cbc5ec6d-da4f-4492-b4ea-62a9954fd63c.mp4" type="video/mp4">
+    </video>
+  </div>
+  <div class="malagoIntroShade" aria-hidden="true"></div>
+  <div class="malagoIntroContent">
+    <h1 id="malagoIntroTitle">You enjoy. We take care of the rest.</h1>
+    <p>Your private concierge for everything</p>
+    <button id="malagoIntroContinue" class="malagoIntroContinue" type="button">Continue</button>
+  </div>
+</div>
 <header class="topbar"><div class="wrap"><a class="brand brandFeaturing" href="#top" aria-label="Villa Magos × Malago"><img class="brandVillaLogo" src="/img/villa-magos-logo.PNG" alt="Villa Magos Málaga" width="144" height="45" loading="eager" decoding="async"><span class="brandFeaturingX" aria-hidden="true">×</span><img class="brandMalagoLogo" src="/img/malago-logo.webp" alt="Malago" width="260" height="93" loading="eager" decoding="async"></a><nav class="nav"><a href="#experiences">Expériences</a><a href="#experiences">Expériences</a><a href="#villa">La villa</a><a href="#experiences">Nos services</a></nav><div class="headerActions"><div class="languageControl"><button type="button" id="malagoLanguageButton" aria-label="Choose language" aria-expanded="false" aria-controls="malagoLanguageSwitcher">🌐</button><label class="languageLabel" for="malagoLanguageSwitcher">Language</label><select id="malagoLanguageSwitcher" aria-label="Choose language"><option value="en">English</option><option value="fr">Français</option><option value="es">Español</option><option value="de">Deutsch</option><option value="it">Italiano</option><option value="nl">Nederlands</option><option value="ru">Русский</option><option value="pt">Português</option><option value="ar">العربية</option><option value="zh">中文</option></select></div><a class="navcta" href="https://wa.me/34613384566?text=Hello%20Malago%2C%20I%20would%20like%20to%20discover%20your%20services."><span class="navctaFull">Contact Malago ↗</span><span class="navctaMobile">Contact Malago ↗</span></a></div></div></header>
 <main id="top">
 
@@ -2007,5 +2046,39 @@ const langSelect=document.getElementById('malagoLanguageSwitcher');if(langSelect
 
 <style id="MALAGO_DJ_TEXT_BELOW_IMAGE_2026">@media(max-width:650px){.villaHomeCarousel[data-current-slide="3"] .villaStoryCopy{top:calc(47% + 52px)!important;bottom:auto!important}}</style>
 
+<script id="MALAGO_VIDEO_WELCOME_INTRO_SCRIPT_2026">
+(function(){
+  const intro=document.getElementById('malagoWelcomeIntro');
+  if(!intro)return;
+  const video=intro.querySelector('video');
+  const continueButton=document.getElementById('malagoIntroContinue');
+  let closed=false;
+  document.body.classList.add('malago-intro-open');
+  // Request playback immediately, before waiting for DOM/load events; video and CDN are preloaded in <head>.
+  video.muted=true;
+  video.playsInline=true;
+  video.setAttribute('playsinline','');
+  video.setAttribute('webkit-playsinline','');
+  function showFinalFrame(){
+    if(closed||intro.classList.contains('is-ended'))return;
+    intro.classList.add('is-ended');
+    try{video.pause()}catch(e){}
+  }
+  function closeIntro(){
+    if(closed)return;
+    closed=true;
+    intro.classList.add('is-closing');
+    document.body.classList.remove('malago-intro-open');
+    window.setTimeout(function(){intro.remove()},750);
+  }
+  video.addEventListener('ended',showFinalFrame,{once:true});
+  video.addEventListener('error',showFinalFrame,{once:true});
+  continueButton.addEventListener('click',closeIntro);
+  if(window.matchMedia('(prefers-reduced-motion: reduce)').matches){showFinalFrame();return;}
+  const playPromise=video.play();
+  if(playPromise&&typeof playPromise.catch==='function')playPromise.catch(showFinalFrame);
+  window.setTimeout(function(){if(!closed&&!intro.classList.contains('is-ended')&&video.readyState<2)showFinalFrame()},12000);
+})();
+</script>
 </body>
 </html>
