@@ -1289,7 +1289,7 @@ function renderFlowOptions(s,selecting){
   'Irish pub':'https://d2ol7oe51mr4n9.cloudfront.net/user_3LIbHMwUoEDn4cQX1aW4M05gMa6/ac955a04-b0f4-4929-a2d3-6263dfad8d50.png',
   'Live music':'https://d2ol7oe51mr4n9.cloudfront.net/user_3LIbHMwUoEDn4cQX1aW4M05gMa6/363e9375-d0d8-4c64-a2fd-52a0152a1da3.png',
   'Un rooftop':'https://d2ol7oe51mr4n9.cloudfront.net/user_3LIbHMwUoEDn4cQX1aW4M05gMa6/611ada38-b9aa-4370-8af8-88b3403a1012.png',
-  'Bar à cocktails':'https://d2ol7oe51mr4n9.cloudfront.net/user_3LIbHMwUoEDn4cQX1aW4M05gMa6/99ff0ece-f47a-4cf4-9347-gcf3502940960.png',
+  'Bar à cocktails':'https://d2ol7oe51mr4n9.cloudfront.net/user_3LIbHMwUoEDn4cQX1aW4M05gMa6/99ff0ece-f47a-4cf4-9347-7cf3502940960.png',
   'Bar à vin':'https://d2ol7oe51mr4n9.cloudfront.net/user_3LIbHMwUoEDn4cQX1aW4M05gMa6/f8340398-5b4a-48cc-92eb-3f8c5beb7aa3.png'
  };
  const button=(o,i)=>{const image=optionImages[o[0]];return '<button class="malagoFlowOption '+(image?'has-option-image ':'')+(state.chosen.includes(o[0])?'is-selected':'')+'" style="--option-i:'+i+'" data-malago-option="'+i+'" type="button" aria-pressed="'+state.chosen.includes(o[0])+'">'+(image?'<img src="'+image+'" alt="" loading="lazy">':'')+'<b>'+esc(o[0])+'</b><small>'+esc(o[1])+'</small></button>';};
