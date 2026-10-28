@@ -1293,7 +1293,8 @@ function renderFlowOptions(s,selecting){
   'Un rooftop':'https://d2ol7oe51mr4n9.cloudfront.net/user_3LIbHMwUoEDn4cQX1aW4M05gMa6/611ada38-b9aa-4370-8af8-88b3403a1012.png',
   'Bar à cocktails':'https://d2ol7oe51mr4n9.cloudfront.net/user_3LIbHMwUoEDn4cQX1aW4M05gMa6/99ff0ece-f47a-4cf4-9347-7cf350294096.png',
   'Bar à vin':'https://d2ol7oe51mr4n9.cloudfront.net/user_3LIbHMwUoEDn4cQX1aW4M05gMa6/f8340398-5b4a-48cc-92eb-3f8c5beb7aa3.png'
- }; const button=(o,i)=>{const image=optionImages[o[0]];
+ };
+ const button=(o,i)=>{const image=optionImages[o[0]];return '<button class="malagoFlowOption '+(image?'has-option-image ':'')+(state.chosen.includes(o[0])?'is-selected':'')+'" style="--option-i:'+i+'" data-malago-option="'+i+'" type="button" aria-pressed="'+state.chosen.includes(o[0])+'">'+(image?'<img src="'+image+'" alt="" loading="lazy">':'')+'<b>'+esc(o[0])+'</b><small>'+esc(o[1])+'</small></button>';};
  if(!selecting||state.cat!=='comfort')return '<div class="malagoFlowOptions">'+s[1].map((o,i)=>button(o,i)).join('')+'</div>';
  const family=/baby-sitting|lit bébé|chaise haute|poussette|siège auto|rehausseur|jeux|besoin famille/i;
  const general=s[1].map((o,i)=>({o,i})).filter(x=>!family.test(x.o[0]));
