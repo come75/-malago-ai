@@ -1289,7 +1289,7 @@ function renderFlowOptions(s,selecting){
   'Irish pub':'https://d2ol7oe51mr4n9.cloudfront.net/user_3LIbHMwUoEDn4cQX1aW4M05gMa6/ac955a04-b0f4-4929-a2d3-6263dfad8d50.png',
   'Live music':'https://d2ol7oe51mr4n9.cloudfront.net/user_3LIbHMwUoEDn4cQX1aW4M05gMa6/363e9375-d0d8-4c64-a2fd-52a0152a1da3.png',
   'Un rooftop':'https://d2ol7oe51mr4n9.cloudfront.net/user_3LIbHMwUoEDn4cQX1aW4M05gMa6/611ada38-b9aa-4370-8af8-88b3403a1012.png',
-  'Bar à cocktails':'https://d2ol7oe51mr4n9.cloudfront.net/user_3LIbHMwUoEDn4cQX1aW4M05gMa6/99ff0ece-f47a-4cf4-9347-7cf3502940960.png',
+  'Bar à cocktails':'https://d2ol7oe51mr4n9.cloudfront.net/user_3LIbHMwUoEDn4cQX1aW4M05gMa6/99ff0ece-f47a-4cf4-9347-7cf350294096.png',
   'Bar à vin':'https://d2ol7oe51mr4n9.cloudfront.net/user_3LIbHMwUoEDn4cQX1aW4M05gMa6/f8340398-5b4a-48cc-92eb-3f8c5beb7aa3.png'
  };
  const button=(o,i)=>{const image=optionImages[o[0]];return '<button class="malagoFlowOption '+(image?'has-option-image ':'')+(state.chosen.includes(o[0])?'is-selected':'')+'" style="--option-i:'+i+'" data-malago-option="'+i+'" type="button" aria-pressed="'+state.chosen.includes(o[0])+'">'+(image?'<img src="'+image+'" alt="" loading="lazy">':'')+'<b>'+esc(o[0])+'</b><small>'+esc(o[1])+'</small></button>';};
@@ -2070,13 +2070,17 @@ const langSelect=document.getElementById('malagoLanguageSwitcher');if(langSelect
   if(!intro)return;
   const video=intro.querySelector('video');
   const continueButton=document.getElementById('malagoIntroContinue');
-  let closed=false;
+  if(!video||!continueButton)return;
+  let closed=false, playbackRetryUsed=false;
   document.body.classList.add('malago-intro-open');
-  // Request playback immediately, before waiting for DOM/load events; video and CDN are preloaded in <head>.
+  // Never replace a playable video with its poster just because autoplay was initially refused.
   video.muted=true;
+  video.defaultMuted=true;
   video.playsInline=true;
+  video.setAttribute('muted','');
   video.setAttribute('playsinline','');
   video.setAttribute('webkit-playsinline','');
+  video.setAttribute('autoplay','');
   function showFinalFrame(){
     if(closed||intro.classList.contains('is-ended'))return;
     intro.classList.add('is-ended');
@@ -2089,13 +2093,37 @@ const langSelect=document.getElementById('malagoLanguageSwitcher');if(langSelect
     document.body.classList.remove('malago-intro-open');
     window.setTimeout(function(){intro.remove()},750);
   }
+  function requestPlayback(){
+    if(closed||intro.classList.contains('is-ended'))return;
+    video.muted=true;
+    const result=video.play();
+    if(result&&typeof result.catch==='function'){
+      result.catch(function(){
+        // A rejected autoplay promise is not the end of the video. Retry after media is ready
+        // and on the first user interaction instead of freezing on the poster frame.
+      });
+    }
+  }
   video.addEventListener('ended',showFinalFrame,{once:true});
-  video.addEventListener('error',showFinalFrame,{once:true});
+  video.addEventListener('canplay',requestPlayback,{once:true});
+  video.addEventListener('loadeddata',requestPlayback,{once:true});
+  video.addEventListener('error',function(){
+    // Try one media reload; do not switch to the static poster on a transient loading error.
+    if(playbackRetryUsed||closed)return;
+    playbackRetryUsed=true;
+    window.setTimeout(function(){try{video.load();requestPlayback()}catch(e){}},500);
+  });
+  intro.addEventListener('pointerdown',requestPlayback,{once:true,passive:true});
+  document.addEventListener('visibilitychange',function(){
+    if(!document.hidden)requestPlayback();
+  });
   continueButton.addEventListener('click',closeIntro);
   if(window.matchMedia('(prefers-reduced-motion: reduce)').matches){showFinalFrame();return;}
-  const playPromise=video.play();
-  if(playPromise&&typeof playPromise.catch==='function')playPromise.catch(showFinalFrame);
-  window.setTimeout(function(){if(!closed&&!intro.classList.contains('is-ended')&&video.readyState<2)showFinalFrame()},12000);
+  requestPlayback();
+  // Keep trying after the browser has finished loading media; never turn a delayed video into a still image.
+  window.setTimeout(function(){
+    if(!closed&&video.readyState<2)requestPlayback();
+  },12000);
 })();
 </script>
 </body>
