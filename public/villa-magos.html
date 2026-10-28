@@ -2074,10 +2074,40 @@ const langSelect=document.getElementById('malagoLanguageSwitcher');if(langSelect
   video.addEventListener('ended',showFinalFrame,{once:true});
   video.addEventListener('error',showFinalFrame,{once:true});
   continueButton.addEventListener('click',closeIntro);
-  if(window.matchMedia('(prefers-reduced-motion: reduce)').matches){showFinalFrame();return;}
+  // The intro is intentionally animated even when the device requests reduced motion:
+  // this is the branded welcome sequence, not decorative page motion.
+  // Never replace the video with a still frame just because autoplay was rejected.
+  // Some mobile browsers need a user gesture before they will start playback.
+  let retryInstalled=false;
+  function retryPlayback(){
+    if(closed||intro.classList.contains('is-ended'))return;
+    const p=video.play();
+    if(p&&typeof p.then==='function'){
+      p.then(function(){
+        intro.removeEventListener('pointerdown',retryPlayback);
+        intro.removeEventListener('touchstart',retryPlayback);
+        intro.removeEventListener('click',retryPlayback);
+      }).catch(function(){});
+    }
+  }
+  function installPlaybackRetry(){
+    if(retryInstalled)return;
+    retryInstalled=true;
+    intro.addEventListener('pointerdown',retryPlayback,{passive:true});
+    intro.addEventListener('touchstart',retryPlayback,{passive:true});
+    intro.addEventListener('click',retryPlayback);
+  }
+  try{video.load()}catch(e){}
   const playPromise=video.play();
-  if(playPromise&&typeof playPromise.catch==='function')playPromise.catch(showFinalFrame);
-  window.setTimeout(function(){if(!closed&&!intro.classList.contains('is-ended')&&video.readyState<2)showFinalFrame()},12000);
+  if(playPromise&&typeof playPromise.catch==='function'){
+    playPromise.catch(function(){
+      installPlaybackRetry();
+      video.addEventListener('canplay',retryPlayback,{once:true});
+    });
+  }
+  video.addEventListener('canplay',function(){
+    if(video.paused)retryPlayback();
+  },{once:true});
 })();
 </script>
 </body>
