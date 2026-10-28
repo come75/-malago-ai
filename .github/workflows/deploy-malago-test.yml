@@ -1,0 +1,21 @@
+name: Deploy Malago test
+on:
+  push:
+    branches:
+      - feat/malago-sea-intro
+    paths:
+      - 'public/**'
+      - 'worker.js'
+      - 'wrangler.jsonc'
+      - '.github/workflows/deploy-malago-test.yml'
+  workflow_dispatch:
+jobs:
+  deploy-test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_DEPLOY_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          command: deploy --config wrangler.jsonc
