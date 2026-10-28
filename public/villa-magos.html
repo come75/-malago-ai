@@ -956,6 +956,8 @@ body.malago-intro-open{overflow:hidden!important}
 #malagoWelcomeIntro .malagoIntroMedia{position:absolute;inset:0;display:grid;place-items:center;background:#000}
 #malagoWelcomeIntro .malagoIntroVideo,#malagoWelcomeIntro .malagoIntroFinalFrame{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center;background:#000}
 #malagoWelcomeIntro .malagoIntroVideo{z-index:1;opacity:1;transition:opacity .9s ease}
+/* Prevent iOS Safari's native play overlay; playback is started by our intro controller. */
+#malagoWelcomeIntro .malagoIntroVideo::-webkit-media-controls-start-playback-button,#malagoWelcomeIntro .malagoIntroVideo::-webkit-media-controls-overlay-play-button{display:none!important;-webkit-appearance:none;opacity:0;pointer-events:none}
 #malagoWelcomeIntro .malagoIntroFinalFrame{z-index:0;opacity:0;transition:opacity .9s ease}
 #malagoWelcomeIntro .malagoIntroShade{position:absolute;inset:0;z-index:2;pointer-events:none;opacity:0;background:linear-gradient(180deg,rgba(0,0,0,.52) 0%,rgba(0,0,0,.24) 26%,rgba(0,0,0,0) 55%);transition:opacity .8s ease}
 #malagoWelcomeIntro .malagoIntroContent{position:absolute;z-index:3;top:clamp(26px,6.5vh,76px);left:20px;right:20px;display:flex;flex-direction:column;align-items:center;text-align:center;opacity:0;transform:translateY(16px);transition:opacity .75s ease,transform .75s ease}
@@ -2056,7 +2058,12 @@ const langSelect=document.getElementById('malagoLanguageSwitcher');if(langSelect
   document.body.classList.add('malago-intro-open');
   // Request playback immediately, before waiting for DOM/load events; video and CDN are preloaded in <head>.
   video.muted=true;
+  video.defaultMuted=true;
+  video.volume=0;
   video.playsInline=true;
+  video.removeAttribute('controls');
+  video.setAttribute('muted','');
+  video.setAttribute('autoplay','');
   video.setAttribute('playsinline','');
   video.setAttribute('webkit-playsinline','');
   function showFinalFrame(){
@@ -2108,6 +2115,14 @@ const langSelect=document.getElementById('malagoLanguageSwitcher');if(langSelect
   video.addEventListener('canplay',function(){
     if(video.paused)retryPlayback();
   },{once:true});
+  // iOS can suspend autoplay while the page is becoming visible; retry silently
+  // when it returns to the foreground. This does not add a visible play button.
+  document.addEventListener('visibilitychange',function(){
+    if(!document.hidden&&video.paused)retryPlayback();
+  });
+  window.addEventListener('pageshow',function(){
+    if(video.paused)retryPlayback();
+  });
 })();
 </script>
 </body>
