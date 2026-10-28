@@ -964,20 +964,32 @@ body.malago-intro-open{overflow:hidden!important}
 #malagoWelcomeIntro .malagoIntroVideo{z-index:1;opacity:1;transition:opacity .9s ease}
 #malagoWelcomeIntro .malagoIntroFinalFrame{z-index:0;opacity:0;transition:opacity .9s ease}
 #malagoWelcomeIntro .malagoIntroShade{position:absolute;inset:0;z-index:2;pointer-events:none;opacity:0;background:linear-gradient(180deg,rgba(0,0,0,.52) 0%,rgba(0,0,0,.24) 26%,rgba(0,0,0,0) 55%);transition:opacity .8s ease}
-#malagoWelcomeIntro .malagoIntroContent{position:absolute;z-index:3;top:clamp(26px,6.5vh,76px);left:20px;right:20px;display:flex;flex-direction:column;align-items:center;text-align:center;opacity:0;transform:translateY(16px);transition:opacity .75s ease,transform .75s ease}
-#malagoWelcomeIntro .malagoIntroContent h1{width:min(980px,100%);max-width:980px;margin:0;color:#fff;font-family:Georgia,"Times New Roman",serif;font-weight:400;font-size:clamp(29px,4.3vw,56px);line-height:1.08;letter-spacing:-.025em;text-wrap:balance;text-shadow:0 2px 24px rgba(0,0,0,.38)}
-#malagoWelcomeIntro .malagoIntroContent p{margin:16px 0 0;color:rgba(255,255,255,.9);font-size:clamp(14px,1.45vw,19px);line-height:1.45;letter-spacing:.025em;text-shadow:0 2px 18px rgba(0,0,0,.45)}
-#malagoWelcomeIntro .malagoIntroContinue{display:inline-flex;align-items:center;justify-content:center;min-width:142px;min-height:50px;margin-top:27px;padding:14px 30px;border:1px solid rgba(245,222,170,.95);border-radius:999px;background:#dfc796;color:#171915;font:700 11px/1.2 Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;letter-spacing:.15em;text-transform:uppercase;cursor:pointer;box-shadow:0 10px 35px rgba(0,0,0,.24);transition:transform .2s ease,background .2s ease}
-#malagoWelcomeIntro .malagoIntroContinue:hover{background:#f0dcae;transform:translateY(-2px)}
+
+#malagoWelcomeIntro .malagoIntroContent{position:absolute;inset:0;z-index:3;opacity:0;pointer-events:none;transition:opacity .75s ease}
+#malagoWelcomeIntro .malagoIntroContent h1{position:absolute;top:31.5%;left:24px;right:24px;width:min(690px,calc(100% - 48px));max-width:690px;margin:0 auto;color:#fff;font-family:Georgia,"Times New Roman",serif;font-weight:400;font-size:clamp(31px,4.3vw,50px);line-height:1.12;letter-spacing:-.03em;text-wrap:balance;text-align:center;text-shadow:0 2px 24px rgba(0,0,0,.38)}
+#malagoWelcomeIntro .malagoIntroContinue{position:absolute;top:63%;left:50%;transform:translateX(-50%);display:inline-flex;align-items:center;justify-content:center;width:max-content;min-width:224px;max-width:calc(100% - 40px);min-height:48px;margin:0;padding:14px 22px;border:1px solid rgba(235,214,170,.88);border-radius:3px;background:rgba(13,17,17,.34);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);color:#f4e4bf;font:600 10px/1.2 Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;letter-spacing:.145em;text-transform:uppercase;white-space:nowrap;cursor:pointer;box-shadow:0 8px 28px rgba(0,0,0,.18);transition:transform .2s ease,background .2s ease,border-color .2s ease}
+#malagoWelcomeIntro .malagoIntroContinue:hover{background:rgba(228,206,158,.14);border-color:#f2dfb6;transform:translateX(-50%) translateY(-2px)}
 #malagoWelcomeIntro .malagoIntroContinue:focus-visible{outline:2px solid #fff;outline-offset:4px}
 #malagoWelcomeIntro.is-ended .malagoIntroVideo{opacity:0}
 #malagoWelcomeIntro.is-ended .malagoIntroFinalFrame{opacity:1}
 #malagoWelcomeIntro.is-ended .malagoIntroShade{opacity:1}
-#malagoWelcomeIntro.is-ended .malagoIntroContent{opacity:1;transform:translateY(0)}
+#malagoWelcomeIntro.is-ended .malagoIntroContent{opacity:1}
 #malagoWelcomeIntro.is-closing{opacity:0;pointer-events:none}
-@media(max-width:650px){#malagoWelcomeIntro .malagoIntroVideo,#malagoWelcomeIntro .malagoIntroFinalFrame{object-fit:cover;object-position:center}#malagoWelcomeIntro .malagoIntroShade{opacity:0;background:linear-gradient(180deg,rgba(0,0,0,.08),rgba(0,0,0,0) 60%)}#malagoWelcomeIntro .malagoIntroContent{inset:0;top:0;left:0;right:0;display:block;transform:none}#malagoWelcomeIntro .malagoIntroContent h1{position:absolute;top:32%;left:18px;right:18px;width:auto;max-width:none;font-size:clamp(27px,7.4vw,34px);line-height:1.08;letter-spacing:-.03em}#malagoWelcomeIntro .malagoIntroContent p{position:absolute;top:41.7%;left:18px;right:18px;max-width:400px;margin:0 auto;font-size:14px;line-height:1.4}#malagoWelcomeIntro .malagoIntroContinue{position:absolute;top:61.5%;left:50%;transform:translateX(-50%);margin:0;min-width:132px;min-height:46px;padding:13px 26px}#malagoWelcomeIntro .malagoIntroContinue:hover{transform:translateX(-50%) translateY(-2px)}}
-@media(max-width:380px){#malagoWelcomeIntro .malagoIntroContent{top:4.4vh;left:15px;right:15px}#malagoWelcomeIntro .malagoIntroContent h1{font-size:27px}#malagoWelcomeIntro .malagoIntroContent p{font-size:13px}}
-@media(max-height:520px) and (orientation:landscape){#malagoWelcomeIntro .malagoIntroContent{top:16px}#malagoWelcomeIntro .malagoIntroContent h1{font-size:clamp(24px,4vw,38px)}#malagoWelcomeIntro .malagoIntroContent p{margin-top:8px}#malagoWelcomeIntro .malagoIntroContinue{margin-top:12px;min-height:40px}}
+@media(max-width:650px){
+#malagoWelcomeIntro .malagoIntroVideo,#malagoWelcomeIntro .malagoIntroFinalFrame{object-fit:cover;object-position:center}
+#malagoWelcomeIntro .malagoIntroShade{opacity:0;background:linear-gradient(180deg,rgba(0,0,0,.08),rgba(0,0,0,0) 60%)}
+#malagoWelcomeIntro .malagoIntroContent{inset:0}
+#malagoWelcomeIntro .malagoIntroContent h1{top:31.5%;left:18px;right:18px;width:auto;max-width:440px;font-size:clamp(28px,7.2vw,35px);line-height:1.12;letter-spacing:-.025em}
+#malagoWelcomeIntro .malagoIntroContinue{top:64.5%;min-width:0;max-width:calc(100% - 44px);min-height:48px;padding:14px 20px;font-size:9.5px;letter-spacing:.12em}
+}
+@media(max-width:380px){
+#malagoWelcomeIntro .malagoIntroContent h1{top:30.5%;left:16px;right:16px;font-size:clamp(27px,7.5vw,30px)}
+#malagoWelcomeIntro .malagoIntroContinue{top:64%;max-width:calc(100% - 32px);padding:14px 16px;font-size:9px;letter-spacing:.1em}
+}
+@media(max-height:520px) and (orientation:landscape){
+#malagoWelcomeIntro .malagoIntroContent h1{top:17%;width:75vw;max-width:75vw;font-size:clamp(24px,4vw,34px)}
+#malagoWelcomeIntro .malagoIntroContinue{top:66%;min-height:42px;padding:11px 22px}
+}
 @media(prefers-reduced-motion:reduce){#malagoWelcomeIntro,#malagoWelcomeIntro *{transition:none!important;animation:none!important}}
 </style>
   <link rel="stylesheet" href="/villa-magos-calendar.css">
@@ -1002,9 +1014,8 @@ body.malago-intro-open{overflow:hidden!important}
   </div>
   <div class="malagoIntroShade" aria-hidden="true"></div>
   <div class="malagoIntroContent">
-    <h1 id="malagoIntroTitle">You enjoy. We take care of the rest.</h1>
-    <p>Your private concierge for everything</p>
-    <button id="malagoIntroContinue" class="malagoIntroContinue" type="button">Continue</button>
+    <h1 id="malagoIntroTitle">Your private concierge on the Costa del Sol.</h1>
+    <button id="malagoIntroContinue" class="malagoIntroContinue" type="button">DISCOVER YOUR EXPERIENCE</button>
   </div>
 </div>
 <header class="topbar"><div class="wrap"><a class="brand brandFeaturing" href="#top" aria-label="Villa Magos × Malago"><img class="brandVillaLogo" src="/img/villa-magos-logo.PNG" alt="Villa Magos Málaga" width="144" height="45" loading="eager" decoding="async"><span class="brandFeaturingX" aria-hidden="true">×</span><img class="brandMalagoLogo" src="/img/malago-logo.webp" alt="Malago" width="260" height="93" loading="eager" decoding="async"></a><nav class="nav"><a href="#experiences">Expériences</a><a href="#experiences">Expériences</a><a href="#villa">La villa</a><a href="#experiences">Nos services</a></nav><div class="headerActions"><div class="languageControl"><button type="button" id="malagoLanguageButton" aria-label="Choose language" aria-expanded="false" aria-controls="malagoLanguageSwitcher">🌐</button><label class="languageLabel" for="malagoLanguageSwitcher">Language</label><select id="malagoLanguageSwitcher" aria-label="Choose language"><option value="en">English</option><option value="fr">Français</option><option value="es">Español</option><option value="de">Deutsch</option><option value="it">Italiano</option><option value="nl">Nederlands</option><option value="ru">Русский</option><option value="pt">Português</option><option value="ar">العربية</option><option value="zh">中文</option></select></div><a class="navcta" href="https://wa.me/34613384566?text=Hello%20Malago%2C%20I%20would%20like%20to%20discover%20your%20services."><span class="navctaFull">Contact Malago ↗</span><span class="navctaMobile">Contact Malago ↗</span></a></div></div></header>
