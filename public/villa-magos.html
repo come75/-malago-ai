@@ -723,6 +723,12 @@ body.form-visible .mobileCta{
 .malagoFlowOption.is-selected{border-color:var(--gold2);background:#30291f}
 .malagoFlowOption b{display:block;font-size:13px;font-weight:600}
 .malagoFlowOption small{display:block;margin-top:6px;color:#b8b0a3;font-size:11px;line-height:1.45}
+.malagoFlowOption.has-option-image{padding:0;overflow:hidden;min-height:160px;display:flex;flex-direction:column;justify-content:flex-start}
+.malagoFlowOption.has-option-image img{display:block;width:100%;height:104px;object-fit:cover}
+.malagoFlowOption.has-option-image b,.malagoFlowOption.has-option-image small{margin-left:12px;margin-right:12px}
+.malagoFlowOption.has-option-image b{margin-top:10px}
+.malagoFlowOption.has-option-image small{margin-bottom:12px}
+@media(max-width:520px){.malagoFlowOptions:has(.has-option-image){grid-template-columns:repeat(2,minmax(0,1fr))}.malagoFlowOption.has-option-image{min-height:145px}.malagoFlowOption.has-option-image img{height:88px}}
 .malagoFlowRow{display:flex;gap:10px;margin-top:23px}
 .malagoFlowNext,.malagoFlowBack{border-radius:99px;padding:13px 18px;font-size:11px;letter-spacing:.04em;border:1px solid var(--gold2)}
 .malagoFlowNext{background:var(--gold2);color:#171915;font-weight:800;flex:1}
@@ -1278,7 +1284,15 @@ document.getElementById('activityClose').addEventListener('click',closeActivity)
  function currentItem(){return selectedItems()[state.itemIndex]||'';}
  function openCat(key){state={cat:key,step:0,answers:[],chosen:[],detail:'',message:'',itemIndex:0,itemAnswers:{},itemDetails:{}};$('#malagoExperienceFlow').classList.add('is-open');draw();$('#malagoExperienceFlow').scrollIntoView({behavior:'smooth',block:'nearest'});}
 function renderFlowOptions(s,selecting){
- const button=(o,i)=>'<button class="malagoFlowOption '+(state.chosen.includes(o[0])?'is-selected':'')+'" style="--option-i:'+i+'" data-malago-option="'+i+'" type="button" aria-pressed="'+state.chosen.includes(o[0])+'"><b>'+esc(o[0])+'</b><small>'+esc(o[1])+'</small></button>';
+ const optionImages={
+  'Au bord de l’eau':'https://d2ol7oe51mr4n9.cloudfront.net/user_3LIbHMwUoEDn4cQX1aW4M05gMa6/13da1e2f-45aa-4ad7-8333-c18726870d16.png',
+  'Irish pub':'https://d2ol7oe51mr4n9.cloudfront.net/user_3LIbHMwUoEDn4cQX1aW4M05gMa6/ac955a04-b0f4-4929-a2d3-6263dfad8d50.png',
+  'Live music':'https://d2ol7oe51mr4n9.cloudfront.net/user_3LIbHMwUoEDn4cQX1aW4M05gMa6/363e9375-d0d8-4c64-a2fd-52a0152a1da3.png',
+  'Un rooftop':'https://d2ol7oe51mr4n9.cloudfront.net/user_3LIbHMwUoEDn4cQX1aW4M05gMa6/611ada38-b9aa-4370-8af8-88b3403a1012.png',
+  'Bar à cocktails':'https://d2ol7oe51mr4n9.cloudfront.net/user_3LIbHMwUoEDn4cQX1aW4M05gMa6/99ff0ece-f47a-4cf4-9347-gcf3502940960.png',
+  'Bar à vin':'https://d2ol7oe51mr4n9.cloudfront.net/user_3LIbHMwUoEDn4cQX1aW4M05gMa6/f8340398-5b4a-48cc-92eb-3f8c5beb7aa3.png'
+ };
+ const button=(o,i)=>{const image=optionImages[o[0]];return '<button class="malagoFlowOption '+(image?'has-option-image ':'')+(state.chosen.includes(o[0])?'is-selected':'')+'" style="--option-i:'+i+'" data-malago-option="'+i+'" type="button" aria-pressed="'+state.chosen.includes(o[0])+'">'+(image?'<img src="'+image+'" alt="" loading="lazy">':'')+'<b>'+esc(o[0])+'</b><small>'+esc(o[1])+'</small></button>';};
  if(!selecting||state.cat!=='comfort')return '<div class="malagoFlowOptions">'+s[1].map((o,i)=>button(o,i)).join('')+'</div>';
  const family=/baby-sitting|lit bébé|chaise haute|poussette|siège auto|rehausseur|jeux|besoin famille/i;
  const general=s[1].map((o,i)=>({o,i})).filter(x=>!family.test(x.o[0]));
