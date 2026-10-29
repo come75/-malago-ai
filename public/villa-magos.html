@@ -680,29 +680,36 @@ body.form-visible .mobileCta{
 @media(max-width:420px){.brandFeaturing{gap:6px}.brandVillaLogo{width:88px;height:32px;padding:3px}.brandMalagoLogo{width:66px;height:25px}.brandFeaturingX{font-size:18px}.navcta{padding:9px 10px;font-size:8px;letter-spacing:.04em}}
 
 
-/* Animation premium des catégories : bascule 3D puis révélation en spirale */
+/* Animation premium des expériences : retournement complet puis révélation en spirale */
 .service{transform-style:preserve-3d;backface-visibility:hidden;will-change:transform}
 .service.is-flipping{animation:malagoCategoryFlip .62s cubic-bezier(.2,.78,.22,1) both;pointer-events:none}
 @keyframes malagoCategoryFlip{
   0%{transform:perspective(900px) rotateY(0) scale(1)}
-  45%{transform:perspective(900px) rotateY(88deg) scale(.96)}
-  100%{transform:perspective(900px) rotateY(0) scale(1)}
+  42%{transform:perspective(900px) rotateY(90deg) scale(.94);filter:brightness(.82)}
+  72%{transform:perspective(900px) rotateY(180deg) scale(.96);filter:brightness(.9)}
+  100%{transform:perspective(900px) rotateY(360deg) scale(1);filter:brightness(1)}
 }
-.activityModal.open .activityGallery img{animation:malagoSpiralReveal .62s cubic-bezier(.2,.75,.25,1) both}
-.activityModal.open .activityGallery img:nth-child(1){animation-delay:.08s}
-.activityModal.open .activityGallery img:nth-child(2){animation-delay:.19s}
+.activityModal.open .activityPanel{animation:malagoPanelReveal .48s cubic-bezier(.18,.78,.24,1) both}
+.activityModal.open .activityGallery img{opacity:0;animation:malagoSpiralReveal .68s cubic-bezier(.2,.75,.25,1) both}
+.activityModal.open .activityGallery img:nth-child(1){animation-delay:.04s}
+.activityModal.open .activityGallery img:nth-child(2){animation-delay:.17s}
 .activityModal.open .activityGallery img:nth-child(3){animation-delay:.3s}
-.activityModal.open .activityDetail{animation:malagoSpiralReveal .58s cubic-bezier(.2,.75,.25,1) both}
+.activityModal.open .activityDetail{opacity:0;animation:malagoSpiralReveal .58s cubic-bezier(.2,.75,.25,1) both}
 .activityModal.open .activityDetail:nth-child(1){animation-delay:.12s}
-.activityModal.open .activityDetail:nth-child(2){animation-delay:.24s}
-.activityModal.open .activityDetail:nth-child(3){animation-delay:.36s}
+.activityModal.open .activityDetail:nth-child(2){animation-delay:.25s}
+.activityModal.open .activityDetail:nth-child(3){animation-delay:.38s}
+@keyframes malagoPanelReveal{
+  from{opacity:0;transform:translateY(14px) scale(.985)}
+  to{opacity:1;transform:translateY(0) scale(1)}
+}
 @keyframes malagoSpiralReveal{
-  0%{opacity:0;transform:translate3d(18px,24px,0) rotate(-7deg) scale(.88);filter:blur(4px)}
-  65%{opacity:1;transform:translate3d(-3px,-2px,0) rotate(1deg) scale(1.015);filter:blur(0)}
+  0%{opacity:0;transform:translate3d(24px,22px,0) rotate(-13deg) scale(.76);filter:blur(5px)}
+  45%{opacity:.9;transform:translate3d(-8px,-5px,0) rotate(5deg) scale(1.035);filter:blur(1px)}
+  75%{opacity:1;transform:translate3d(2px,2px,0) rotate(-1.5deg) scale(.99);filter:blur(0)}
   100%{opacity:1;transform:translate3d(0,0,0) rotate(0) scale(1);filter:blur(0)}
 }
 @media(prefers-reduced-motion:reduce){
- .service.is-flipping,.activityModal.open .activityGallery img,.activityModal.open .activityDetail{animation:none!important}
+ .service.is-flipping,.activityModal.open .activityPanel,.activityModal.open .activityGallery img,.activityModal.open .activityDetail{animation:none!important;opacity:1}
 }
 
 </style>
