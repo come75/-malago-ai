@@ -961,25 +961,1042 @@ html:not(.client-portal-mode) body:not(.show-client-access) .clientPortalSection
 body.malago-intro-open{overflow:hidden!important}
 #malagoWelcomeIntro .malagoIntroMedia{position:absolute;inset:0;display:grid;place-items:center;background:#000}
 #malagoWelcomeIntro .malagoIntroVideo,#malagoWelcomeIntro .malagoIntroFinalFrame{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center;background:#000}
-/* Prevent iOS Safari's native play overlay; playback is started by our intro controller. */
-#malagoWelcomeIntro .malagoIntroVideo::-webkit-media-controls-start-playback-button,#malagoWelcomeIntro .malagoIntroVideo::-webkit-media-controls-overlay-play-button{display:none!important;-webkit-appearance:none;opacity:0;pointer-events:none}
 #malagoWelcomeIntro .malagoIntroVideo{z-index:1;opacity:1;transition:opacity .9s ease}
 #malagoWelcomeIntro .malagoIntroFinalFrame{z-index:0;opacity:0;transition:opacity .9s ease}
 #malagoWelcomeIntro .malagoIntroShade{position:absolute;inset:0;z-index:2;pointer-events:none;opacity:0;background:linear-gradient(180deg,rgba(0,0,0,.52) 0%,rgba(0,0,0,.24) 26%,rgba(0,0,0,0) 55%);transition:opacity .8s ease}
-#malagoWelcomeIntro .malagoIntroContent{position:absolute;z-index:3;top:clamp(26px,6.5vh,76px);left:20px;right:20px;display:flex;flex-direction:column;align-items:center;text-align:center;opacity:0;transform:translateY(16px);transition:opacity .75s ease,transform .75s ease}
-#malagoWelcomeIntro .malagoIntroContent h1{width:min(980px,100%);max-width:980px;margin:0;color:#fff;font-family:Georgia,"Times New Roman",serif;font-weight:400;font-size:clamp(29px,4.3vw,56px);line-height:1.08;letter-spacing:-.025em;text-wrap:balance;text-shadow:0 2px 24px rgba(0,0,0,.38)}
-#malagoWelcomeIntro .malagoIntroContent p{margin:16px 0 0;color:rgba(255,255,255,.9);font-size:clamp(14px,1.45vw,19px);line-height:1.45;letter-spacing:.025em;text-shadow:0 2px 18px rgba(0,0,0,.45)}
-#malagoWelcomeIntro .malagoIntroContinue{display:inline-flex;align-items:center;justify-content:center;min-width:142px;min-height:50px;margin-top:27px;padding:14px 30px;border:1px solid rgba(245,222,170,.95);border-radius:999px;background:#dfc796;color:#171915;font:700 11px/1.2 Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;letter-spacing:.15em;text-transform:uppercase;cursor:pointer;box-shadow:0 10px 35px rgba(0,0,0,.24);transition:transform .2s ease,background .2s ease}
-#malagoWelcomeIntro .malagoIntroContinue:hover{background:#f0dcae;transform:translateY(-2px)}
+
+#malagoWelcomeIntro .malagoIntroContent{position:absolute;inset:0;z-index:3;opacity:0;pointer-events:none;transition:opacity .75s ease}
+#malagoWelcomeIntro .malagoIntroContent h1{position:absolute;top:31.5%;left:24px;right:24px;width:min(690px,calc(100% - 48px));max-width:690px;margin:0 auto;color:#fff;font-family:Georgia,"Times New Roman",serif;font-weight:400;font-size:clamp(31px,4.3vw,50px);line-height:1.12;letter-spacing:-.03em;text-wrap:balance;text-align:center;text-shadow:0 2px 24px rgba(0,0,0,.38)}
+#malagoWelcomeIntro .malagoIntroContinue{position:absolute;top:63%;left:50%;transform:translateX(-50%);display:inline-flex;align-items:center;justify-content:center;width:max-content;min-width:224px;max-width:calc(100% - 40px);min-height:48px;margin:0;padding:14px 22px;border:1px solid rgba(235,214,170,.88);border-radius:3px;background:rgba(13,17,17,.34);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);color:#f4e4bf;font:600 10px/1.2 Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;letter-spacing:.145em;text-transform:uppercase;white-space:nowrap;cursor:pointer;box-shadow:0 8px 28px rgba(0,0,0,.18);transition:transform .2s ease,background .2s ease,border-color .2s ease}
+#malagoWelcomeIntro .malagoIntroContinue:hover{background:rgba(228,206,158,.14);border-color:#f2dfb6;transform:translateX(-50%) translateY(-2px)}
 #malagoWelcomeIntro .malagoIntroContinue:focus-visible{outline:2px solid #fff;outline-offset:4px}
 #malagoWelcomeIntro.is-ended .malagoIntroVideo{opacity:0}
 #malagoWelcomeIntro.is-ended .malagoIntroFinalFrame{opacity:1}
 #malagoWelcomeIntro.is-ended .malagoIntroShade{opacity:1}
-#malagoWelcomeIntro.is-ended .malagoIntroContent{opacity:1;transform:translateY(0)}
+#malagoWelcomeIntro.is-ended .malagoIntroContent{opacity:1;pointer-events:auto}
 #malagoWelcomeIntro.is-closing{opacity:0;pointer-events:none}
-@media(max-width:650px){#malagoWelcomeIntro .malagoIntroVideo,#malagoWelcomeIntro .malagoIntroFinalFrame{object-fit:cover;object-position:center}#malagoWelcomeIntro .malagoIntroShade{opacity:0;background:linear-gradient(180deg,rgba(0,0,0,.08),rgba(0,0,0,0) 60%)}#malagoWelcomeIntro .malagoIntroContent{inset:0;top:0;left:0;right:0;display:block;transform:none}#malagoWelcomeIntro .malagoIntroContent h1{position:absolute;top:32%;left:18px;right:18px;width:auto;max-width:none;font-size:clamp(27px,7.4vw,34px);line-height:1.08;letter-spacing:-.03em}#malagoWelcomeIntro .malagoIntroContent p{position:absolute;top:41.7%;left:18px;right:18px;max-width:400px;margin:0 auto;font-size:14px;line-height:1.4}#malagoWelcomeIntro .malagoIntroContinue{position:absolute;top:61.5%;left:50%;transform:translateX(-50%);margin:0;min-width:132px;min-height:46px;padding:13px 26px}#malagoWelcomeIntro .malagoIntroContinue:hover{transform:translateX(-50%) translateY(-2px)}}
-@media(max-width:380px){#malagoWelcomeIntro .malagoIntroContent{top:4.4vh;left:15px;right:15px}#malagoWelcomeIntro .malagoIntroContent h1{font-size:27px}#malagoWelcomeIntro .malagoIntroContent p{font-size:13px}}
-@media(max-height:520px) and (orientation:landscape){#malagoWelcomeIntro .malagoIntroContent{top:16px}#malagoWelcomeIntro .malagoIntroContent h1{font-size:clamp(24px,4vw,38px)}#malagoWelcomeIntro .malagoIntroContent p{margin-top:8px}#malagoWelcomeIntro .malagoIntroContinue{margin-top:12px;min-height:40px}}
+@media(max-width:650px){
+#malagoWelcomeIntro .malagoIntroVideo,#malagoWelcomeIntro .malagoIntroFinalFrame{object-fit:cover;object-position:center}
+#malagoWelcomeIntro .malagoIntroShade{opacity:0;background:linear-gradient(180deg,rgba(0,0,0,.08),rgba(0,0,0,0) 60%)}
+#malagoWelcomeIntro .malagoIntroContent{inset:0}
+#malagoWelcomeIntro .malagoIntroContent h1{top:31.5%;left:18px;right:18px;width:auto;max-width:440px;font-size:clamp(28px,7.2vw,35px);line-height:1.12;letter-spacing:-.025em}
+#malagoWelcomeIntro .malagoIntroContinue{top:64.5%;min-width:0;max-width:calc(100% - 44px);min-height:48px;padding:14px 20px;font-size:9.5px;letter-spacing:.12em}
+}
+@media(max-width:380px){
+#malagoWelcomeIntro .malagoIntroContent h1{top:30.5%;left:16px;right:16px;font-size:clamp(27px,7.5vw,30px)}
+#malagoWelcomeIntro .malagoIntroContinue{top:64%;max-width:calc(100% - 32px);padding:14px 16px;font-size:9px;letter-spacing:.1em}
+}
+@media(max-height:520px) and (orientation:landscape){
+#malagoWelcomeIntro .malagoIntroContent h1{top:17%;width:75vw;max-width:75vw;font-size:clamp(24px,4vw,34px)}
+#malagoWelcomeIntro .malagoIntroContinue{top:66%;min-height:42px;padding:11px 22px}
+}
+@media(prefers-reduced-motion:reduce){#malagoWelcomeIntro,#malagoWelcomeIntro *{transition:none!important;animation:none!important}}
+</style>
+  <link rel="stylesheet" href="/villa-magos-calendar.css">
+
+<style id="malago-language-styles">
+.headerActions{display:flex;align-items:center;gap:10px;margin-left:auto}
+.languageControl{position:relative;display:flex;align-items:center}
+#malagoLanguageSwitcher{max-width:125px;min-height:40px;border:1px solid rgba(228,206,158,.32);border-radius:99px;padding:0 12px;background:#171814;color:#f5f0e5;font:inherit;font-size:11px;cursor:pointer}
+#malagoLanguageButton{display:none;min-width:40px;min-height:40px;border:1px solid rgba(228,206,158,.32);border-radius:50%;background:#171814;color:#f5f0e5;font-size:19px;cursor:pointer}
+.languageLabel{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0)}
+@media(max-width:700px){.headerActions{gap:6px}.headerActions .navcta{padding:10px 11px;font-size:10px}.languageControl{position:relative}#malagoLanguageButton{display:inline-flex;align-items:center;justify-content:center}#malagoLanguageSwitcher{display:none;position:absolute;z-index:1000;right:0;top:calc(100% + 8px);width:170px;max-width:none;min-height:44px;padding:0 10px;font-size:13px;box-shadow:0 12px 32px rgba(0,0,0,.45)}.languageControl.is-open #malagoLanguageSwitcher{display:block}}
+</style>
+</head>
+<body class="villa-home-pool">
+
+type html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#10110f">
+<title>La Villa Magos × Malago — Vos envies, parfaitement orchestrées</title>
+<meta name="description" content="Private concierge for Villa Magos guests in Churriana, Málaga: private chefs, yachts, sea experiences, restaurants, beach clubs and more.">
+<link rel="preconnect" href="https://images.unsplash.com">
+<style>
+/* Programme chef privé : cartes par date, plus aérées et plus lisibles sur mobile */
+.chefStayDateGrid{display:grid;grid-template-columns:1fr;gap:14px;margin:18px 0 26px}
+.chefStayDateCard{position:relative;overflow:hidden;border:1px solid rgba(228,206,158,.2);border-radius:17px;padding:17px 15px 15px;background:linear-gradient(145deg,rgba(43,40,32,.92),rgba(25,26,22,.98));box-shadow:0 7px 20px rgba(0,0,0,.12);transition:border-color .18s ease,background .18s ease}
+.chefStayDateCard:before{content:"";position:absolute;inset:0 auto 0 0;width:3px;background:linear-gradient(180deg,#e4ce9e,#b58b45);opacity:.8}
+.chefStayDateHeading{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:0 0 15px;padding:0 1px 12px 4px;border-bottom:1px solid rgba(228,206,158,.13)}
+.chefStayDateHeading strong{font-size:16px;font-weight:700;text-transform:capitalize;letter-spacing:-.02em;color:#f0d9a6}
+.chefStayDateHeading small{font-size:11px;letter-spacing:.1em;color:#aaa394;background:rgba(255,255,255,.045);border:1px solid rgba(255,255,255,.07);border-radius:7px;padding:5px 7px}
+.chefDayMealChoices{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+.chefDayMealChoice{position:relative;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:7px;min-width:0;min-height:76px;padding:10px 3px;border:1px solid rgba(228,206,158,.19);border-radius:12px;background:rgba(255,255,255,.025);color:#d8d1c4;text-align:center;font-size:11px;line-height:1.25;font-weight:600;cursor:pointer;transition:background .18s ease,border-color .18s ease,color .18s ease,transform .18s ease}
+.chefDayMealChoice:active{transform:scale(.98)}
+.chefDayMealChoice:has(input:checked){background:linear-gradient(145deg,#f0dcae,#dcc18a);color:#211f19;border-color:#f0dcae;box-shadow:0 3px 10px rgba(228,206,158,.12)}
+.chefDayMealChoice input{appearance:none;-webkit-appearance:none;width:17px;height:17px;margin:0;flex-shrink:0;border:1.5px solid #8b8068;border-radius:5px;background:rgba(0,0,0,.12);position:relative;cursor:pointer}
+.chefDayMealChoice input:checked{border-color:#28251d;background:#28251d}
+.chefDayMealChoice input:checked:after{content:"";position:absolute;left:4px;top:1px;width:5px;height:9px;border:solid #f0dcae;border-width:0 2px 2px 0;transform:rotate(45deg)}
+.chefDayMealChoice input:focus-visible{outline:2px solid #e4ce9e;outline-offset:3px}
+.chefDayMealChoice span{display:block;max-width:100%;overflow-wrap:anywhere}
+@media(min-width:560px){.chefStayDateGrid{grid-template-columns:repeat(2,minmax(0,1fr))}.chefDayMealChoice{min-height:82px;font-size:12px}}
+@media(max-width:380px){.chefStayDateCard{padding:14px 10px}.chefDayMealChoices{gap:5px}.chefDayMealChoice{font-size:10px;min-height:72px}}
+
+:root{--ink:#171915;--muted:#74776e;--cream:#f5f2eb;--paper:#fffdf8;--gold:#c5a46d;--gold2:#e4ce9e;--line:rgba(23,25,21,.13);--dark:#10110f;--radius:22px}
+*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:var(--cream);color:var(--ink);font-family:Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;-webkit-font-smoothing:antialiased}a{color:inherit;text-decoration:none}button,input,textarea,select{font:inherit}.wrap{width:min(1180px,calc(100% - 48px));margin:auto}.eyebrow{font-size:10px;letter-spacing:.24em;text-transform:uppercase;font-weight:800;color:var(--gold);display:flex;align-items:center;gap:10px}.eyebrow:before{content:"";width:24px;height:1px;background:currentColor}.topbar{position:fixed;top:0;left:0;right:0;z-index:50;color:#fff;padding:14px 0;background:rgba(16,17,15,.9);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-bottom:1px solid rgba(228,206,158,.18);box-shadow:0 8px 24px rgba(0,0,0,.12)}.topbar .wrap{display:flex;align-items:center;justify-content:space-between}.brand{font-family:Georgia,serif;font-size:17px;letter-spacing:.09em}
+.brandFeaturing{display:flex;align-items:center;gap:10px;flex:0 1 auto;min-width:0;font-size:initial;letter-spacing:normal;white-space:nowrap}.brandFeaturing img{display:block;object-fit:contain;flex:0 0 auto;max-width:none;opacity:1;visibility:visible}.brandVillaLogo{display:flex;align-items:center;justify-content:center;width:144px;height:45px;flex:0 0 auto;background:#f5f2eb;border:1px solid rgba(228,206,158,.72);border-radius:6px;padding:4px 7px;color:#292a25;font-family:Georgia,serif;font-size:11px;font-weight:600;letter-spacing:.16em}.brandMalagoLogo{display:block;width:108px;height:35px;max-height:42px;object-fit:contain;object-position:center;flex:0 0 auto;overflow:visible;border:0!important;border-radius:0!important;padding:0!important;background:transparent!important}.brandFeaturingX{color:#e4ce9e;font-family:Georgia,serif;font-size:25px;font-weight:400;line-height:1;flex:0 0 auto}.topbar .wrap{gap:16px}.navcta{flex:0 0 auto;white-space:nowrap}@media(max-width:850px){.brandFeaturing{gap:7px}.brandVillaLogo{width:95px;height:32px;padding:3px}.brandMalagoLogo{width:78px;height:28px;max-height:30px;object-fit:contain;object-position:center}.brandFeaturingX{font-size:19px}.topbar .wrap{gap:8px}.nav{display:none}}.navctaMobile{display:none}@media(max-width:650px){.topbar{padding:12px 0}.topbar .wrap{justify-content:flex-start;gap:0}.brandFeaturing{gap:4px}.brandVillaLogo{width:74px;height:28px}.brandMalagoLogo{width:52px;max-height:25px;object-fit:contain;object-position:center}.brandFeaturingX{font-size:15px}.navcta{display:inline-flex;align-items:center;margin-left:auto;padding:8px 8px;font-size:9px;letter-spacing:.015em;flex:0 0 auto}.navctaFull{display:none}.navctaMobile{display:inline}}.brand span{color:var(--gold2)}.nav{display:flex;gap:28px;font-size:12px;color:rgba(255,255,255,.8)}.nav a:hover{color:#fff}.navcta{border:1px solid rgba(255,255,255,.5);padding:12px 17px;border-radius:99px;font-size:11px;letter-spacing:.08em;text-transform:uppercase}.hero{min-height:720px;height:min(900px,100svh);position:relative;display:flex;align-items:flex-end;overflow:hidden;background:#343d3c;color:#fff}.hero:before{content:"";position:absolute;inset:0;background:linear-gradient(90deg,rgba(9,16,15,.7),rgba(9,16,15,.2) 72%),linear-gradient(0deg,rgba(9,16,15,.65),transparent 70%),url('https://images.unsplash.com/photo-1602343168117-bb8ffe3e2e9f?auto=format&fit=crop&w=2200&q=85') center/cover}.heroInner{position:relative;z-index:1;padding:140px 0 78px;width:100%}.hero .eyebrow{color:var(--gold2)}h1,h2,h3,p{margin-top:0}h1{font-family:Georgia,"Times New Roman",serif;font-weight:400;letter-spacing:-.045em;font-size:clamp(46px,7.3vw,94px);line-height:.99;max-width:840px;margin:27px 0}.hero h1 em{color:var(--gold2);font-weight:400}.heroText{max-width:520px;color:rgba(255,255,255,.8);line-height:1.8;font-size:15px}.heroActions{display:flex;gap:12px;flex-wrap:wrap;margin-top:30px}.btn{display:inline-flex;align-items:center;justify-content:center;gap:12px;border-radius:100px;padding:16px 22px;font-size:11px;font-weight:800;letter-spacing:.09em;text-transform:uppercase;transition:transform .2s,background .2s;cursor:pointer;border:0}.btn:hover{transform:translateY(-2px)}.btnGold{background:var(--gold2);color:#171915}.btnGlass{border:1px solid rgba(255,255,255,.45);color:white;background:rgba(255,255,255,.08);backdrop-filter:blur(12px)}.heroNote{margin-top:55px;color:rgba(255,255,255,.65);font-size:10px;letter-spacing:.18em;text-transform:uppercase}.intro{padding:110px 0 95px}.introGrid{display:grid;grid-template-columns:.9fr 1.1fr;gap:80px;align-items:start}.intro h2,.sectionHead h2{font-family:Georgia,serif;font-size:clamp(35px,4.4vw,58px);line-height:1.05;letter-spacing:-.04em;font-weight:400;margin:20px 0}.intro p{font-size:15px;line-height:1.9;color:#62655c;max-width:570px}.introQuote{border-left:1px solid var(--gold);padding:5px 0 5px 26px;margin-top:32px;color:#383a33;font-family:Georgia,serif;font-size:22px;line-height:1.45}.statRow{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:35px}.stat{padding:20px 0;border-top:1px solid var(--line)}.stat strong{font-family:Georgia,serif;font-size:29px;font-weight:400;display:block}.stat span{font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);display:block;margin-top:7px}.section{padding:95px 0}.dark{background:var(--dark);color:white}.sectionHead{display:flex;align-items:end;justify-content:space-between;gap:30px;margin-bottom:38px}.sectionHead h2{max-width:650px;margin-bottom:0}.sectionHead p{color:#92968b;max-width:330px;line-height:1.7;font-size:13px;margin-bottom:5px}.servicesGrid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}.service{min-height:275px;border:1px solid rgba(255,255,255,.13);border-radius:18px;overflow:hidden;position:relative;display:flex;align-items:flex-end;padding:22px;background:#242821;isolation:isolate;transition:transform .25s,border-color .25s}.service:hover{transform:translateY(-5px);border-color:rgba(228,206,158,.7)}.service:before{content:"";position:absolute;inset:0;background:linear-gradient(0deg,rgba(0,0,0,.83),rgba(0,0,0,.03) 85%);z-index:-1}.service img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:-2;transition:transform .7s}.service:hover img{transform:scale(1.06)}.serviceNum{position:absolute;top:17px;left:19px;font-size:10px;letter-spacing:.15em;color:rgba(255,255,255,.75)}.service h3{font-family:Georgia,serif;font-weight:400;font-size:25px;line-height:1.05;margin:0 0 9px}.service p{font-size:11px;color:rgba(255,255,255,.72);line-height:1.6;margin:0}.serviceText{width:100%}.serviceLink{display:inline-block;font-size:10px;text-transform:uppercase;letter-spacing:.14em;color:var(--gold2);margin-top:16px}.note{font-size:11px;line-height:1.7;color:#92968b;margin-top:22px}.editorial{padding:100px 0}.editorialGrid{display:grid;grid-template-columns:1.1fr .9fr;gap:70px;align-items:center}.editorialPhoto{height:570px;border-radius:3px 90px 3px 3px;overflow:hidden;position:relative}.editorialPhoto img{width:100%;height:100%;object-fit:cover}.photoTag{position:absolute;bottom:22px;left:22px;padding:12px 15px;background:rgba(17,19,16,.72);backdrop-filter:blur(12px);color:white;font-size:10px;letter-spacing:.14em;text-transform:uppercase}.editorialCopy h2{font-family:Georgia,serif;font-size:clamp(36px,4.5vw,58px);font-weight:400;line-height:1.05;letter-spacing:-.04em;margin:22px 0}.editorialCopy p{font-size:14px;line-height:1.9;color:#686b62}.pillList{display:flex;flex-wrap:wrap;gap:8px;margin:25px 0 32px}.pill{padding:10px 12px;border:1px solid var(--line);border-radius:99px;font-size:10px;letter-spacing:.05em}.steps{display:grid;grid-template-columns:repeat(3,1fr);gap:28px}.step{padding-top:20px;border-top:1px solid rgba(255,255,255,.2)}.stepNo{color:var(--gold2);font-family:Georgia,serif;font-size:24px}.step h3{font-family:Georgia,serif;font-weight:400;font-size:23px;margin:18px 0 10px}.step p{font-size:12px;line-height:1.8;color:#a7aa9f}.request{padding:100px 0;background:#e9e4d9}.requestGrid{display:grid;grid-template-columns:.8fr 1.2fr;gap:70px}.request h2{font-family:Georgia,serif;font-weight:400;font-size:clamp(38px,4.6vw,60px);line-height:1.02;letter-spacing:-.04em;margin:20px 0}.requestCopy p{font-size:14px;line-height:1.9;color:#66695f}.formCard{background:var(--paper);padding:30px;border-radius:20px;box-shadow:0 15px 55px rgba(30,30,20,.06)}.formCard label{display:block;font-size:10px;text-transform:uppercase;letter-spacing:.13em;font-weight:800;color:#77796f;margin-bottom:9px}.field{margin-bottom:18px}.field input,.field select,.field textarea{width:100%;padding:14px 15px;border:1px solid #dedbd2;background:transparent;border-radius:10px;color:var(--ink);outline:none}.field input:focus,.field select:focus,.field textarea:focus{border-color:var(--gold)}.field textarea{min-height:90px;resize:vertical}.formTwo{display:grid;grid-template-columns:1fr 1fr;gap:14px}.checkGrid{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin:8px 0 22px}.check{display:flex;align-items:center;gap:9px;border:1px solid #e4e0d6;padding:12px;border-radius:10px;font-size:12px;color:#4d5048}.check input{accent-color:#9f8151}.formCard .btn{width:100%}.formHint{font-size:10px;color:#888b80;line-height:1.6;margin:12px 0 0}.footer{background:var(--dark);color:white;padding:35px 0}.footer .wrap{display:flex;justify-content:space-between;gap:20px;align-items:center}.footer small{color:#96998f;font-size:10px;line-height:1.6}.footer .brand{font-size:14px}.localGrid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}.localCard{background:var(--paper);border:1px solid var(--line);border-radius:16px;padding:23px;display:flex;flex-direction:column;align-items:flex-start;min-height:220px}.localType{font-size:9px;letter-spacing:.16em;text-transform:uppercase;color:#8c754f;font-weight:800}.localCard h3{font-family:Georgia,serif;font-weight:400;font-size:25px;line-height:1.1;margin:13px 0 9px}.localCard p{font-size:12px;line-height:1.75;color:#686b62;margin:0 0 16px}.localCard a{font-size:10px;text-transform:uppercase;letter-spacing:.1em;font-weight:800;color:#7e6338;margin-top:auto}.localCard a:hover{text-decoration:underline}.localNote{font-size:11px;line-height:1.7;color:#77796f;margin-top:20px}@media(max-width:850px){.localGrid{grid-template-columns:repeat(2,minmax(0,1fr))}}@media(max-width:480px){.localGrid{grid-template-columns:1fr}.localCard{min-height:unset}}.activityModal{position:fixed;inset:0;z-index:30;background:rgba(7,9,7,.82);display:none;align-items:center;justify-content:center;padding:18px;backdrop-filter:blur(8px)}.activityModal.open{display:flex}.activityPanel{position:relative;background:var(--cream);color:var(--ink);width:min(920px,100%);max-height:92svh;overflow:auto;border-radius:22px}.activityClose{position:absolute;right:14px;top:14px;z-index:2;border:0;border-radius:50%;width:42px;height:42px;background:rgba(16,17,15,.78);color:white;font-size:24px;cursor:pointer}.activityGallery{display:grid;grid-template-columns:1.4fr 1fr 1fr;gap:5px;height:280px;background:#ddd}.activityGallery img{width:100%;height:100%;object-fit:cover;min-width:0}.activityGallery img:first-child{grid-row:span 1}.activityContent{padding:30px clamp(20px,5vw,48px) 36px}.activityContent h2{font-family:Georgia,serif;font-weight:400;font-size:clamp(34px,5vw,52px);line-height:1.05;margin:14px 0}.activityContent>p{font-size:14px;line-height:1.85;color:#66695f;max-width:760px}.activityDetails{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:24px 0}.activityDetail{border-top:1px solid var(--line);padding-top:12px}.activityDetail strong{display:block;font-size:10px;text-transform:uppercase;letter-spacing:.1em;margin-bottom:7px}.activityDetail span{font-size:12px;color:#686b62;line-height:1.6}.activityContent .btn{margin:4px 8px 0 0}.btnWhatsapp{background:#25D366!important;color:#fff!important;border:1px solid #25D366!important;box-shadow:0 8px 24px rgba(37,211,102,.24);font-size:12px!important;letter-spacing:.045em!important}.btnWhatsapp:hover{background:#1fb85a!important;transform:translateY(-2px)}.waIcon{width:20px;height:20px;flex:0 0 20px;display:inline-block}.heroWhatsapp{margin-top:13px;display:inline-flex;align-items:center;gap:11px;padding:15px 21px;border-radius:999px;background:#25D366;color:#fff;font-size:11px;font-weight:850;letter-spacing:.06em;text-transform:uppercase;box-shadow:0 10px 30px rgba(0,0,0,.24);border:1px solid rgba(255,255,255,.35);transition:transform .2s,background .2s}.heroWhatsapp:hover{background:#1fb85a;transform:translateY(-3px)}.heroWhatsapp .waIcon{width:23px;height:23px;flex-basis:23px}.hero .heroActions{margin-top:25px}.whatsappFloat{position:fixed;right:20px;bottom:20px;z-index:25;background:#25D366;color:#fff;border:2px solid rgba(255,255,255,.9);border-radius:999px;padding:17px 23px;box-shadow:0 10px 32px rgba(0,0,0,.3);font-size:12px;font-weight:900;letter-spacing:.045em;display:flex;align-items:center;gap:10px;transition:transform .2s,background .2s}.whatsappFloat:hover{background:#1fb85a;transform:translateY(-3px)}.whatsappFloat .waIcon{width:25px;height:25px;flex-basis:25px}.activityContent .btnWhatsapp{display:inline-flex;align-items:center;gap:10px;padding:16px 22px}.activityContent .btnWhatsapp .waIcon{width:22px;height:22px;flex-basis:22px}@media(max-width:650px){.heroWhatsapp{width:100%;justify-content:center;font-size:11px;padding:15px 14px}.whatsappFloat{right:12px;bottom:82px;padding:14px 17px;font-size:11px}.whatsappFloat .waIcon{width:23px;height:23px;flex-basis:23px}}.whatsappFloat{position:fixed;right:18px;bottom:22px;z-index:20;background:#176b4a;color:#fff;border-radius:999px;padding:15px 19px;box-shadow:0 8px 30px #0003;font-size:11px;font-weight:800;letter-spacing:.05em;display:flex;align-items:center;gap:9px}.whatsappFloat:hover{background:#10583c}.service{cursor:pointer}.service:focus-visible{outline:2px solid var(--gold2);outline-offset:3px}@media(max-width:650px){.activityModal{padding:8px}.activityPanel{max-height:94svh;border-radius:16px}.activityGallery{height:210px;grid-template-columns:1fr 1fr;grid-template-rows:1fr 78px}.activityGallery img:first-child{grid-column:span 2}.activityDetails{grid-template-columns:1fr;gap:10px}.activityContent{padding:22px 18px 28px}.whatsappFloat{right:12px;bottom:82px;padding:13px 15px}.mobileCta{z-index:21}}.mobileCta{display:none}
+@media(max-width:850px){.wrap{width:min(100% - 34px,680px)}.nav{display:none}.hero{min-height:760px;height:90svh;max-height:900px}.heroInner{padding:125px 0 62px}.heroText{font-size:14px}.intro,.section,.editorial,.request{padding:72px 0}.introGrid,.editorialGrid,.requestGrid{grid-template-columns:1fr;gap:32px}.introQuote{font-size:19px}.sectionHead{display:block}.sectionHead p{margin-top:20px}.servicesGrid{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.service{min-height:245px;padding:16px}.service h3{font-size:22px}.editorialPhoto{height:430px;order:2}.editorialCopy{order:1}.steps{grid-template-columns:1fr;gap:25px}.step{display:grid;grid-template-columns:40px 1fr;column-gap:15px}.stepNo{grid-row:span 2}.step h3{margin:0 0 7px}.step p{margin:0}.formCard{padding:21px}.footer .wrap{align-items:flex-start;flex-direction:column}.mobileCta{display:flex;position:fixed;bottom:12px;left:12px;right:12px;z-index:10;box-shadow:0 8px 30px #0003}.mobileCta .btn{width:100%;box-shadow:0 8px 30px #0002}.footer{padding-bottom:95px}}
+@media(max-width:420px){.wrap{width:calc(100% - 28px)}.brand{font-size:14px}.hero{min-height:740px}.hero h1{font-size:47px}.heroInner{padding-bottom:56px}.heroActions .btn{width:100%}.statRow{gap:8px}.stat strong{font-size:24px}.stat span{font-size:9px;line-height:1.4}.servicesGrid{gap:8px}.service{min-height:220px}.service h3{font-size:20px}.service p{font-size:10px}.formTwo{grid-template-columns:1fr}.checkGrid{grid-template-columns:1fr 1fr}}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*,*:before,*:after{transition:none!important}}
+
+/* Identité Malago : vert profond de marque, distinct du vert officiel WhatsApp. */
+:root{--malago-green:#176b4a;--malago-green-dark:#10583c;--malago-green-soft:#e8f1eb;--gold:#b89a63;--gold2:#dfc796}
+.brand span{color:var(--malago-green)}
+.eyebrow{color:var(--malago-green)}
+.hero .eyebrow{color:var(--gold2)}
+/* En attendant une vraie photo de La Villa Magos, ne pas présenter une villa de stock comme si c'était la propriété. */
+.hero:before{background:linear-gradient(90deg,rgba(9,16,15,.66),rgba(9,16,15,.12) 72%),linear-gradient(0deg,rgba(9,16,15,.5),transparent 70%),url('https://media.vrbo.com/lodging/125000000/124250000/124246600/124246600/3c99860b.jpg?impolicy=resizecrop&ra=fit&rw=1200') center 52%/cover}
+.btnWhatsapp,.heroWhatsapp{background:#25D366;color:#fff;border-color:#25D366}
+.btnWhatsapp:hover,.heroWhatsapp:hover{background:#1fb85a}
+.whatsappFloat{background:#25D366;color:#fff;border:2px solid rgba(255,255,255,.9)}
+.whatsappFloat:hover{background:#1fb85a}
+.localType{color:var(--malago-green)}
+.localCard a{color:var(--malago-green)}
+.check input{accent-color:var(--malago-green)}
+.field input:focus,.field select:focus,.field textarea:focus{border-color:var(--malago-green)}
+
+
+/* Couleur WhatsApp demandée : #075E54 */
+.btnWhatsapp,.heroWhatsapp,.whatsappFloat{background:#075E54!important;color:#fff!important;border-color:#075E54!important}
+.btnWhatsapp:hover,.heroWhatsapp:hover,.whatsappFloat:hover{background:#064e47!important;border-color:#064e47!important}
+
+
+/* Malago brand system + premium Villa Magos treatment */
+:root{--malago-orange:#EE8405;--malago-orange-soft:#fff0dc;--malago-green:#075E54;--ink:#171915;--cream:#f5f1e8;--paper:#fffdf8;--gold:#c5a46d;--gold2:#e4ce9e;--dark:#0b0b0b}
+.brand span{color:var(--malago-orange)}
+.eyebrow{color:var(--malago-orange)}
+.hero .eyebrow{color:var(--gold2)}
+.btnGold{background:var(--malago-orange);color:#171915}
+.btnGold:hover{background:#d87500}
+.introQuote{border-left-color:var(--malago-orange)}
+.stepNo{color:var(--malago-orange)}
+.service:hover{border-color:rgba(238,132,5,.8)}
+.serviceLink{color:#ffb24f}
+.pill{border-color:rgba(238,132,5,.28)}
+.field input:focus,.field select:focus,.field textarea:focus{border-color:var(--malago-orange)}
+.check input{accent-color:var(--malago-orange)}
+.localType{color:#b86b08}
+.localCard a{color:#a95d00}
+.navcta:hover{border-color:var(--malago-orange);color:#ffd6a1}
+.btnWhatsapp,.heroWhatsapp,.whatsappFloat{background:#075E54!important;color:#fff!important;border-color:#075E54!important}
+.btnWhatsapp:hover,.heroWhatsapp:hover,.whatsappFloat:hover{background:#064e47!important;border-color:#064e47!important}
+
+
+/* Galerie officielle Villa Magos */
+.villaGallery{padding:76px 0 88px;background:#f5f1e8}
+.villaGalleryHead{display:flex;justify-content:space-between;align-items:end;gap:24px;margin-bottom:28px}
+.villaGalleryHead h2{font-family:Georgia,serif;font-weight:400;font-size:clamp(34px,4.2vw,54px);line-height:1.05;letter-spacing:-.04em;margin:16px 0 0;max-width:600px}
+.villaGalleryHead p{max-width:330px;color:#686b62;font-size:13px;line-height:1.8;margin:0}
+.villaGalleryGrid{display:grid;grid-template-columns:1.35fr 1fr 1fr;grid-template-rows:220px 220px;gap:10px}
+.villaGalleryItem{margin:0;position:relative;overflow:hidden;background:#ded8ca;border-radius:3px 24px 3px 3px}
+.villaGalleryItem:first-child{grid-row:span 2}
+.villaGalleryItem img{width:100%;height:100%;display:block;object-fit:cover;transition:transform .7s}
+.villaGalleryItem:hover img{transform:scale(1.04)}
+.villaGalleryItem figcaption{position:absolute;left:12px;bottom:12px;padding:9px 12px;background:rgba(11,11,11,.72);color:white;font-size:10px;letter-spacing:.1em;text-transform:uppercase;backdrop-filter:blur(8px)}
+@media(max-width:700px){.villaGallery{padding:58px 0}.villaGalleryHead{display:block}.villaGalleryHead p{margin-top:15px}.villaGalleryGrid{grid-template-columns:1fr 1fr;grid-template-rows:240px 150px 150px}.villaGalleryItem:first-child{grid-column:span 2;grid-row:auto}}
+
+
+/* HERO IMMERSIF — la piscine, puis les expériences Malago */
+.villaStory{position:relative;height:400svh;background:#0b0d0b;color:#fff;isolation:isolate}
+.villaStoryPin{position:sticky;top:0;height:100svh;min-height:560px;overflow:hidden;background:#10110f}
+.villaStoryFrames,.villaStoryVignette{position:absolute;inset:0}
+.bartenderDayGrid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin-top:14px}.bartenderDayChoice{min-height:68px;border:1px solid rgba(224,201,151,.25);border-radius:14px;background:#1d1d19;color:#e8e1d4;padding:10px 6px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;font:inherit;text-transform:capitalize}.bartenderDayChoice small{font-size:12px;color:#a9a49a}.bartenderDayChoice.is-selected{background:#332b1e;border-color:#e8cf9b;box-shadow:inset 3px 0 #e8cf9b}.bartenderPerDay{border:1px solid rgba(224,201,151,.2);border-radius:14px;padding:14px;margin-top:12px}.bartenderPerDayTitle{display:block;color:#e8cf9b;margin-bottom:12px;text-transform:capitalize}.bartenderHelp{font-size:14px;line-height:1.5;color:#a9a49a;margin:4px 0 10px}.bartenderSelectAll{margin-top:12px;border:1px solid #e8cf9b;border-radius:12px;background:transparent;color:#e8cf9b;padding:12px 16px;font:inherit}@media(max-width:390px){.bartenderDayGrid{grid-template-columns:repeat(2,minmax(0,1fr))}}.bartenderScheduleGroup{border:1px solid rgba(224,201,151,.22);border-radius:18px;padding:18px;margin:18px 0;background:rgba(255,255,255,.015)}.bartenderScheduleGroup h3{font-size:18px;margin:0 0 6px;color:#e8d09f;font-weight:600}.bartenderScheduleGroup .malagoFlowOptions{margin-top:14px}.bartenderScheduleGroup .malagoFlowField{margin:14px 0 0}.bartenderHelp{font-size:14px;line-height:1.5;color:#a9a49a;margin:4px 0 10px}.bartenderScheduleGroup .bartenderTimeRow{margin-top:10px}.bartenderScheduleGroup .bartenderTimeRow+.bartenderTimeRow{margin-top:16px}.malagoFlowRow.bartenderTimeRow{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;background:transparent!important;padding:0!important;margin:14px 0}.malagoFlowRow.bartenderTimeRow .malagoFlowField{min-width:0;margin:0}.malagoFlowRow.bartenderTimeRow input{width:100%;min-width:0;box-sizing:border-box}@media(max-width:520px){.malagoFlowRow.bartenderTimeRow{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.malagoFlowRow.bartenderTimeRow label{font-size:14px}}.villaStoryFrame{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center 50%;opacity:0;transform:scale(1.018);transition:opacity .85s ease,transform 1.5s cubic-bezier(.2,.7,.2,1);will-change:opacity,transform}
+.villaStoryFrame[data-scene="pool"]{opacity:1;transform:scale(1)}
+.villaStoryPin[data-scene="chef"] .villaStoryFrame[data-scene="chef"],
+.villaStoryPin[data-scene="barman"] .villaStoryFrame[data-scene="barman"],
+.villaStoryPin[data-scene="dj"] .villaStoryFrame[data-scene="dj"]{opacity:1;transform:scale(1)}
+.villaStoryVignette{pointer-events:none;background:linear-gradient(0deg,rgba(8,10,9,.72),transparent 42%),linear-gradient(90deg,rgba(8,10,9,.22),transparent 66%);opacity:0;transition:opacity .55s ease}
+.villaStoryPin[data-scene="chef"] .villaStoryVignette,
+.villaStoryPin[data-scene="barman"] .villaStoryVignette,
+.villaStoryPin[data-scene="dj"] .villaStoryVignette{opacity:1}
+.villaStoryCopy{position:absolute;z-index:2;left:clamp(24px,7vw,100px);bottom:clamp(42px,9vh,100px);max-width:min(570px,82vw);opacity:0;transform:translateY(18px);transition:opacity .45s ease,transform .55s ease;pointer-events:none}
+.villaStoryPin[data-scene="chef"] .villaStoryCopy,
+.villaStoryPin[data-scene="barman"] .villaStoryCopy,
+.villaStoryPin[data-scene="dj"] .villaStoryCopy{opacity:1;transform:translateY(0);pointer-events:auto}
+.villaStoryKicker{display:flex;align-items:center;gap:10px;color:#f1d8a8;font-size:10px;letter-spacing:.22em;font-weight:800;text-transform:uppercase;margin-bottom:16px}
+.villaStoryKicker:before{content:"";display:block;width:26px;height:1px;background:currentColor}
+.villaStoryCopy h2{font-family:Georgia,"Times New Roman",serif;font-weight:400;letter-spacing:-.045em;font-size:clamp(42px,6vw,76px);line-height:.98;margin:0 0 16px;max-width:580px}
+.villaStoryCopy h2 em{font-weight:400;color:#f1d8a8}
+.villaStoryCopy p{max-width:420px;font-size:14px;line-height:1.75;color:rgba(255,255,255,.86);margin:0 0 23px}
+.villaStoryCopy .btn{pointer-events:auto}
+.villaStoryProgress{position:absolute;z-index:2;right:clamp(20px,4vw,58px);bottom:clamp(42px,9vh,100px);display:flex;align-items:center;gap:10px;color:rgba(255,255,255,.8);font-size:10px;letter-spacing:.16em;opacity:0;transition:opacity .3s}
+.villaStoryPin[data-scene="chef"] .villaStoryProgress,
+.villaStoryPin[data-scene="barman"] .villaStoryProgress,
+.villaStoryPin[data-scene="dj"] .villaStoryProgress{opacity:1}
+.villaStoryProgressTrack{display:flex;gap:4px}
+.villaStoryProgressTrack i{display:block;width:17px;height:2px;background:rgba(255,255,255,.42);transition:background .25s,width .25s}
+.villaStoryPin[data-scene="chef"] .villaStoryProgressTrack i:nth-child(1),
+.villaStoryPin[data-scene="barman"] .villaStoryProgressTrack i:nth-child(-n+2),
+.villaStoryPin[data-scene="dj"] .villaStoryProgressTrack i{background:#f1d8a8}
+.villaStoryStep{height:100svh;min-height:560px;pointer-events:none}
+@media(min-width:1000px){
+ .villaStoryFrame[data-scene="chef"]{object-position:center 58%}
+ .villaStoryFrame[data-scene="barman"]{object-position:center 53%}
+ .villaStoryFrame[data-scene="dj"]{object-position:center 54%}
+}
+@media(max-width:700px){
+ .villaStory{height:400svh}
+ .villaStoryPin{min-height:520px}
+ .villaStoryFrame{object-position:center center}
+ .villaStoryVignette{background:linear-gradient(0deg,rgba(8,10,9,.78),transparent 58%)}
+ .villaStoryCopy{left:22px;right:22px;bottom:64px;max-width:none}
+ .villaStoryCopy h2{font-size:clamp(41px,12vw,60px);margin-bottom:13px}
+ .villaStoryCopy p{font-size:13px;line-height:1.65;max-width:340px;margin-bottom:18px}
+ .villaStoryCopy .btn{font-size:10px;padding:14px 16px}
+ .villaStoryProgress{right:22px;bottom:32px;font-size:9px}
+}
+@media(prefers-reduced-motion:reduce){
+ .villaStoryFrame,.villaStoryVignette,.villaStoryCopy,.villaStoryProgress{transition:none}
+}
+
+
+/* Accueil Villa Magos : carrousel plein écran, automatique et pilotable au doigt. */
+.villaHomeCarousel .villaStoryFrame[data-slide="0"]:not(.is-active){opacity:0!important;transform:scale(1.045)}
+
+.villaStory.villaHomeCarousel{height:auto;min-height:0;background:#0b0d0b}
+.villaHomeCarousel .villaStoryPin{position:relative;top:auto;height:min(900px,100svh);min-height:650px;max-height:1000px}
+.villaHomeCarousel .villaStoryFrames{overflow:hidden}
+.villaHomeCarousel .villaStoryFrame{opacity:0;transform:scale(1.045);transition:opacity 1s ease,transform 6s ease}
+.villaHomeCarousel .villaStoryFrame.is-active{opacity:1;transform:scale(1)}
+.villaHomeCarousel .villaStoryVignette{opacity:1;background:linear-gradient(0deg,rgba(8,10,9,.78),rgba(8,10,9,.06) 72%),linear-gradient(90deg,rgba(8,10,9,.42),transparent 78%)}
+.villaHomeCarousel .villaStoryCopy{opacity:1;transform:none;pointer-events:auto;bottom:clamp(110px,15vh,150px);max-width:min(720px,82vw)}
+.villaHomeCarousel .villaStoryCopy h2{font-size:clamp(48px,7vw,88px);margin:0 0 18px}
+.villaHomeCarousel .villaStoryCopy p{font-size:15px;max-width:470px;margin-bottom:24px}
+.villaCarouselControls{position:absolute;z-index:4;right:clamp(22px,6vw,80px);bottom:clamp(35px,7vh,70px);display:flex;align-items:center;gap:13px;color:#fff}
+.villaCarouselArrow{width:42px;height:42px;border-radius:50%;border:1px solid rgba(255,255,255,.55);background:rgba(12,15,12,.25);color:#fff;font-size:19px;cursor:pointer;backdrop-filter:blur(8px)}
+.villaCarouselArrow:hover{background:var(--malago-orange);border-color:var(--malago-orange);color:#171915}
+.villaCarouselDots{display:flex;align-items:center;gap:6px}
+.villaCarouselDot{width:7px;height:7px;border:0;border-radius:50%;background:rgba(255,255,255,.5);padding:0;cursor:pointer;transition:width .25s,background .25s}
+.villaCarouselDot.is-active{width:24px;border-radius:99px;background:var(--malago-orange)}
+.villaCarouselCount{font-size:10px;letter-spacing:.14em;min-width:45px;text-align:center}
+.villaCarouselScroll{position:absolute;left:clamp(24px,7vw,100px);bottom:clamp(42px,7vh,70px);z-index:3;font-size:9px;letter-spacing:.18em;color:rgba(255,255,255,.75)}
+.villaCarouselScroll span{color:var(--malago-orange);font-size:15px;margin-left:10px}
+@media(max-width:650px){
+ .villaHomeCarousel .villaStoryPin{height:88svh;min-height:680px;max-height:850px}
+ .villaHomeCarousel .villaStoryCopy{left:22px;right:22px;bottom:140px;max-width:none}
+ .villaHomeCarousel .villaStoryCopy h2{font-size:clamp(43px,12vw,60px)}
+ .villaHomeCarousel .villaStoryCopy p{font-size:13px;max-width:330px}
+ .villaCarouselControls{left:22px;right:22px;bottom:52px;justify-content:flex-end;gap:9px}
+ .villaCarouselScroll{left:22px;bottom:63px;font-size:8px;max-width:45%}
+ .villaCarouselArrow{width:36px;height:36px}
+}
+@media(prefers-reduced-motion:reduce){.villaHomeCarousel .villaStoryFrame{transition:none}}
+
+
+.villaSingleHero{height:auto!important;min-height:0!important}
+.villaSingleHero .villaStoryPin{position:relative!important;top:auto!important;height:min(900px,100svh)!important;min-height:650px!important;max-height:1000px!important}
+.villaSingleHero .villaStoryFrame{opacity:1!important;transform:none!important}
+.villaSingleHero .villaStoryCopy{opacity:1!important;transform:none!important;pointer-events:auto!important;bottom:clamp(100px,15vh,150px)!important}
+.villaSingleHero .villaCarouselScroll{bottom:clamp(35px,7vh,70px)!important}
+@media(max-width:650px){.villaSingleHero .villaStoryPin{height:88svh!important;min-height:640px!important;max-height:850px!important}.villaSingleHero .villaStoryCopy{left:22px!important;right:22px!important;bottom:100px!important}.villaSingleHero .villaCarouselScroll{left:22px!important;bottom:45px!important}}
+/* HERO d'accueil — piscine seule puis expériences à swiper */
+/* L’en-tête reste visible sur toutes les sections, y compris après le scroll mobile. */
+.topbar,.whatsappFloat,.mobileCta{transition:opacity .45s ease,visibility .45s ease}
+.villaHomeCarousel[data-current-slide="0"] .villaStoryVignette{opacity:0!important;background:none!important}
+.villaHomeCarousel[data-current-slide="0"] .villaStoryCopy{opacity:0!important;visibility:hidden!important;pointer-events:none!important;transform:none!important}
+.villaHomeCarousel[data-current-slide="0"] .villaCarouselControls,
+.villaHomeCarousel[data-current-slide="0"] .villaCarouselScroll{display:none!important}
+.villaHomeCarousel[data-current-slide="0"] .villaStoryFrame[data-slide="0"]{object-position:center center;filter:none}
+.villaHomeCarousel .villaStoryFrame{touch-action:pan-y}
+.villaHomeCarousel .villaStoryKicker{color:var(--malago-orange);letter-spacing:.24em}
+.villaHomeCarousel .villaStoryCopy h2 em{color:#f4b45b}
+@media(max-width:650px){
+ .villaHomeCarousel .villaStoryPin{height:100svh;min-height:560px;max-height:none}
+ .villaHomeCarousel .villaStoryCopy{bottom:145px}
+ .villaCarouselControls{bottom:34px}
+}
+@media(prefers-reduced-motion:reduce){.topbar,.whatsappFloat,.mobileCta{transition:none}}
+
+body.villa-home-pool .villaHomeCarousel .villaStoryCopy{opacity:0!important;visibility:hidden!important;pointer-events:none!important;transform:none!important}
+body.villa-home-pool .villaHomeCarousel .villaStoryVignette{opacity:0!important;background:none!important}
+.villaHomeCarousel .villaStoryPin{touch-action:pan-y}
+
+
+body.villa-home-pool .villaHomeCarousel .villaCarouselControls,
+body.villa-home-pool .villaHomeCarousel .villaCarouselScroll{display:none!important}
+
+
+/* Synchronisation stricte image/texte et transitions plus douces */
+.villaSingleHero .villaStoryFrame{opacity:0!important;transform:scale(1.035)!important;transition:opacity .9s ease,transform 5.8s cubic-bezier(.2,.65,.25,1)!important}
+.villaSingleHero .villaStoryFrame.is-active{opacity:1!important;transform:scale(1)!important}
+.villaHomeCarousel .villaStoryCopy{opacity:1;transition:opacity .35s ease,transform .45s ease!important}
+.villaHomeCarousel.is-copy-changing .villaStoryCopy{opacity:0!important;transform:translateY(12px)!important}
+.villaHomeCarousel .villaStoryFrame{will-change:opacity,transform}
+.villaHomeCarousel .villaCarouselDot{transition:width .35s ease,background .35s ease}
+@media(prefers-reduced-motion:reduce){
+ .villaSingleHero .villaStoryFrame,.villaHomeCarousel .villaStoryCopy{transition:none!important}
+}
+
+
+/* Lisibilité du hero : cadrage abaissé et zone de texte protégée */
+.villaHomeCarousel .villaStoryFrames{background:#0b0d0b}
+.villaHomeCarousel .villaStoryFrame{object-position:center 43%!important}
+.villaHomeCarousel .villaStoryFrame[data-slide="0"]{object-position:center 50%!important}
+.villaHomeCarousel .villaStoryVignette{
+  opacity:1!important;
+  background:
+    linear-gradient(0deg,rgba(5,7,6,.94) 0%,rgba(5,7,6,.78) 22%,rgba(5,7,6,.32) 48%,rgba(5,7,6,.02) 76%),
+    linear-gradient(90deg,rgba(5,7,6,.40) 0%,rgba(5,7,6,.12) 54%,transparent 100%)!important;
+  transition:opacity .5s ease,background .5s ease;
+}
+.villaHomeCarousel .villaStoryCopy{
+  left:clamp(24px,7vw,100px)!important;
+  bottom:clamp(116px,17vh,174px)!important;
+  max-width:min(650px,78vw)!important;
+  padding:clamp(0px,1vw,12px) 0 0!important;
+  text-shadow:0 2px 18px rgba(0,0,0,.28);
+}
+.villaHomeCarousel .villaStoryCopy h2{
+  max-width:620px;
+  text-wrap:balance;
+  line-height:1.02;
+  margin-bottom:14px!important;
+}
+.villaHomeCarousel .villaStoryCopy p{
+  max-width:430px!important;
+  color:rgba(255,255,255,.94)!important;
+  text-shadow:0 1px 12px rgba(0,0,0,.65);
+}
+.villaHomeCarousel .villaStoryKicker{ text-shadow:0 1px 10px rgba(0,0,0,.6) }
+.villaHomeCarousel .villaCarouselControls{bottom:clamp(28px,5vh,52px)!important}
+.villaHomeCarousel .villaCarouselScroll{bottom:clamp(34px,5vh,55px)!important}
+@media(max-width:650px){
+  .villaHomeCarousel .villaStoryFrame{object-position:center 38%!important}
+  .villaHomeCarousel .villaStoryFrame[data-slide="0"]{object-position:center 50%!important}
+  .villaHomeCarousel .villaStoryVignette{
+    background:linear-gradient(0deg,rgba(5,7,6,.96) 0%,rgba(5,7,6,.84) 28%,rgba(5,7,6,.38) 55%,rgba(5,7,6,.03) 82%)!important;
+  }
+  .villaHomeCarousel .villaStoryCopy{
+    left:22px!important;right:22px!important;bottom:116px!important;max-width:none!important;
+  }
+  .villaHomeCarousel .villaStoryCopy h2{font-size:clamp(39px,10.5vw,56px)!important;line-height:1.04}
+  .villaHomeCarousel .villaStoryCopy p{font-size:13px!important;line-height:1.6!important;max-width:340px!important}
+  .villaHomeCarousel .villaCarouselControls{bottom:30px!important}
+  .villaHomeCarousel .villaCarouselScroll{bottom:42px!important}
+}
+@media(prefers-reduced-motion:reduce){.villaHomeCarousel .villaStoryVignette{transition:none!important}}
+
+
+/* HERO mobile : image en haut, texte sur fond uni — aucune superposition */
+@media(max-width:650px){
+  .villaHomeCarousel .villaStoryPin{
+    height:calc(100svh - 12px)!important;
+    min-height:700px!important;
+    max-height:none!important;
+    background:#0b0b0b!important;
+    overflow:hidden!important;
+  }
+  .villaHomeCarousel .villaStoryFrames{
+    position:absolute!important;
+    inset:0 0 auto 0!important;
+    height:47%!important;
+    background:#0b0b0b!important;
+    overflow:hidden!important;
+  }
+  .villaHomeCarousel .villaStoryFrame{
+    height:100%!important;
+    width:100%!important;
+    object-fit:cover!important;
+    object-position:center 42%!important;
+    transform:none!important;
+  }
+  .villaHomeCarousel .villaStoryFrame[data-slide="0"]{object-position:center 50%!important}
+  .villaHomeCarousel .villaStoryVignette{
+    position:absolute!important;
+    inset:0!important;
+    height:51%!important;
+    background:linear-gradient(180deg,rgba(0,0,0,.03) 35%,rgba(11,11,11,.35) 72%,#0b0b0b 100%)!important;
+    opacity:1!important;
+  }
+  .villaHomeCarousel .villaStoryCopy{
+    position:absolute!important;
+    top:calc(47% + 14px)!important;
+    bottom:94px!important;
+    left:22px!important;
+    right:22px!important;
+    width:auto!important;
+    max-width:none!important;
+    padding:0!important;
+    display:flex!important;
+    flex-direction:column!important;
+    align-items:flex-start!important;
+    justify-content:flex-start!important;
+    gap:0!important;
+    text-shadow:none!important;
+    overflow:hidden!important;
+  }
+  .villaHomeCarousel .villaStoryKicker{
+    margin:0 0 9px!important;
+    font-size:10px!important;
+    letter-spacing:.19em!important;
+    line-height:1.4!important;
+    text-shadow:none!important;
+  }
+  .villaHomeCarousel .villaStoryCopy h2{
+    margin:0 0 10px!important;
+    max-width:100%!important;
+    font-size:clamp(31px,8.2vw,43px)!important;
+    line-height:1.02!important;
+    letter-spacing:-.045em!important;
+    text-wrap:balance!important;
+  }
+  .villaHomeCarousel .villaStoryCopy p{
+    margin:0 0 14px!important;
+    max-width:100%!important;
+    font-size:13px!important;
+    line-height:1.45!important;
+    color:rgba(255,255,255,.82)!important;
+    text-shadow:none!important;
+  }
+  .villaHomeCarousel .villaStoryCopy .btn{
+    min-height:44px!important;
+    padding:12px 17px!important;
+    font-size:10px!important;
+    letter-spacing:.12em!important;
+    white-space:normal!important;
+    max-width:100%!important;
+  }
+  .villaHomeCarousel .villaCarouselScroll{display:none!important}
+  .villaHomeCarousel .villaCarouselControls{
+    bottom:22px!important;
+    left:18px!important;
+    right:18px!important;
+    justify-content:center!important;
+    gap:9px!important;
+    z-index:12!important;
+  }
+  .villaHomeCarousel .villaCarouselArrow{width:34px!important;height:34px!important}
+  .villaHomeCarousel .villaCarouselCount{font-size:10px!important}
+  .villaHomeCarousel .villaCarouselDot{min-width:7px!important}
+  .villaHomeCarousel .villaCarouselDot.is-active{min-width:22px!important}
+  /* Le bouton WhatsApp flottant reste visible sur toutes les diapositives du carrousel. */
+  body.villa-home-pool .villaHomeCarousel .villaStoryCopy,
+  body.villa-home-pool .villaHomeCarousel .villaStoryVignette{opacity:0!important;visibility:hidden!important}
+}
+@media(max-width:390px){
+  .villaHomeCarousel .villaStoryPin{min-height:660px!important}
+  .villaHomeCarousel .villaStoryFrames{height:43%!important}
+  .villaHomeCarousel .villaStoryVignette{height:47%!important}
+  .villaHomeCarousel .villaStoryCopy{top:calc(43% + 12px)!important;bottom:88px!important}
+  .villaHomeCarousel .villaStoryCopy h2{font-size:31px!important}
+  .villaHomeCarousel .villaStoryCopy p{font-size:12px!important}
+}
+
+
+/* Invitation discrète à découvrir le carrousel par un swipe vers la gauche */
+@keyframes villaSwipeHint{
+  0%,100%{transform:translateX(0);opacity:.92}
+  50%{transform:translateX(-9px);opacity:1}
+}
+.villaHomeCarousel .villaSwipeHint{
+  position:absolute;z-index:14;display:flex;align-items:center;gap:12px;
+  color:#fff;letter-spacing:.17em;text-transform:uppercase;font-size:10px;
+  font-weight:700;pointer-events:none;
+  text-shadow:0 2px 12px rgba(0,0,0,.45);
+  animation:villaSwipeHint 1.8s ease-in-out infinite;
+}
+.villaHomeCarousel .villaSwipeHint .villaSwipeArrow{
+  width:40px;height:40px;border:1px solid rgba(255,255,255,.68);
+  border-radius:50%;display:grid;place-items:center;font-size:22px;line-height:1;
+  background:rgba(10,10,10,.16);backdrop-filter:blur(5px);
+}
+.villaHomeCarousel .villaSwipeHint[hidden]{display:none!important}
+@media(max-width:650px){
+  .villaHomeCarousel .villaSwipeHint{
+    top:calc(47% - 54px);right:20px;font-size:9px;gap:8px;
+  }
+  .villaHomeCarousel .villaSwipeHint .villaSwipeArrow{width:34px;height:34px}
+  .villaHomeCarousel[data-current-slide="0"] .villaSwipeHint{
+    top:calc(47% - 54px);
+    color:#fff;
+  }
+}
+@media(max-width:390px){
+  .villaHomeCarousel .villaSwipeHint{top:calc(43% - 48px);right:16px}
+}
+@media(prefers-reduced-motion:reduce){.villaHomeCarousel .villaSwipeHint{animation:none}}
+
+
+/* Message d'accueil : montrer que Villa Magos offre plus qu'un logement */
+@media(max-width:650px){
+  body.villa-home-pool .villaHomeCarousel .villaStoryCopy{
+    top:auto!important;
+    bottom:94px!important;
+    left:22px!important;right:22px!important;
+    height:auto!important;
+    display:flex!important;
+    opacity:1!important;
+    visibility:visible!important;
+    pointer-events:auto!important;
+    transform:none!important;
+    overflow:visible!important;
+    color:#fff!important;
+    text-shadow:0 2px 18px rgba(0,0,0,.45)!important;
+  }
+  body.villa-home-pool .villaHomeCarousel .villaStoryVignette{
+    height:100%!important;
+    background:linear-gradient(180deg,rgba(0,0,0,0) 38%,rgba(0,0,0,.12) 53%,rgba(0,0,0,.76) 100%)!important;
+    opacity:1!important;visibility:visible!important;
+  }
+  body.villa-home-pool .villaHomeCarousel .villaStoryKicker{display:block!important;color:#ffb04a!important}
+  body.villa-home-pool .villaHomeCarousel .villaStoryCopy h2{
+    display:block!important;font-size:clamp(34px,9vw,44px)!important;
+    line-height:1.02!important;margin:0 0 10px!important;max-width:360px!important;
+  }
+  body.villa-home-pool .villaHomeCarousel .villaStoryCopy p{
+    display:block!important;font-size:13px!important;line-height:1.5!important;
+    max-width:340px!important;margin:0!important;color:rgba(255,255,255,.94)!important;
+  }
+  body.villa-home-pool .villaHomeCarousel .villaStoryCopy .btn{display:none!important}
+  body.villa-home-pool .villaHomeCarousel .villaSwipeHint{top:auto!important;bottom:28px!important;right:20px!important}
+}
+
+
+/* Hiérarchie du message d'accueil : plus éditoriale, plus proche de la photo */
+@media(max-width:650px){
+  body.villa-home-pool .villaHomeCarousel .villaStoryCopy{
+    bottom:100px!important;
+    gap:0!important;
+    padding:0!important;
+    max-width:360px!important;
+  }
+  body.villa-home-pool .villaHomeCarousel .villaStoryKicker{
+    display:flex!important;align-items:center!important;gap:9px!important;
+    margin:0 0 13px!important;font-size:9px!important;
+    letter-spacing:.17em!important;line-height:1.35!important;
+    color:#f3ad4d!important;
+  }
+  body.villa-home-pool .villaHomeCarousel .villaStoryKicker:before{
+    content:"";display:block;width:23px;height:1px;background:#ee8405;flex:0 0 23px;
+  }
+  body.villa-home-pool .villaHomeCarousel .villaStoryCopy h2{
+    font-size:clamp(36px,9.4vw,46px)!important;
+    line-height:.99!important;letter-spacing:-.055em!important;
+    margin:0 0 13px!important;max-width:350px!important;
+    text-wrap:balance!important;
+  }
+  body.villa-home-pool .villaHomeCarousel .villaStoryCopy h2 em{
+    display:block!important;color:#f0ae58!important;
+    font-weight:400!important;
+  }
+  body.villa-home-pool .villaHomeCarousel .villaStoryCopy p{
+    font-size:13px!important;line-height:1.55!important;
+    letter-spacing:-.01em!important;max-width:320px!important;
+    color:rgba(255,255,255,.84)!important;
+  }
+  body.villa-home-pool .villaHomeCarousel .villaSwipeHint{
+    left:22px!important;right:22px!important;bottom:26px!important;
+    top:auto!important;justify-content:space-between!important;
+    font-size:9px!important;letter-spacing:.14em!important;
+  }
+}
+@media(min-width:651px){
+  body.villa-home-pool .villaHomeCarousel .villaStoryCopy{
+    max-width:620px!important;bottom:clamp(110px,15vh,170px)!important;
+  }
+  body.villa-home-pool .villaHomeCarousel .villaStoryCopy h2{
+    max-width:620px!important;font-size:clamp(54px,6vw,82px)!important;
+    line-height:.98!important;letter-spacing:-.045em!important;
+  }
+  body.villa-home-pool .villaHomeCarousel .villaStoryCopy p{
+    max-width:440px!important;font-size:16px!important;line-height:1.65!important;
+  }
+}
+
+
+/* Aligner le texte de toutes les slides sur le même système éditorial mobile */
+@media(max-width:650px){
+  .villaHomeCarousel:not([data-current-slide="0"]) .villaStoryCopy{
+    top:auto!important;
+    bottom:clamp(112px,15vh,142px)!important;
+    left:22px!important;right:22px!important;
+    width:auto!important;max-width:360px!important;
+    padding:0!important;margin:0!important;
+    display:flex!important;flex-direction:column!important;
+    align-items:flex-start!important;justify-content:flex-end!important;
+    gap:0!important;overflow:visible!important;
+    text-shadow:none!important;
+  }
+  .villaHomeCarousel:not([data-current-slide="0"]) .villaStoryKicker{
+    display:flex!important;align-items:center!important;gap:9px!important;
+    margin:0 0 13px!important;font-size:9px!important;
+    line-height:1.35!important;letter-spacing:.17em!important;
+    color:#f3ad4d!important;
+  }
+  .villaHomeCarousel:not([data-current-slide="0"]) .villaStoryKicker:before{
+    content:"";display:block;width:23px;height:1px;background:#ee8405;flex:0 0 23px;
+  }
+  .villaHomeCarousel:not([data-current-slide="0"]) .villaStoryCopy h2{
+    font-size:clamp(36px,9.4vw,46px)!important;
+    line-height:.99!important;letter-spacing:-.055em!important;
+    margin:0 0 13px!important;max-width:350px!important;
+    text-wrap:balance!important;
+  }
+  .villaHomeCarousel:not([data-current-slide="0"]) .villaStoryCopy h2 em{
+    display:block!important;color:#f0ae58!important;font-weight:400!important;
+  }
+  .villaHomeCarousel:not([data-current-slide="0"]) .villaStoryCopy p{
+    margin:0 0 19px!important;max-width:320px!important;
+    font-size:13px!important;line-height:1.55!important;
+    color:rgba(255,255,255,.84)!important;
+  }
+  .villaHomeCarousel:not([data-current-slide="0"]) .villaStoryCopy .btn{
+    display:inline-flex!important;align-self:flex-start!important;
+    align-items:center!important;justify-content:center!important;
+    min-height:44px!important;padding:12px 17px!important;
+    max-width:100%!important;white-space:normal!important;
+    font-size:10px!important;letter-spacing:.12em!important;
+  }
+  .villaHomeCarousel:not([data-current-slide="0"]) .villaStoryVignette{
+    inset:0!important;height:100%!important;opacity:1!important;
+    background:linear-gradient(180deg,rgba(0,0,0,0) 0%,rgba(0,0,0,.04) 30%,rgba(0,0,0,.2) 44%,#0b0b0b 60%,#0b0b0b 100%)!important;
+  }
+  .villaHomeCarousel:not([data-current-slide="0"]) .villaSwipeHint{display:none!important}
+}
+@media(max-width:390px){
+  .villaHomeCarousel:not([data-current-slide="0"]) .villaStoryCopy{bottom:105px!important}
+  .villaHomeCarousel:not([data-current-slide="0"]) .villaStoryCopy h2{font-size:32px!important}
+  .villaHomeCarousel:not([data-current-slide="0"]) .villaStoryCopy p{font-size:12px!important}
+}
+
+
+/* Piscine : rapprocher le bloc éditorial de la photo comme sur les autres slides */
+@media(max-width:650px){
+  body.villa-home-pool .villaHomeCarousel .villaStoryCopy{
+    top:calc(47% + 22px)!important;
+    bottom:auto!important;
+    left:22px!important;right:22px!important;
+    height:auto!important;
+    max-height:none!important;
+    justify-content:flex-start!important;
+    overflow:visible!important;
+  }
+  body.villa-home-pool .villaHomeCarousel .villaStoryCopy .villaStoryKicker{margin-bottom:11px!important}
+  body.villa-home-pool .villaHomeCarousel .villaStoryCopy h2{
+    margin-bottom:11px!important;
+    font-size:clamp(34px,8.8vw,43px)!important;
+    line-height:1.01!important;
+  }
+  body.villa-home-pool .villaHomeCarousel .villaStoryCopy p{
+    max-width:330px!important;
+    margin-bottom:0!important;
+    font-size:13px!important;
+    line-height:1.5!important;
+  }
+}
+@media(max-width:390px){
+  body.villa-home-pool .villaHomeCarousel .villaStoryCopy{top:calc(43% + 18px)!important}
+}
+
+
+/* MALAGO SIGNATURE — finitions premium et confort mobile */
+:root{
+  --malago-orange:#EE8405;
+  --malago-orange-deep:#d87500;
+  --malago-green:#075E54;
+  --dark:#0b0b0b;
+  --cream:#f5f1e8;
+  --gold:#EE8405;
+  --gold2:#ffd19a;
+  --line:rgba(245,241,232,.16);
+}
+html{scroll-padding-top:24px}
+body{background:#0b0b0b}
+::selection{background:#EE8405;color:#111}
+a,button,input,select,textarea{-webkit-tap-highlight-color:transparent}
+a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{
+  outline:2px solid #EE8405!important;outline-offset:4px!important
+}
+.eyebrow{color:#EE8405}
+.brand span{color:#EE8405}
+.btnGold,.btn:not(.btnWhatsapp){transition:transform .22s ease,background .22s ease,box-shadow .22s ease}
+.btnGold{background:#EE8405!important;color:#171915!important;border-color:#EE8405!important}
+.btnGold:hover{background:#ff9a19!important;box-shadow:0 12px 34px rgba(238,132,5,.2)}
+.section.dark{background:#0b0b0b;color:#f5f1e8}
+.sectionHead{gap:36px;align-items:end;margin-bottom:34px}
+.sectionHead h2{max-width:700px;font-size:clamp(36px,5vw,64px);line-height:.99;letter-spacing:-.045em;text-wrap:balance}
+.sectionHead p{max-width:390px;font-size:14px;line-height:1.8;color:rgba(245,241,232,.68)}
+.servicesGrid{gap:14px}
+.service{
+  min-height:390px;border:1px solid rgba(255,255,255,.16);border-radius:22px;
+  padding:22px;isolation:isolate;background:#171815;overflow:hidden;
+  transition:transform .35s cubic-bezier(.2,.7,.2,1),border-color .25s ease,box-shadow .25s ease;
+}
+.service:after{content:"";position:absolute;inset:0;z-index:-1;pointer-events:none;
+  background:linear-gradient(180deg,rgba(0,0,0,.06) 5%,rgba(0,0,0,.08) 28%,rgba(0,0,0,.68) 66%,rgba(0,0,0,.88) 100%)}
+.service img{transition:transform .65s cubic-bezier(.2,.7,.2,1);filter:saturate(.86)}
+.service:hover{transform:translateY(-4px);border-color:rgba(238,132,5,.8);box-shadow:0 18px 45px rgba(0,0,0,.22)}
+.service:hover img{transform:scale(1.045)}
+.serviceNum{font-size:9px;letter-spacing:.19em;color:rgba(255,255,255,.78)}
+.serviceText{gap:10px}
+.service h3{font-size:clamp(23px,2.5vw,32px);line-height:1.03;letter-spacing:-.035em}
+.service p{font-size:12px;line-height:1.7;color:rgba(255,255,255,.82);max-width:34ch}
+.serviceLink{font-size:10px;letter-spacing:.15em;color:#ffb65c;margin-top:7px}
+.note,.localNote{color:rgba(245,241,232,.56);font-size:11px;line-height:1.8}
+.localCard{border-radius:18px;overflow:hidden;transition:transform .25s ease,border-color .25s ease}
+.localCard:hover{transform:translateY(-3px);border-color:rgba(238,132,5,.6)}
+.request{background:#f5f1e8;color:#171915}
+.request .eyebrow{color:#a85c00}
+.requestCopy h2{font-size:clamp(42px,6vw,70px);line-height:.98;letter-spacing:-.05em;text-wrap:balance}
+.requestCopy p{font-size:14px;line-height:1.8;color:#62635d;max-width:42ch}
+.formCard{border:1px solid rgba(23,25,21,.12);border-radius:24px;box-shadow:0 18px 55px rgba(23,25,21,.08)}
+.field input,.field select,.field textarea{border-radius:12px;min-height:48px}
+.check{border-radius:12px;transition:border-color .2s ease,background .2s ease}
+.check:has(input:checked){border-color:#EE8405;background:#fff4e5}
+.check input{accent-color:#EE8405}
+.btnWhatsapp,.heroWhatsapp,.whatsappFloat{
+  background:#075E54!important;color:#fff!important;border-color:#075E54!important;
+  box-shadow:0 10px 28px rgba(7,94,84,.22)!important
+}
+.btnWhatsapp:hover,.heroWhatsapp:hover,.whatsappFloat:hover{background:#064e47!important}
+.mobileCta{
+  bottom:max(12px,env(safe-area-inset-bottom));left:14px;right:14px;
+  z-index:18;transition:transform .28s ease,opacity .22s ease;
+}
+.mobileCta .btn{
+  min-height:56px;border-radius:999px;font-size:11px;letter-spacing:.13em;
+  box-shadow:0 10px 35px rgba(0,0,0,.28)
+}
+body.experiences-visible .mobileCta,
+body.form-visible .mobileCta{
+  transform:translateY(150%);opacity:0;pointer-events:none
+}
+.villaStoryCopy h2{text-wrap:balance}
+.villaStoryCopy p{max-width:38ch}
+.villaCarouselArrow{transition:background .2s ease,border-color .2s ease,transform .2s ease}
+.villaCarouselArrow:hover{background:#EE8405;border-color:#EE8405;color:#111;transform:scale(1.04)}
+@media(max-width:850px){
+  .section,.intro,.editorial,.request{padding:clamp(54px,9vw,76px) 0}
+  .sectionHead{margin-bottom:26px}
+  .servicesGrid{gap:11px}
+  .service{min-height:300px;padding:17px;border-radius:18px}
+  .service h3{font-size:clamp(21px,4vw,28px)}
+  .service p{font-size:11px;line-height:1.6}
+  .serviceLink{font-size:9px;letter-spacing:.12em}
+}
+@media(max-width:480px){
+  .wrap{width:calc(100% - 30px)}
+  .sectionHead h2{font-size:clamp(35px,10vw,44px);line-height:1}
+  .sectionHead p{font-size:13px;line-height:1.7}
+  .servicesGrid{gap:9px}
+  .service{min-height:270px;padding:14px;border-radius:17px}
+  .serviceNum{font-size:8px;letter-spacing:.12em}
+  .service h3{font-size:22px;line-height:1.02}
+  .service p{font-size:10px;line-height:1.55}
+  .serviceLink{font-size:8px;line-height:1.45;letter-spacing:.1em}
+  .requestCopy h2{font-size:44px}
+  .mobileCta .btn{min-height:54px}
+  .whatsappFloat{bottom:calc(18px + env(safe-area-inset-bottom));right:12px;padding:12px 14px}
+}
+@media(prefers-reduced-motion:reduce){
+  *,*:before,*:after{scroll-behavior:auto!important;animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}
+}
+
+
+/* Malago Experience Explorer — hero intégré à la DA Villa Magos */
+.malagoExperienceHero{background:#10110f;color:#fff;padding:clamp(76px,8vw,112px) 0 58px;position:relative;overflow:hidden}
+.malagoExperienceHero:before{content:"";position:absolute;inset:0;pointer-events:none;background:radial-gradient(ellipse at 86% 0%,rgba(197,164,109,.09),transparent 38%)}
+.malagoExperienceHero .wrap{position:relative;z-index:1}
+.malagoExperienceIntro{display:flex;flex-direction:column;align-items:center;text-align:center;gap:0;margin-bottom:28px}.malagoExperienceIntro>div{width:100%}.malagoExperienceIntro h1{margin-left:auto;margin-right:auto}
+.malagoExperienceIntro h1{font:clamp(40px,5.7vw,70px)/.98 Georgia,serif;letter-spacing:-.045em;font-weight:400;max-width:720px;margin:20px 0 0;color:#fff}
+.malagoExperienceIntro h1 em{font-weight:400;color:var(--gold2)}
+.malagoExperienceIntro p{font-size:13px;line-height:1.75;color:#b8b0a3;max-width:340px;margin:0 0 5px}
+.malagoExperienceGrid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
+.malagoExperienceTile{isolation:isolate;position:relative;display:flex;flex-direction:column;justify-content:space-between;min-height:clamp(210px,23vw,275px);padding:17px;text-align:left;color:#fff;border:1px solid rgba(228,206,158,.22);border-radius:16px;overflow:hidden;background:#1a1b17;transition:transform .25s,border-color .25s;animation:malagoTileIn .48s both;animation-delay:calc(var(--tile-i)*45ms)}
+.malagoExperienceTile:before{content:"";position:absolute;inset:0;z-index:-2;background:var(--tile-image) center/cover;opacity:.78;transition:transform .55s,opacity .3s}.malagoExperienceTile[data-malago-cat="comfort"]:before,.malagoExperienceTile[data-new-cat="comfort"]:before{background-position:center 66%}
+.malagoExperienceTile:after{content:"";position:absolute;inset:0;z-index:-1;background:linear-gradient(180deg,rgba(0,0,0,.14),rgba(0,0,0,.16) 26%,rgba(0,0,0,.88) 100%)}
+.malagoExperienceTile:hover,.malagoExperienceTile:focus-visible{border-color:var(--gold2);transform:translateY(-3px);outline:none}
+.malagoExperienceTile:hover:before{transform:scale(1.055);opacity:.96}
+.malagoExperienceTile .tileNum{font-size:9px;letter-spacing:.19em;color:#f5e5c8}
+.malagoExperienceTile h2{font:clamp(22px,2.4vw,29px)/.98 Georgia,serif;font-weight:400;margin:0 0 8px;color:#fff}
+.malagoExperienceTile p{font-size:11px;line-height:1.5;color:rgba(255,255,255,.82);margin:0 0 12px;max-width:245px}
+.malagoExperienceTile .tileBottom{display:flex;justify-content:space-between;align-items:end}
+.malagoExperienceTile .tileArrow{display:grid;place-items:center;width:33px;height:33px;border:1px solid var(--gold2);border-radius:50%;color:var(--gold2);font-size:17px;transition:background .2s,color .2s}
+.malagoExperienceTile:hover .tileArrow{background:var(--gold2);color:#171915}
+.malagoExperienceFine{font-size:10px;line-height:1.65;color:#8c887e;margin:15px 0 0}
+#malagoExperienceFlow{display:none;margin-top:18px;border:1px solid rgba(228,206,158,.25);border-radius:16px;overflow:hidden;background:linear-gradient(145deg,#191a16,#10110f);animation:malagoFlowIn .32s ease}
+#malagoExperienceFlow.is-open{display:block}
+.malagoFlowTop{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:13px 18px;border-bottom:1px solid rgba(228,206,158,.16);font-size:11px;color:#aaa397}
+.malagoFlowTop strong{color:var(--gold2);font-weight:600}
+.malagoFlowClose{width:34px;height:34px;border:1px solid rgba(255,255,255,.2);border-radius:50%;background:transparent;color:#fff;font-size:19px}
+.malagoFlowBody{padding:clamp(20px,4vw,34px);min-height:300px}
+.malagoFlowBody h2{font:clamp(29px,4vw,43px)/1.04 Georgia,serif;font-weight:400;letter-spacing:-.035em;color:#fff;margin:10px 0 8px}
+.malagoFlowLead{font-size:12px;line-height:1.65;color:#aaa397;margin:0 0 22px}
+.malagoFlowOptions{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.malagoFlowOption{min-height:82px;padding:14px;text-align:left;border:1px solid #454035;border-radius:12px;background:#1b1c18;color:#fff;transition:transform .18s,border-color .18s,background .18s;animation:malagoTileIn .26s both;animation-delay:calc(var(--option-i)*30ms)}
+.malagoFlowOption:hover{border-color:var(--gold2);transform:translateY(-2px)}
+.malagoFlowOption.is-selected{border-color:var(--gold2);background:#30291f}
+.malagoFlowOption b{display:block;font-size:13px;font-weight:600}
+.malagoFlowOption small{display:block;margin-top:6px;color:#b8b0a3;font-size:11px;line-height:1.45}
+.malagoFlowOption.has-option-image{padding:0;overflow:hidden;min-height:160px;display:flex;flex-direction:column;justify-content:flex-start}
+.malagoFlowOption.has-option-image img{display:block;width:100%;height:104px;object-fit:cover}
+.malagoFlowOption.has-option-image b,.malagoFlowOption.has-option-image small{margin-left:12px;margin-right:12px}
+.malagoFlowOption.has-option-image b{margin-top:10px}
+.malagoFlowOption.has-option-image small{margin-bottom:12px}
+@media(max-width:520px){.malagoFlowOptions:has(.has-option-image){grid-template-columns:repeat(2,minmax(0,1fr))}.malagoFlowOption.has-option-image{min-height:145px}.malagoFlowOption.has-option-image img{height:88px}}
+.malagoFlowRow{display:flex;gap:10px;margin-top:23px}
+.malagoFlowNext,.malagoFlowBack{border-radius:99px;padding:13px 18px;font-size:11px;letter-spacing:.04em;border:1px solid var(--gold2)}
+.malagoFlowNext{background:var(--gold2);color:#171915;font-weight:800;flex:1}
+.malagoFlowBack{background:transparent;color:#fff;border-color:rgba(255,255,255,.22)}
+.malagoFlowField{margin-top:18px;max-width:600px}
+.malagoFlowField label{display:block;font-size:11px;color:#e5dac7;margin-bottom:8px}
+.malagoFlowField textarea,.malagoFlowField input{width:100%;padding:13px;border-radius:10px;border:1px solid #494238;background:#24221e;color:#fff;font:12px Inter,system-ui,sans-serif}
+.malagoFlowField textarea{min-height:78px;resize:vertical}
+.malagoFlowField fieldset{border:1px solid rgba(228,206,158,.22);border-radius:12px;padding:14px;margin:0;min-width:0}
+.malagoFlowField legend{padding:0 7px;color:#e5dac7;font-size:12px}
+.malagoChoiceGrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+.malagoChoice{display:flex;align-items:center;gap:9px;min-height:42px;padding:10px 11px;border:1px solid #494238;border-radius:9px;background:#24221e;color:#e5dac7;font-size:12px;line-height:1.4;cursor:pointer}
+.malagoChoice:has(input:checked){border-color:var(--gold2);background:#30291f;color:#fff}
+.malagoChoice input{appearance:none;-webkit-appearance:none;flex:none;width:17px;height:17px;margin:0;border:1px solid #8b8170;border-radius:5px;background:#171915;display:grid;place-items:center}
+.malagoChoice input:checked{background:var(--gold2);border-color:var(--gold2)}
+.malagoChoice input:checked:after{content:"✓";font-size:12px;font-weight:800;color:#171915}
+@media(max-width:560px){.malagoChoiceGrid{grid-template-columns:1fr}.malagoFlowBody{padding:20px 16px}.malagoFlowRow{align-items:stretch}.malagoFlowNext,.malagoFlowBack{padding:12px 14px}}
+.malagoFlowRecap{border:1px solid rgba(228,206,158,.32);background:#211d17;border-radius:12px;padding:15px;margin-top:18px;font-size:12px;line-height:1.75;white-space:pre-line;color:#e4d9c7;text-align:left}
+.malagoFlowDone{text-align:center;padding:10px 0}
+.malagoFlowCheck{width:54px;height:54px;border:1px solid var(--gold2);border-radius:50%;display:grid;place-items:center;color:var(--gold2);font-size:24px;margin:0 auto 17px}
+.malagoFlowDone h2{font-size:clamp(30px,4vw,38px)}
+.malagoFlowDone>p{font-size:13px;line-height:1.7;color:#b8b0a3;max-width:510px;margin:0 auto}
+.malagoFlowResponse{display:inline-block;border:1px solid rgba(228,206,158,.22);border-radius:12px;padding:12px 22px;margin:18px auto;color:#b8b0a3;font-size:11px}
+.malagoFlowResponse strong{display:block;font:27px Georgia,serif;color:#fff;margin-top:4px}
+@keyframes malagoTileIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+@keyframes malagoFlowIn{from{opacity:0;transform:translateY(12px) scale(.99)}to{opacity:1;transform:none}}
+@media(max-width:900px){.malagoExperienceGrid{grid-template-columns:repeat(2,minmax(0,1fr))}.malagoExperienceTile{min-height:220px}.malagoFlowOptions{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:650px){.malagoExperienceHero{padding:84px 0 42px}.malagoExperienceIntro{display:block;margin-bottom:20px}.malagoExperienceIntro h1{font-size:43px;margin-top:15px}.malagoExperienceIntro p{margin-top:13px;font-size:12px}.malagoExperienceGrid{gap:8px}.malagoExperienceTile{min-height:190px;padding:11px;border-radius:12px}.malagoExperienceTile h2{font-size:23px}.malagoExperienceTile p{font-size:10px}.malagoFlowTop{padding:12px 14px}.malagoFlowBody{padding:18px}.malagoFlowOptions{gap:8px}.malagoFlowOption{padding:11px;min-height:76px}.malagoFlowOption b{font-size:12px}.malagoFlowOption small{font-size:10px}.malagoFlowRow{position:sticky;bottom:0;background:#11110f;padding:9px 0 2px}.malagoFlowNext,.malagoFlowBack{padding:12px 14px}}
+@media(prefers-reduced-motion:reduce){.malagoExperienceTile,#malagoExperienceFlow,.malagoFlowOption{animation:none!important;transition:none!important}}
+
+/* Espace client intégré à la vitrine Villa Magos : mêmes tokens, mêmes composants, même navigation */
+.clientPortalSection{padding:100px 0 110px;background:#f5f1e8;scroll-margin-top:24px}
+.clientPortalIntro{display:flex;justify-content:space-between;align-items:end;gap:36px;margin-bottom:36px}
+.clientPortalIntro h2{font-family:Georgia,"Times New Roman",serif;font-weight:400;font-size:clamp(42px,5.2vw,68px);line-height:.99;letter-spacing:-.045em;margin:22px 0}
+.clientPortalIntro h2 em{font-weight:400;color:#a66a18}
+.clientPortalIntro p{max-width:530px;font-size:14px;line-height:1.85;color:#686b62;margin:0}
+.clientPortalBrandNote{display:flex;align-items:center;gap:13px;color:#686b62;font-size:10px;line-height:1.7;letter-spacing:.1em;text-transform:uppercase;white-space:nowrap;padding-bottom:7px}
+.clientPortalLock{display:grid;place-items:center;width:43px;height:43px;border:1px solid rgba(23,25,21,.2);border-radius:50%;font-size:20px;color:#a66a18}
+.clientPortalAccess{display:grid;grid-template-columns:64px minmax(0,1fr);gap:22px;align-items:start;padding:30px;background:#fffdf8;border:1px solid rgba(23,25,21,.13);border-radius:20px;box-shadow:0 15px 45px rgba(23,25,21,.045)}
+.clientPortalAccessMark{display:grid;place-items:center;width:52px;height:52px;border-radius:50%;background:#fff0dc;color:#9a5b00;font-family:Georgia,serif;font-size:26px}
+.clientPortalKicker,.clientPortalCardKicker{font-size:9px;letter-spacing:.2em;text-transform:uppercase;font-weight:800;color:#a66a18}
+.clientPortalAccess h3,.clientPortalWelcome h3,.clientPortalCard h3{font-family:Georgia,"Times New Roman",serif;font-weight:400;letter-spacing:-.025em}
+.clientPortalAccess h3{font-size:clamp(25px,3vw,34px);margin:9px 0 10px}
+.clientPortalAccess p{max-width:690px;color:#686b62;font-size:13px;line-height:1.85;margin:0 0 22px}
+.clientPortalAccess .btn{min-height:46px}
+.clientPortalPrivate{margin-top:25px}
+.clientPortalWelcome{display:flex;align-items:end;justify-content:space-between;gap:24px;margin-bottom:22px}
+.clientPortalWelcome h3{font-size:clamp(30px,4vw,44px);margin:10px 0}
+.clientPortalWelcome p{max-width:570px;color:#686b62;font-size:13px;line-height:1.8;margin:0}
+.clientPortalBadge{display:inline-flex;align-items:center;gap:9px;border:1px solid rgba(238,132,5,.25);background:#fff4e5;color:#75440b;padding:11px 14px;border-radius:99px;font-size:9px;letter-spacing:.1em;text-transform:uppercase;white-space:nowrap}
+.clientPortalBadge span{width:6px;height:6px;border-radius:50%;background:#EE8405}
+.clientPortalGrid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:16px;align-items:start}
+.clientPortalCard{min-width:0;background:#fffdf8;border:1px solid rgba(23,25,21,.13);border-radius:18px;padding:27px;box-shadow:0 15px 45px rgba(23,25,21,.045)}
+.clientPortalCard h3{font-size:26px;margin:8px 0}
+.clientPortalSub{font-size:12px;line-height:1.75;color:#686b62;margin:0 0 21px}
+.clientPortalField{margin:17px 0}
+.clientPortalField label{display:block;font-size:10px;letter-spacing:.13em;text-transform:uppercase;font-weight:800;color:#686b62;margin:0 0 9px}
+.clientPortalField select,.clientPortalField textarea{width:100%;border:1px solid #dedbd2;background:#fffdf8;color:#171915;border-radius:10px;padding:14px 15px;font-size:13px;outline:none}
+.clientPortalField select:focus,.clientPortalField textarea:focus{border-color:#EE8405;box-shadow:0 0 0 3px rgba(238,132,5,.1)}
+.clientPortalField textarea{min-height:130px;resize:vertical;line-height:1.65}
+.malagoFilterCard{border:1px solid #454035;border-radius:14px;background:#171815;color:#f8f4ec;padding:17px;margin:16px 0;text-align:left}
+.malagoFilterCard h3{font:400 23px Georgia,serif;color:#fffdf8;margin:7px 0 10px}.malagoFilterCard .eyebrow{color:#ee8405}.malagoFilterAnswers{color:#c4bdb1}.malagoFilterAnswers li{margin:5px 0}.malagoFilterGrid .malagoFlowField label{color:#e5dac7}.malagoFilterGrid input,.malagoFilterGrid select,.malagoFilterGrid textarea{background:#24221e!important;color:#fff!important;border-color:#494238!important;border-radius:10px!important}.malagoFilterGrid select option{background:#24221e;color:#fff}.malagoFilterGrid input::placeholder,.malagoFilterGrid textarea::placeholder{color:#aaa49a}
+.malagoFilterAnswers{font-size:11px;line-height:1.65;color:#6f7168;padding-left:18px;margin:0 0 12px}
+.malagoFilterGrid,.clientPortalFilterGrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:0 12px}
+.malagoFilterGrid .malagoFlowField{min-width:0}.malagoFilterGrid input,.malagoFilterGrid select,.malagoFilterGrid textarea{width:100%;min-width:0}
+.malagoFlowReview{max-width:760px;margin:auto}.malagoFlowReview>p{line-height:1.7}
+.malagoFlowFine{font-size:10px;line-height:1.6;color:#77796f;margin-top:12px}
+.clientPortalCategoryFilters{margin:12px 0 18px;padding:14px;background:#f7f4ed;border:1px solid #e4dfd3;border-radius:12px}
+.bartenderProgress{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:5px;margin:12px 0 18px}.bartenderProgress span{height:4px;border-radius:99px;background:#ddd7ca}.bartenderProgress span.is-done{background:#c5a66c}.bartenderStage{color:#26251f}.bartenderStepTitle{font-size:15px;line-height:1.4;font-weight:800;color:#25241f;margin:0 0 15px}.bartenderIntro,.bartenderHelp,.bartenderStayLine,.bartenderEmptyHint{font-size:12px;line-height:1.65;color:#777367;margin:0 0 13px}.bartenderSubheading{font-size:13px;font-weight:800;margin:18px 0 10px;color:#39362e}.bartenderDateGrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin:12px 0 18px}.bartenderDateOption{display:flex;flex-direction:column;gap:4px;padding:12px 10px;border:1px solid #ded7c8;border-radius:11px;background:#fffdf8;color:#343128;cursor:pointer;min-width:0}.bartenderDateOption input{accent-color:#98733c}.bartenderDateOption span{font-size:12px;font-weight:700;text-transform:capitalize}.bartenderDateOption small{font-size:10px;color:#827b6d}.bartenderDateOption.is-selected{background:#f3ead8;border-color:#b89a60}.bartenderScheduleCard{border:1px solid #e1dacd;border-radius:12px;background:#fffdf9;padding:13px;margin:10px 0}.bartenderScheduleCard>strong{display:block;color:#96743e;font-size:13px;text-transform:capitalize;margin-bottom:10px}.bartenderField{display:flex;flex-direction:column;gap:6px;margin:11px 0;min-width:0}.bartenderField label,.bartenderStage label:not(.bartenderChoice){font-size:11px;font-weight:700;color:#6c675b}.bartenderField input,.bartenderField select,.bartenderField textarea{width:100%;min-width:0;border:1px solid #d9d2c5;border-radius:9px;background:#fffefa;color:#26251f;padding:11px 12px;font:inherit;font-size:13px;box-sizing:border-box}.bartenderField textarea{resize:vertical}.bartenderChoices{display:grid;grid-template-columns:1fr;gap:8px;margin:12px 0}.bartenderChoice{display:flex;align-items:center;gap:10px;border:1px solid #ded7c8;border-radius:10px;padding:12px;background:#fffdf8;color:#343128;font-size:12px;line-height:1.4;cursor:pointer}.bartenderChoice.is-selected,.bartenderChoice:has(input:checked){background:#f3ead8;border-color:#b89a60}.bartenderChoice input{accent-color:#98733c;flex-shrink:0}.bartenderChoice span{min-width:0}.bartenderWide{margin:10px 0}.bartenderServiceChoice span{display:flex;flex-direction:column;gap:4px}.bartenderServiceChoice small{font-size:11px;color:#777367;font-weight:400}.bartenderTwoCols{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.bartenderBudgetOptions{display:grid;gap:7px;margin:12px 0}.bartenderAddDate,.bartenderEditSchedule{border:1px solid #b89a60;border-radius:99px;background:transparent;color:#775a2b;padding:9px 13px;font-size:11px;font-weight:700;cursor:pointer}.bartenderReview{margin-top:18px}.bartenderReview>h5{font-size:17px;margin:0 0 12px;color:#26251f}.bartenderReviewBlock{background:#fffdf8;border:1px solid #e4ddcf;border-radius:12px;padding:12px;margin:9px 0}.bartenderReviewBlock>strong{display:block;color:#94713a;font-size:12px;margin-bottom:8px}.bartenderReviewBlock p{font-size:12px;line-height:1.6;margin:0;color:#514d43}.bartenderReviewRows{display:grid;gap:0}.bartenderReviewRow{display:flex;align-items:start;justify-content:space-between;gap:12px;padding:9px 0;border-top:1px solid #eee8dd}.bartenderReviewRow:first-child{border-top:0}.bartenderReviewRow span{font-size:12px;text-transform:capitalize;color:#343128}.bartenderReviewRow small{font-size:11px;text-align:right;color:#777367;white-space:nowrap}.bartenderWizardNav{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:18px;padding-top:14px;border-top:1px solid #e4ddcf}.bartenderWizardNav button{min-height:42px;border-radius:99px;padding:10px 16px;font-size:11px;font-weight:800;cursor:pointer}.bartenderNavBack{border:1px solid #d5cdbd;background:transparent;color:#514b3e}.bartenderNavNext{border:1px solid #98733c;background:#98733c;color:#fff}.bartenderNavHint{font-size:10px;color:#777367}@media(max-width:380px){.bartenderDateGrid{grid-template-columns:1fr}.bartenderReviewRow{flex-direction:column;gap:4px}.bartenderReviewRow small{text-align:left;white-space:normal}.bartenderTwoCols{grid-template-columns:1fr}}
+.clientPortalFilterHeading{font-size:10px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:#98733c;margin-bottom:7px}
+.clientPortalFilterGrid .clientPortalField{min-width:0}.clientPortalFilterGrid input,.clientPortalFilterGrid select,.clientPortalFilterGrid textarea{width:100%;min-width:0}
+@media(max-width:560px){.malagoFilterGrid,.clientPortalFilterGrid{grid-template-columns:1fr}.malagoFilterCard{padding:13px}}
+
+.clientPortalSubmit{width:100%;min-height:49px}
+.clientPortalHint,.clientPortalFoot{font-size:10px;line-height:1.7;color:#85877d;margin:13px 0 0}
+.clientPortalMessage{margin-top:13px;padding:13px 14px;border-radius:10px;font-size:12px;line-height:1.6}
+.clientPortalMessage.success{display:block;background:#e3eee6;color:#075E54}
+.clientPortalMessage.error{display:block;background:#fff0ed;color:#963c2f}
+.clientPortalRequestsHead{display:flex;align-items:start;justify-content:space-between;gap:12px;margin-bottom:15px}
+.clientPortalRequestsHead h3{margin-bottom:5px}
+.clientPortalRequestsHead .clientPortalSub{margin-bottom:0}
+.clientPortalRefresh{border:1px solid rgba(23,25,21,.18);border-radius:99px;background:transparent;color:#171915;font-size:9px;letter-spacing:.08em;text-transform:uppercase;padding:11px 13px;min-height:40px;cursor:pointer}
+.clientPortalRefresh:hover{background:#fff4e5;border-color:#EE8405}
+.clientPortalRequest{padding:16px 0;border-top:1px solid rgba(23,25,21,.1)}
+.clientPortalRequest:first-child{border-top:0;padding-top:0}
+.clientPortalRequestTop{display:flex;align-items:start;justify-content:space-between;gap:12px}
+.clientPortalRequest h4{font-size:12px;font-weight:800;margin:0 0 5px}
+.clientPortalDate{font-size:10px;color:#85877d}
+.clientPortalStatus{font-size:9px;font-weight:800;letter-spacing:.04em;padding:6px 9px;border-radius:99px;background:#fff0dc;color:#75440b;white-space:nowrap}
+.clientPortalStatus.confirmed{background:#e3eee6;color:#075E54}
+.clientPortalStatus.declined,.clientPortalStatus.cancelled{background:#fbe8e4;color:#934537}
+.clientPortalDescription{font-size:12px;line-height:1.75;color:#686b62;margin:10px 0 0;white-space:pre-wrap;overflow-wrap:anywhere}
+.clientPortalEmpty{padding:22px 16px;border:1px dashed rgba(23,25,21,.2);border-radius:12px;text-align:center;font-size:12px;line-height:1.7;color:#686b62;background:#faf8f1}
+.clientPortalFoot{margin-top:18px}
+.clientPortalSection [hidden]{display:none!important}
+@media(max-width:850px){.clientPortalSection{padding:72px 0 80px}.clientPortalIntro{display:block}.clientPortalBrandNote{margin-top:24px}.clientPortalGrid{grid-template-columns:1fr;gap:13px}.clientPortalWelcome{display:block}.clientPortalBadge{margin-top:18px}.clientPortalCard{padding:22px}}
+@media(max-width:480px){.clientPortalSection{padding:58px 0 68px}.clientPortalIntro h2{font-size:42px}.clientPortalAccess{grid-template-columns:1fr;gap:15px;padding:22px}.clientPortalAccessMark{width:43px;height:43px}.clientPortalCard{padding:19px;border-radius:15px}.clientPortalRequestsHead{align-items:start}.clientPortalStatus{white-space:normal;text-align:center}}
+
+
+
+/* Expérience privée : le lien client ouvre une interface dédiée, sans la vitrine ni ses CTA flottants */
+html.client-portal-mode{scroll-behavior:auto}
+html.client-portal-mode body{background:var(--cream)}
+html.client-portal-mode .topbar{position:relative;top:auto;left:auto;right:auto;background:var(--dark);box-shadow:none;border-bottom:1px solid rgba(228,206,158,.18);padding:13px 0}
+html.client-portal-mode .topbar .wrap{max-width:1180px}
+html.client-portal-mode .topbar .nav{display:none!important}
+html.client-portal-mode .topbar .navcta{display:inline-flex;align-items:center;margin-left:auto;padding:10px 13px;font-size:10px;letter-spacing:.06em}
+html.client-portal-mode main>section:not(#experiences):not(#malagoExperienceFlow):not(#villa):not(#espace-client){display:none!important}
+html.client-portal-mode .footer,
+html.client-portal-mode .mobileCta,
+html.client-portal-mode .whatsappFloat,
+html.client-portal-mode .activityModal{display:none!important}
+html.client-portal-mode .clientPortalSection{display:block!important;padding:58px 0 76px;min-height:calc(100svh - 72px);scroll-margin-top:0;background:var(--cream)}
+html.client-portal-mode .clientPortalIntro{margin-bottom:30px}
+html.client-portal-mode .clientPortalIntro h2{font-size:clamp(39px,5.2vw,66px);margin:19px 0}
+html.client-portal-mode .clientPortalAccess,
+html.client-portal-mode .clientPortalCard{box-shadow:0 16px 48px rgba(23,25,21,.055)}
+html.client-portal-mode .clientPortalPrivate{margin-top:12px}
+html.client-portal-mode .wrap{width:min(1040px,calc(100% - 48px))}
+@media(max-width:650px){
+ html.client-portal-mode .topbar{padding:11px 0}
+ html.client-portal-mode .topbar .wrap{justify-content:flex-start}
+ html.client-portal-mode .brandVillaLogo{width:95px;height:32px}
+ html.client-portal-mode .brandMalagoLogo{width:78px;height:28px}
+ html.client-portal-mode .brandFeaturingX{font-size:19px}
+ html.client-portal-mode .clientPortalSection{padding:38px 0 52px;min-height:calc(100svh - 54px)}
+ html.client-portal-mode .clientPortalIntro{margin-bottom:26px}
+ html.client-portal-mode .clientPortalIntro h2{font-size:clamp(38px,10vw,48px);line-height:1.02;margin:16px 0}
+ html.client-portal-mode .clientPortalIntro p{font-size:14px;line-height:1.75}
+ html.client-portal-mode .clientPortalBrandNote{margin-top:20px}
+ html.client-portal-mode .clientPortalGrid{gap:14px}
+ html.client-portal-mode .clientPortalAccess{padding:22px}
+ html.client-portal-mode .clientPortalCard{padding:20px}
+}
+html:not(.client-portal-mode) body:not(.show-client-access) .clientPortalSection{display:none!important}
+
+/* Chef privé — interface premium mobile */
+#malagoExperienceFlow .malagoFlowField fieldset,
+#malagoExperienceFlow fieldset.malagoFlowField{
+  appearance:none;-webkit-appearance:none;border:1px solid rgba(228,206,158,.18)!important;
+  border-radius:15px!important;padding:14px!important;margin:16px 0 0!important;
+  min-width:0;background:#171815!important;box-shadow:none!important;
+}
+#malagoExperienceFlow .malagoFlowField legend{
+  padding:0 7px!important;color:#d8c7a7!important;font-size:12px!important;
+  letter-spacing:.015em!important;font-weight:500!important;
+}
+#malagoExperienceFlow .malagoChoiceGrid{
+  display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:8px!important;
+}
+#malagoExperienceFlow .malagoChoice{
+  display:flex!important;align-items:center!important;gap:9px!important;
+  min-height:48px!important;padding:11px 12px!important;margin:0!important;
+  border:1px solid #3d3a32!important;border-radius:11px!important;
+  background:#1d1e1a!important;color:#d9d1c4!important;font-size:12px!important;
+  line-height:1.4!important;text-transform:none!important;letter-spacing:0!important;
+  font-weight:400!important;cursor:pointer!important;transition:border-color .18s,background .18s!important;
+}
+#malagoExperienceFlow .malagoChoice:has(input:checked){
+  border-color:#e4ce9e!important;background:#2b251c!important;color:#fff8ed!important;
+}
+#malagoExperienceFlow .malagoChoice input{
+  appearance:none!important;-webkit-appearance:none!important;flex:0 0 17px!important;
+  width:17px!important;height:17px!important;margin:0!important;border:1px solid #817665!important;
+  border-radius:50%!important;background:transparent!important;display:grid!important;place-items:center!important;
+}
+#malagoExperienceFlow .malagoChoice input:checked{
+  border-color:#e4ce9e!important;background:#e4ce9e!important;
+}
+#malagoExperienceFlow .malagoChoice input:checked:after{
+  content:""!important;width:5px!important;height:5px!important;border-radius:50%!important;background:#171915!important;
+}
+#malagoExperienceFlow .malagoFlowField input:not([type=checkbox]),
+#malagoExperienceFlow .malagoFlowField textarea,
+#malagoExperienceFlow .malagoFlowField select{
+  appearance:none;-webkit-appearance:none;width:100%!important;max-width:100%!important;
+  min-height:47px!important;padding:13px 14px!important;border:1px solid #403b32!important;
+  border-radius:11px!important;background-color:#201f1b!important;color:#f5eee2!important;
+  font:inherit!important;font-size:14px!important;line-height:1.4!important;
+  box-shadow:none!important;outline:none!important;color-scheme:dark;
+}
+#malagoExperienceFlow .malagoFlowField select{
+  padding-right:42px!important;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%23e4ce9e' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m7 10 5 5 5-5'/%3E%3C/svg%3E")!important;
+  background-repeat:no-repeat!important;background-position:right 14px center!important;
+}
+#malagoExperienceFlow .malagoFlowField input:focus,
+#malagoExperienceFlow .malagoFlowField textarea:focus,
+#malagoExperienceFlow .malagoFlowField select:focus{
+  border-color:#c8a96f!important;box-shadow:0 0 0 2px rgba(228,206,158,.08)!important;
+}
+#malagoExperienceFlow .malagoFlowField input[type=date],
+#malagoExperienceFlow .malagoFlowField input[type=time]{color-scheme:dark!important;}
+#malagoExperienceFlow .malagoFilterCard{
+  border:1px solid rgba(228,206,158,.17)!important;border-radius:17px!important;
+  background:linear-gradient(145deg,#191a17,#141512)!important;padding:17px!important;
+  box-shadow:none!important;
+}
+#malagoExperienceFlow .malagoFlowDone h2{
+  font-size:clamp(30px,7vw,42px)!important;line-height:1.04!important;letter-spacing:-.035em!important;
+}
+#malagoExperienceFlow .malagoFlowDone>p{
+  font-size:13px!important;line-height:1.75!important;color:#b7b0a4!important;
+}
+#malagoExperienceFlow .malagoFlowRow{gap:9px!important;margin-top:22px!important;}
+#malagoExperienceFlow .malagoFlowNext,
+#malagoExperienceFlow .malagoFlowBack{
+  min-height:47px!important;border-radius:999px!important;padding:12px 16px!important;
+  font-size:12px!important;letter-spacing:.015em!important;
+}
+#malagoExperienceFlow .malagoFlowNext{background:#e4ce9e!important;border-color:#e4ce9e!important;color:#171915!important;}
+#malagoExperienceFlow .malagoFlowBack{border-color:#4a463d!important;background:transparent!important;color:#eee6d8!important;}
+#malagoExperienceFlow .malagoFlowField small{display:block;margin-top:8px;color:#9e988d;font-size:11px;line-height:1.6;}
+@media(max-width:560px){
+  #malagoExperienceFlow .malagoChoiceGrid{grid-template-columns:1fr!important;}
+  #malagoExperienceFlow .malagoFlowBody{padding:21px 16px!important;}
+  #malagoExperienceFlow .malagoFilterCard{padding:14px!important;border-radius:14px!important;}
+  #malagoExperienceFlow .malagoFlowRow{align-items:stretch!important;}
+  #malagoExperienceFlow .malagoFlowNext,#malagoExperienceFlow .malagoFlowBack{padding:12px 13px!important;}
+}
+
+
+/* Accroche d'accueil : plus visible que le texte secondaire, sans concurrencer le titre */
+.malagoExperienceIntro > p{font-family:"Trebuchet MS",Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;font-size:clamp(1.8rem,3vw,2.2rem);line-height:1.35;font-weight:600;letter-spacing:-.025em;text-align:center;max-width:900px;margin:24px auto 0;color:#fff}
+.malagoExperienceIntro > p strong,.malagoExperienceIntro > p .malagoAccent{color:#f28c28}
+@media(max-width:700px){.malagoExperienceIntro > p{font-size:1.5rem;line-height:1.4;margin:20px auto 0;text-align:center}}
+
+/* Restored Malago continuous logo-reveal intro from verified feature branch */
+#malagoWelcomeIntro{position:fixed;inset:0;z-index:2147483000;background:#000;color:#fff;overflow:hidden;isolation:isolate;opacity:1;transition:opacity .7s ease}
+body.malago-intro-open{overflow:hidden!important}
+#malagoWelcomeIntro .malagoIntroMedia{position:absolute;inset:0;display:grid;place-items:center;background:#000}
+#malagoWelcomeIntro .malagoIntroVideo,#malagoWelcomeIntro .malagoIntroFinalFrame{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center;background:#000}
+#malagoWelcomeIntro .malagoIntroVideo{z-index:1;opacity:1;transition:opacity .9s ease}
+#malagoWelcomeIntro .malagoIntroFinalFrame{z-index:0;opacity:0;transition:opacity .9s ease}
+#malagoWelcomeIntro .malagoIntroShade{position:absolute;inset:0;z-index:2;pointer-events:none;opacity:0;background:linear-gradient(180deg,rgba(0,0,0,.52) 0%,rgba(0,0,0,.24) 26%,rgba(0,0,0,0) 55%);transition:opacity .8s ease}
+
+#malagoWelcomeIntro .malagoIntroContent{position:absolute;inset:0;z-index:3;opacity:0;pointer-events:none;transition:opacity .75s ease}
+#malagoWelcomeIntro .malagoIntroContent h1{position:absolute;top:31.5%;left:24px;right:24px;width:min(690px,calc(100% - 48px));max-width:690px;margin:0 auto;color:#fff;font-family:Georgia,"Times New Roman",serif;font-weight:400;font-size:clamp(31px,4.3vw,50px);line-height:1.12;letter-spacing:-.03em;text-wrap:balance;text-align:center;text-shadow:0 2px 24px rgba(0,0,0,.38)}
+#malagoWelcomeIntro .malagoIntroContinue{position:absolute;top:63%;left:50%;transform:translateX(-50%);display:inline-flex;align-items:center;justify-content:center;width:max-content;min-width:224px;max-width:calc(100% - 40px);min-height:48px;margin:0;padding:14px 22px;border:1px solid rgba(235,214,170,.88);border-radius:3px;background:rgba(13,17,17,.34);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);color:#f4e4bf;font:600 10px/1.2 Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;letter-spacing:.145em;text-transform:uppercase;white-space:nowrap;cursor:pointer;box-shadow:0 8px 28px rgba(0,0,0,.18);transition:transform .2s ease,background .2s ease,border-color .2s ease}
+#malagoWelcomeIntro .malagoIntroContinue:hover{background:rgba(228,206,158,.14);border-color:#f2dfb6;transform:translateX(-50%) translateY(-2px)}
+#malagoWelcomeIntro .malagoIntroContinue:focus-visible{outline:2px solid #fff;outline-offset:4px}
+#malagoWelcomeIntro.is-ended .malagoIntroVideo{opacity:0}
+#malagoWelcomeIntro.is-ended .malagoIntroFinalFrame{opacity:1}
+#malagoWelcomeIntro.is-ended .malagoIntroShade{opacity:1}
+#malagoWelcomeIntro.is-ended .malagoIntroContent{opacity:1;pointer-events:auto}
+#malagoWelcomeIntro.is-closing{opacity:0;pointer-events:none}
+@media(max-width:650px){
+#malagoWelcomeIntro .malagoIntroVideo,#malagoWelcomeIntro .malagoIntroFinalFrame{object-fit:cover;object-position:center}
+#malagoWelcomeIntro .malagoIntroShade{opacity:0;background:linear-gradient(180deg,rgba(0,0,0,.08),rgba(0,0,0,0) 60%)}
+#malagoWelcomeIntro .malagoIntroContent{inset:0}
+#malagoWelcomeIntro .malagoIntroContent h1{top:31.5%;left:18px;right:18px;width:auto;max-width:440px;font-size:clamp(28px,7.2vw,35px);line-height:1.12;letter-spacing:-.025em}
+#malagoWelcomeIntro .malagoIntroContinue{top:64.5%;min-width:0;max-width:calc(100% - 44px);min-height:48px;padding:14px 20px;font-size:9.5px;letter-spacing:.12em}
+}
+@media(max-width:380px){
+#malagoWelcomeIntro .malagoIntroContent h1{top:30.5%;left:16px;right:16px;font-size:clamp(27px,7.5vw,30px)}
+#malagoWelcomeIntro .malagoIntroContinue{top:64%;max-width:calc(100% - 32px);padding:14px 16px;font-size:9px;letter-spacing:.1em}
+}
+@media(max-height:520px) and (orientation:landscape){
+#malagoWelcomeIntro .malagoIntroContent h1{top:17%;width:75vw;max-width:75vw;font-size:clamp(24px,4vw,34px)}
+#malagoWelcomeIntro .malagoIntroContinue{top:66%;min-height:42px;padding:11px 22px}
+}
 @media(prefers-reduced-motion:reduce){#malagoWelcomeIntro,#malagoWelcomeIntro *{transition:none!important;animation:none!important}}
 </style>
   <link rel="stylesheet" href="/villa-magos-calendar.css">
