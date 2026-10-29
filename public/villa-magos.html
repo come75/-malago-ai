@@ -1002,6 +1002,35 @@ body.malago-intro-open{overflow:hidden!important}
 .languageLabel{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0)}
 @media(max-width:700px){.headerActions{gap:6px}.headerActions .navcta{padding:10px 11px;font-size:10px}.languageControl{position:relative}#malagoLanguageButton{display:inline-flex;align-items:center;justify-content:center}#malagoLanguageSwitcher{display:none;position:absolute;z-index:1000;right:0;top:calc(100% + 8px);width:170px;max-width:none;min-height:44px;padding:0 10px;font-size:13px;box-shadow:0 12px 32px rgba(0,0,0,.45)}.languageControl.is-open #malagoLanguageSwitcher{display:block}}
 </style>
+
+<style id="MALAGO_SPIRAL_CATEGORY_TRANSITION_2026">
+/* Category-to-subcategory transition: stay in context, never jump down the page. */
+#malagoExperienceCategories .malagoExperienceTile{transform-style:preserve-3d;backface-visibility:hidden;transition:transform .32s cubic-bezier(.2,.75,.25,1),filter .25s ease}
+#malagoExperienceCategories .malagoExperienceTile.is-opening{transform:perspective(900px) rotateY(180deg) scale(.9);filter:brightness(1.18);pointer-events:none}
+#malagoNewFlow{display:none;position:fixed;inset:0;z-index:1000;max-width:none;width:100%;height:100%;height:100dvh;margin:0;padding:clamp(18px,4vw,44px);border:0;border-radius:0;overflow-y:auto;overscroll-behavior:contain;background:radial-gradient(ellipse at 50% 0%,rgba(228,206,158,.12),transparent 42%),rgba(8,9,8,.97);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);color:#f5f0e5;opacity:0;transform:scale(.97);transform-origin:center;box-sizing:border-box}
+#malagoNewFlow.is-open{display:block;animation:mnfPortalIn .42s cubic-bezier(.2,.75,.25,1) both}
+#malagoNewFlow .mnf-head,#malagoNewFlow #mnfContent{width:min(900px,100%);margin-left:auto;margin-right:auto}
+#malagoNewFlow .mnf-head{position:sticky;top:0;z-index:2;padding:10px 0 18px;background:linear-gradient(180deg,rgba(8,9,8,.98) 70%,rgba(8,9,8,0))}
+#malagoNewFlow .mnf-title{animation:mnfSpiralReveal .62s cubic-bezier(.2,.75,.25,1) both}
+#malagoNewFlow .mnf-service{transform-origin:center;animation:mnfSpiralReveal .62s cubic-bezier(.2,.75,.25,1) both;animation-delay:calc(var(--mnf-i,0)*55ms)}
+#malagoNewFlow .mnf-services .mnf-service:nth-child(1){--mnf-i:0}
+#malagoNewFlow .mnf-services .mnf-service:nth-child(2){--mnf-i:1}
+#malagoNewFlow .mnf-services .mnf-service:nth-child(3){--mnf-i:2}
+#malagoNewFlow .mnf-services .mnf-service:nth-child(4){--mnf-i:3}
+#malagoNewFlow .mnf-services .mnf-service:nth-child(5){--mnf-i:4}
+#malagoNewFlow .mnf-services .mnf-service:nth-child(6){--mnf-i:5}
+#malagoNewFlow .mnf-services .mnf-service:nth-child(7){--mnf-i:6}
+#malagoNewFlow .mnf-services .mnf-service:nth-child(8){--mnf-i:7}
+#malagoNewFlow .mnf-services .mnf-service:nth-child(9){--mnf-i:8}
+#malagoNewFlow .mnf-services .mnf-service:nth-child(10){--mnf-i:9}
+#malagoNewFlow .mnf-services .mnf-service:nth-child(11){--mnf-i:10}
+#malagoNewFlow .mnf-service:focus-visible,#malagoNewFlow button:focus-visible{outline:2px solid #e4ce9e;outline-offset:4px}
+@keyframes mnfPortalIn{0%{opacity:0;transform:scale(.97)}65%{opacity:1;transform:scale(1.005)}100%{opacity:1;transform:scale(1)}}
+@keyframes mnfSpiralReveal{0%{opacity:0;transform:translate3d(0,24px,0) rotate(-9deg) scale(.82);filter:blur(5px)}65%{opacity:1;transform:translate3d(0,-3px,0) rotate(2deg) scale(1.015);filter:blur(0)}100%{opacity:1;transform:translate3d(0,0,0) rotate(0) scale(1);filter:blur(0)}}
+@media(max-width:650px){#malagoNewFlow{padding:calc(14px + env(safe-area-inset-top)) 16px calc(22px + env(safe-area-inset-bottom))}#malagoNewFlow .mnf-head{padding-top:8px}#malagoNewFlow .mnf-services{gap:9px}#malagoNewFlow .mnf-service{min-width:0;font-size:13px}}
+@media(prefers-reduced-motion:reduce){#malagoExperienceCategories .malagoExperienceTile,#malagoNewFlow,#malagoNewFlow *{animation:none!important;transition:none!important;filter:none!important;transform:none!important}}
+</style>
+
 </head>
 <body class="villa-home-pool">
 
@@ -1806,12 +1835,12 @@ const direct=new Set(['Surprenez-moi','Conseil plages','Boat party','Pêche','Ac
 const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const wa=msg=>'https://wa.me/'+WA+'?text='+encodeURIComponent(msg);
 const grid=$('#malagoExperienceCategories'); if(!grid)return;
-function renderCategoryTiles(){grid.innerHTML=C.map((c,i)=>'<button class="malagoExperienceTile" data-new-cat="'+c.key+'" style="--tile-i:'+i+';--tile-image:url('+tileImages[c.key]+')"><span class="tileNum">'+String(i+1).padStart(2,'0')+' / '+esc(categoryText(c.title).toUpperCase())+'</span><div><h2>'+esc(categoryText(c.title))+'</h2><div class="tileBottom"><span class="tileArrow">↗</span></div></div></button>').join('');grid.querySelectorAll('[data-new-cat]').forEach(b=>{b.onclick=()=>{if(root.classList.contains('is-open'))return;cat=C.find(x=>x.key===b.dataset.newCat);item=null;a={};night={};stage='services';b.classList.add('is-opening');window.setTimeout(()=>{root.classList.add('is-open');document.body.style.overflow='hidden';render();b.classList.remove('is-opening');$('#mnfClose').focus({preventScroll:true});},420);};});}
+function renderCategoryTiles(){grid.innerHTML=C.map((c,i)=>'<button class="malagoExperienceTile" data-new-cat="'+c.key+'" style="--tile-i:'+i+';--tile-image:url('+tileImages[c.key]+')"><span class="tileNum">'+String(i+1).padStart(2,'0')+' / '+esc(categoryText(c.title).toUpperCase())+'</span><div><h2>'+esc(categoryText(c.title))+'</h2><div class="tileBottom"><span class="tileArrow">↗</span></div></div></button>').join('');grid.querySelectorAll('[data-new-cat]').forEach(b=>{b.onclick=()=>{if(root.classList.contains('is-open'))return;cat=C.find(x=>x.key===b.dataset.newCat);item=null;a={};night={};stage='services';b.classList.add('is-opening');window.setTimeout(()=>{root.classList.add('is-open');document.body.dataset.mnfScrollY=String(window.scrollY);document.body.style.overflow='hidden';render();b.classList.remove('is-opening');$('#mnfClose').focus({preventScroll:true});},420);};});}
 renderCategoryTiles();
 const old=$('#malagoExperienceFlow');if(old)old.hidden=true;
 const root=document.createElement('section');root.id='malagoNewFlow';root.setAttribute('aria-live','polite');root.innerHTML='<div class="mnf-panel"><div class="mnf-head"><div><div class="mnf-kicker" id="mnfKicker"></div><div class="mnf-note" id="mnfStep"></div></div><button class="mnf-secondary" type="button" id="mnfClose">'+esc(flowText('Fermer ×'))+'</button></div><div id="mnfContent"></div></div>';grid.after(root);
 let cat,item,stage='services',a={},night={};
-function close(){root.classList.remove('is-open');document.body.style.overflow='';}
+function close(){root.classList.remove('is-open');document.body.style.overflow='';const y=Number(document.body.dataset.mnfScrollY||0);window.scrollTo(0,y);}
 $('#mnfClose').onclick=close;
 function contact(service,extra=''){let serviceText;const sep=service.indexOf(' — ');if(sep>0&&(service.slice(0,sep)==='Voyage express'||service.slice(0,sep)==='Voyages express')){serviceText=flowText(service.slice(0,sep))+' — '+flowText(service.slice(sep+3));}else serviceText=flowText(service);const msg=[flowText('Bonjour Malago'),flowText('Je souhaite organiser une demande.'),flowText('Service')+' : '+serviceText,extra,flowText('Merci !')].filter(Boolean).join('\n');window.open(wa(msg),'_blank','noopener');}
 function field(k,l,t='text',opts=null){return {k,l,t,opts};}
