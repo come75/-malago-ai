@@ -1247,7 +1247,7 @@ document.getElementById('activityClose').addEventListener('click',closeActivity)
   ['Quel service précis souhaitez-vous ?',[]]
   ]},
  sea:{label:'EN MER',steps:[
- ['Qu’est-ce qui vous tente ?',[['Bateau / yacht','Choisissez le type de bateau qui vous correspond'],['Jet-ski','Faire le plein de sensations'],['Boat party','Faire la fête sur l’eau'],['Pêcher','Une sortie de pêche'],['Une excursion','Explorer la côte'],['Voir les dauphins / baleines','Selon saison et conditions']]],
+ ['Qu’est-ce qui vous tente ?',[['Bateau / yacht','Choisissez le type de bateau qui vous correspond'],['Jet-ski','Faire le plein de sensations'],['Boat party','Faire la fête sur l’eau'],['Pêche','Une sortie de pêche'],['Activités nautiques','Bouées tractées et autres activités sur l’eau'],['Dauphins / Baleines','Selon la saison et les conditions']]],
  ['Avec qui partez-vous ?',[['1–2 personnes','Petit comité'],['3–6 personnes','Un petit groupe'],['7–12 personnes','Famille ou amis'],['13 personnes ou plus','Groupe plus important']]],
  ['Quel moment ?',[['Aujourd’hui','Selon disponibilité'],['Demain','Préparer la sortie'],['Pendant le séjour','On s’adapte'],['Je ne sais pas encore','Aidez-moi à choisir']]]
  ]},
@@ -1292,7 +1292,13 @@ function renderFlowOptions(s,selecting){
   'Live music':'https://d2ol7oe51mr4n9.cloudfront.net/user_3LIbHMwUoEDn4cQX1aW4M05gMa6/363e9375-d0d8-4c64-a2fd-52a0152a1da3.png',
   'Un rooftop':'https://d2ol7oe51mr4n9.cloudfront.net/user_3LIbHMwUoEDn4cQX1aW4M05gMa6/611ada38-b9aa-4370-8af8-88b3403a1012.png',
   'Bar à cocktails':'https://d2ol7oe51mr4n9.cloudfront.net/user_3LIbHMwUoEDn4cQX1aW4M05gMa6/99ff0ece-f47a-4cf4-9347-7cf350294096.png',
-  'Bar à vin':'https://d2ol7oe51mr4n9.cloudfront.net/user_3LIbHMwUoEDn4cQX1aW4M05gMa6/f8340398-5b4a-48cc-92eb-3f8c5beb7aa3.png'
+  'Bar à vin':'https://d2ol7oe51mr4n9.cloudfront.net/user_3LIbHMwUoEDn4cQX1aW4M05gMa6/f8340398-5b4a-48cc-92eb-3f8c5beb7aa3.png',
+  'Bateau / yacht':'https://images.unsplash.com/photo-1567899378494-47b22a2ae96a?auto=format&fit=crop&w=900&q=85',
+  'Jet-ski':'https://images.unsplash.com/photo-1569263979104-865ab7cd8d13?auto=format&fit=crop&w=900&q=85',
+  'Boat party':'https://images.unsplash.com/photo-1530053969600-caed2596d242?auto=format&fit=crop&w=900&q=85',
+  'Pêche':'https://images.unsplash.com/photo-1518837695005-2083093ee35b?auto=format&fit=crop&w=900&q=85',
+  'Activités nautiques':'https://images.unsplash.com/photo-1502680390469-be75c86b636f?auto=format&fit=crop&w=900&q=85',
+  'Dauphins / Baleines':'https://images.unsplash.com/photo-1607153333879-c174d265f1d2?auto=format&fit=crop&w=900&q=85'
  };
  const button=(o,i)=>{const image=optionImages[o[0]];return '<button class="malagoFlowOption '+(image?'has-option-image ':'')+(state.chosen.includes(o[0])?'is-selected':'')+'" style="--option-i:'+i+'" data-malago-option="'+i+'" type="button" aria-pressed="'+state.chosen.includes(o[0])+'">'+(image?'<img src="'+image+'" alt="" loading="lazy">':'')+'<b>'+esc(o[0])+'</b><small>'+esc(o[1])+'</small></button>';};
  if(!selecting||state.cat!=='comfort')return '<div class="malagoFlowOptions">'+s[1].map((o,i)=>button(o,i)).join('')+'</div>';
@@ -1452,7 +1458,7 @@ function saveDetailValue(entry,value){const key=entry.field[0];state.itemDetails
 function renderSeaWizard(){
  const body=$('#malagoFlowBody'),items=selectedItems(),index=state.seaFlow?.index||0;
  const item=items[index],values=(state.itemDetails[item]||(state.itemDetails[item]={}));
- const isBoat=/bateau|yacht/i.test(item),isYacht=/yacht/i.test(String((state.itemDetails[item]||{}).boat_type||'')),isJet=/jet.?ski/i.test(item),isExcursion=/excursion/i.test(item),isParty=/boat party/i.test(item),isFishing=/pêch/i.test(item),isWildlife=/dauphins|baleines/i.test(item);
+ const isBoat=/bateau|yacht/i.test(item),isYacht=/yacht/i.test(String((state.itemDetails[item]||{}).boat_type||'')),isJet=/jet.?ski/i.test(item),isExcursion=/excursion|activités nautiques/i.test(item),isParty=/boat party/i.test(item),isFishing=/pêch/i.test(item),isWildlife=/dauphins|baleines/i.test(item);
  const escv=v=>esc(String(v??''));
  const get=(k)=>values[k]??'';
  const field=(key,label,type='text',placeholder='À préciser si utile')=>'<div class="malagoFlowField"><label for="sea-'+key+'">'+label+'</label><input id="sea-'+key+'" data-sea-field="'+key+'" type="'+type+'" value="'+escv(get(key))+'" placeholder="'+escv(placeholder)+'"></div>';
