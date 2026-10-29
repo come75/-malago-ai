@@ -2112,7 +2112,16 @@ const langSelect=document.getElementById('malagoLanguageSwitcher');if(langSelect
     window.setTimeout(function(){intro.remove()},750);
   }
   video.addEventListener('ended',showFinalFrame,{once:true});
-  video.addEventListener('error',showFinalFrame,{once:true});
+  // A failed video must never leave the full-screen black overlay blocking the site.
+  video.addEventListener('error',function(){
+    closeIntro();
+  },{once:true});
+  // Safety net for browsers/CDN stalls: preserve the site if playback never starts.
+  let introPlaybackStarted=false;
+  video.addEventListener('playing',function(){introPlaybackStarted=true;},{once:true});
+  window.setTimeout(function(){
+    if(!closed&&!introPlaybackStarted) closeIntro();
+  },10000);
   continueButton.addEventListener('click',closeIntro);
   // The intro is intentionally animated even when the device requests reduced motion:
   // this is the branded welcome sequence, not decorative page motion.
