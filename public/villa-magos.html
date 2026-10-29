@@ -679,6 +679,32 @@ body.form-visible .mobileCta{
 @media(max-width:850px){.brandFeaturing{gap:8px}.brandVillaLogo{width:112px;height:37px;padding:3px 5px}.brandMalagoLogo{width:83px;height:29px}.brandFeaturingX{font-size:21px}.topbar{padding:18px 0}.topbar .wrap{gap:10px}.navcta{padding:10px 12px;font-size:9px;white-space:nowrap}}
 @media(max-width:420px){.brandFeaturing{gap:6px}.brandVillaLogo{width:88px;height:32px;padding:3px}.brandMalagoLogo{width:66px;height:25px}.brandFeaturingX{font-size:18px}.navcta{padding:9px 10px;font-size:8px;letter-spacing:.04em}}
 
+
+/* Animation premium des catégories : bascule 3D puis révélation en spirale */
+.service{transform-style:preserve-3d;backface-visibility:hidden;will-change:transform}
+.service.is-flipping{animation:malagoCategoryFlip .62s cubic-bezier(.2,.78,.22,1) both;pointer-events:none}
+@keyframes malagoCategoryFlip{
+  0%{transform:perspective(900px) rotateY(0) scale(1)}
+  45%{transform:perspective(900px) rotateY(88deg) scale(.96)}
+  100%{transform:perspective(900px) rotateY(0) scale(1)}
+}
+.activityModal.open .activityGallery img{animation:malagoSpiralReveal .62s cubic-bezier(.2,.75,.25,1) both}
+.activityModal.open .activityGallery img:nth-child(1){animation-delay:.08s}
+.activityModal.open .activityGallery img:nth-child(2){animation-delay:.19s}
+.activityModal.open .activityGallery img:nth-child(3){animation-delay:.3s}
+.activityModal.open .activityDetail{animation:malagoSpiralReveal .58s cubic-bezier(.2,.75,.25,1) both}
+.activityModal.open .activityDetail:nth-child(1){animation-delay:.12s}
+.activityModal.open .activityDetail:nth-child(2){animation-delay:.24s}
+.activityModal.open .activityDetail:nth-child(3){animation-delay:.36s}
+@keyframes malagoSpiralReveal{
+  0%{opacity:0;transform:translate3d(18px,24px,0) rotate(-7deg) scale(.88);filter:blur(4px)}
+  65%{opacity:1;transform:translate3d(-3px,-2px,0) rotate(1deg) scale(1.015);filter:blur(0)}
+  100%{opacity:1;transform:translate3d(0,0,0) rotate(0) scale(1);filter:blur(0)}
+}
+@media(prefers-reduced-motion:reduce){
+ .service.is-flipping,.activityModal.open .activityGallery img,.activityModal.open .activityDetail{animation:none!important}
+}
+
 </style>
 </head>
 <body class="villa-home-pool">
@@ -759,7 +785,7 @@ const activityInfo={
 const modal=document.getElementById('activityModal');
 function closeActivity(){modal.classList.remove('open');document.body.style.overflow=''}
 function openActivity(name){const d=activityInfo[name];if(!d)return;document.getElementById('activityEyebrow').textContent=d.eyebrow;document.getElementById('activityTitle').textContent=d.title;document.getElementById('activityDescription').textContent=d.desc;document.getElementById('activityGallery').replaceChildren(...d.images.map((src,i)=>{const im=document.createElement('img');im.src=src;im.alt=d.title+' — photo '+(i+1);im.loading='lazy';return im}));document.getElementById('activityDetails').replaceChildren(...d.details.map(pair=>{const box=document.createElement('div');box.className='activityDetail';const strong=document.createElement('strong');strong.textContent=pair[0];const span=document.createElement('span');span.textContent=pair[1];box.append(strong,span);return box}));document.getElementById('activityWhatsapp').href=waBase+encodeURIComponent('Bonjour Malago, je souhaite des informations sur : '+name+' pour un séjour à La Villa Magos. Pouvez-vous me préciser les formules, tarifs et disponibilités ?');modal.classList.add('open');document.body.style.overflow='hidden'}
-document.querySelectorAll('[data-service]').forEach(card=>{card.removeAttribute('href');card.setAttribute('role','button');card.setAttribute('tabindex','0');card.setAttribute('aria-haspopup','dialog');card.addEventListener('click',e=>{e.preventDefault();openActivity(card.dataset.service)});card.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();openActivity(card.dataset.service)}})});
+document.querySelectorAll('[data-service]').forEach(card=>{card.removeAttribute('href');card.setAttribute('role','button');card.setAttribute('tabindex','0');card.setAttribute('aria-haspopup','dialog');let opening=false;const activate=e=>{if(e){e.preventDefault()}if(opening)return;opening=true;card.classList.remove('is-flipping');void card.offsetWidth;card.classList.add('is-flipping');window.setTimeout(()=>{openActivity(card.dataset.service);card.classList.remove('is-flipping');opening=false},360)};card.addEventListener('click',activate);card.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){activate(e)}})});
 document.getElementById('activityClose').addEventListener('click',closeActivity);document.getElementById('activityBack').addEventListener('click',closeActivity);modal.addEventListener('click',e=>{if(e.target===modal)closeActivity()});document.addEventListener('keydown',e=>{if(e.key==='Escape')closeActivity()});
 
 
