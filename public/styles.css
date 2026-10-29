@@ -664,3 +664,28 @@ body.menuOpen{position:fixed;width:100%;overflow:hidden}
 .malagoAiWidget:not(.mascotReady) .malagoAiTitle img{opacity:0}
 .malagoAiWidget.mascotReady .malagoAiMascot img,
 .malagoAiWidget.mascotReady .malagoAiTitle img{opacity:1}
+
+
+/* Premium category reveal: tactile card flip + spiral subcategory entrance */
+.guideCat{position:relative;isolation:isolate;overflow:hidden;perspective:1100px;transform-style:preserve-3d}
+.guideCatTrigger{position:relative;z-index:2;display:flex;align-items:center;gap:13px;width:100%;padding:0;border:0;background:transparent;color:inherit;text-align:left;cursor:pointer}
+.guideCatText{display:flex;flex:1;flex-direction:column;gap:4px;min-width:0}
+.guideCatText strong{font-size:17px;letter-spacing:-.45px}
+.guideCatText small{font-size:11px;line-height:1.35;color:#77736d}
+.guideCatArrow{display:grid;place-items:center;width:32px;height:32px;flex:0 0 32px;border:1px solid #e6ded2;border-radius:50%;font-size:15px;transition:transform .45s cubic-bezier(.2,.8,.2,1),background .3s,color .3s}
+.guideCatPreview{padding-top:13px;transition:opacity .3s,transform .45s}
+.guideCatPreview p{margin:0;color:#68645e;font-size:12px;line-height:1.5}
+.guideCat.is-open{z-index:3;border-color:#d5a45f;box-shadow:0 22px 60px #16110a20;transform:translateY(-3px)}
+.guideCat.is-open .guideCatArrow{transform:rotate(135deg);background:#111;color:#fff;border-color:#111}
+.guideCat.is-open .guideCatPreview{opacity:.12;transform:translateY(-8px) scale(.97);pointer-events:none}
+.guideSubcats{position:absolute;inset:0;z-index:4;display:flex;flex-direction:column;padding:15px;background:linear-gradient(145deg,#fffdf9,#f2eadf);border-radius:inherit;opacity:0;visibility:hidden;pointer-events:none;transform:rotateY(-88deg) scale(.88);transform-origin:left center;transition:transform .58s cubic-bezier(.2,.8,.2,1),opacity .28s ease,visibility .58s;backface-visibility:hidden}
+.guideCat.is-open .guideSubcats{opacity:1;visibility:visible;pointer-events:auto;transform:rotateY(0) scale(1)}
+.guideSubcatsHead{display:flex;align-items:center;justify-content:space-between;gap:8px;padding-bottom:10px;border-bottom:1px solid #e7ddcf;font-size:10px;font-weight:900;letter-spacing:1.5px;text-transform:uppercase;color:#8b6b40}
+.guideCatClose{width:29px;height:29px;border:1px solid #e0d4c4;border-radius:50%;background:#fff;color:#27231e;font-size:20px;line-height:1;cursor:pointer}
+.guideSubcatOrbit{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;align-content:center;flex:1;padding-top:12px}
+.guideSubcat{display:flex;align-items:center;justify-content:space-between;gap:8px;min-width:0;min-height:34px;padding:9px 10px;border:1px solid #e6dccd;border-radius:12px;background:#fff;color:#29251f;font-size:10px;font-weight:750;line-height:1.25;text-align:left;box-shadow:0 5px 14px #3a28100a;opacity:0;transform:translate3d(0,12px,0) rotate(-8deg) scale(.75);transition:transform .5s cubic-bezier(.16,1,.3,1),opacity .32s ease,border-color .2s,background .2s}
+.guideSubcat span{flex:0 0 auto;color:#b17b38;font-size:13px}
+.guideCat.is-open .guideSubcat{opacity:1;transform:translate3d(0,0,0) rotate(0) scale(1);transition-delay:calc(var(--sub-index,0)*55ms)}
+.guideSubcat:hover,.guideSubcat:focus-visible{background:#fff6e9;border-color:#d5a45f;outline:none}
+@media(max-width:420px){.guideCat{min-height:150px}.guideSubcats{padding:12px}.guideSubcatOrbit{gap:6px}.guideSubcat{padding:8px;font-size:9px}}
+@media(prefers-reduced-motion:reduce){.guideCat,.guideCatArrow,.guideCatPreview,.guideSubcats,.guideSubcat{transition:none!important;animation:none!important}.guideSubcat{opacity:1;transform:none}.guideCat.is-open .guideSubcat{transition-delay:0ms}}
