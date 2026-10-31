@@ -2935,6 +2935,9 @@ function setCategoryFace(card,flipped){
 function expandCategoryCard(card){
  if(!card||card.classList.contains('is-expanded'))return;
  const rect=card.getBoundingClientRect();
+ const fixedHeader=document.querySelector('.topbar');
+ const expandedTop=fixedHeader?Math.max(0,Math.ceil(fixedHeader.getBoundingClientRect().bottom)):0;
+ card.style.setProperty('--expanded-top',expandedTop+'px');
  lockExpandedPage();
  card.style.setProperty('--card-top',rect.top+'px');
  card.style.setProperty('--card-left',rect.left+'px');
@@ -2952,7 +2955,7 @@ function collapseCategoryCard(card,onDone){
   if(card.classList.contains('is-expanded'))return;
   if(cardCleanupTimer){clearTimeout(cardCleanupTimer);cardCleanupTimer=null;}
   card.classList.remove('is-expanding');
-  ['--card-top','--card-left','--card-width','--card-height'].forEach(k=>card.style.removeProperty(k));
+  ['--card-top','--card-left','--card-width','--card-height','--expanded-top'].forEach(k=>card.style.removeProperty(k));
   unlockExpandedPage();
   if(onDone)onDone();
  };
@@ -3659,6 +3662,15 @@ html.malago-card-expanded,body.malago-card-expanded{overflow:hidden!important}
     padding-top:0!important;
     padding-bottom:12px!important;
   }
+}
+</style>
+<style id="MALAGO-EXPANDED-CATEGORY-VIEWPORT-FIX-2026">
+/* Les catégories ouvertes commencent sous le header fixe : aucun titre ni bouton masqué sur iPhone. */
+.malagoExperienceTile.is-expanding.is-expanded{
+  top:var(--expanded-top,0px)!important;
+  bottom:0!important;
+  height:calc(100vh - var(--expanded-top,0px))!important;
+  height:calc(100dvh - var(--expanded-top,0px))!important;
 }
 </style>
 <style id="MALAGO-GLOBAL-REMOVE-DECORATIVE-SELECT-ARROWS">
