@@ -2881,14 +2881,20 @@ function lockExpandedPage(){
 }
 function unlockExpandedPage(){
  if(!cardLockSnapshot)return;
+ const root=document.documentElement;
+ const previousScrollBehavior=root.style.scrollBehavior;
+ /* Le site utilise scroll-behavior:smooth globalement : le scrollTo de restauration
+    doit être instantané pour éviter le mouvement vertical visible au retour. */
+ root.style.scrollBehavior='auto';
  document.body.style.position=cardLockSnapshot.position;
  document.body.style.top=cardLockSnapshot.top;
  document.body.style.width=cardLockSnapshot.width;
  document.body.style.overflow=cardLockSnapshot.overflow;
  document.body.classList.remove('malago-card-expanded');
- document.documentElement.classList.remove('malago-card-expanded');
+ root.classList.remove('malago-card-expanded');
  cardLockSnapshot=null;
  window.scrollTo(0,expandedScrollY);
+ root.style.scrollBehavior=previousScrollBehavior;
 }
 function setCategoryFace(card,flipped){
  const front=card.querySelector('.malagoExperienceFront'),back=card.querySelector('.malagoExperienceBack');
