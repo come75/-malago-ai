@@ -2998,12 +2998,45 @@ const old=$('#malagoExperienceFlow');if(old)old.hidden=true;
 const root=document.createElement('section');root.id='malagoNewFlow';root.setAttribute('aria-live','polite');root.innerHTML='<div class="mnf-head"><div><div class="mnf-kicker" id="mnfKicker"></div><div class="mnf-note" id="mnfStep"></div></div><button class="mnf-secondary" type="button" id="mnfClose">'+esc(flowText('Fermer ×'))+'</button></div><div id="mnfContent"></div>';grid.after(root);
 let cat,item,stage='services',a={},night={},activeDetailsCard=null;
 function close(){if(activeDetailsCard){returnToCategoryBack();return;}root.classList.remove('is-open');}
-function returnToCategoryBack(){if(activeDetailsCard){const card=activeDetailsCard;root.classList.remove('is-open');card.classList.remove('is-details');const face=card.querySelector('.malagoExperienceDetailsFace');if(face){face.setAttribute('inert','');face.setAttribute('aria-hidden','true');face.removeAttribute('role');face.scrollTop=0;}grid.after(root);activeDetailsCard=null;return;}root.classList.remove('is-open');if(!cat)return;const card=grid.querySelector('[data-category-card="'+cat.key+'"]');if(cat.key==='nightlife'){if(card)collapseCategoryCard(card);return;}if(card)expandCategoryCard(card);}
+function returnToCategoryBack(){
+ if(activeDetailsCard){
+  const card=activeDetailsCard;
+  root.classList.remove('is-open');
+  card.classList.remove('is-details');
+  const face=card.querySelector('.malagoExperienceDetailsFace');
+  if(face){face.setAttribute('inert','');face.setAttribute('aria-hidden','true');face.removeAttribute('role');face.scrollTop=0;}
+  grid.after(root);
+  activeDetailsCard=null;
+  /* Revenir explicitement à la face sous-catégories. Ne pas rappeler
+     expandCategoryCard() sur une carte déjà expanded : cette fonction
+     sortirait immédiatement et laisserait l'état de face ambigu. */
+  if(card.classList.contains('is-expanded')){
+   card.classList.add('is-flipped');
+   setCategoryFace(card,true);
+  }else{
+   expandCategoryCard(card);
+  }
+  return;
+ }
+ root.classList.remove('is-open');
+ if(!cat)return;
+ const card=grid.querySelector('[data-category-card="'+cat.key+'"]');
+ if(cat.key==='nightlife'){if(card)collapseCategoryCard(card);return;}
+ if(card){
+  if(card.classList.contains('is-expanded')){
+   card.classList.add('is-flipped');
+   setCategoryFace(card,true);
+  }else expandCategoryCard(card);
+ }
+}
 root.addEventListener('click',e=>{const b=e.target.closest('[data-qcm-key]');if(!b||!root.contains(b))return;const select=root.querySelector('[data-key="'+b.dataset.qcmKey+'"]');if(!select)return;select.value=b.dataset.qcmValue;select.dispatchEvent(new Event('change',{bubbles:true}));});
 /* MALAGO-DETAILS-NAVIGATION-CLICK-RECOVERY-2026
    Navigation fiable sur la face retournée : délégation en capture pour les boutons recréés à chaque render. */
-root.addEventListener('click',e=>{
- const button=e.target.closest('#mnfBack,#mnfEdit,#mnfClose');
+/* Délégation au document : root est déplacé entre la grille et la face détails.
+   Un listener sur le document reste fiable pendant tous ces déplacements (Safari/iOS inclus). */
+document.addEventListener('click',e=>{
+ const target=e.target;
+ const button=target&&target.closest?target.closest('#mnfBack,#mnfEdit,#mnfClose'):null;
  if(!button||!root.contains(button))return;
  e.preventDefault();
  e.stopImmediatePropagation();
