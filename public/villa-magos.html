@@ -2546,22 +2546,30 @@ function renderSeaWizardSummary(){
  const cards=items.map((item,i)=>{const v=state.itemDetails[item]||{};return '<section class="malagoFilterCard"><div class="eyebrow">ACTIVITÉ '+(i+1)+' · EN MER</div><h3>'+esc(item)+'</h3><ul class="malagoFilterAnswers">'+Object.entries(v).filter(([,value])=>Array.isArray(value)?value.length>0:String(value??'').trim()!=='').map(([key,value])=>'<li><strong>'+esc(labels[key]||key)+':</strong> '+esc(Array.isArray(value)?value.join(', '):String(value))+'</li>').join('')+'</ul><button type="button" class="malagoFlowBack" data-sea-edit="'+i+'">Modifier cette activité</button></section>';}).join('');
  body.innerHTML='<div class="malagoFlowDone malagoFlowReview"><div class="eyebrow">EN MER · RÉCAPITULATIF</div><h2>Vérifiez votre demande.</h2><p>Chaque activité conserve ses propres réponses, sa date, son horaire et sa durée. Les prestations et conditions seront confirmées par le partenaire.</p>'+cards+'<div class="malagoFlowRow"><button class="malagoFlowBack" id="seaSummaryBack" type="button">← Retour</button><button class="malagoFlowNext" id="malagoFlowSubmit" type="button">Préparer ma demande </button></div><p class="malagoFlowFine">Cette demande n’est pas une réservation confirmée. Aucune réservation ne sera effectuée par cette maquette.</p><div id="malagoFlowSubmitMessage" role="status" aria-live="polite"></div></div>';
  /* Récapitulatif EN MER : délégation en capture, les boutons sont recréés à chaque rendu. */
- document.addEventListener('click',e=>{
-  const target=e.target;
-  const edit=target&&target.closest?target.closest('[data-sea-edit]'):null;
-  const back=target&&target.closest?target.closest('#seaSummaryBack'):null;
-  if(edit&&body.contains(edit)){
-   e.preventDefault();e.stopImmediatePropagation();
-   state.seaFlow.index=Number(edit.dataset.seaEdit)||0;
-   renderSeaWizard();
-   return;
-  }
-  if(back&&body.contains(back)){
-   e.preventDefault();e.stopImmediatePropagation();
-   state.seaFlow.index=Math.max(0,items.length-1);
-   renderSeaWizard();
-  }
- },true);
+ /* Navigation du récapitulatif EN MER : un seul écouteur sur le conteneur persistant.
+   Les index sont relus depuis l’état courant pour éviter les anciennes fermetures capturées. */
+ if(body.dataset.seaSummaryNavigationBound!=='true'){
+  body.dataset.seaSummaryNavigationBound='true';
+  body.addEventListener('click',e=>{
+   const target=e.target;
+   const edit=target&&target.closest?target.closest('[data-sea-edit]'):null;
+   if(edit&&body.contains(edit)){
+    e.preventDefault();e.stopImmediatePropagation();
+    const nextIndex=Number(edit.dataset.seaEdit);
+    state.seaFlow.index=Number.isInteger(nextIndex)?Math.max(0,nextIndex):0;
+    state.seaFlow.review=false;
+    renderSeaWizard();
+    return;
+   }
+   const back=target&&target.closest?target.closest('#seaSummaryBack'):null;
+   if(back&&body.contains(back)){
+    e.preventDefault();e.stopImmediatePropagation();
+    state.seaFlow.index=Math.max(0,selectedItems().length-1);
+    state.seaFlow.review=false;
+    renderSeaWizard();
+   }
+  },true);
+ }
  $('#malagoFlowSubmit').onclick=submitRequests;
 }
 
@@ -3912,5 +3920,69 @@ body.malago-card-expanded .whatsappFloat{
 #malagoNewFlow select,#malagoExperienceFlow select,.malagoFlowField select{appearance:none!important;-webkit-appearance:none!important;background-image:none!important;padding-right:14px!important}
 #malagoNewFlow .mnf-select-field:before,#malagoNewFlow .mnf-select-field:after,#malagoNewFlow .mnf-select-chevron{content:none!important;display:none!important}
 </style>
+<style id="MALAGO-NAVIGATION-TOUCH-STABILITY-2026">
+/* Sur écran tactile, ne pas placer les commandes dans un arbre 3D transformé.
+   Safari iOS peut sinon perdre le hit-test d'un premier tap, surtout avec une
+   face intérieure qui défile. La carte garde son agrandissement; seules les
+   faces sont affichées/masquées, sans rotation 3D. */
+@media (hover:none) and (pointer:coarse), (max-width:760px) {
+  #malagoExperienceCategories .malagoExperienceTile {
+    perspective:none!important;
+    -webkit-perspective:none!important;
+  }
+  #malagoExperienceCategories .malagoExperienceTile .malagoExperienceCardInner,
+  #malagoExperienceCategories .malagoExperienceTile.is-flipped .malagoExperienceCardInner,
+  #malagoExperienceCategories .malagoExperienceTile.is-expanding.is-details .malagoExperienceCardInner {
+    transform:none!important;
+    -webkit-transform:none!important;
+    transform-style:flat!important;
+    -webkit-transform-style:flat!important;
+    transition:none!important;
+  }
+  #malagoExperienceCategories .malagoExperienceTile .malagoExperienceFront,
+  #malagoExperienceCategories .malagoExperienceTile .malagoExperienceBack,
+  #malagoExperienceCategories .malagoExperienceTile .malagoExperienceDetailsFace {
+    transform:none!important;
+    -webkit-transform:none!important;
+    backface-visibility:visible!important;
+    -webkit-backface-visibility:visible!important;
+  }
+  #malagoExperienceCategories .malagoExperienceTile:not(.is-flipped) .malagoExperienceBack,
+  #malagoExperienceCategories .malagoExperienceTile:not(.is-details) .malagoExperienceDetailsFace {
+    visibility:hidden!important;
+    pointer-events:none!important;
+  }
+  #malagoExperienceCategories .malagoExperienceTile.is-flipped:not(.is-details) .malagoExperienceBack {
+    visibility:visible!important;
+    pointer-events:auto!important;
+  }
+  #malagoExperienceCategories .malagoExperienceTile.is-flipped:not(.is-details) .malagoExperienceFront,
+  #malagoExperienceCategories .malagoExperienceTile.is-details .malagoExperienceFront,
+  #malagoExperienceCategories .malagoExperienceTile.is-details .malagoExperienceBack {
+    visibility:hidden!important;
+    pointer-events:none!important;
+  }
+  #malagoExperienceCategories .malagoExperienceTile.is-expanding.is-details .malagoExperienceDetailsFace {
+    transform:none!important;
+    -webkit-transform:none!important;
+    backface-visibility:visible!important;
+    -webkit-backface-visibility:visible!important;
+    visibility:visible!important;
+    pointer-events:auto!important;
+  }
+  #malagoExperienceCategories .malagoExperienceUnflip,
+  #malagoExperienceCategories .malagoExperienceSubcategory,
+  #malagoExperienceCategories .malagoExperienceDetailsFace #malagoNewFlow button {
+    touch-action:manipulation!important;
+    -webkit-tap-highlight-color:transparent;
+  }
+  #malagoExperienceCategories .malagoExperienceBack,
+  #malagoExperienceCategories .malagoExperienceDetailsFace {
+    -webkit-overflow-scrolling:touch!important;
+    overscroll-behavior-y:contain!important;
+  }
+}
+</style>
+
 </body>
 </html>
