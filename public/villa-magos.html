@@ -2965,6 +2965,15 @@ function renderCategoryTiles(){
  grid.innerHTML=C.map((c,i)=>'<article class="malagoExperienceTile" data-category-card="'+c.key+'" style="--tile-i:'+i+';--tile-image:url('+tileImages[c.key]+')"><div class="malagoExperienceCardInner"><button type="button" class="malagoExperienceFace malagoExperienceFront" data-flip-category="'+c.key+'" aria-label="'+esc(categoryText(c.title)+' — '+flowText('Voir les sous-catégories'))+'"><span class="tileNum">'+String(i+1).padStart(2,'0')+' / '+esc(categoryText(c.title).toUpperCase())+'</span><div class="malagoExperienceFrontCopy"><h2>'+esc(categoryText(c.title))+'</h2><div class="tileBottom"><span class="tileHint">'+esc(flowText('Découvrir'))+'</span></div></div></button><div class="malagoExperienceFace malagoExperienceBack" aria-label="'+esc(categoryText(c.title)+' — '+flowText('Sous-catégories'))+'" inert><div class="malagoExperienceBackHead"><span class="malagoExperienceBackTitle">'+esc(categoryText(c.title))+'</span><button type="button" class="malagoExperienceUnflip" data-unflip="'+c.key+'" aria-label="'+esc(flowText('Retour à toutes les catégories'))+'"><span class="malagoExperienceUnflipLabel">'+esc(flowText('Retour aux catégories'))+'</span></button></div><div class="malagoExperienceSubcategories">'+c.items.map(x=>{const photo=subcategoryPhotoSets[c.key]?.[x];return '<button type="button" class="malagoExperienceSubcategory'+(photo?' has-image':'')+'" data-new-item="'+esc(x)+'" data-category-key="'+c.key+'">'+(photo?'<img class="malagoExperienceSubcategoryImage" src="'+photo+'" alt="" loading="lazy" onerror="this.style.display=\'none\'">':'')+'<span class="malagoExperienceSubcategoryLabel">'+esc(categoryText(x))+'</span></button>';}).join('')+'</div></div></div></article>').join('');
  grid.querySelectorAll('[data-flip-category]').forEach(b=>b.onclick=()=>{
   const card=b.closest('[data-category-card]');
+  // La catégorie Boîte de nuit n'a qu'un seul choix : ouvrir directement son formulaire dédié.
+  if(b.dataset.flipCategory==='nightlife'){
+   cat=C.find(x=>x.key==='nightlife');
+   item='Choisir une boîte de nuit';
+   a={};night={};stage='night';
+   root.classList.add('is-open');
+   render();
+   return;
+  }
   grid.querySelectorAll('.malagoExperienceTile.is-expanding').forEach(other=>{if(other!==card)collapseCategoryCard(other);});
   expandCategoryCard(card);
  });
