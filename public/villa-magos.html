@@ -2912,12 +2912,12 @@ function collapseCategoryCard(card,onDone){
  card.classList.remove('is-expanded','is-flipped');
  setCategoryFace(card,false);
  const cleanup=()=>{
-  if(!card.classList.contains('is-expanded')){
-   card.classList.remove('is-expanding');
-   ['--card-top','--card-left','--card-width','--card-height'].forEach(k=>card.style.removeProperty(k));
-   unlockExpandedPage();
-   if(onDone)onDone();
-  }
+  if(card.classList.contains('is-expanded'))return;
+  if(cardCleanupTimer){clearTimeout(cardCleanupTimer);cardCleanupTimer=null;}
+  card.classList.remove('is-expanding');
+  ['--card-top','--card-left','--card-width','--card-height'].forEach(k=>card.style.removeProperty(k));
+  unlockExpandedPage();
+  if(onDone)onDone();
  };
  if(cardCleanupTimer)clearTimeout(cardCleanupTimer);
  card.addEventListener('transitionend',function onEnd(e){if(e.target!==card||!['top','width','height'].includes(e.propertyName))return;card.removeEventListener('transitionend',onEnd);cleanup();});
