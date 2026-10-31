@@ -2848,7 +2848,7 @@ const C=[
 ['Me déplacer','Louer une voiture|Chauffeur privé|Taxi / VTC','transport'],
 ['Activités','Flamenco|Bachata|Salsa|Autres danses|Quad et buggy|Musée|Visite historique|Visites gourmandes|Bowling|Karting','activities'],
 ['Excursion','Caminito del Rey|Nerja|Ronda|Séville|Grenade|Cordoue|Cadix|Tarifa|Gibraltar|Marbella|Voyages express','excursion'],
-['Nature et Animaux','Balade à cheval|Randonnée|Dauphins / baleines|Aquarium|Zoo','nature'],
+['Nature & Animaux','Balade à cheval|Randonnée|Dauphins / baleines|Aquarium|Zoo','nature'],
 ['Plages & beach clubs','Conseil plage|Beach club','beach'],
 ['En mer','Bateau / yacht|Jet-ski|Boat party|Pêche|Activités nautiques|Dauphins / baleines','sea'],
 ['Sortir manger','Tapas|Restaurant|Fine dining|Brunch|Desserts & pastries','food'],
@@ -2879,7 +2879,9 @@ function titleCaseCategoryLabel(value,lang){
 }
 function categoryText(value){
  const lang=document.getElementById('malagoLanguageSwitcher')?.value||'en';
- const translated=CATEGORY_TRANSLATIONS[lang]?.[value]||CATEGORY_EXTRA_TRANSLATIONS[lang]?.[value]||window.MALAGO_T?.(value,lang)||CATEGORY_TRANSLATIONS.en[value]||CATEGORY_EXTRA_TRANSLATIONS.en[value]||value;
+ const lookupValue=value==='Nature & Animaux'?'Nature et animaux':value;
+ let translated=CATEGORY_TRANSLATIONS[lang]?.[lookupValue]||CATEGORY_EXTRA_TRANSLATIONS[lang]?.[lookupValue]||window.MALAGO_T?.(lookupValue,lang)||CATEGORY_TRANSLATIONS.en[lookupValue]||CATEGORY_EXTRA_TRANSLATIONS.en[lookupValue]||lookupValue;
+ if(lang==='fr'&&lookupValue==='Nature et animaux')translated='Nature & animaux';
  return titleCaseCategoryLabel(translated,lang);
 }
 const tileImages={comfort:"https://images.pexels.com/photos/30655495/pexels-photo-30655495.jpeg?auto=compress&cs=tinysrgb&w=1200",villa:"/media/villa-magos-piscine.WEBP",drinks:"https://d2ol7oe51mr4n9.cloudfront.net/user_3LIbHMwUoEDn4cQX1aW4M05gMa6/b983668b-bba3-43cc-bc4c-25dcff6d11c5.jpg",sport:"https://d2ol7oe51mr4n9.cloudfront.net/user_3LIbHMwUoEDn4cQX1aW4M05gMa6/f808d59d-fed4-4f8f-b558-e5568763d900.jpg",nature:"https://images.unsplash.com/photo-1553284965-83fd3e82fa5a?auto=format&fit=crop&w=800&q=80",food:"https://images.unsplash.com/photo-1414235077428-338989a2e8c0?auto=format&fit=crop&w=800&q=80",beach:"https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=800&q=80",sea:"https://images.unsplash.com/photo-1567899378494-47b22a2ae96a?auto=format&fit=crop&w=800&q=80",transport:"https://images.unsplash.com/photo-1503376780353-7e6692767b70?auto=format&fit=crop&w=800&q=80",wellness:"https://images.unsplash.com/photo-1540555700478-4be289fbecef?auto=format&fit=crop&w=800&q=80",nightlife:"https://d2ol7oe51mr4n9.cloudfront.net/user_3LIbHMwUoEDn4cQX1aW4M05gMa6/6c28cedf-c26b-4c68-9155-c4d522e8aa5a.jpg",excursion:"https://d2ol7oe51mr4n9.cloudfront.net/user_3LIbHMwUoEDn4cQX1aW4M05gMa6/3d275fe6-ac8c-4770-b6b5-9f93565bc9ae.jpg",activities:"https://d2ol7oe51mr4n9.cloudfront.net/user_3LIbHMwUoEDn4cQX1aW4M05gMa6/a5ad5614-7261-4dba-ab3a-1fdcba523dfb.jpg"};
