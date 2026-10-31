@@ -2998,7 +2998,7 @@ const old=$('#malagoExperienceFlow');if(old)old.hidden=true;
 const root=document.createElement('section');root.id='malagoNewFlow';root.setAttribute('aria-live','polite');root.innerHTML='<div class="mnf-head"><div><div class="mnf-kicker" id="mnfKicker"></div><div class="mnf-note" id="mnfStep"></div></div><button class="mnf-secondary" type="button" id="mnfClose">'+esc(flowText('Fermer ×'))+'</button></div><div id="mnfContent"></div>';grid.after(root);
 let cat,item,stage='services',a={},night={},activeDetailsCard=null;
 function close(){if(activeDetailsCard){returnToCategoryBack();return;}root.classList.remove('is-open');}
-function returnToCategoryBack(){if(activeDetailsCard){const card=activeDetailsCard;root.classList.remove('is-open');card.classList.remove('is-details');grid.after(root);activeDetailsCard=null;return;}root.classList.remove('is-open');if(!cat)return;const card=grid.querySelector('[data-category-card="'+cat.key+'"]');if(cat.key==='nightlife'){if(card)collapseCategoryCard(card);return;}if(card)expandCategoryCard(card);}
+function returnToCategoryBack(){if(activeDetailsCard){const card=activeDetailsCard;root.classList.remove('is-open');card.classList.remove('is-details');const face=card.querySelector('.malagoExperienceDetailsFace');if(face){face.setAttribute('inert','');face.setAttribute('aria-hidden','true');face.removeAttribute('role');face.scrollTop=0;}grid.after(root);activeDetailsCard=null;return;}root.classList.remove('is-open');if(!cat)return;const card=grid.querySelector('[data-category-card="'+cat.key+'"]');if(cat.key==='nightlife'){if(card)collapseCategoryCard(card);return;}if(card)expandCategoryCard(card);}
 root.addEventListener('click',e=>{const b=e.target.closest('[data-qcm-key]');if(!b||!root.contains(b))return;const select=root.querySelector('[data-key="'+b.dataset.qcmKey+'"]');if(!select)return;select.value=b.dataset.qcmValue;select.dispatchEvent(new Event('change',{bubbles:true}));});
 $('#mnfClose').onclick=close;
 function contact(service,extra='',reservedWindow=null){let serviceText;const sep=service.indexOf(' — ');if(sep>0&&(service.slice(0,sep)==='Voyage express'||service.slice(0,sep)==='Voyages express')){serviceText=flowText(service.slice(0,sep))+' — '+flowText(service.slice(sep+3));}else serviceText=flowText(service);const msg=[flowText('Bonjour Malago'),flowText('Je souhaite organiser une demande.'),flowText('Service')+' : '+serviceText,extra,flowText('Merci !')].filter(Boolean).join('\n');const url=wa(msg);if(reservedWindow&&!reservedWindow.closed){reservedWindow.location.href=url;}else{window.location.href=url;}}
@@ -3030,7 +3030,7 @@ const fs=fields();c.innerHTML='<h2 class="mnf-title">'+esc(categoryText(item))+'
 }
 const labels={date:'Date',time:'Heure',people:'Nombre de personnes',diet:'Préférences alimentaires',allergies:'Allergies / intolérances',meals:'Organisation des repas',notes:'Précisions',cuisine:'Type de cuisine',cuisineOther:'Précisions cuisine / envies',music:'Type de musique',event:'Type d’événement',eventOther:'Précisions événement',decoration:'Type de décoration',mood:'Ambiance',booking:'Choix',boat:'Type d’embarcation',jetskis:'Nombre de jet-skis',cars:'Nombre de voitures',style:'Style de voiture',budget:'Budget par voiture',vehicle:'Véhicule souhaité',massage:'Formule',massageOther:'Précisions',hair:'Pour'};
 function input(f){if(f.opts)return sf(f.k,f.l,f.opts);return '<div class="mnf-field"><label>'+esc(flowText(f.l))+'</label>'+(f.t==='textarea'?'<textarea data-key="'+f.k+'" aria-label="'+esc(flowText(f.l))+'"></textarea>':'<input data-key="'+f.k+'" aria-label="'+esc(flowText(f.l))+'" type="'+f.t+'" '+(f.t==='number'?'min="1" max="99"':'')+'></div>');}
-function choose(x,whatsAppWindow=null,detailCard=null){item=x;a={};const directRequest=direct.has(x)||(cat.key==='sea'&&x==='Dauphins / baleines');if(directRequest){const card=detailCard||activeDetailsCard;if(card)collapseCategoryCard(card,()=>contact(x,'',whatsAppWindow));else contact(x,'',whatsAppWindow);return;}if(x==='Choisir une boîte de nuit'){stage='night';}else if(x==='Voyages express'){stage='travel';}else if(fields().length===0){const card=detailCard||activeDetailsCard;if(card)collapseCategoryCard(card,()=>contact(x,'',whatsAppWindow));else contact(x,'',whatsAppWindow);return;}else{if(whatsAppWindow&&!whatsAppWindow.closed)whatsAppWindow.close();stage='form';}if(detailCard){activeDetailsCard=detailCard;const face=detailCard.querySelector('.malagoExperienceDetailsFace');if(face)face.appendChild(root);detailCard.classList.add('is-details');}root.classList.add('is-open');render();}
+function choose(x,whatsAppWindow=null,detailCard=null){item=x;a={};const directRequest=direct.has(x)||(cat.key==='sea'&&x==='Dauphins / baleines');if(directRequest){const card=detailCard||activeDetailsCard;if(card)collapseCategoryCard(card,()=>contact(x,'',whatsAppWindow));else contact(x,'',whatsAppWindow);return;}if(x==='Choisir une boîte de nuit'){stage='night';}else if(x==='Voyages express'){stage='travel';}else if(fields().length===0){const card=detailCard||activeDetailsCard;if(card)collapseCategoryCard(card,()=>contact(x,'',whatsAppWindow));else contact(x,'',whatsAppWindow);return;}else{if(whatsAppWindow&&!whatsAppWindow.closed)whatsAppWindow.close();stage='form';}if(detailCard){activeDetailsCard=detailCard;const face=detailCard.querySelector('.malagoExperienceDetailsFace');if(face){face.appendChild(root);face.removeAttribute('inert');face.setAttribute('aria-hidden','false');face.setAttribute('role','region');}detailCard.classList.add('is-details');}root.classList.add('is-open');render();}
 const langSelect=document.getElementById('malagoLanguageSwitcher');if(langSelect)langSelect.addEventListener('change',()=>{renderCategoryTiles();if(root.classList.contains('is-open')&&cat)render();});
 })();
 </script>
@@ -3796,6 +3796,39 @@ html.malago-card-expanded,body.malago-card-expanded{overflow:hidden!important}
 html.malago-card-expanded .whatsappFloat,
 body.malago-card-expanded .whatsappFloat{
   display:none!important;
+}
+</style>
+<style id="MALAGO-DETAILS-FACE-INTERACTION-SCROLL-FIX-2026">
+/* La troisième face devient interactive uniquement lorsque le formulaire est affiché. */
+.malagoExperienceTile.is-expanding.is-details .malagoExperienceDetailsFace{
+  visibility:visible!important;
+  pointer-events:auto!important;
+  overflow-x:hidden!important;
+  overflow-y:auto!important;
+  -webkit-overflow-scrolling:touch!important;
+  touch-action:pan-y!important;
+  overscroll-behavior-y:contain!important;
+  min-height:0!important;
+  height:100%!important;
+}
+.malagoExperienceTile.is-expanding.is-details .malagoExperienceDetailsFace #malagoNewFlow{
+  position:relative!important;
+  display:block!important;
+  width:100%!important;
+  min-height:100%!important;
+  height:auto!important;
+  max-height:none!important;
+  overflow:visible!important;
+  pointer-events:auto!important;
+  touch-action:pan-y!important;
+  box-sizing:border-box!important;
+}
+.malagoExperienceTile.is-expanding.is-details .malagoExperienceDetailsFace #malagoNewFlow input,
+.malagoExperienceTile.is-expanding.is-details .malagoExperienceDetailsFace #malagoNewFlow select,
+.malagoExperienceTile.is-expanding.is-details .malagoExperienceDetailsFace #malagoNewFlow textarea,
+.malagoExperienceTile.is-expanding.is-details .malagoExperienceDetailsFace #malagoNewFlow button{
+  pointer-events:auto!important;
+  touch-action:manipulation!important;
 }
 </style>
 <style id="MALAGO-GLOBAL-REMOVE-DECORATIVE-SELECT-ARROWS">
