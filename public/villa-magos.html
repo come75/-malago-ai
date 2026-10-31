@@ -2613,7 +2613,7 @@ function renderChefWizard(){
  if(!values.meals_by_day||typeof values.meals_by_day!=='object'||Array.isArray(values.meals_by_day))values.meals_by_day={};
  Object.keys(values.meals_by_day).forEach(day=>{if(!availableStayDates.includes(day))delete values.meals_by_day[day];else values.meals_by_day[day]=Array.isArray(values.meals_by_day[day])?values.meals_by_day[day].filter(m=>['Petit-déjeuner','Déjeuner','Dîner'].includes(m)):[];});
  values.selected_days=availableStayDates.filter(day=>(values.meals_by_day[day]||[]).length>0);
- const formatStayDay=day=>{const d=parseStayDate(day);return d?d.toLocaleDateString('fr-FR',{weekday:'short',day:'numeric',month:'short'}):day;};
+ const formatStayDay=day=>{const d=parseStayDate(day),lang=document.getElementById('malagoLanguageSwitcher')?.value||'en',locales={en:'en-GB',fr:'fr-FR',es:'es-ES',de:'de-DE',it:'it-IT',nl:'nl-NL',ru:'ru-RU',pt:'pt-PT',ar:'ar',zh:'zh-CN'};return d?d.toLocaleDateString(locales[lang]||'en-GB',{weekday:'short',day:'numeric',month:'short'}):day;};
  if(window.MALAGO_CLIENT_TOKEN&&!window.VM_RESERVATION&&!state.chefStayFetchStarted){
   state.chefStayFetchStarted=true;
   fetch('/api/client/requests',{headers:{'Authorization':'Bearer '+window.MALAGO_CLIENT_TOKEN},cache:'no-store'}).then(r=>r.ok?r.json():null).then(data=>{
