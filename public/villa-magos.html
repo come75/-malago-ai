@@ -3673,6 +3673,65 @@ html.malago-card-expanded,body.malago-card-expanded{overflow:hidden!important}
   height:calc(100dvh - var(--expanded-top,0px))!important;
 }
 </style>
+<style id="MALAGO-EXPANDED-CATEGORY-COMPACT-HEADER-2026">
+/* En-tête compact : libérer un maximum de hauteur pour les sous-catégories. */
+.malagoExperienceTile.is-expanding .malagoExperienceBack{
+  padding:10px 16px 14px!important;
+}
+.malagoExperienceTile.is-expanding .malagoExperienceBackHead{
+  gap:8px!important;
+  padding:0 0 8px!important;
+  margin:0!important;
+  font-size:clamp(20px,2.2vw,26px)!important;
+}
+.malagoExperienceTile.is-expanding .malagoExperienceBackTitle{
+  font-size:clamp(20px,2.2vw,26px)!important;
+  line-height:1.08!important;
+}
+.malagoExperienceTile.is-expanding .malagoExperienceUnflip{
+  width:auto!important;
+  min-width:0!important;
+  height:34px!important;
+  min-height:34px!important;
+  flex:0 0 auto!important;
+  padding:0 10px!important;
+  gap:0!important;
+  border-radius:999px!important;
+  font-size:11px!important;
+  line-height:1!important;
+  font-weight:600!important;
+  letter-spacing:0!important;
+  box-shadow:0 2px 9px rgba(0,0,0,.2)!important;
+}
+.malagoExperienceTile.is-expanding .malagoExperienceSubcategories{
+  margin-top:8px!important;
+  gap:10px!important;
+  padding-top:0!important;
+}
+@media(max-width:760px){
+  .malagoExperienceTile.is-expanding .malagoExperienceBack{
+    padding:8px 12px 12px!important;
+  }
+  .malagoExperienceTile.is-expanding .malagoExperienceBackHead{
+    gap:6px!important;
+    padding-bottom:7px!important;
+    font-size:20px!important;
+  }
+  .malagoExperienceTile.is-expanding .malagoExperienceBackTitle{
+    font-size:20px!important;
+  }
+  .malagoExperienceTile.is-expanding .malagoExperienceUnflip{
+    height:32px!important;
+    min-height:32px!important;
+    padding:0 8px!important;
+    font-size:10px!important;
+  }
+  .malagoExperienceTile.is-expanding .malagoExperienceSubcategories{
+    margin-top:6px!important;
+    gap:9px!important;
+  }
+}
+</style>
 <style id="MALAGO-GLOBAL-REMOVE-DECORATIVE-SELECT-ARROWS">
 /* Retirer partout les chevrons décoratifs des listes déroulantes. Les flèches de navigation fonctionnelles restent intactes. */
 #malagoNewFlow select,#malagoExperienceFlow select,.malagoFlowField select{appearance:none!important;-webkit-appearance:none!important;background-image:none!important;padding-right:14px!important}
