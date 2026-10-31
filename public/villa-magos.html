@@ -3556,5 +3556,46 @@ html.malago-card-expanded,body.malago-card-expanded{overflow:hidden!important}
 })();
 </script>
 
+
+<script id="malago-header-contact-language-2026">
+(function(){
+ const select=document.getElementById('malagoLanguageSwitcher');
+ const link=document.querySelector('.headerActions .navcta');
+ if(!select||!link)return;
+ const labels={
+  en:'Contact Malago ↗',fr:'Contacter Malago ↗',es:'Contactar Malago ↗',de:'Malago kontaktieren ↗',
+  it:'Contatta Malago ↗',nl:'Contact Malago ↗',ru:'Связаться с Malago ↗',pt:'Contactar Malago ↗',
+  ar:'تواصل مع Malago ↗',zh:'联系 Malago ↗'
+ };
+ const messages={
+  en:'Hello Malago, I would like to discover your services.',
+  fr:'Bonjour Malago, je souhaite découvrir vos services.',
+  es:'Hola Malago, me gustaría conocer sus servicios.',
+  de:'Hallo Malago, ich möchte Ihre Dienstleistungen kennenlernen.',
+  it:'Ciao Malago, vorrei conoscere i vostri servizi.',
+  nl:'Hallo Malago, ik wil graag jullie diensten ontdekken.',
+  ru:'Здравствуйте, Malago! Я хотел(а) бы узнать о ваших услугах.',
+  pt:'Olá Malago, gostaria de conhecer os vossos serviços.',
+  ar:'مرحبًا Malago، أود التعرّف على خدماتكم.',
+  zh:'你好，Malago！我想了解你们的服务。'
+ };
+ function refresh(){
+  const lang=select.value||'en';
+  const label=labels[lang]||labels.en;
+  link.querySelectorAll('.navctaFull,.navctaMobile').forEach(el=>{el.textContent=label;});
+  link.setAttribute('aria-label',label.replace(' ↗',''));
+  link.href='https://wa.me/34613384566?text='+encodeURIComponent(messages[lang]||messages.en);
+ }
+ link.addEventListener('click',function(event){
+  event.preventDefault();
+  const lang=select.value||'en';
+  const url='https://wa.me/34613384566?text='+encodeURIComponent(messages[lang]||messages.en);
+  window.open(url,'_blank','noopener');
+ });
+ select.addEventListener('change',refresh);
+ refresh();
+})();
+</script>
+
 </body>
 </html>
