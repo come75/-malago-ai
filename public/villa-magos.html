@@ -2907,8 +2907,8 @@ function expandCategoryCard(card){
  void card.offsetWidth;
  requestAnimationFrame(()=>{card.classList.add('is-expanded','is-flipped');setCategoryFace(card,true);});
 }
-function collapseCategoryCard(card){
- if(!card||!card.classList.contains('is-expanding')){if(card){card.classList.remove('is-flipped');setCategoryFace(card,false);}return;}
+function collapseCategoryCard(card,onDone){
+ if(!card||!card.classList.contains('is-expanding')){if(card){card.classList.remove('is-flipped');setCategoryFace(card,false);}if(onDone)onDone();return;}
  card.classList.remove('is-expanded','is-flipped');
  setCategoryFace(card,false);
  const cleanup=()=>{
@@ -2916,6 +2916,7 @@ function collapseCategoryCard(card){
    card.classList.remove('is-expanding');
    ['--card-top','--card-left','--card-width','--card-height'].forEach(k=>card.style.removeProperty(k));
    unlockExpandedPage();
+   if(onDone)onDone();
   }
  };
  if(cardCleanupTimer)clearTimeout(cardCleanupTimer);
@@ -2933,9 +2934,8 @@ function renderCategoryTiles(){
  grid.querySelectorAll('[data-new-item]').forEach(b=>b.onclick=()=>{
   const card=b.closest('[data-category-card]');
   cat=C.find(x=>x.key===b.dataset.categoryKey);
-  collapseCategoryCard(card);
-  item=null;a={};night={};
-  choose(b.dataset.newItem);
+  const selected=b.dataset.newItem;
+  collapseCategoryCard(card,()=>{item=null;a={};night={};choose(selected);});
  });
 }
 renderCategoryTiles();
