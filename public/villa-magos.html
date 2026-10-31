@@ -3000,6 +3000,27 @@ let cat,item,stage='services',a={},night={},activeDetailsCard=null;
 function close(){if(activeDetailsCard){returnToCategoryBack();return;}root.classList.remove('is-open');}
 function returnToCategoryBack(){if(activeDetailsCard){const card=activeDetailsCard;root.classList.remove('is-open');card.classList.remove('is-details');const face=card.querySelector('.malagoExperienceDetailsFace');if(face){face.setAttribute('inert','');face.setAttribute('aria-hidden','true');face.removeAttribute('role');face.scrollTop=0;}grid.after(root);activeDetailsCard=null;return;}root.classList.remove('is-open');if(!cat)return;const card=grid.querySelector('[data-category-card="'+cat.key+'"]');if(cat.key==='nightlife'){if(card)collapseCategoryCard(card);return;}if(card)expandCategoryCard(card);}
 root.addEventListener('click',e=>{const b=e.target.closest('[data-qcm-key]');if(!b||!root.contains(b))return;const select=root.querySelector('[data-key="'+b.dataset.qcmKey+'"]');if(!select)return;select.value=b.dataset.qcmValue;select.dispatchEvent(new Event('change',{bubbles:true}));});
+/* MALAGO-DETAILS-NAVIGATION-CLICK-RECOVERY-2026
+   Navigation fiable sur la face retournée : délégation en capture pour les boutons recréés à chaque render. */
+root.addEventListener('click',e=>{
+ const button=e.target.closest('#mnfBack,#mnfEdit,#mnfClose');
+ if(!button||!root.contains(button))return;
+ e.preventDefault();
+ e.stopImmediatePropagation();
+ if(button.id==='mnfEdit'){
+  stage=cat&&cat.key==='nightlife'?'nightdate':'form';
+  render();
+  const first=root.querySelector('#mnfContent input,#mnfContent select,#mnfContent textarea');
+  if(first)first.focus({preventScroll:true});
+  return;
+ }
+ if(button.id==='mnfBack'){
+  if(stage==='nightdate'){stage='night';render();return;}
+  returnToCategoryBack();
+  return;
+ }
+ if(button.id==='mnfClose')close();
+},true);
 $('#mnfClose').onclick=close;
 function contact(service,extra='',reservedWindow=null){let serviceText;const sep=service.indexOf(' — ');if(sep>0&&(service.slice(0,sep)==='Voyage express'||service.slice(0,sep)==='Voyages express')){serviceText=flowText(service.slice(0,sep))+' — '+flowText(service.slice(sep+3));}else serviceText=flowText(service);const msg=[flowText('Bonjour Malago'),flowText('Je souhaite organiser une demande.'),flowText('Service')+' : '+serviceText,extra,flowText('Merci !')].filter(Boolean).join('\n');const url=wa(msg);if(reservedWindow&&!reservedWindow.closed){reservedWindow.location.href=url;}else{window.location.href=url;}}
 function field(k,l,t='text',opts=null){return {k,l,t,opts};}
