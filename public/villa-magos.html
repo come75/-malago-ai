@@ -3014,7 +3014,7 @@ if(cat.key==='wellness'){if(item==='Massage à la maison')return [field('massage
 if(cat.key==='activities'&&item==='Quad et buggy')return [field('vehicle','Choix','select',['Quad','Buggy']),p,d,h];
 return [];
 }
-function sf(k,l,opts){const isChef=cat.key==='villa'&&item==='Un chef',isEvent=cat.key==='villa'&&item==='Un événement';const noChevron=isChef||isEvent;return '<div class="mnf-field mnf-select-field'+(isChef?' mnf-chef-select-field':'')+(isEvent?' mnf-event-select-field':'')+'"><label>'+esc(flowText(l))+'</label><select data-key="'+k+'" aria-label="'+esc(flowText(l))+'"><option value="">'+esc(flowText('Sélectionnez une réponse…'))+'</option>'+opts.map(o=>'<option value="'+esc(o)+'">'+esc(flowText(o))+'</option>').join('')+'</select>'+(noChevron?'':'<span class="mnf-select-chevron" aria-hidden="true">⌄</span>')+'</div>';}
+function sf(k,l,opts){const isChef=cat.key==='villa'&&item==='Un chef',isEvent=cat.key==='villa'&&item==='Un événement';return '<div class="mnf-field mnf-select-field'+(isChef?' mnf-chef-select-field':'')+(isEvent?' mnf-event-select-field':'')+'"><label>'+esc(flowText(l))+'</label><select data-key="'+k+'" aria-label="'+esc(flowText(l))+'"><option value="">'+esc(flowText('Sélectionnez une réponse…'))+'</option>'+opts.map(o=>'<option value="'+esc(o)+'">'+esc(flowText(o))+'</option>').join('')+'</select></div>';}
 
 function render(){
 const c=$('#mnfContent');$('#mnfKicker').textContent=categoryText(cat.title).toUpperCase();$('#mnfStep').textContent=stage==='services'?flowText('Choisissez un service'):stage==='review'?flowText('Récapitulatif'):flowText('Précisez votre demande');
@@ -3640,5 +3640,11 @@ html.malago-card-expanded,body.malago-card-expanded{overflow:hidden!important}
 })();
 </script>
 
+
+<style id="MALAGO-GLOBAL-REMOVE-DECORATIVE-SELECT-ARROWS">
+/* Retirer partout les chevrons décoratifs des listes déroulantes. Les flèches de navigation fonctionnelles restent intactes. */
+#malagoNewFlow select,#malagoExperienceFlow select,.malagoFlowField select{appearance:none!important;-webkit-appearance:none!important;background-image:none!important;padding-right:14px!important}
+#malagoNewFlow .mnf-select-field:before,#malagoNewFlow .mnf-select-field:after,#malagoNewFlow .mnf-select-chevron{content:none!important;display:none!important}
+</style>
 </body>
 </html>
