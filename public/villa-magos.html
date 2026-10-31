@@ -1002,6 +1002,13 @@ body.malago-intro-open{overflow:hidden!important}
 .languageLabel{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0)}
 @media(max-width:700px){.headerActions{gap:6px}.headerActions .navcta{padding:10px 11px;font-size:10px}.languageControl{position:relative}#malagoLanguageButton{display:inline-flex;align-items:center;justify-content:center}#malagoLanguageSwitcher{display:none;position:absolute;z-index:1000;right:0;top:calc(100% + 8px);width:170px;max-width:none;min-height:44px;padding:0 10px;font-size:13px;box-shadow:0 12px 32px rgba(0,0,0,.45)}.languageControl.is-open #malagoLanguageSwitcher{display:block}}
 </style>
+
+<style id="MALAGO-INTRO-COPY-ON-VIDEO">
+/* Le message et le CTA sont visibles dès la première image, pendant toute la vidéo. */
+#malagoWelcomeIntro .malagoIntroContent{opacity:1!important;pointer-events:auto!important}
+#malagoWelcomeIntro .malagoIntroShade{opacity:1!important}
+@media(max-width:650px){#malagoWelcomeIntro .malagoIntroShade{opacity:.22!important}}
+</style>
 </head>
 <body class="villa-home-pool">
 
