@@ -3734,6 +3734,11 @@ html.malago-card-expanded,body.malago-card-expanded{overflow:hidden!important}
 </style>
 <style id="MALAGO-SUBCATEGORY-TO-DETAILS-CARD-FLIP-2026">
 /* Deuxième retournement : la carte passe des sous-catégories au formulaire détaillé. */
+/* La troisième face ne doit jamais recouvrir les photos lorsque la carte est au repos. */
+.malagoExperienceDetailsFace{
+  visibility:hidden!important;
+  pointer-events:none!important;
+}
 .malagoExperienceTile.is-expanding.is-details .malagoExperienceCardInner{
   transform:rotateY(360deg)!important;
 }
@@ -3742,7 +3747,13 @@ html.malago-card-expanded,body.malago-card-expanded{overflow:hidden!important}
   inset:0!important;
   z-index:3!important;
   display:block!important;
-  overflow:hidden!important;
+  visibility:hidden!important;
+  pointer-events:none!important;
+  overflow-x:hidden!important;
+  overflow-y:auto!important;
+  -webkit-overflow-scrolling:touch!important;
+  touch-action:pan-y!important;
+  overscroll-behavior-y:contain!important;
   padding:0!important;
   border:1px solid rgba(228,206,158,.55)!important;
   border-radius:0!important;
@@ -3751,21 +3762,26 @@ html.malago-card-expanded,body.malago-card-expanded{overflow:hidden!important}
   backface-visibility:hidden!important;
   -webkit-backface-visibility:hidden!important;
 }
+.malagoExperienceTile.is-expanding.is-details .malagoExperienceDetailsFace{
+  visibility:visible!important;
+  pointer-events:auto!important;
+}
 .malagoExperienceTile.is-expanding.is-details .malagoExperienceFront{
   visibility:hidden!important;
 }
 .malagoExperienceTile.is-expanding .malagoExperienceDetailsFace #malagoNewFlow{
-  position:absolute!important;
-  inset:0!important;
+  position:relative!important;
+  inset:auto!important;
   display:block!important;
   width:100%!important;
   max-width:none!important;
-  height:100%!important;
-  max-height:100%!important;
+  height:auto!important;
+  min-height:100%!important;
+  max-height:none!important;
   margin:0!important;
   padding:clamp(14px,3vw,28px)!important;
-  overflow-y:auto!important;
-  overscroll-behavior:contain!important;
+  overflow:visible!important;
+  overscroll-behavior:initial!important;
   box-sizing:border-box!important;
   border:0!important;
   border-radius:0!important;
@@ -3773,8 +3789,13 @@ html.malago-card-expanded,body.malago-card-expanded{overflow:hidden!important}
 }
 @media(max-width:760px){
   .malagoExperienceTile.is-expanding .malagoExperienceDetailsFace #malagoNewFlow{
-    padding:12px 14px 22px!important;
+    padding:12px 14px max(28px,env(safe-area-inset-bottom))!important;
   }
+}
+/* Le bouton WhatsApp flottant ne doit pas recouvrir les champs pendant la saisie. */
+html.malago-card-expanded .whatsappFloat,
+body.malago-card-expanded .whatsappFloat{
+  display:none!important;
 }
 </style>
 <style id="MALAGO-GLOBAL-REMOVE-DECORATIVE-SELECT-ARROWS">
