@@ -3006,7 +3006,7 @@ if(cat.key==='wellness'){if(item==='Massage à la maison')return [field('massage
 if(cat.key==='activities'&&item==='Quad et buggy')return [field('vehicle','Choix','select',['Quad','Buggy']),p,d,h];
 return [];
 }
-function sf(k,l,opts){const isChef=cat.key==='villa'&&item==='Un chef';return '<div class="mnf-field mnf-select-field'+(isChef?' mnf-chef-select-field':'')+'"><label>'+esc(flowText(l))+'</label><select data-key="'+k+'" aria-label="'+esc(flowText(l))+'"><option value="">'+esc(flowText('Sélectionnez une réponse…'))+'</option>'+opts.map(o=>'<option value="'+esc(o)+'">'+esc(flowText(o))+'</option>').join('')+'</select>'+(isChef?'':'<span class="mnf-select-chevron" aria-hidden="true">⌄</span>')+'</div>';}
+function sf(k,l,opts){const isChef=cat.key==='villa'&&item==='Un chef',isEvent=cat.key==='villa'&&item==='Un événement';const noChevron=isChef||isEvent;return '<div class="mnf-field mnf-select-field'+(isChef?' mnf-chef-select-field':'')+(isEvent?' mnf-event-select-field':'')+'"><label>'+esc(flowText(l))+'</label><select data-key="'+k+'" aria-label="'+esc(flowText(l))+'"><option value="">'+esc(flowText('Sélectionnez une réponse…'))+'</option>'+opts.map(o=>'<option value="'+esc(o)+'">'+esc(flowText(o))+'</option>').join('')+'</select>'+(noChevron?'':'<span class="mnf-select-chevron" aria-hidden="true">⌄</span>')+'</div>';}
 
 function render(){
 const c=$('#mnfContent');$('#mnfKicker').textContent=categoryText(cat.title).toUpperCase();$('#mnfStep').textContent=stage==='services'?flowText('Choisissez un service'):stage==='review'?flowText('Récapitulatif'):flowText('Précisez votre demande');
@@ -3363,7 +3363,7 @@ const langSelect=document.getElementById('malagoLanguageSwitcher');if(langSelect
 #malagoNewFlow .mnf-field select{cursor:pointer;color-scheme:dark}
 #malagoNewFlow .mnf-field select:focus,#malagoNewFlow .mnf-field input:focus{outline:none;border-color:#e4ce9e;box-shadow:0 0 0 3px rgba(228,206,158,.1)}
 #malagoNewFlow .mnf-field select option{background:#20211c;color:#f5f0e5}
-#malagoNewFlow .mnf-select-field:after{content:'⌄';position:absolute;right:15px;bottom:12px;color:#e4ce9e;font-size:17px;pointer-events:none}\n#malagoNewFlow .mnf-chef-select-field:after{content:none!important}\n#malagoNewFlow .mnf-chef-select-field select{padding-right:14px!important}
+#malagoNewFlow .mnf-select-field:after{content:'⌄';position:absolute;right:15px;bottom:12px;color:#e4ce9e;font-size:17px;pointer-events:none}\n#malagoNewFlow .mnf-chef-select-field:after{content:none!important}\n#malagoNewFlow .mnf-chef-select-field select{padding-right:14px!important}\n/* Événement : supprimer les deux chevrons superposés sur iOS et navigateurs mobiles. */\n#malagoNewFlow .mnf-event-select-field:before,#malagoNewFlow .mnf-event-select-field:after{content:none!important;display:none!important}\n#malagoNewFlow .mnf-event-select-field .mnf-select-chevron{display:none!important}\n#malagoNewFlow .mnf-event-select-field select{appearance:none!important;-webkit-appearance:none!important;background-image:none!important;padding-right:14px!important}
 #malagoNewFlow .mnf-field input[type=date],#malagoNewFlow .mnf-field input[type=time]{padding-right:12px;color-scheme:dark}
 #malagoNewFlow .mnf-note{margin-top:16px}
 @media(max-width:760px){#malagoNewFlow .mnf-fields{grid-template-columns:1fr;gap:14px}}
