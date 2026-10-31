@@ -3340,7 +3340,8 @@ html.malago-card-expanded,body.malago-card-expanded{overflow:hidden!important}
 .malagoExperienceTile.is-expanding.is-expanded{top:0!important;left:0!important;width:100vw!important;height:100vh!important;height:100dvh!important}
 .malagoExperienceTile.is-expanding .malagoExperienceFace{border-radius:0;padding:clamp(20px,4vw,48px)}
 .malagoExperienceTile.is-expanding .malagoExperienceBack{background:radial-gradient(ellipse at 100% 0%,rgba(228,206,158,.18),transparent 55%),linear-gradient(180deg,rgba(12,13,11,.58),rgba(12,13,11,.9)),var(--tile-image) center/cover}
-.malagoExperienceTile.is-expanding .malagoExperienceBackHead{font-size:clamp(22px,3vw,34px);padding-bottom:18px}
+.malagoExperienceTile.is-expanding .malagoExperienceBackHead{font-size:clamp(22px,3vw,34px);padding-top:max(54px,calc(env(safe-area-inset-top) + 38px));padding-bottom:18px;box-sizing:border-box}
+@media(max-width:760px){.malagoExperienceTile.is-expanding .malagoExperienceBackHead{padding-top:max(76px,calc(env(safe-area-inset-top) + 60px))}}
 .malagoExperienceTile.is-expanding .malagoExperienceSubcategories{grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin-top:20px;padding:2px 4px 12px}
 .malagoExperienceTile.is-expanding .malagoExperienceSubcategory{min-height:54px;padding:13px 16px;border-radius:12px;font-size:clamp(13px,1.25vw,16px);background:rgba(16,17,15,.62);backdrop-filter:blur(8px)}
 .malagoExperienceTile.is-expanding .malagoExperienceUnflip{display:inline-flex;align-items:center;justify-content:center;gap:10px;width:auto;min-width:176px;height:52px;flex:0 0 auto;padding:0 18px;border:1px solid rgba(228,206,158,.9);border-radius:999px;background:rgba(228,206,158,.16);color:#fff;font-size:14px;font-weight:600;letter-spacing:.01em;box-shadow:0 4px 18px rgba(0,0,0,.24);backdrop-filter:blur(8px)}
