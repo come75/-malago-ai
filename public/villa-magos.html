@@ -2545,8 +2545,23 @@ function renderSeaWizardSummary(){
  const labels={boat_type:'Type de bateau recherché',participants:'Nombre de participants',participants_other:'Nombre de personnes (autre)',jet_formula:'Formule souhaitée',format:'Type de sortie',preferences:'Préférences',onboard:'Attentes à bord',excursion_type:'Expérience souhaitée',dive_experience:'Expérience en plongée',dive_notes:'Précisions plongée',excursion_notes:'Précisions excursion',party_mood:'Ambiance',guests:'Nombre d’invités',party_notes:'Musique / boissons',fishing_type:'Type de pêche',equipment:'Matériel',fishing_notes:'Précisions pêche',wildlife_type:'Observation souhaitée',wildlife_notes:'Précisions observation',date:'Date souhaitée',time:'Heure souhaitée',duration:'Durée souhaitée',budget:'Budget approximatif',notes:'Précisions',notes_general:'Autres précisions'};
  const cards=items.map((item,i)=>{const v=state.itemDetails[item]||{};return '<section class="malagoFilterCard"><div class="eyebrow">ACTIVITÉ '+(i+1)+' · EN MER</div><h3>'+esc(item)+'</h3><ul class="malagoFilterAnswers">'+Object.entries(v).filter(([,value])=>Array.isArray(value)?value.length>0:String(value??'').trim()!=='').map(([key,value])=>'<li><strong>'+esc(labels[key]||key)+':</strong> '+esc(Array.isArray(value)?value.join(', '):String(value))+'</li>').join('')+'</ul><button type="button" class="malagoFlowBack" data-sea-edit="'+i+'">Modifier cette activité</button></section>';}).join('');
  body.innerHTML='<div class="malagoFlowDone malagoFlowReview"><div class="eyebrow">EN MER · RÉCAPITULATIF</div><h2>Vérifiez votre demande.</h2><p>Chaque activité conserve ses propres réponses, sa date, son horaire et sa durée. Les prestations et conditions seront confirmées par le partenaire.</p>'+cards+'<div class="malagoFlowRow"><button class="malagoFlowBack" id="seaSummaryBack" type="button">← Retour</button><button class="malagoFlowNext" id="malagoFlowSubmit" type="button">Préparer ma demande </button></div><p class="malagoFlowFine">Cette demande n’est pas une réservation confirmée. Aucune réservation ne sera effectuée par cette maquette.</p><div id="malagoFlowSubmitMessage" role="status" aria-live="polite"></div></div>';
- body.querySelectorAll('[data-sea-edit]').forEach(b=>b.onclick=()=>{state.seaFlow.index=+b.dataset.seaEdit;renderSeaWizard();});
- $('#seaSummaryBack').onclick=()=>{state.seaFlow.index=items.length-1;renderSeaWizard();};
+ /* Récapitulatif EN MER : délégation en capture, les boutons sont recréés à chaque rendu. */
+ document.addEventListener('click',e=>{
+  const target=e.target;
+  const edit=target&&target.closest?target.closest('[data-sea-edit]'):null;
+  const back=target&&target.closest?target.closest('#seaSummaryBack'):null;
+  if(edit&&body.contains(edit)){
+   e.preventDefault();e.stopImmediatePropagation();
+   state.seaFlow.index=Number(edit.dataset.seaEdit)||0;
+   renderSeaWizard();
+   return;
+  }
+  if(back&&body.contains(back)){
+   e.preventDefault();e.stopImmediatePropagation();
+   state.seaFlow.index=Math.max(0,items.length-1);
+   renderSeaWizard();
+  }
+ },true);
  $('#malagoFlowSubmit').onclick=submitRequests;
 }
 
@@ -2980,7 +2995,14 @@ function renderCategoryTiles(){
   grid.querySelectorAll('.malagoExperienceTile.is-expanding').forEach(other=>{if(other!==card)collapseCategoryCard(other);});
   expandCategoryCard(card);
  });
- grid.querySelectorAll('[data-unflip]').forEach(b=>b.onclick=()=>collapseCategoryCard(b.closest('[data-category-card]')));
+ /* Retour sous-catégories : délégation en capture pour éviter les clics perdus sur Safari/iOS. */
+ document.addEventListener('click',e=>{
+  const button=e.target&&e.target.closest?e.target.closest('[data-unflip]'):null;
+  if(!button||!grid.contains(button))return;
+  e.preventDefault();
+  e.stopImmediatePropagation();
+  collapseCategoryCard(button.closest('[data-category-card]'));
+ },true);
  grid.querySelectorAll('[data-new-item]').forEach(b=>b.onclick=()=>{
   const card=b.closest('[data-category-card]');
   cat=C.find(x=>x.key===b.dataset.categoryKey);
