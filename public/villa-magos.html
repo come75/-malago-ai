@@ -2978,7 +2978,11 @@ function renderCategoryTiles(){
   const card=b.closest('[data-category-card]');
   cat=C.find(x=>x.key===b.dataset.categoryKey);
   const selected=b.dataset.newItem;
-  collapseCategoryCard(card,()=>{item=null;a={};night={};choose(selected);});
+  item=selected;
+  const opensWhatsAppDirectly=direct.has(selected)||(cat.key==='sea'&&selected==='Dauphins / baleines')||(selected!=='Choisir une boîte de nuit'&&selected!=='Voyages express'&&fields().length===0);
+  /* Réserver l’onglet pendant le geste utilisateur : l’animation de fermeture retarde le callback et Safari bloque sinon window.open. */
+  const reservedWhatsAppWindow=opensWhatsAppDirectly?window.open('about:blank','_blank'):null;
+  collapseCategoryCard(card,()=>{item=null;a={};night={};choose(selected,reservedWhatsAppWindow);});
  });
 }
 renderCategoryTiles();
@@ -2990,7 +2994,7 @@ function close(){root.classList.remove('is-open');}
 function returnToCategoryBack(){root.classList.remove('is-open');if(!cat)return;const card=grid.querySelector('[data-category-card="'+cat.key+'"]');if(card)expandCategoryCard(card);}
 root.addEventListener('click',e=>{const b=e.target.closest('[data-qcm-key]');if(!b||!root.contains(b))return;const select=root.querySelector('[data-key="'+b.dataset.qcmKey+'"]');if(!select)return;select.value=b.dataset.qcmValue;select.dispatchEvent(new Event('change',{bubbles:true}));});
 $('#mnfClose').onclick=close;
-function contact(service,extra=''){let serviceText;const sep=service.indexOf(' — ');if(sep>0&&(service.slice(0,sep)==='Voyage express'||service.slice(0,sep)==='Voyages express')){serviceText=flowText(service.slice(0,sep))+' — '+flowText(service.slice(sep+3));}else serviceText=flowText(service);const msg=[flowText('Bonjour Malago'),flowText('Je souhaite organiser une demande.'),flowText('Service')+' : '+serviceText,extra,flowText('Merci !')].filter(Boolean).join('\n');window.open(wa(msg),'_blank','noopener');}
+function contact(service,extra='',reservedWindow=null){let serviceText;const sep=service.indexOf(' — ');if(sep>0&&(service.slice(0,sep)==='Voyage express'||service.slice(0,sep)==='Voyages express')){serviceText=flowText(service.slice(0,sep))+' — '+flowText(service.slice(sep+3));}else serviceText=flowText(service);const msg=[flowText('Bonjour Malago'),flowText('Je souhaite organiser une demande.'),flowText('Service')+' : '+serviceText,extra,flowText('Merci !')].filter(Boolean).join('\n');const url=wa(msg);if(reservedWindow&&!reservedWindow.closed){reservedWindow.location.href=url;}else{window.location.href=url;}}
 function field(k,l,t='text',opts=null){return {k,l,t,opts};}
 function fields(){
 const d=field('date','Date souhaitée','date'),h=field('time','Heure souhaitée','time'),p=field('people','Nombre de personnes','number'),diet=field('diet','Préférences alimentaires','textarea'),all=field('allergies','Allergies / intolérances','textarea');
@@ -3019,7 +3023,7 @@ const fs=fields();c.innerHTML='<h2 class="mnf-title">'+esc(categoryText(item))+'
 }
 const labels={date:'Date',time:'Heure',people:'Nombre de personnes',diet:'Préférences alimentaires',allergies:'Allergies / intolérances',meals:'Organisation des repas',notes:'Précisions',cuisine:'Type de cuisine',cuisineOther:'Précisions cuisine / envies',music:'Type de musique',event:'Type d’événement',eventOther:'Précisions événement',decoration:'Type de décoration',mood:'Ambiance',booking:'Choix',boat:'Type d’embarcation',jetskis:'Nombre de jet-skis',cars:'Nombre de voitures',style:'Style de voiture',budget:'Budget par voiture',vehicle:'Véhicule souhaité',massage:'Formule',massageOther:'Précisions',hair:'Pour'};
 function input(f){if(f.opts)return sf(f.k,f.l,f.opts);return '<div class="mnf-field"><label>'+esc(flowText(f.l))+'</label>'+(f.t==='textarea'?'<textarea data-key="'+f.k+'" aria-label="'+esc(flowText(f.l))+'"></textarea>':'<input data-key="'+f.k+'" aria-label="'+esc(flowText(f.l))+'" type="'+f.t+'" '+(f.t==='number'?'min="1" max="99"':'')+'></div>');}
-function choose(x){item=x;a={};if(direct.has(x)||(cat.key==='sea'&&x==='Dauphins / baleines')){contact(x);return;}if(x==='Choisir une boîte de nuit'){stage='night';}else if(x==='Voyages express'){stage='travel';}else if(fields().length===0){contact(x);return;}else{stage='form';}root.classList.add('is-open');render();}
+function choose(x,whatsAppWindow=null){item=x;a={};if(direct.has(x)||(cat.key==='sea'&&x==='Dauphins / baleines')){contact(x,'',whatsAppWindow);return;}if(x==='Choisir une boîte de nuit'){stage='night';}else if(x==='Voyages express'){stage='travel';}else if(fields().length===0){contact(x,'',whatsAppWindow);return;}else{if(whatsAppWindow&&!whatsAppWindow.closed)whatsAppWindow.close();stage='form';}root.classList.add('is-open');render();}
 const langSelect=document.getElementById('malagoLanguageSwitcher');if(langSelect)langSelect.addEventListener('change',()=>{renderCategoryTiles();if(root.classList.contains('is-open')&&cat)render();});
 })();
 </script>
