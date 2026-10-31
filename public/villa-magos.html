@@ -2868,7 +2868,7 @@ function titleCaseCategoryLabel(value,lang){
   ru:['и','или','но'],pt:['e','ou','nem','mas'],ar:['و','أو','لكن'],zh:[]
  };
  let wordIndex=0;
- return String(value??'').replace(/[\\p{L}\\p{M}][\\p{L}\\p{M}'’\\-]*/gu,word=>{
+ return String(value??'').replace(/[\p{L}\p{M}][\p{L}\p{M}'’\-]*/gu,word=>{
   const lower=word.toLocaleLowerCase();
   const isConjunction=(conjunctions[lang]||conjunctions.en).includes(lower);
   const isAcronym=word.length>1&&word===word.toLocaleUpperCase();
