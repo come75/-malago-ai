@@ -3520,37 +3520,29 @@ html.malago-card-expanded,body.malago-card-expanded{overflow:hidden!important}
 .languageControl{position:relative;display:flex;align-items:center}
 #malagoLanguageSwitcher{position:absolute!important;width:1px!important;height:1px!important;opacity:0!important;pointer-events:none!important;overflow:hidden!important}
 #malagoLanguageButton{display:none!important}
-#malagoLanguagePremiumButton{display:inline-flex;align-items:center;gap:9px;min-height:42px;padding:0 14px;border:1px solid rgba(214,190,139,.34);border-radius:999px;background:linear-gradient(145deg,rgba(37,37,31,.98),rgba(20,21,18,.98));color:#f5f0e5;font:inherit;font-size:12px;letter-spacing:.02em;cursor:pointer;box-shadow:0 5px 18px rgba(0,0,0,.16);transition:border-color .2s,background .2s,transform .2s}
+#malagoLanguagePremiumButton{display:inline-flex;align-items:center;justify-content:center;width:42px;height:42px;padding:0;border:1px solid rgba(214,190,139,.34);border-radius:50%;background:linear-gradient(145deg,rgba(37,37,31,.98),rgba(20,21,18,.98));color:#f5f0e5;font:inherit;font-size:21px;cursor:pointer;box-shadow:0 5px 18px rgba(0,0,0,.16);transition:border-color .2s,background .2s,transform .2s}
 #malagoLanguagePremiumButton:hover,#malagoLanguagePremiumButton[aria-expanded=true]{border-color:rgba(214,190,139,.72);background:linear-gradient(145deg,#343329,#20211c)}
-#malagoLanguagePremiumButton .langFlag{font-size:17px;line-height:1}
-#malagoLanguagePremiumButton .langChevron{font-size:9px;color:#cbb98f;margin-left:2px}
-#malagoLanguageMenu{position:absolute;z-index:1200;top:calc(100% + 10px);right:0;width:210px;padding:7px;border:1px solid rgba(214,190,139,.25);border-radius:15px;background:rgba(25,26,22,.98);box-shadow:0 18px 48px rgba(0,0,0,.48);backdrop-filter:blur(18px);display:none}
+#malagoLanguageMenu{position:absolute;z-index:1200;top:calc(100% + 10px);right:0;width:112px;padding:6px;border:1px solid rgba(214,190,139,.25);border-radius:13px;background:rgba(25,26,22,.98);box-shadow:0 18px 48px rgba(0,0,0,.48);backdrop-filter:blur(18px);display:none}
 .languageControl.is-open #malagoLanguageMenu{display:block}
-#malagoLanguageMenu button{width:100%;display:flex;align-items:center;gap:11px;padding:10px 11px;border:0;border-radius:9px;background:transparent;color:#eee9df;text-align:left;font:inherit;font-size:12px;cursor:pointer;transition:background .16s,color .16s}
+#malagoLanguageMenu button{width:100%;display:flex;align-items:center;justify-content:center;padding:10px 11px;border:0;border-radius:8px;background:transparent;color:#eee9df;text-align:center;font:inherit;font-size:12px;font-weight:600;letter-spacing:.08em;cursor:pointer;transition:background .16s,color .16s}
 #malagoLanguageMenu button:hover{background:rgba(214,190,139,.12)}
 #malagoLanguageMenu button[aria-selected=true]{background:rgba(214,190,139,.16);color:#e8d3a4}
-#malagoLanguageMenu .langFlag{font-size:18px;width:22px;text-align:center}
-#malagoLanguageMenu .langCheck{margin-left:auto;color:#d8c397}
-@media(max-width:700px){#malagoLanguagePremiumButton{min-height:39px;padding:0 11px;gap:7px;font-size:11px}#malagoLanguageMenu{width:205px;right:0;max-height:min(65vh,390px);overflow:auto}}
+@media(max-width:700px){#malagoLanguagePremiumButton{width:39px;height:39px;font-size:20px}#malagoLanguageMenu{width:104px;right:0;max-height:min(65vh,390px);overflow:auto}}
 </style>
 <script id="malago-language-picker-premium-script">
 (function(){
  const select=document.getElementById('malagoLanguageSwitcher');
  const control=select&&select.closest('.languageControl');
  if(!select||!control||document.getElementById('malagoLanguagePremiumButton'))return;
- const data={en:['🇬🇧','English'],fr:['🇫🇷','Français'],es:['🇪🇸','Español'],de:['🇩🇪','Deutsch'],it:['🇮🇹','Italiano'],nl:['🇳🇱','Nederlands'],ru:['🇷🇺','Русский'],pt:['🇵🇹','Português'],ar:['🇸🇦','العربية'],zh:['🇨🇳','中文']};
- const button=document.createElement('button');button.type='button';button.id='malagoLanguagePremiumButton';button.setAttribute('aria-haspopup','listbox');button.setAttribute('aria-expanded','false');
+ const data={en:['🇬🇧','EN'],fr:['🇫🇷','FR'],es:['🇪🇸','ES'],de:['🇩🇪','DE'],it:['🇮🇹','IT'],nl:['🇳🇱','NL'],ru:['🇷🇺','RU'],pt:['🇵🇹','PT'],ar:['🇸🇦','AR'],zh:['🇨🇳','ZH']};
+ const button=document.createElement('button');button.type='button';button.id='malagoLanguagePremiumButton';button.setAttribute('aria-label','Choose language');button.setAttribute('aria-haspopup','listbox');button.setAttribute('aria-expanded','false');
  const menu=document.createElement('div');menu.id='malagoLanguageMenu';menu.setAttribute('role','listbox');menu.setAttribute('aria-label','Choose language');
  function render(){
   const code=select.value||'en',item=data[code]||data.en;
-  button.innerHTML='<span class="langFlag" aria-hidden="true">'+item[0]+'</span><span>'+item[1]+'</span><span class="langChevron" aria-hidden="true">▼</span>';
+  button.textContent=item[0];
   menu.innerHTML='';
   Object.entries(data).forEach(([value,entry])=>{
-   const option=document.createElement('button');option.type='button';option.setAttribute('role','option');option.setAttribute('aria-selected',String(value===code));
-   const flag=document.createElement('span');flag.className='langFlag';flag.textContent=entry[0];
-   const name=document.createElement('span');name.textContent=entry[1];
-   option.append(flag,name);
-   if(value===code){const check=document.createElement('span');check.className='langCheck';check.textContent='✓';option.append(check);}
+   const option=document.createElement('button');option.type='button';option.textContent=entry[1];option.setAttribute('role','option');option.setAttribute('aria-selected',String(value===code));
    option.addEventListener('click',()=>{select.value=value;select.dispatchEvent(new Event('change',{bubbles:true}));render();close();});
    menu.append(option);
   });
