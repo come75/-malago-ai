@@ -3641,6 +3641,26 @@ html.malago-card-expanded,body.malago-card-expanded{overflow:hidden!important}
 </script>
 
 
+
+<style id="MALAGO-EXPANDED-CATEGORY-HEADER-SPACING-2026">
+/* En-tête des catégories ouvertes : cadre fermé en haut et titre rapproché de sa bordure. */
+.malagoExperienceTile.is-expanding .malagoExperienceBack{
+  border-top:1px solid rgba(228,206,158,.55)!important;
+  box-sizing:border-box!important;
+}
+.malagoExperienceTile.is-expanding .malagoExperienceBackHead{
+  padding-top:0!important;
+  margin-top:0!important;
+  padding-bottom:14px!important;
+  box-sizing:border-box!important;
+}
+@media(max-width:760px){
+  .malagoExperienceTile.is-expanding .malagoExperienceBackHead{
+    padding-top:0!important;
+    padding-bottom:12px!important;
+  }
+}
+</style>
 <style id="MALAGO-GLOBAL-REMOVE-DECORATIVE-SELECT-ARROWS">
 /* Retirer partout les chevrons décoratifs des listes déroulantes. Les flèches de navigation fonctionnelles restent intactes. */
 #malagoNewFlow select,#malagoExperienceFlow select,.malagoFlowField select{appearance:none!important;-webkit-appearance:none!important;background-image:none!important;padding-right:14px!important}
