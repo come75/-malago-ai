@@ -2867,13 +2867,83 @@ const direct=new Set(['Surprenez-moi','Conseil plages','Boat party','Pêche','Ac
 const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const wa=msg=>'https://wa.me/'+WA+'?text='+encodeURIComponent(msg);
 const grid=$('#malagoExperienceCategories'); if(!grid)return;
-function renderCategoryTiles(){grid.innerHTML=C.map((c,i)=>'<article class="malagoExperienceTile" data-category-card="'+c.key+'" style="--tile-i:'+i+';--tile-image:url('+tileImages[c.key]+')"><div class="malagoExperienceCardInner"><button type="button" class="malagoExperienceFace malagoExperienceFront" data-flip-category="'+c.key+'" aria-label="'+esc(categoryText(c.title)+' — '+flowText('Voir les sous-catégories'))+'"><span class="tileNum">'+String(i+1).padStart(2,'0')+' / '+esc(categoryText(c.title).toUpperCase())+'</span><div class="malagoExperienceFrontCopy"><h2>'+esc(categoryText(c.title))+'</h2><div class="tileBottom"><span class="tileHint">'+esc(flowText('Découvrir'))+'</span><span class="tileArrow">↗</span></div></div></button><div class="malagoExperienceFace malagoExperienceBack" aria-label="'+esc(categoryText(c.title)+' — '+flowText('Sous-catégories'))+'" inert><div class="malagoExperienceBackHead"><span>'+esc(categoryText(c.title))+'</span><button type="button" class="malagoExperienceUnflip" data-unflip="'+c.key+'" aria-label="'+esc(flowText('Retour'))+'">↶</button></div><div class="malagoExperienceSubcategories">'+c.items.map(x=>'<button type="button" class="malagoExperienceSubcategory" data-new-item="'+esc(x)+'" data-category-key="'+c.key+'">'+esc(categoryText(x))+'<span>↗</span></button>').join('')+'</div></div></div></article>').join('');grid.querySelectorAll('[data-flip-category]').forEach(b=>b.onclick=()=>{const card=b.closest('[data-category-card]');const wasFlipped=card.classList.contains('is-flipped');grid.querySelectorAll('.malagoExperienceTile.is-flipped').forEach(other=>{other.classList.remove('is-flipped');other.querySelector('.malagoExperienceFront')?.removeAttribute('inert');other.querySelector('.malagoExperienceFront')?.setAttribute('aria-hidden','false');other.querySelector('.malagoExperienceBack')?.setAttribute('inert','');other.querySelector('.malagoExperienceBack')?.setAttribute('aria-hidden','true');});if(!wasFlipped){card.classList.add('is-flipped');card.querySelector('.malagoExperienceFront')?.setAttribute('inert','');card.querySelector('.malagoExperienceFront')?.setAttribute('aria-hidden','true');card.querySelector('.malagoExperienceBack')?.removeAttribute('inert');card.querySelector('.malagoExperienceBack')?.setAttribute('aria-hidden','false');}});grid.querySelectorAll('[data-unflip]').forEach(b=>b.onclick=()=>{const card=b.closest('[data-category-card]');card.classList.remove('is-flipped');card.querySelector('.malagoExperienceFront')?.removeAttribute('inert');card.querySelector('.malagoExperienceFront')?.setAttribute('aria-hidden','false');card.querySelector('.malagoExperienceBack')?.setAttribute('inert','');card.querySelector('.malagoExperienceBack')?.setAttribute('aria-hidden','true');});grid.querySelectorAll('[data-new-item]').forEach(b=>b.onclick=()=>{cat=C.find(x=>x.key===b.dataset.categoryKey);grid.querySelectorAll('.malagoExperienceTile.is-flipped').forEach(card=>{card.classList.remove('is-flipped');card.querySelector('.malagoExperienceFront')?.removeAttribute('inert');card.querySelector('.malagoExperienceFront')?.setAttribute('aria-hidden','false');card.querySelector('.malagoExperienceBack')?.setAttribute('inert','');card.querySelector('.malagoExperienceBack')?.setAttribute('aria-hidden','true');});item=null;a={};night={};choose(b.dataset.newItem);});}
+let expandedScrollY=0,cardLockSnapshot=null,cardCleanupTimer=null;
+function lockExpandedPage(){
+ if(cardLockSnapshot)return;
+ expandedScrollY=window.scrollY||window.pageYOffset||0;
+ cardLockSnapshot={position:document.body.style.position,top:document.body.style.top,width:document.body.style.width,overflow:document.body.style.overflow};
+ document.documentElement.classList.add('malago-card-expanded');
+ document.body.classList.add('malago-card-expanded');
+ document.body.style.position='fixed';
+ document.body.style.top='-'+expandedScrollY+'px';
+ document.body.style.width='100%';
+ document.body.style.overflow='hidden';
+}
+function unlockExpandedPage(){
+ if(!cardLockSnapshot)return;
+ document.body.style.position=cardLockSnapshot.position;
+ document.body.style.top=cardLockSnapshot.top;
+ document.body.style.width=cardLockSnapshot.width;
+ document.body.style.overflow=cardLockSnapshot.overflow;
+ document.body.classList.remove('malago-card-expanded');
+ document.documentElement.classList.remove('malago-card-expanded');
+ cardLockSnapshot=null;
+ window.scrollTo(0,expandedScrollY);
+}
+function setCategoryFace(card,flipped){
+ const front=card.querySelector('.malagoExperienceFront'),back=card.querySelector('.malagoExperienceBack');
+ if(flipped){front?.setAttribute('inert','');front?.setAttribute('aria-hidden','true');back?.removeAttribute('inert');back?.setAttribute('aria-hidden','false');}
+ else{front?.removeAttribute('inert');front?.setAttribute('aria-hidden','false');back?.setAttribute('inert','');back?.setAttribute('aria-hidden','true');}
+}
+function expandCategoryCard(card){
+ if(!card||card.classList.contains('is-expanded'))return;
+ const rect=card.getBoundingClientRect();
+ lockExpandedPage();
+ card.style.setProperty('--card-top',rect.top+'px');
+ card.style.setProperty('--card-left',rect.left+'px');
+ card.style.setProperty('--card-width',rect.width+'px');
+ card.style.setProperty('--card-height',rect.height+'px');
+ card.classList.add('is-expanding');
+ void card.offsetWidth;
+ requestAnimationFrame(()=>{card.classList.add('is-expanded','is-flipped');setCategoryFace(card,true);});
+}
+function collapseCategoryCard(card){
+ if(!card||!card.classList.contains('is-expanding')){if(card){card.classList.remove('is-flipped');setCategoryFace(card,false);}return;}
+ card.classList.remove('is-expanded','is-flipped');
+ setCategoryFace(card,false);
+ const cleanup=()=>{
+  if(!card.classList.contains('is-expanded')){
+   card.classList.remove('is-expanding');
+   ['--card-top','--card-left','--card-width','--card-height'].forEach(k=>card.style.removeProperty(k));
+   unlockExpandedPage();
+  }
+ };
+ if(cardCleanupTimer)clearTimeout(cardCleanupTimer);
+ card.addEventListener('transitionend',function onEnd(e){if(e.target!==card||!['top','width','height'].includes(e.propertyName))return;card.removeEventListener('transitionend',onEnd);cleanup();});
+ cardCleanupTimer=setTimeout(cleanup,900);
+}
+function renderCategoryTiles(){
+ grid.innerHTML=C.map((c,i)=>'<article class="malagoExperienceTile" data-category-card="'+c.key+'" style="--tile-i:'+i+';--tile-image:url('+tileImages[c.key]+')"><div class="malagoExperienceCardInner"><button type="button" class="malagoExperienceFace malagoExperienceFront" data-flip-category="'+c.key+'" aria-label="'+esc(categoryText(c.title)+' — '+flowText('Voir les sous-catégories'))+'"><span class="tileNum">'+String(i+1).padStart(2,'0')+' / '+esc(categoryText(c.title).toUpperCase())+'</span><div class="malagoExperienceFrontCopy"><h2>'+esc(categoryText(c.title))+'</h2><div class="tileBottom"><span class="tileHint">'+esc(flowText('Découvrir'))+'</span><span class="tileArrow">↗</span></div></div></button><div class="malagoExperienceFace malagoExperienceBack" aria-label="'+esc(categoryText(c.title)+' — '+flowText('Sous-catégories'))+'" inert><div class="malagoExperienceBackHead"><span>'+esc(categoryText(c.title))+'</span><button type="button" class="malagoExperienceUnflip" data-unflip="'+c.key+'" aria-label="'+esc(flowText('Retour'))+'">↶</button></div><div class="malagoExperienceSubcategories">'+c.items.map(x=>'<button type="button" class="malagoExperienceSubcategory" data-new-item="'+esc(x)+'" data-category-key="'+c.key+'">'+esc(categoryText(x))+'<span>↗</span></button>').join('')+'</div></div></div></article>').join('');
+ grid.querySelectorAll('[data-flip-category]').forEach(b=>b.onclick=()=>{
+  const card=b.closest('[data-category-card]');
+  grid.querySelectorAll('.malagoExperienceTile.is-expanding').forEach(other=>{if(other!==card)collapseCategoryCard(other);});
+  expandCategoryCard(card);
+ });
+ grid.querySelectorAll('[data-unflip]').forEach(b=>b.onclick=()=>collapseCategoryCard(b.closest('[data-category-card]')));
+ grid.querySelectorAll('[data-new-item]').forEach(b=>b.onclick=()=>{
+  const card=b.closest('[data-category-card]');
+  cat=C.find(x=>x.key===b.dataset.categoryKey);
+  collapseCategoryCard(card);
+  item=null;a={};night={};
+  choose(b.dataset.newItem);
+ });
+}
 renderCategoryTiles();
 const old=$('#malagoExperienceFlow');if(old)old.hidden=true;
 const root=document.createElement('section');root.id='malagoNewFlow';root.setAttribute('aria-live','polite');root.innerHTML='<div class="mnf-head"><div><div class="mnf-kicker" id="mnfKicker"></div><div class="mnf-note" id="mnfStep"></div></div><button class="mnf-secondary" type="button" id="mnfClose">'+esc(flowText('Fermer ×'))+'</button></div><div id="mnfContent"></div>';grid.after(root);
 let cat,item,stage='services',a={},night={};
 function close(){root.classList.remove('is-open');}
-function returnToCategoryBack(){root.classList.remove('is-open');if(!cat)return;const card=grid.querySelector('[data-category-card="'+cat.key+'"]');if(card){card.classList.add('is-flipped');card.querySelector('.malagoExperienceFront')?.setAttribute('inert','');card.querySelector('.malagoExperienceFront')?.setAttribute('aria-hidden','true');card.querySelector('.malagoExperienceBack')?.removeAttribute('inert');card.querySelector('.malagoExperienceBack')?.setAttribute('aria-hidden','false');}}
+function returnToCategoryBack(){root.classList.remove('is-open');if(!cat)return;const card=grid.querySelector('[data-category-card="'+cat.key+'"]');if(card)expandCategoryCard(card);}
 root.addEventListener('click',e=>{const b=e.target.closest('[data-qcm-key]');if(!b||!root.contains(b))return;const select=root.querySelector('[data-key="'+b.dataset.qcmKey+'"]');if(!select)return;select.value=b.dataset.qcmValue;select.dispatchEvent(new Event('change',{bubbles:true}));});
 $('#mnfClose').onclick=close;
 function contact(service,extra=''){let serviceText;const sep=service.indexOf(' — ');if(sep>0&&(service.slice(0,sep)==='Voyage express'||service.slice(0,sep)==='Voyages express')){serviceText=flowText(service.slice(0,sep))+' — '+flowText(service.slice(sep+3));}else serviceText=flowText(service);const msg=[flowText('Bonjour Malago'),flowText('Je souhaite organiser une demande.'),flowText('Service')+' : '+serviceText,extra,flowText('Merci !')].filter(Boolean).join('\n');window.open(wa(msg),'_blank','noopener');}
@@ -3261,6 +3331,20 @@ const langSelect=document.getElementById('malagoLanguageSwitcher');if(langSelect
 #malagoExperienceFlow .malagoChefOtherField{margin-top:12px}
 #malagoExperienceFlow .malagoChefOtherField label{display:block;margin:0 0 7px;color:#e4ce9e;font-size:11px}
 #malagoExperienceFlow .malagoChefOtherField input{width:100%;min-height:45px;padding:12px 13px;border:1px solid rgba(228,206,158,.3);border-radius:10px;background:#201f1b;color:#f5eee2;font:inherit;font-size:13px}
+
+/* Agrandissement plein écran synchronisé avec le retournement */
+html.malago-card-expanded,body.malago-card-expanded{overflow:hidden!important}
+.malagoExperienceTile.is-expanding{position:fixed!important;z-index:1000!important;top:var(--card-top)!important;left:var(--card-left)!important;width:var(--card-width)!important;height:var(--card-height)!important;min-height:0!important;margin:0!important;max-width:none!important;perspective:1600px;animation:none!important;transition:top .78s cubic-bezier(.2,.72,.18,1),left .78s cubic-bezier(.2,.72,.18,1),width .78s cubic-bezier(.2,.72,.18,1),height .78s cubic-bezier(.2,.72,.18,1)!important}
+.malagoExperienceTile.is-expanding .malagoExperienceCardInner{height:100%;min-height:0;transition:transform .78s cubic-bezier(.2,.72,.18,1)}
+.malagoExperienceTile.is-expanding.is-expanded{top:0!important;left:0!important;width:100vw!important;height:100vh!important;height:100dvh!important}
+.malagoExperienceTile.is-expanding .malagoExperienceFace{border-radius:0;padding:clamp(20px,4vw,48px)}
+.malagoExperienceTile.is-expanding .malagoExperienceBack{background:radial-gradient(ellipse at 100% 0%,rgba(228,206,158,.18),transparent 55%),linear-gradient(180deg,rgba(12,13,11,.58),rgba(12,13,11,.9)),var(--tile-image) center/cover}
+.malagoExperienceTile.is-expanding .malagoExperienceBackHead{font-size:clamp(22px,3vw,34px);padding-bottom:18px}
+.malagoExperienceTile.is-expanding .malagoExperienceSubcategories{grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin-top:20px;padding:2px 4px 12px}
+.malagoExperienceTile.is-expanding .malagoExperienceSubcategory{min-height:54px;padding:13px 16px;border-radius:12px;font-size:clamp(13px,1.25vw,16px);background:rgba(16,17,15,.62);backdrop-filter:blur(8px)}
+.malagoExperienceTile.is-expanding .malagoExperienceUnflip{width:42px;height:42px;flex-basis:42px;font-size:24px}
+@media(max-width:760px){.malagoExperienceTile.is-expanding .malagoExperienceSubcategories{grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}.malagoExperienceTile.is-expanding .malagoExperienceSubcategory{min-height:48px;padding:11px 10px;font-size:12px}}
+@media(prefers-reduced-motion:reduce){.malagoExperienceTile.is-expanding,.malagoExperienceTile.is-expanding .malagoExperienceCardInner{transition:none!important}}
 </style>
 </body>
 </html>
