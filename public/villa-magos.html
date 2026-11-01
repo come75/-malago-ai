@@ -4018,9 +4018,12 @@ body.malago-card-expanded .whatsappFloat{
 }
 #malagoNewFlow .malagoFlowRow{
   display:flex!important;
+  flex-direction:row!important;
+  flex-wrap:nowrap!important;
   align-items:stretch!important;
+  justify-content:space-between!important;
   gap:12px!important;
-  margin-top:24px!important;
+  margin-top:34px!important;
 }
 #malagoNewFlow .malagoFlowRow .malagoFlowBack,
 #malagoNewFlow .malagoFlowRow .malagoFlowNext{
@@ -4029,8 +4032,10 @@ body.malago-card-expanded .whatsappFloat{
   display:inline-flex!important;
   align-items:center!important;
   justify-content:center!important;
-  min-height:48px!important;
-  padding:12px 19px!important;
+  flex:1 1 0!important;
+  min-width:0!important;
+  min-height:42px!important;
+  padding:10px 12px!important;
   border:1px solid rgba(228,206,158,.68)!important;
   border-radius:3px!important;
   box-shadow:none!important;
@@ -4046,7 +4051,7 @@ body.malago-card-expanded .whatsappFloat{
   transition:background .2s ease,border-color .2s ease,color .2s ease,transform .2s ease!important;
 }
 #malagoNewFlow .malagoFlowRow .malagoFlowBack{
-  flex:0 1 auto!important;
+  flex:1 1 0!important;
   background:transparent!important;
   color:#e9dfc8!important;
   border-color:rgba(228,206,158,.48)!important;
@@ -4076,12 +4081,20 @@ body.malago-card-expanded .whatsappFloat{
 }
 @media(max-width:560px){
   #malagoNewFlow #mnfClose{min-height:38px!important;padding:8px 11px!important;font-size:10px!important}
-  #malagoNewFlow .malagoFlowRow{gap:9px!important;margin-top:20px!important}
+  #malagoNewFlow .malagoFlowRow{
+    flex-direction:row!important;
+    flex-wrap:nowrap!important;
+    gap:9px!important;
+    margin-top:30px!important;
+  }
   #malagoNewFlow .malagoFlowRow .malagoFlowBack,
   #malagoNewFlow .malagoFlowRow .malagoFlowNext{
-    min-height:46px!important;
-    padding:11px 12px!important;
-    font-size:12px!important;
+    flex:1 1 0!important;
+    min-width:0!important;
+    min-height:42px!important;
+    padding:9px 8px!important;
+    font-size:11px!important;
+    letter-spacing:.01em!important;
   }
 }
 @media(prefers-reduced-motion:reduce){
