@@ -4393,5 +4393,49 @@ body.malago-card-expanded .whatsappFloat{
 }
 </style>
 
+
+
+<style id="MALAGO-RESTORE-CATEGORY-CARD-FLIP-ON-TOUCH-2026">
+/* Restaurer le retournement des vignettes sur iPhone/iPad.
+   Les faces restent gérées par les règles de visibilité tactiles existantes ;
+   seule l'animation 3D de la carte est réactivée. Le formulaire détaillé
+   conserve son mode plat pour préserver ses interactions. */
+@media (hover:none) and (pointer:coarse), (max-width:760px) {
+  #malagoExperienceCategories .malagoExperienceTile {
+    perspective:1200px!important;
+    -webkit-perspective:1200px!important;
+  }
+  #malagoExperienceCategories .malagoExperienceTile .malagoExperienceCardInner {
+    transform-style:preserve-3d!important;
+    -webkit-transform-style:preserve-3d!important;
+    transition:transform .78s cubic-bezier(.2,.72,.18,1)!important;
+  }
+  #malagoExperienceCategories .malagoExperienceTile.is-flipped:not(.is-details) .malagoExperienceCardInner {
+    transform:rotateY(180deg)!important;
+    -webkit-transform:rotateY(180deg)!important;
+  }
+  #malagoExperienceCategories .malagoExperienceTile:not(.is-details) .malagoExperienceFront,
+  #malagoExperienceCategories .malagoExperienceTile:not(.is-details) .malagoExperienceBack {
+    backface-visibility:hidden!important;
+    -webkit-backface-visibility:hidden!important;
+  }
+  #malagoExperienceCategories .malagoExperienceTile:not(.is-details) .malagoExperienceFront {
+    transform:rotateY(0deg)!important;
+    -webkit-transform:rotateY(0deg)!important;
+  }
+  #malagoExperienceCategories .malagoExperienceTile:not(.is-details) .malagoExperienceBack {
+    transform:rotateY(180deg)!important;
+    -webkit-transform:rotateY(180deg)!important;
+  }
+  #malagoExperienceCategories .malagoExperienceTile.is-expanding.is-details .malagoExperienceCardInner {
+    transform:none!important;
+    -webkit-transform:none!important;
+    transform-style:flat!important;
+    -webkit-transform-style:flat!important;
+    transition:none!important;
+  }
+}
+</style>
+
 </body>
 </html>
