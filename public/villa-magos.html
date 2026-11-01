@@ -3207,10 +3207,12 @@ document.addEventListener('click',e=>{
  e.preventDefault();
  e.stopImmediatePropagation();
  if(button.id==='mnfEdit'){
-  stage=cat&&cat.key==='nightlife'?'nightdate':'form';
-  render();
-  const first=root.querySelector('#mnfContent input,#mnfContent select,#mnfContent textarea');
-  if(first)first.focus({preventScroll:true});
+  malagoGoBack(()=>{
+   stage=cat&&cat.key==='nightlife'?'nightdate':'form';
+   render();
+   const first=root.querySelector('#mnfContent input,#mnfContent select,#mnfContent textarea');
+   if(first)first.focus({preventScroll:true});
+  });
   return;
  }
  if(button.id==='mnfBack'){
