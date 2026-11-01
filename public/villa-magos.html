@@ -4102,6 +4102,72 @@ body.malago-card-expanded .whatsappFloat{
   #malagoNewFlow .malagoFlowRow .malagoFlowBack,
   #malagoNewFlow .malagoFlowRow .malagoFlowNext{transition:none!important}
 }
+
+/* Real service request form: controls are .mnf-actions, not .malagoFlowRow.
+   Two fixed columns keep both actions aligned on narrow iPhone screens. */
+#malagoNewFlow .mnf-actions{
+  display:grid!important;
+  grid-template-columns:minmax(0,1fr) minmax(0,1fr)!important;
+  align-items:stretch!important;
+  justify-content:stretch!important;
+  flex-wrap:nowrap!important;
+  gap:10px!important;
+  width:100%!important;
+  margin-top:32px!important;
+}
+#malagoNewFlow .mnf-actions button,
+#malagoNewFlow .mnf-actions a{
+  box-sizing:border-box!important;
+  display:flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  width:100%!important;
+  min-width:0!important;
+  min-height:44px!important;
+  margin:0!important;
+  padding:9px 8px!important;
+  border:1px solid rgba(228,206,158,.62)!important;
+  border-radius:5px!important;
+  box-shadow:none!important;
+  font-family:Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif!important;
+  font-size:12px!important;
+  font-weight:650!important;
+  line-height:1.2!important;
+  letter-spacing:0!important;
+  text-align:center!important;
+  text-decoration:none!important;
+  white-space:normal!important;
+  overflow-wrap:anywhere!important;
+}
+#malagoNewFlow .mnf-actions .mnf-secondary{
+  background:transparent!important;
+  color:#e9dfc8!important;
+  border-color:rgba(228,206,158,.48)!important;
+}
+#malagoNewFlow .mnf-actions button:not(.mnf-secondary),
+#malagoNewFlow .mnf-actions a:not(.mnf-secondary){
+  background:#e4ce9e!important;
+  color:#171915!important;
+  border-color:#e4ce9e!important;
+}
+#malagoNewFlow .mnf-actions button:focus-visible,
+#malagoNewFlow .mnf-actions a:focus-visible{
+  outline:2px solid #e4ce9e!important;
+  outline-offset:3px!important;
+}
+@media(max-width:560px){
+  #malagoNewFlow .mnf-actions{
+    grid-template-columns:minmax(0,1fr) minmax(0,1fr)!important;
+    gap:9px!important;
+    margin-top:30px!important;
+  }
+  #malagoNewFlow .mnf-actions button,
+  #malagoNewFlow .mnf-actions a{
+    min-height:42px!important;
+    padding:8px 6px!important;
+    font-size:11px!important;
+  }
+}
 </style>
 
 </body>
