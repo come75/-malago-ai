@@ -3085,7 +3085,7 @@ function malagoRestoreHistoryState(state){
   malagoDetachDetails();
   root.classList.remove('is-open');
   grid.after(root);
-  const expanded=grid.querySelector('.malagoExperienceTile.is-expanding');
+  const expanded=grid.querySelector('.malagoExperienceTile.is-expanding, .malagoExperienceTile.is-expanded, .malagoExperienceTile.is-flipped');
   cat=null;item=null;stage='services';a={};night={};
   if(expanded)collapseCategoryCard(expanded,()=>window.scrollTo({top:0,behavior:'smooth'}));
   else window.scrollTo({top:0,behavior:'smooth'});
@@ -3133,9 +3133,15 @@ if(!history.state?.[MALAGO_HISTORY_KEY]){
 window.addEventListener('popstate',e=>{
  if(e.state?.[MALAGO_HISTORY_KEY])malagoRestoreHistoryState(e.state);
  else{
+  /* Safari peut revenir sur une entrée précédente sans notre marqueur
+     (navigation héritée, rechargement ou historique déjà présent). Ne pas
+     laisser une carte principale figée ouverte dans ce cas. */
   malagoHistoryDepth=0;
   malagoDetachDetails();
   root.classList.remove('is-open');
+  const expanded=grid.querySelector('.malagoExperienceTile.is-expanding, .malagoExperienceTile.is-expanded, .malagoExperienceTile.is-flipped');
+  cat=null;item=null;stage='services';a={};night={};
+  if(expanded)collapseCategoryCard(expanded,()=>window.scrollTo({top:0,behavior:'smooth'}));
  }
 });
 function close(){if(activeDetailsCard){returnToCategoryBack();return;}malagoGoBack(()=>root.classList.remove('is-open'));}
