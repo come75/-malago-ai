@@ -3027,6 +3027,7 @@ function renderCategoryTiles(){
   if(!button||!grid.contains(button))return;
   e.preventDefault();
   e.stopImmediatePropagation();
+  if(history.state?.[MALAGO_HISTORY_KEY]&&history.state.view==='category'&&malagoHistoryDepth>0){malagoGoBack(()=>collapseCategoryCard(button.closest('[data-category-card]')));return;}
   collapseCategoryCard(button.closest('[data-category-card]'));
  },true);
  grid.querySelectorAll('[data-new-item]').forEach(b=>b.onclick=()=>{
@@ -3137,7 +3138,7 @@ window.addEventListener('popstate',e=>{
   root.classList.remove('is-open');
  }
 });
-function close(){if(activeDetailsCard){returnToCategoryBack();return;}root.classList.remove('is-open');}
+function close(){if(activeDetailsCard){returnToCategoryBack();return;}malagoGoBack(()=>root.classList.remove('is-open'));}
 /* MALAGO-BRAND-HOME-FROM-OPEN-CATEGORY-2026
    Logo global = retour accueil, y compris depuis une catégorie ou son formulaire.
    On retire d'abord le formulaire de la carte, puis on replie la carte et on remonte. */
