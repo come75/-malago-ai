@@ -3043,6 +3043,29 @@ const old=$('#malagoExperienceFlow');if(old)old.hidden=true;
 const root=document.createElement('section');root.id='malagoNewFlow';root.setAttribute('aria-live','polite');root.innerHTML='<div class="mnf-head"><div><div class="mnf-kicker" id="mnfKicker"></div><div class="mnf-note" id="mnfStep"></div></div><button class="mnf-secondary" type="button" id="mnfClose">'+esc(flowText('Fermer ×'))+'</button></div><div id="mnfContent"></div>';grid.after(root);
 let cat,item,stage='services',a={},night={},activeDetailsCard=null;
 function close(){if(activeDetailsCard){returnToCategoryBack();return;}root.classList.remove('is-open');}
+/* MALAGO-BRAND-HOME-FROM-OPEN-CATEGORY-2026
+   Logo global = retour accueil, y compris depuis une catégorie ou son formulaire.
+   On retire d'abord le formulaire de la carte, puis on replie la carte et on remonte. */
+const brandHome=document.querySelector('.brandFeaturing');
+if(brandHome)brandHome.addEventListener('click',e=>{
+ const card=activeDetailsCard||grid.querySelector('.malagoExperienceTile.is-expanding');
+ const flowIsOpen=root.classList.contains('is-open');
+ if(!card&&!flowIsOpen)return;
+ e.preventDefault();
+ e.stopPropagation();
+ if(activeDetailsCard){
+  const detailCard=activeDetailsCard;
+  detailCard.classList.remove('is-details');
+  const face=detailCard.querySelector('.malagoExperienceDetailsFace');
+  if(face){face.setAttribute('inert','');face.setAttribute('aria-hidden','true');face.removeAttribute('role');face.scrollTop=0;}
+  grid.after(root);
+  activeDetailsCard=null;
+ }
+ root.classList.remove('is-open');
+ const goTop=()=>window.scrollTo({top:0,behavior:'smooth'});
+ if(card&&card.classList.contains('is-expanding'))collapseCategoryCard(card,goTop);
+ else goTop();
+},true);
 function returnToCategoryBack(){
  if(activeDetailsCard){
   const card=activeDetailsCard;
