@@ -540,12 +540,34 @@ async function processStayReminders(env) {
 export default {
   async fetch(request, env) {
     const url = new URL(request.url);
+    // Isolated partner namespace: serve the existing Villa Magos app below
+    // /partner/villamagos/ without changing the origin site's other routes.
+    const partnerPrefix = "/partner/villamagos";
+    const isPartnerRequest = url.pathname === partnerPrefix || url.pathname.startsWith(partnerPrefix + "/");
+    if (isPartnerRequest) {
+      url.pathname = url.pathname.slice(partnerPrefix.length) || "/";
+    }
     const headers = {
       "X-Content-Type-Options":"nosniff",
       "Referrer-Policy":"strict-origin-when-cross-origin",
       "Permissions-Policy":"camera=(), microphone=(), geolocation=()"
     };
     if (request.method === "OPTIONS") return new Response(null,{status:204,headers});
+
+    if (isPartnerRequest && request.method === "GET" && url.pathname === "/") {
+      if (!env?.ASSETS) return new Response("Malago assets unavailable",{status:503,headers:{...headers,"Content-Type":"text/plain;charset=UTF-8"}});
+      const assetUrl = new URL("/villa-magos.html", url);
+      const asset = await env.ASSETS.fetch(new Request(assetUrl, { headers: request.headers }));
+      if (!asset.ok) return asset;
+      const html = await asset.text();
+      // Rebase root-relative HTML, CSS, image and inline-JS URLs into this
+      // partner namespace. The worker strips the prefix before serving them.
+      const rebased = html.replace(/(["'(=])\/(?!\/)/g, "$1" + partnerPrefix + "/");
+      const responseHeaders = new Headers(asset.headers);
+      responseHeaders.set("Content-Type", "text/html; charset=UTF-8");
+      responseHeaders.set("Cache-Control", "no-store");
+      return new Response(rebased, { status: asset.status, headers: responseHeaders });
+    }
 
     if (request.method === "GET" && url.pathname === "/api/config") {
       return json({version:VERSION,googleMapsConfigured:Boolean(env?.GOOGLE_MAPS_API_KEY),googleMapsKey:env?.GOOGLE_MAPS_API_KEY || null},200,headers);
@@ -907,7 +929,7 @@ export default {
     }
 
     if (request.method === "GET") {
-      if (env?.ASSETS) return env.ASSETS.fetch(request);
+      if (env?.ASSETS) return env.ASSETS.fetch(isPartnerRequest ? new Request(url, request) : request);
       return new Response("Malago assets unavailable",{status:503,headers:{...headers,"Content-Type":"text/plain;charset=UTF-8"}});
     }
     if (request.method === "POST" && url.pathname === "/api/chat") {
