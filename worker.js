@@ -562,7 +562,7 @@ export default {
       const html = await asset.text();
       // Rebase root-relative HTML, CSS, image and inline-JS URLs into this
       // partner namespace. The worker strips the prefix before serving them.
-      const rebased = html.replace(/(["'(=])\/(?!\/)/g, "$1" + partnerPrefix + "/");
+      const rebased = html.replace(/(["'=])\/(?!\/)/g, "$1" + partnerPrefix + "/").replace(/url\((\s*)\/(?!\/)/g, "url($1" + partnerPrefix + "/");
       const responseHeaders = new Headers(asset.headers);
       responseHeaders.set("Content-Type", "text/html; charset=UTF-8");
       responseHeaders.set("Cache-Control", "no-store");
