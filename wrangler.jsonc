@@ -1,6 +1,6 @@
 {
   "$schema": "./node_modules/wrangler/config-schema.json",
-  "name": "test",
+  "name": "malago-site",
   "main": "worker.js",
   "compatibility_date": "2026-09-25",
   "observability": {
@@ -10,10 +10,21 @@
       "head_sampling_rate": 1
     }
   },
-  "triggers": {"crons": ["0 * * * *"]},
-  "cache": {"enabled": true},
-  "ai": {"binding": "AI"},
-  "assets": {"directory": "./public","binding": "ASSETS"},
+  "triggers": {
+    "crons": [
+      "0 * * * *"
+    ]
+  },
+  "cache": {
+    "enabled": true
+  },
+  "ai": {
+    "binding": "AI"
+  },
+  "assets": {
+    "directory": "./public",
+    "binding": "ASSETS"
+  },
   "d1_databases": [
     {
       "binding": "DB",
@@ -29,7 +40,11 @@
         "database_id": "573e7ef9-f5be-4ad2-b807-8c6c23661a33"
       }
     ],
-    "ai": {"binding": "AI"},
-    "assets": {"binding": "ASSETS"}
+    "ai": {
+      "binding": "AI"
+    },
+    "assets": {
+      "binding": "ASSETS"
+    }
   }
 }
