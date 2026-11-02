@@ -1,6 +1,6 @@
 {
   "$schema": "./node_modules/wrangler/config-schema.json",
-  "name": "test",
+  "name": "malago-villamagos",
   "main": "worker.js",
   "compatibility_date": "2026-09-25",
   "observability": {
@@ -10,26 +10,14 @@
       "head_sampling_rate": 1
     }
   },
-  "triggers": {"crons": ["0 * * * *"]},
-  "cache": {"enabled": true},
-  "ai": {"binding": "AI"},
-  "assets": {"directory": "./public","binding": "ASSETS"},
+  "cache": { "enabled": true },
+  "ai": { "binding": "AI" },
+  "assets": { "directory": "./public", "binding": "ASSETS" },
   "d1_databases": [
     {
       "binding": "DB",
-      "database_name": "malago-client-requests",
-      "database_id": "573e7ef9-f5be-4ad2-b807-8c6c23661a33"
+      "database_name": "malagoxvillamagos",
+      "database_id": "ab0a3bc7-73e0-4548-8b7f-6314442b09a1"
     }
-  ],
-  "previews": {
-    "d1_databases": [
-      {
-        "binding": "DB",
-        "database_name": "malago-client-requests",
-        "database_id": "573e7ef9-f5be-4ad2-b807-8c6c23661a33"
-      }
-    ],
-    "ai": {"binding": "AI"},
-    "assets": {"binding": "ASSETS"}
-  }
+  ]
 }
