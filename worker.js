@@ -1,4 +1,4 @@
-const VERSION = "MALAGO-SEA-INTRO-2026-10-31"; // trigger Cloudflare build — refresh test deployment for chef private UI
+const VERSION = "MALAGO-PARTNER-PREFIX-2026-11-02"; // trigger Cloudflare build — refresh test deployment for chef private UI
 const MODEL = "@cf/meta/llama-3.1-8b-instruct-fast";
 const NOTION_VERSION = "2025-09-03";
 const NOTION_DATA_SOURCE_ID = "43dd83a7-a18a-461c-9bb8-9cd9e79376df";
