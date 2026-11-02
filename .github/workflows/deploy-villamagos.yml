@@ -1,6 +1,9 @@
 name: Deploy Villa Magos
 on:
   workflow_dispatch:
+  push:
+    branches:
+      - fix/villamagos-partner-prefix-domain
 jobs:
   deploy-villamagos:
     runs-on: ubuntu-latest
