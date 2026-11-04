@@ -2054,33 +2054,18 @@ body.malago-intro-open{overflow:hidden!important}
  </div>
 </section>
 <section class="villaStory villaHomeCarousel villaSingleHero" id="villa" aria-label="Bienvenue à La Susana">
-  <div class="villaStoryPin" data-scene="pool" role="region" aria-roledescription="carrousel" aria-label="La Susana et les expériences Malago" tabindex="0">
+  <div class="villaStoryPin" data-scene="pool" role="region" aria-label="La Susana" tabindex="0">
     <div class="villaStoryFrames">
       <img class="villaStoryFrame is-active" data-slide="0" src="/media/https://static.wixstatic.com/media/8ef0f2_8d676941d7df4e21a1865ecfa1068957~mv2_d_5457_3822_s_4_2.jpg/v1/fill/w_1905,h_993,al_c,q_85,usm_0.66_1.00_0.01,enc_avif,quality_auto/8ef0f2_8d676941d7df4e21a1865ecfa1068957~mv2_d_5457_3822_s_4_2.jpg" alt="Piscine et extérieur de La Susana" fetchpriority="high">
-      <img class="villaStoryFrame" data-slide="1" src="/media/villa-magos-chef.PNG" alt="Chef en cuisine pour une expérience privée" loading="lazy">
-      <img class="villaStoryFrame" data-slide="2" src="/media/villa-magos-barman.PNG" alt="Barman préparant des cocktails" loading="lazy">
-      <img class="villaStoryFrame" data-slide="3" src="/media/villa-magos-dj.PNG" alt="DJ en soirée" loading="lazy">
     </div>
     <div class="villaStoryVignette"></div>
-    <div class="villaSwipeHint" aria-hidden="true"><span>Glissez vers la gauche pour en voir plus</span><span class="villaSwipeArrow">←</span></div>
     <div class="villaStoryCopy is-visible">
-      <div class="villaStoryKicker" id="villaSlideKicker">AVEC MALAGO</div>
-      <h2 id="villaSlideTitle">Votre séjour,<br><em>en mieux.</em></h2>
-      <p id="villaSlideText">Une villa pour se retrouver. Malago vous aide à imaginer les expériences qui feront la différence.</p>
+      <div class="villaStoryKicker" id="villaSlideKicker">La Susana × MALAGO</div>
+      <h2 id="villaSlideTitle">Bien plus qu’un<br><em>simple logement.</em></h2>
+      <p id="villaSlideText">Une villa à vivre pleinement, avec des expériences pensées pour vous et votre groupe.</p>
       <a class="btn btnGold" href="#experiences">Découvrir les expériences <span>↘</span></a>
     </div>
     <div class="villaCarouselScroll">DÉFILER POUR DÉCOUVRIR <span>↓</span></div>
-    <div class="villaCarouselControls" aria-label="Navigation du carrousel">
-      <button class="villaCarouselArrow" type="button" data-carousel-prev aria-label="Photo précédente">←</button>
-      <div class="villaCarouselDots" aria-label="Choisir une photo">
-        <button class="villaCarouselDot is-active" type="button" data-carousel-to="0" aria-label="Photo piscine"></button>
-        <button class="villaCarouselDot" type="button" data-carousel-to="1" aria-label="Expérience chef"></button>
-        <button class="villaCarouselDot" type="button" data-carousel-to="2" aria-label="Expérience barman"></button>
-        <button class="villaCarouselDot" type="button" data-carousel-to="3" aria-label="Expérience DJ"></button>
-      </div>
-      <span class="villaCarouselCount">01 / 04</span>
-      <button class="villaCarouselArrow" type="button" data-carousel-next aria-label="Photo suivante">→</button>
-    </div>
   </div>
 </section>
 <footer class="footer"><div class="wrap"><a class="brand" href="#top">La Susana <span>×</span> MALAGO</a><small>Guide privé des hôtes de La Susana · Marbella, Málaga</small></div></footer>
@@ -2115,102 +2100,26 @@ document.getElementById('activityClose').addEventListener('click',closeActivity)
 (function(){
   const root=document.querySelector('.villaHomeCarousel');
   if(!root) return;
-  const slides=[...root.querySelectorAll('.villaStoryFrame')];
-  const dots=[...root.querySelectorAll('.villaCarouselDot')];
-  const count=root.querySelector('.villaCarouselCount');
   const kicker=root.querySelector('#villaSlideKicker');
   const title=root.querySelector('#villaSlideTitle');
   const text=root.querySelector('#villaSlideText');
   const cta=root.querySelector('.villaStoryCopy .btn');
-  const copy=[
-    {kicker:'La Susana × MALAGO',title:'Bien plus qu’un<br><em>simple logement.</em>',text:'Une villa à vivre pleinement, avec des expériences pensées pour vous et votre groupe.',cta:''},
-    {kicker:'AVEC MALAGO · À TABLE',title:'Les plaisirs d’un chef,<br><em>chez vous.</em>',text:'Des produits de saison, une belle table et un menu imaginé pour votre groupe — sans quitter la villa.',cta:'Imaginer mon expérience '},
-    {kicker:'AVEC MALAGO · COCKTAILS',title:'Le coucher du soleil,<br><em>un verre à la main.</em>',text:'Un barman prépare vos cocktails au bord de la piscine. Vous n’avez plus qu’à profiter du moment.',cta:'Imaginer mon expérience '},
-    {kicker:'AVEC MALAGO · SOIRÉE',title:'La villa change de rythme,<br><em>la soirée commence.</em>',text:'Un DJ, une playlist qui vous ressemble et une ambiance pensée pour votre groupe, du sunset jusqu’à la nuit.',cta:'Imaginer mon expérience '}
-  ];
-  const hint=root.querySelector('.villaSwipeHint');
-  let active=0,timer=null,resumeTimer=null;
-  const reduced=window.matchMedia('(prefers-reduced-motion: reduce)');
-  const delay=5600;
-  function render(index,animate=true){
-    active=(index+slides.length)%slides.length;
-    root.dataset.currentSlide=String(active);
-    if(hint) hint.hidden=active!==0;
-    document.body.classList.toggle('villa-home-pool',active===0);
-    slides.forEach((slide,i)=>{
-      slide.classList.toggle('is-active',i===active);
-      slide.setAttribute('aria-hidden',i===active?'false':'true');
-    });
-    dots.forEach((dot,i)=>{
-      dot.classList.toggle('is-active',i===active);
-      dot.setAttribute('aria-pressed',i===active?'true':'false');
-    });
-    if(animate) root.classList.add('is-copy-changing');
+  const copy={kicker:'La Susana × MALAGO',title:'Bien plus qu’un<br><em>simple logement.</em>',text:'Une villa à vivre pleinement, avec des expériences pensées pour vous et votre groupe.'};
+  function refresh(){
     const lang=document.getElementById('malagoLanguageSwitcher')?.value||'en';
-    kicker.textContent=window.MALAGO_T?window.MALAGO_T(copy[active].kicker,lang):copy[active].kicker;
-    title.innerHTML=window.MALAGO_T?window.MALAGO_T(copy[active].title,lang):copy[active].title;
-    text.textContent=window.MALAGO_T?window.MALAGO_T(copy[active].text,lang):copy[active].text;
-    cta.textContent=window.MALAGO_T?window.MALAGO_T(copy[active].cta,lang):copy[active].cta;
-    cta.href='#experiences';
-    count.textContent=String(active+1).padStart(2,'0')+' / '+String(slides.length).padStart(2,'0');
-    if(resumeTimer) clearTimeout(resumeTimer);
-    if(animate) resumeTimer=setTimeout(()=>root.classList.remove('is-copy-changing'),80);
+    kicker.innerHTML=window.MALAGO_T?window.MALAGO_T(copy.kicker,lang):copy.kicker;
+    title.innerHTML=window.MALAGO_T?window.MALAGO_T(copy.title,lang):copy.title;
+    text.textContent=window.MALAGO_T?window.MALAGO_T(copy.text,lang):copy.text;
   }
-  cta.addEventListener('click',e=>{e.preventDefault();const villaCategory=document.querySelector('[data-malago-cat="villa"]');if(villaCategory){villaCategory.click();}else{document.querySelector('#experiences')?.scrollIntoView({behavior:'smooth',block:'start'});}});
-  function stop(){if(timer){clearInterval(timer);timer=null}}
-  function start(){
-    stop();
-    if(!reduced.matches && !document.hidden) timer=setInterval(()=>render(active+1),delay);
-  }
-  function go(index){render(index);start()}
-  root.querySelector('[data-carousel-prev]').addEventListener('click',()=>go(active-1));
-  root.querySelector('[data-carousel-next]').addEventListener('click',()=>go(active+1));
-  dots.forEach((dot,i)=>dot.addEventListener('click',()=>go(i)));
-  let pointerStart=null;
-  root.addEventListener('pointerdown',e=>{
-    if(e.pointerType==='mouse' && e.button!==0) return;
-    pointerStart={x:e.clientX,y:e.clientY};
-  },{passive:true});
-  root.addEventListener('pointerup',e=>{
-    if(!pointerStart) return;
-    const dx=e.clientX-pointerStart.x,dy=e.clientY-pointerStart.y;
-    pointerStart=null;
-    if(Math.abs(dx)>48 && Math.abs(dx)>Math.abs(dy)*1.2) go(active+(dx<0?1:-1));
-  },{passive:true});
-  root.addEventListener('pointercancel',()=>{pointerStart=null},{passive:true});
-  root.addEventListener('mouseenter',stop);
-  root.addEventListener('mouseleave',start);
-  root.addEventListener('focusin',stop);
-  root.addEventListener('focusout',start);
-  root.addEventListener('keydown',e=>{
-    if(e.key==='ArrowRight'){e.preventDefault();go(active+1)}
-    if(e.key==='ArrowLeft'){e.preventDefault();go(active-1)}
+  cta.addEventListener('click',e=>{
+    e.preventDefault();
+    const villaCategory=document.querySelector('[data-malago-cat="villa"]');
+    if(villaCategory) villaCategory.click();
+    else document.querySelector('#experiences')?.scrollIntoView({behavior:'smooth',block:'start'});
   });
-  document.addEventListener('visibilitychange',()=>document.hidden?stop():start());
-  if(reduced.addEventListener) reduced.addEventListener('change',start);
   const languageSelect=document.getElementById('malagoLanguageSwitcher');
-  if(languageSelect) languageSelect.addEventListener('change',()=>setTimeout(()=>render(active,false),0));
-  const languageControl=document.querySelector('.languageControl');
-  const languageButton=document.getElementById('malagoLanguageButton');
-  if(languageControl&&languageButton&&languageSelect){
-    languageButton.addEventListener('click',()=>{
-      const opened=languageControl.classList.toggle('is-open');
-      languageButton.setAttribute('aria-expanded',opened?'true':'false');
-      if(opened) languageSelect.focus();
-    });
-    document.addEventListener('click',event=>{
-      if(!languageControl.contains(event.target)){
-        languageControl.classList.remove('is-open');
-        languageButton.setAttribute('aria-expanded','false');
-      }
-    });
-    languageSelect.addEventListener('change',()=>{
-      languageControl.classList.remove('is-open');
-      languageButton.setAttribute('aria-expanded','false');
-    });
-  }
-  render(0,false);
-  start();
+  if(languageSelect) languageSelect.addEventListener('change',refresh);
+  refresh();
 })();
 </script>
 
