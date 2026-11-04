@@ -1,0 +1,9 @@
+{
+  "$schema": "./node_modules/wrangler/config-schema.json",
+  "name": "malago-la-susana-preview",
+  "main": "worker.js",
+  "compatibility_date": "2026-09-25",
+  "workers_dev": true,
+  "observability": { "enabled": true },
+  "assets": { "directory": "./public", "binding": "ASSETS" }
+}

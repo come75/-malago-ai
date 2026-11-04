@@ -540,10 +540,11 @@ async function processStayReminders(env) {
 export default {
   async fetch(request, env) {
     const url = new URL(request.url);
-    // Isolated partner namespace: serve the existing Villa Magos app below
-    // /partner/villamagos/ without changing the origin site's other routes.
-    const partnerPrefix = "/partner/villamagos";
-    const isPartnerRequest = url.pathname === partnerPrefix || url.pathname.startsWith(partnerPrefix + "/");
+    // Isolated partner namespaces: each partner site is served below its own prefix.
+    // Keep Villa Magos intact and expose the separate La Susana copy.
+    const partnerPrefixes = ["/partner/villamagos", "/partner/lasusana"];
+    const partnerPrefix = partnerPrefixes.find(prefix => url.pathname === prefix || url.pathname.startsWith(prefix + "/")) || "";
+    const isPartnerRequest = Boolean(partnerPrefix);
     if (isPartnerRequest) {
       url.pathname = url.pathname.slice(partnerPrefix.length) || "/";
     }
