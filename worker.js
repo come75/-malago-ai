@@ -540,7 +540,7 @@ async function processStayReminders(env) {
 export default {
   async fetch(request, env) {
     const url = new URL(request.url);
-    // Isolated partner namespaces: each partner site is served below its own prefix.
+    // Isolated partner namespaces: each partner site is served below its own prefix (preview build).
     // Keep Villa Magos intact and expose the separate La Susana copy.
     const partnerPrefixes = ["/partner/villamagos", "/partner/lasusana"];
     const partnerPrefix = partnerPrefixes.find(prefix => url.pathname === prefix || url.pathname.startsWith(prefix + "/")) || "";
