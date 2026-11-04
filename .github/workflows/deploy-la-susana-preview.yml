@@ -1,0 +1,26 @@
+name: Deploy La Susana preview
+on:
+  push:
+    branches:
+      - feat/la-susana-site
+    paths:
+      - public/villa-magos.html
+      - worker.js
+      - wrangler.la-susana-preview.jsonc
+permissions:
+  contents: read
+concurrency:
+  group: la-susana-preview
+  cancel-in-progress: true
+jobs:
+  deploy-preview:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: feat/la-susana-site
+      - uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_DEPLOY_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          command: deploy --config wrangler.la-susana-preview.jsonc
