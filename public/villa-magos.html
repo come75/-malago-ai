@@ -3391,6 +3391,7 @@ const langSelect=document.getElementById('malagoLanguageSwitcher');if(langSelect
  const initial=saved&&['en','fr','es','de','it','nl','ru','pt','ar','zh'].includes(saved)?saved:'en';
  select.addEventListener('change',()=>apply(select.value));
  apply(initial);
+ select.dispatchEvent(new Event('change',{bubbles:true}));
  const observer=new MutationObserver(records=>{const lang=select.value;records.forEach(r=>{r.addedNodes&&r.addedNodes.forEach(n=>{if(n.nodeType===3)translateText(n,lang);else if(n.nodeType===1){if(n.childNodes)n.childNodes.forEach(c=>{if(c.nodeType===3)translateText(c,lang)});translateAttributes(n,lang);n.querySelectorAll&&n.querySelectorAll('*').forEach(el=>{el.childNodes.forEach(c=>{if(c.nodeType===3)translateText(c,lang)});translateAttributes(el,lang);});}});});});
  observer.observe(document.body,{childList:true,subtree:true});
 })();
