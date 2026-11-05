@@ -3863,9 +3863,12 @@ html.malago-card-expanded,body.malago-card-expanded{overflow:hidden!important}
   if(floatingLink){floatingLink.href='https://wa.me/34613384566?text='+encodeURIComponent(messages[lang]||messages.en);}
  }
  if(floatingLink){
-  floatingLink.addEventListener('click',function(){
+  floatingLink.addEventListener('click',function(event){
+   event.preventDefault();
    const lang=select.value||'en';
-   floatingLink.href='https://wa.me/34613384566?text='+encodeURIComponent(messages[lang]||messages.en);
+   const url='https://wa.me/34613384566?text='+encodeURIComponent(messages[lang]||messages.en);
+   floatingLink.href=url;
+   window.open(url,'_blank','noopener');
   });
  }
  link.addEventListener('click',function(event){
