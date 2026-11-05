@@ -3396,6 +3396,48 @@ const langSelect=document.getElementById('malagoLanguageSwitcher');if(langSelect
 })();
 </script>
 
+<script id="MALAGO_INTRO_LANGUAGE_PATCH_2026">
+(function(){
+ const select=document.getElementById('malagoLanguageSwitcher');
+ const title=document.getElementById('malagoIntroTitle');
+ const button=document.getElementById('malagoIntroContinue');
+ if(!select||!title||!button)return;
+ const translations={
+  'Your private concierge on the Costa del Sol.':{
+   en:'Your private concierge on the Costa del Sol.',
+   fr:'Votre concierge privé sur la Costa del Sol.',
+   es:'Tu conserje privado en la Costa del Sol.',
+   de:'Ihr privater Concierge an der Costa del Sol.',
+   it:'Il tuo concierge privato sulla Costa del Sol.',
+   nl:'Jouw privéconciërge aan de Costa del Sol.',
+   ru:'Ваш личный консьерж на побережье Коста-дель-Соль.',
+   pt:'O seu concierge privado na Costa del Sol.',
+   ar:'مساعدك الشخصي الخاص على كوستا ديل سول.',
+   zh:'您在太阳海岸的私人礼宾服务。'
+  },
+  'DISCOVER YOUR EXPERIENCE':{
+   en:'DISCOVER YOUR EXPERIENCE',
+   fr:'DÉCOUVRIR VOS EXPÉRIENCES',
+   es:'DESCUBRE TUS EXPERIENCIAS',
+   de:'ENTDECKEN SIE IHRE ERLEBNISSE',
+   it:'SCOPRI LE TUE ESPERIENZE',
+   nl:'ONTDEK JOUW ERVARINGEN',
+   ru:'ОТКРОЙТЕ СВОИ ВПЕЧАТЛЕНИЯ',
+   pt:'DESCUBRA AS SUAS EXPERIÊNCIAS',
+   ar:'اكتشف تجاربك',
+   zh:'探索您的专属体验'
+  }
+ };
+ function applyIntroLanguage(){
+  const lang=select.value||'en';
+  title.textContent=translations['Your private concierge on the Costa del Sol.'][lang]||translations['Your private concierge on the Costa del Sol.'].en;
+  button.textContent=translations['DISCOVER YOUR EXPERIENCE'][lang]||translations['DISCOVER YOUR EXPERIENCE'].en;
+ }
+ select.addEventListener('change',applyIntroLanguage);
+ applyIntroLanguage();
+})();
+</script>
+
 
 <style id="MALAGO_CAROUSEL_TEXT_BASELINE_2026">@media(max-width:650px){.villaHomeCarousel .villaStoryCopy{top:calc(47% + 22px)!important;bottom:auto!important;left:22px!important;right:22px!important;width:auto!important;max-width:none!important;height:auto!important;max-height:none!important;padding:0!important;margin:0!important;display:flex!important;flex-direction:column!important;align-items:flex-start!important;justify-content:flex-start!important;gap:0!important;overflow:visible!important;text-shadow:none!important}.villaHomeCarousel .villaStoryCopy .villaStoryKicker{margin:0 0 11px!important;line-height:1.35!important}.villaHomeCarousel .villaStoryCopy h2{max-width:100%!important;margin:0 0 11px!important;font-size:clamp(34px,8.8vw,43px)!important;line-height:1.01!important;letter-spacing:-.045em!important;text-wrap:balance!important}.villaHomeCarousel .villaStoryCopy h2 em{display:block!important;color:#f0ae58!important;font-weight:400!important}.villaHomeCarousel .villaStoryCopy p{max-width:100%!important;margin:0 0 16px!important;font-size:13px!important;line-height:1.5!important}}@media(max-width:390px){.villaHomeCarousel .villaStoryCopy{top:calc(43% + 18px)!important}}</style>
 
