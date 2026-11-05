@@ -5,6 +5,7 @@ on:
       - feat/la-susana-site
     paths:
       - public/villa-magos.html
+      - public/villa-la-susana.html
       - worker.js
       - wrangler.la-susana-preview.jsonc
 permissions:
