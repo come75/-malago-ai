@@ -3835,6 +3835,7 @@ html.malago-card-expanded,body.malago-card-expanded{overflow:hidden!important}
 (function(){
  const select=document.getElementById('malagoLanguageSwitcher');
  const link=document.querySelector('.headerActions .navcta');
+ const floatingLink=document.querySelector('.whatsappFloat');
  if(!select||!link)return;
  const labels={
   en:'Contact Malago ',fr:'Contacter Malago ',es:'Contactar Malago ',de:'Malago kontaktieren ',
@@ -3859,6 +3860,13 @@ html.malago-card-expanded,body.malago-card-expanded{overflow:hidden!important}
   link.querySelectorAll('.navctaFull,.navctaMobile').forEach(el=>{el.textContent=label;});
   link.setAttribute('aria-label',label.replace(' ',''));
   link.href='https://wa.me/34613384566?text='+encodeURIComponent(messages[lang]||messages.en);
+  if(floatingLink){floatingLink.href='https://wa.me/34613384566?text='+encodeURIComponent(messages[lang]||messages.en);}
+ }
+ if(floatingLink){
+  floatingLink.addEventListener('click',function(){
+   const lang=select.value||'en';
+   floatingLink.href='https://wa.me/34613384566?text='+encodeURIComponent(messages[lang]||messages.en);
+  });
  }
  link.addEventListener('click',function(event){
   event.preventDefault();
