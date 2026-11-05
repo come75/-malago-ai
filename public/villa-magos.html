@@ -3385,10 +3385,32 @@ const langSelect=document.getElementById('malagoLanguageSwitcher');if(langSelect
   const meta=document.querySelector('meta[name="description"]');
   if(meta)meta.content=translated('Le concierge privé des hôtes de La Susana à Marbella, Málaga.',lang);
   select.value=lang;
+  // Persistance multi-supports : URL (rechargement/partage), cookie et stockage local.
   try{localStorage.setItem('malago-language',lang)}catch(e){}
+  try{document.cookie='malago-language='+encodeURIComponent(lang)+'; Path=/; Max-Age=31536000; SameSite=Lax'}catch(e){}
+  try{
+   const url=new URL(window.location.href);
+   url.searchParams.set('lang',lang);
+   window.history.replaceState({},'',url.pathname+url.search+url.hash);
+  }catch(e){}
  }
- const saved=(()=>{try{return localStorage.getItem('malago-language')}catch(e){return null}})();
- const initial=saved&&['en','fr','es','de','it','nl','ru','pt','ar','zh'].includes(saved)?saved:'en';
+ const allowed=['en','fr','es','de','it','nl','ru','pt','ar','zh'];
+ const initial=(()=>{
+  try{
+   const fromUrl=new URL(window.location.href).searchParams.get('lang');
+   if(allowed.includes(fromUrl))return fromUrl;
+  }catch(e){}
+  try{
+   const match=document.cookie.match(/(?:^|;\\s*)malago-language=([^;]+)/);
+   const fromCookie=match?decodeURIComponent(match[1]):null;
+   if(allowed.includes(fromCookie))return fromCookie;
+  }catch(e){}
+  try{
+   const fromStorage=localStorage.getItem('malago-language');
+   if(allowed.includes(fromStorage))return fromStorage;
+  }catch(e){}
+  return 'en';
+ })();
  select.addEventListener('change',()=>apply(select.value));
  apply(initial);
  select.dispatchEvent(new Event('change',{bubbles:true}));
