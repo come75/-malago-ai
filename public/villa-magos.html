@@ -3401,7 +3401,7 @@ const langSelect=document.getElementById('malagoLanguageSwitcher');if(langSelect
    if(allowed.includes(fromUrl))return fromUrl;
   }catch(e){}
   try{
-   const match=document.cookie.match(/(?:^|;\\s*)malago-language=([^;]+)/);
+   const match=document.cookie.match(/(?:^|;\s*)malago-language=([^;]+)/);
    const fromCookie=match?decodeURIComponent(match[1]):null;
    if(allowed.includes(fromCookie))return fromCookie;
   }catch(e){}
