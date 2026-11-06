@@ -7,15 +7,140 @@ on:
       - 'public/**'
       - 'worker.js'
       - 'wrangler.jsonc'
+      - 'locales/**'
+      - 'scripts/**'
       - '.github/workflows/deploy-malago-test.yml'
-  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: deploy-malago-test
+  cancel-in-progress: true
 jobs:
   deploy-test:
     runs-on: ubuntu-latest
+    timeout-minutes: 20
     steps:
       - uses: actions/checkout@v4
-      - uses: cloudflare/wrangler-action@v3
+      - name: Validate JavaScript, localisation and test bindings
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --check worker.js
+          node --check public/site-v2.js
+          node --check public/localisation-formulaires.js
+          node --check public/villa-magos-calendar.js
+          node scripts/validate-locales.mjs
+          node --input-type=module <<'NODE'
+          import { readFileSync, writeFileSync } from 'node:fs';
+          import { execFileSync } from 'node:child_process';
+
+          const html = readFileSync('public/villa-magos.html', 'utf8');
+          const translations = readFileSync('public/localisation-formulaires.js', 'utf8');
+          const worker = readFileSync('worker.js', 'utf8');
+          const wrangler = readFileSync('wrangler.jsonc', 'utf8');
+          const locales = ['en', 'fr', 'es', 'de', 'it', 'nl', 'ru', 'pt', 'ar', 'zh'];
+
+          if (!worker.includes('const partnerPrefix = "/partner/villamagos"')) {
+            throw new Error('The Villa Magos partner route is missing from the Worker.');
+          }
+          if (!wrangler.includes('"name": "test"') ||
+              !wrangler.includes('malago-client-requests') ||
+              !wrangler.includes('0 * * * *')) {
+            throw new Error('The test Worker name, D1 binding or cron trigger has changed.');
+          }
+          if (!html.includes('/localisation-formulaires.js')) {
+            throw new Error('The Villa Magos page does not load its translation bundle.');
+          }
+          if (!html.includes("document.documentElement.dir=lang==='ar'?'rtl':'ltr'")) {
+            throw new Error('Arabic RTL handling is missing.');
+          }
+          for (const locale of locales) {
+            if (!html.includes("'" + locale + "'")) {
+              throw new Error('Locale ' + locale + ' is not enabled in the page language system.');
+            }
+          }
+
+          const translationRows = translations.split(/\r?\n/).filter((line) =>
+            line.trimStart().startsWith('"') && line.includes(': {en:')
+          );
+          if (translationRows.length < 400) {
+            throw new Error('Unexpectedly low base translation coverage: ' + translationRows.length + ' entries.');
+          }
+          for (const [index, row] of translationRows.entries()) {
+            const missing = locales.filter((locale) => !row.includes(locale + ':'));
+            if (missing.length) {
+              throw new Error('Base translation row ' + (index + 1) + ' is missing: ' + missing.join(', '));
+            }
+          }
+
+          const mealPlannerKeys = [
+            'Imaginons vos repas.',
+            'Quels repas souhaitez-vous prévoir ?',
+            'Votre programme de repas est distinct de toute prestation événementielle. Revenez en arrière pour le modifier.',
+            'Type de repas',
+            'Début du séjour',
+            'Fin du séjour'
+          ];
+          for (const key of mealPlannerKeys) {
+            const row = translations.split(/\r?\n/).find((line) => line.includes('"' + key + '"'));
+            if (!row) throw new Error('Meal-planner translation is missing: ' + key);
+            const missing = locales.filter((locale) =>
+              !row.includes(locale + ':') && !row.includes('"' + locale + '":')
+            );
+            if (missing.length) {
+              throw new Error('Meal-planner translation "' + key + '" is missing: ' + missing.join(', '));
+            }
+          }
+
+          let checked = 0;
+          const scripts = [...html.matchAll(/<script\b([^>]*)>([\s\S]*?)<\/script>/gi)];
+          for (const [, attrs, code] of scripts) {
+            if (/\bsrc\s*=/i.test(attrs) || !code.trim()) continue;
+            const type = attrs.match(/\btype\s*=\s*["']([^"']+)["']/i)?.[1]?.toLowerCase();
+            if (type && !['text/javascript', 'application/javascript', 'module'].includes(type)) continue;
+            const extension = type === 'module' ? 'mjs' : 'js';
+            const file = '/tmp/malago-inline-' + checked + '.' + extension;
+            writeFileSync(file, code);
+            execFileSync(process.execPath, ['--check', file], { stdio: 'inherit' });
+            checked++;
+          }
+          if (!checked) throw new Error('No inline JavaScript blocks were checked.');
+          console.log('Validated ' + checked + ' inline scripts, 10 locales and the Villa Magos meal-planner translations.');
+          NODE
+      - name: Deploy test Worker
+        uses: cloudflare/wrangler-action@v3
         with:
           apiToken: ${{ secrets.CLOUDFLARE_DEPLOY_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
           command: deploy --config wrangler.jsonc
+      - name: Smoke test deployed test Worker
+        shell: bash
+        run: |
+          set -euo pipefail
+          BASE_URL="https://test.malago.workers.dev"
+          EXPECTED_VERSION="MALAGO-PARTNER-PREFIX-2026-11-02"
+
+          for attempt in $(seq 1 12); do
+            if curl -fsS --max-time 25 "$BASE_URL/health" -o /tmp/malago-health.json; then
+              if node -e "const h=JSON.parse(require('fs').readFileSync('/tmp/malago-health.json','utf8'));process.exit(h.version === '$EXPECTED_VERSION' && h.aiConfigured === true ? 0 : 1)"; then
+                break
+              fi
+            fi
+            sleep 5
+          done
+
+          if [ ! -s /tmp/malago-health.json ]; then
+            echo "The test Worker health endpoint did not respond."
+            exit 1
+          fi
+          node -e "const h=JSON.parse(require('fs').readFileSync('/tmp/malago-health.json','utf8'));if(h.version !== '$EXPECTED_VERSION' || h.aiConfigured !== true) process.exit(1)"
+
+          curl -fsS --max-time 25 "$BASE_URL/partner/villamagos/" -o /tmp/villa-magos.html
+          grep -Fq 'La Villa Magos × Malago' /tmp/villa-magos.html
+          grep -Fq '/partner/villamagos/localisation-formulaires.js' /tmp/villa-magos.html
+          curl -fsS --max-time 25 "$BASE_URL/partner/villamagos/localisation-formulaires.js" -o /tmp/villa-magos-localisation.js
+          grep -Fq 'window.MALAGO_UI_TRANSLATIONS' /tmp/villa-magos-localisation.js
+          grep -Fq 'Imaginons vos repas.' /tmp/villa-magos-localisation.js
+          curl -fsS --max-time 25 "$BASE_URL/partner/villamagos/villa-magos-calendar.css" -o /dev/null
+
+          echo "Smoke tests passed: Worker version, AI binding, partner page, translation bundle, meal planner and CSS asset."

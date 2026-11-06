@@ -1,4 +1,4 @@
-const VERSION = "MALAGO-SEA-INTRO-2026-10-31"; // trigger Cloudflare build — refresh test deployment for chef private UI
+const VERSION = "MALAGO-PARTNER-PREFIX-2026-11-02"; // trigger Cloudflare build — refresh test deployment for chef private UI
 const MODEL = "@cf/meta/llama-3.1-8b-instruct-fast";
 const NOTION_VERSION = "2025-09-03";
 const NOTION_DATA_SOURCE_ID = "43dd83a7-a18a-461c-9bb8-9cd9e79376df";
@@ -540,12 +540,34 @@ async function processStayReminders(env) {
 export default {
   async fetch(request, env) {
     const url = new URL(request.url);
+    // Isolated partner namespace: serve the existing Villa Magos app below
+    // /partner/villamagos/ without changing the origin site's other routes.
+    const partnerPrefix = "/partner/villamagos";
+    const isPartnerRequest = url.pathname === partnerPrefix || url.pathname.startsWith(partnerPrefix + "/");
+    if (isPartnerRequest) {
+      url.pathname = url.pathname.slice(partnerPrefix.length) || "/";
+    }
     const headers = {
       "X-Content-Type-Options":"nosniff",
       "Referrer-Policy":"strict-origin-when-cross-origin",
       "Permissions-Policy":"camera=(), microphone=(), geolocation=()"
     };
     if (request.method === "OPTIONS") return new Response(null,{status:204,headers});
+
+    if (isPartnerRequest && request.method === "GET" && url.pathname === "/") {
+      if (!env?.ASSETS) return new Response("Malago assets unavailable",{status:503,headers:{...headers,"Content-Type":"text/plain;charset=UTF-8"}});
+      const assetUrl = new URL("/villa-magos.html", url);
+      const asset = await env.ASSETS.fetch(new Request(assetUrl, { headers: request.headers }));
+      if (!asset.ok) return asset;
+      const html = await asset.text();
+      // Rebase root-relative HTML, CSS, image and inline-JS URLs into this
+      // partner namespace. The worker strips the prefix before serving them.
+      const rebased = html.replace(/(["'=])\/(?!\/)/g, "$1" + partnerPrefix + "/").replace(/url\((\s*)\/(?!\/)/g, "url($1" + partnerPrefix + "/");
+      const responseHeaders = new Headers(asset.headers);
+      responseHeaders.set("Content-Type", "text/html; charset=UTF-8");
+      responseHeaders.set("Cache-Control", "no-store");
+      return new Response(rebased, { status: asset.status, headers: responseHeaders });
+    }
 
     if (request.method === "GET" && url.pathname === "/api/config") {
       return json({version:VERSION,googleMapsConfigured:Boolean(env?.GOOGLE_MAPS_API_KEY),googleMapsKey:env?.GOOGLE_MAPS_API_KEY || null},200,headers);
@@ -893,6 +915,12 @@ export default {
       return new Response("Malago assets unavailable",{status:503,headers:{...headers,"Content-Type":"text/plain;charset=UTF-8"}});
     }
 
+    // Public Villa Magos partner URL.
+    if (request.method === "GET" && (url.pathname === "/partner/villamagos" || url.pathname === "/partner/villamagos/")) {
+      if (env?.ASSETS) return env.ASSETS.fetch(new Request(new URL("/villa-magos.html", url), { method: "GET", headers: request.headers }));
+      return new Response("Malago assets unavailable",{status:503,headers:{...headers,"Content-Type":"text/plain;charset=UTF-8"}});
+    }
+
     // Clean client-facing route: serve the existing Villa Magos experience at a dedicated stay URL.
     // The private token remains in the URL fragment, which is not sent to the server.
     if (request.method === "GET" && url.pathname === "/villa-magos/sejour") {
@@ -901,7 +929,7 @@ export default {
     }
 
     if (request.method === "GET") {
-      if (env?.ASSETS) return env.ASSETS.fetch(request);
+      if (env?.ASSETS) return env.ASSETS.fetch(isPartnerRequest ? new Request(url, request) : request);
       return new Response("Malago assets unavailable",{status:503,headers:{...headers,"Content-Type":"text/plain;charset=UTF-8"}});
     }
     if (request.method === "POST" && url.pathname === "/api/chat") {
