@@ -1,4 +1,5 @@
 name: Deploy Malago test
+# Test-only deployment pipeline; no D1 migrations are run.
 on:
   push:
     branches:
