@@ -1,18 +1,15 @@
-name: Deploy Villa Magos
+name: Legacy Villa Magos deployment guard
 on:
   workflow_dispatch:
 jobs:
-  deploy-villamagos:
+  block-obsolete-deployment:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: cloudflare/wrangler-action@v3
-        with:
-          apiToken: ${{ secrets.CLOUDFLARE_DEPLOY_TOKEN }}
-          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          command: d1 execute malagoxvillamagos --remote --file=migrations/0001_villa_magos_init.sql
-      - uses: cloudflare/wrangler-action@v3
-        with:
-          apiToken: ${{ secrets.CLOUDFLARE_DEPLOY_TOKEN }}
-          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          command: deploy --config wrangler.jsonc
+      - name: Stop obsolete deployment from main
+        shell: bash
+        run: |
+          echo "::error::This legacy workflow is intentionally blocked."
+          echo "Villa Magos must be deployed from fix/villamagos-partner-prefix-domain,"
+          echo "which uses the dedicated malago-villamagos Worker and its own D1 database."
+          echo "Do not deploy main/worker.js to the shared test Worker from this workflow."
+          exit 1
