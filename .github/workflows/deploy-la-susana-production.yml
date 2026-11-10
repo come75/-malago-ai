@@ -1,0 +1,27 @@
+name: Deploy La Susana production
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: la-susana-production
+  cancel-in-progress: false
+jobs:
+  deploy-production:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: deploy/villa-la-susana-malago-domain
+      - name: Copy uploaded DJ photo into public assets
+        run: cp 4C2C83BE-F311-497B-80E1-B1B28A9F5040.png public/4C2C83BE-F311-497B-80E1-B1B28A9F5040.png
+      - uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_DEPLOY_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          command: d1 execute malago-villa-la-susana --remote --file=migrations/0001_la_susana_init.sql
+      - uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_DEPLOY_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          command: deploy --config wrangler.la-susana-production.jsonc
