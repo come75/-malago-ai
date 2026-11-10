@@ -1,6 +1,11 @@
 name: Deploy La Susana production
 on:
   workflow_dispatch:
+  push:
+    branches:
+      - deploy/villa-la-susana-malago-domain
+    paths:
+      - wrangler.la-susana-production.jsonc
 permissions:
   contents: read
 concurrency:
