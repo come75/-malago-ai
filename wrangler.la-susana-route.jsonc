@@ -1,6 +1,7 @@
 {
   "$schema": "./node_modules/wrangler/config-schema.json",
   "name": "malago-villa-la-susana-route",
+  // Path-only Worker: proxies to the isolated static-assets Worker.
   "main": "worker.la-susana-route.js",
   "compatibility_date": "2026-09-25",
   "routes": [
