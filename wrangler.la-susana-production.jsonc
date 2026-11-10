@@ -3,12 +3,6 @@
   "name": "malago-villa-la-susana",
   // Dedicated partner route; does not overlap Villa Magos path. Deployment trigger.
   "main": "worker.js",
-  "routes": [
-    {
-      "pattern": "malago-agency.com/partner/villasusana*",
-      "zone_name": "malago-agency.com"
-    }
-  ],
   "compatibility_date": "2026-09-25",
   "observability": {
     "enabled": true,
