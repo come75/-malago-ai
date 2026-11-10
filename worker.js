@@ -542,7 +542,7 @@ export default {
     const url = new URL(request.url);
     // Isolated partner namespaces: each partner site is served below its own prefix (preview build).
     // Keep Villa Magos intact and expose the separate La Susana copy.
-    const partnerPrefixes = ["/partner/villamagos", "/partner/lasusana"];
+    const partnerPrefixes = ["/partner/villamagos", "/partner/villasusana"];
     const partnerPrefix = partnerPrefixes.find(prefix => url.pathname === prefix || url.pathname.startsWith(prefix + "/")) || "";
     const isPartnerRequest = Boolean(partnerPrefix);
     if (isPartnerRequest) {
@@ -557,7 +557,8 @@ export default {
 
     if (isPartnerRequest && request.method === "GET" && url.pathname === "/") {
       if (!env?.ASSETS) return new Response("Malago assets unavailable",{status:503,headers:{...headers,"Content-Type":"text/plain;charset=UTF-8"}});
-      const assetUrl = new URL("/villa-magos.html", url);
+      const partnerAsset = partnerPrefix === "/partner/villasusana" ? "/villa-la-susana.html" : "/villa-magos.html";
+      const assetUrl = new URL(partnerAsset, url);
       const asset = await env.ASSETS.fetch(new Request(assetUrl, { headers: request.headers }));
       if (!asset.ok) return asset;
       const html = await asset.text();
