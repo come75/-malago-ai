@@ -1,0 +1,22 @@
+{
+  "$schema": "./node_modules/wrangler/config-schema.json",
+  "name": "malago-villa-la-susana",
+  "main": "worker.js",
+  "compatibility_date": "2026-09-25",
+  "observability": {
+    "enabled": true,
+    "logs": {
+      "invocation_logs": true,
+      "head_sampling_rate": 1
+    }
+  },
+  "cache": { "enabled": true },
+  "assets": { "directory": "./public", "binding": "ASSETS" },
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "malago-villa-la-susana",
+      "database_id": "REPLACE_WITH_NEW_CLOUDFLARE_D1_DATABASE_ID"
+    }
+  ]
+}
