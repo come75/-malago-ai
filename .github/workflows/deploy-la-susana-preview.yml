@@ -6,6 +6,7 @@ on:
     paths:
       - public/villa-magos.html
       - public/villa-la-susana.html
+      - 4C2C83BE-F311-497B-80E1-B1B28A9F5040.png
       - worker.js
       - wrangler.la-susana-preview.jsonc
 permissions:
@@ -20,6 +21,8 @@ jobs:
       - uses: actions/checkout@v4
         with:
           ref: feat/la-susana-site
+      - name: Copy uploaded DJ photo into public assets
+        run: cp 4C2C83BE-F311-497B-80E1-B1B28A9F5040.png public/4C2C83BE-F311-497B-80E1-B1B28A9F5040.png
       - uses: cloudflare/wrangler-action@v3
         with:
           apiToken: ${{ secrets.CLOUDFLARE_DEPLOY_TOKEN }}
