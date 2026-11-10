@@ -2,6 +2,12 @@
   "$schema": "./node_modules/wrangler/config-schema.json",
   "name": "malago-villa-la-susana",
   "main": "worker.js",
+  "routes": [
+    {
+      "pattern": "malago-agency.com/partner/villasusana*",
+      "zone_name": "malago-agency.com"
+    }
+  ],
   "compatibility_date": "2026-09-25",
   "observability": {
     "enabled": true,
