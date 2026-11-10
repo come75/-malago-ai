@@ -6,6 +6,7 @@ on:
     paths:
       - public/villa-magos.html
       - public/villa-la-susana.html
+      - .github/workflows/deploy-la-susana-preview.yml
       - 4C2C83BE-F311-497B-80E1-B1B28A9F5040.png
       - worker.js
       - wrangler.la-susana-preview.jsonc
