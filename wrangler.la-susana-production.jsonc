@@ -1,6 +1,7 @@
 {
   "$schema": "./node_modules/wrangler/config-schema.json",
   "name": "malago-villa-la-susana",
+  // Dedicated partner route; does not overlap Villa Magos path.
   "main": "worker.js",
   "routes": [
     {
