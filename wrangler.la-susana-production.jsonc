@@ -16,7 +16,7 @@
     {
       "binding": "DB",
       "database_name": "malago-villa-la-susana",
-      "database_id": "REPLACE_WITH_NEW_CLOUDFLARE_D1_DATABASE_ID"
+      "database_id": "9faaff50-7e47-4cd3-87ea-29d95706b926"
     }
   ]
 }
