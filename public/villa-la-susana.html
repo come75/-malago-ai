@@ -2133,6 +2133,24 @@ document.getElementById('activityClose').addEventListener('click',closeActivity)
   let active=0,timer=null,resumeTimer=null;
   const reduced=window.matchMedia('(prefers-reduced-motion: reduce)');
   const delay=5600;
+  const shortTitles={
+    fr:['PRENEZ LA ROUTE','PRENEZ LE LARGE','CHANGEZ DE SENTIER'],
+    en:['HIT THE ROAD','SET SAIL','TAKE A NEW PATH'],
+    es:['PONTE EN MARCHA','¡AL MAR!','CAMBIA DE SENDERO'],
+    de:['AUF DIE STRASSE','HINAUS AUFS MEER','NEUE WEGE ENTDECKEN'],
+    it:['SI PARTE!','PRENDI IL LARGO','CAMBIA SENTIERO'],
+    nl:['GA OP PAD','GA DE ZEE OP','KIES EEN NIEUW PAD'],
+    ru:['В ПУТЬ','В ОТКРЫТОЕ МОРЕ','СМЕНИТЕ МАРШРУТ'],
+    pt:['PÉ NA ESTRADA','FAÇA-SE AO MAR','MUDE DE TRILHO'],
+    ar:['انطلقوا على الطريق','أبحروا نحو الأفق','اكتشفوا دروباً جديدة'],
+    zh:['踏上旅程','驶向远海','探索新路线']
+  };
+  function updateShortTitle(){
+    const lang=document.getElementById('malagoLanguageSwitcher')?.value||'en';
+    const labels=shortTitles[lang]||shortTitles.en;
+    title.dataset.shortTitle=active>0?labels[active-1]:'';
+  }
+  window.MALAGO_UPDATE_CAROUSEL_TITLE=updateShortTitle;
   function render(index,animate=true){
     active=(index+slides.length)%slides.length;
     root.dataset.currentSlide=String(active);
@@ -2148,6 +2166,7 @@ document.getElementById('activityClose').addEventListener('click',closeActivity)
     });
     if(animate) root.classList.add('is-copy-changing');
     const lang=document.getElementById('malagoLanguageSwitcher')?.value||'en';
+    updateShortTitle();
     kicker.textContent=window.MALAGO_T?window.MALAGO_T(copy[active].kicker,lang):copy[active].kicker;
     title.innerHTML=window.MALAGO_T?window.MALAGO_T(copy[active].title,lang):copy[active].title;
     text.textContent=window.MALAGO_T?window.MALAGO_T(copy[active].text,lang):copy[active].text;
@@ -3464,6 +3483,7 @@ const langSelect=document.getElementById('malagoLanguageSwitcher');if(langSelect
   const meta=document.querySelector('meta[name="description"]');
   if(meta)meta.content=translated('Le concierge privé des hôtes de la Villa La Susana à Marbella, Málaga.',lang);
   select.value=lang;
+   window.MALAGO_UPDATE_CAROUSEL_TITLE?.();
   try{localStorage.setItem('malago-language',lang)}catch(e){}
  }
  const saved=(()=>{try{return localStorage.getItem('malago-language')}catch(e){return null}})();
@@ -4597,7 +4617,11 @@ body.malago-card-expanded .whatsappFloat{
     text-align:left!important;
   }
   .villaHomeCarousel[data-current-slide="3"] #villaSlideTitle:before{
-    content:"CHANGEZ DE SENTIER"!important;
+    content:attr(data-short-title)!important;
+  }
+  .villaHomeCarousel[data-current-slide="1"] #villaSlideTitle:before,
+  .villaHomeCarousel[data-current-slide="2"] #villaSlideTitle:before{
+    content:attr(data-short-title)!important;
   }
 }
 </style>
