@@ -4553,5 +4553,54 @@ body.malago-card-expanded .whatsappFloat{
 }
 </style>
 
+
+<style id="MALAGO-SUSANA-MOBILE-SHORT-TITLES-2026">
+@media(max-width:650px){
+  /* Sur mobile, seuls les trois messages courts restent sur la photo. */
+  .villaHomeCarousel .villaStoryKicker{display:none!important}
+  .villaHomeCarousel .villaStoryCopy h2{
+    top:0!important;left:0!important;right:auto!important;
+    width:auto!important;max-width:none!important;
+    margin:0!important;padding:0!important;
+    font-size:0!important;line-height:1!important;
+    white-space:nowrap!important;text-wrap:nowrap!important;
+    letter-spacing:-.035em!important;
+    text-shadow:0 2px 10px rgba(0,0,0,.55)!important;
+  }
+  .villaHomeCarousel .villaStoryCopy h2 em{display:none!important}
+  .villaHomeCarousel .villaStoryCopy h2:before{
+    display:block!important;font-family:Georgia,"Times New Roman",serif!important;
+    font-size:clamp(16px,4.5vw,21px)!important;
+    line-height:1!important;font-weight:400!important;
+    font-style:normal!important;letter-spacing:-.025em!important;
+    color:#fff!important;white-space:nowrap!important;
+  }
+  /* Slide 2 — titre déplacé vers la zone libre à droite, au-dessus de la voiture. */
+  .villaHomeCarousel[data-current-slide="1"] #villaSlideTitle{
+    top:43%!important;left:auto!important;right:6%!important;
+    text-align:right!important;
+  }
+  .villaHomeCarousel[data-current-slide="1"] #villaSlideTitle:before{
+    content:"PRENEZ LA ROUTE"!important;
+  }
+  /* Slide 3 — titre dans le ciel à droite, au-dessus du yacht. */
+  .villaHomeCarousel[data-current-slide="2"] #villaSlideTitle{
+    top:32%!important;left:auto!important;right:5%!important;
+    text-align:right!important;
+  }
+  .villaHomeCarousel[data-current-slide="2"] #villaSlideTitle:before{
+    content:"PRENEZ LE LARGE"!important;
+  }
+  /* Slide 4 — titre court en haut à gauche, sur la zone de ciel. */
+  .villaHomeCarousel[data-current-slide="3"] #villaSlideTitle{
+    top:13%!important;left:20px!important;right:20px!important;
+    text-align:left!important;
+  }
+  .villaHomeCarousel[data-current-slide="3"] #villaSlideTitle:before{
+    content:"CHANGEZ DE SENTIER"!important;
+  }
+}
+</style>
+
 </body>
 </html>
