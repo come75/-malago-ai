@@ -2124,10 +2124,10 @@ document.getElementById('activityClose').addEventListener('click',closeActivity)
   const text=root.querySelector('#villaSlideText');
   const cta=root.querySelector('.villaStoryCopy .btn');
   const copy=[
-    {kicker:'VILLA LA SUSANA × MALAGO',title:'Bien plus qu’un<br><em>simple logement.</em>',text:'Une villa à vivre pleinement, avec des expériences pensées pour vous et votre groupe.',cta:''},
-    {kicker:'AVEC MALAGO · À TABLE',title:'Les plaisirs d’un chef,<br><em>chez vous.</em>',text:'Des produits de saison, une belle table et un menu imaginé pour votre groupe — sans quitter la villa.',cta:'Imaginer mon expérience '},
-    {kicker:'AVEC MALAGO · COCKTAILS',title:'Le coucher du soleil,<br><em>un verre à la main.</em>',text:'Un barman prépare vos cocktails au bord de la piscine. Vous n’avez plus qu’à profiter du moment.',cta:'Imaginer mon expérience '},
-    {kicker:'AVEC MALAGO · SOIRÉE',title:'La villa change de rythme,<br><em>la soirée commence.</em>',text:'Un DJ, une playlist qui vous ressemble et une ambiance pensée pour votre groupe, du sunset jusqu’à la nuit.',cta:'Imaginer mon expérience '}
+    {kicker:'MALAGO · DÉCOUVRIR',title:'LA COSTA DEL SOL,<br><em>À VOTRE RYTHME.</em>',text:'Des routes panoramiques aux adresses confidentielles, laissez la région se dévoiler au fil de vos envies.',cta:'Découvrir les expériences'},
+    {kicker:'MALAGO · SE DÉPLACER',title:'PRENEZ LA ROUTE.<br><em>VIVEZ LE VOYAGE.</em>',text:'Choisissez votre véhicule et partez explorer la région en toute liberté.',cta:'Découvrir les expériences'},
+    {kicker:'MALAGO · EN MER',title:'PRENEZ<br><em>LE LARGE.</em>',text:'Une parenthèse en yacht pour découvrir la Méditerranée depuis le meilleur point de vue.',cta:'Découvrir les expériences'},
+    {kicker:'MALAGO · EXPLORER',title:'CHANGEZ DE SENTIER.<br><em>CHANGEZ DE PERSPECTIVE.</em>',text:'Des excursions nature pour découvrir les paysages de la Costa del Sol autrement.',cta:'Découvrir les expériences'}
   ];
   const hint=root.querySelector('.villaSwipeHint');
   let active=0,timer=null,resumeTimer=null;
@@ -4407,6 +4407,69 @@ body.malago-card-expanded .whatsappFloat{
     font-size:.74em;
     letter-spacing:.045em;
   }
+}
+</style>
+
+
+<style id="MALAGO-SUSANA-EDITORIAL-CAROUSEL-OVERLAY-2026">
+/* La narration accompagne chaque nouvelle scène directement sur la photographie. */
+.villaHomeCarousel .villaStoryVignette{
+  background:
+    linear-gradient(180deg,rgba(8,10,9,.58) 0%,rgba(8,10,9,.18) 38%,transparent 64%),
+    linear-gradient(0deg,rgba(8,10,9,.42),transparent 38%),
+    linear-gradient(90deg,rgba(8,10,9,.2),transparent 72%)!important;
+  opacity:1!important;
+}
+.villaHomeCarousel .villaStoryCopy{
+  top:clamp(132px,17vh,205px)!important;
+  bottom:auto!important;
+  left:clamp(28px,7vw,100px)!important;
+  right:auto!important;
+  width:min(690px,76vw)!important;
+  max-width:690px!important;
+  padding:0!important;
+  text-shadow:0 2px 24px rgba(0,0,0,.24);
+}
+.villaHomeCarousel .villaStoryKicker{margin-bottom:14px!important}
+.villaHomeCarousel .villaStoryCopy h2{
+  max-width:690px!important;
+  font-size:clamp(44px,6.1vw,78px)!important;
+  line-height:.98!important;
+  text-wrap:balance!important;
+}
+.villaHomeCarousel .villaStoryCopy h2 em{color:#e4ce9e!important}
+.villaHomeCarousel .villaStoryCopy p{
+  max-width:430px!important;
+  font-size:14px!important;
+  line-height:1.65!important;
+}
+@media(max-width:650px){
+  .villaHomeCarousel .villaStoryVignette{
+    background:linear-gradient(180deg,rgba(8,10,9,.64),rgba(8,10,9,.12) 72%,transparent)!important;
+  }
+  .villaHomeCarousel .villaStoryCopy{
+    top:18px!important;
+    left:20px!important;
+    right:20px!important;
+    bottom:auto!important;
+    width:auto!important;
+    max-width:none!important;
+    text-shadow:0 2px 18px rgba(0,0,0,.35)!important;
+  }
+  .villaHomeCarousel .villaStoryKicker{
+    font-size:9px!important;
+    letter-spacing:.18em!important;
+    margin-bottom:8px!important;
+  }
+  .villaHomeCarousel .villaStoryCopy h2{
+    max-width:100%!important;
+    margin:0!important;
+    font-size:clamp(28px,7.4vw,38px)!important;
+    line-height:1!important;
+    letter-spacing:-.04em!important;
+  }
+  .villaHomeCarousel .villaStoryCopy p,
+  .villaHomeCarousel .villaStoryCopy .btn{display:none!important}
 }
 </style>
 
