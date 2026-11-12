@@ -4602,5 +4602,57 @@ body.malago-card-expanded .whatsappFloat{
 }
 </style>
 
+
+<style id="MALAGO-SUSANA-MOBILE-TITLE-FIX-2026">
+@media(max-width:650px){
+  /* Supprime réellement le kicker et le texte HTML d'origine : seul le titre court reste visible. */
+  .villaHomeCarousel #villaSlideKicker{
+    display:none!important;visibility:hidden!important;opacity:0!important;
+    width:0!important;height:0!important;margin:0!important;padding:0!important;
+  }
+  .villaHomeCarousel #villaSlideTitle{
+    font-size:0!important;line-height:0!important;
+    color:transparent!important;-webkit-text-fill-color:transparent!important;
+    text-shadow:none!important;letter-spacing:0!important;
+    white-space:nowrap!important;text-wrap:nowrap!important;
+    overflow:visible!important;
+  }
+  .villaHomeCarousel #villaSlideTitle em,
+  .villaHomeCarousel #villaSlideTitle br{
+    display:none!important;visibility:hidden!important;
+  }
+  .villaHomeCarousel #villaSlideTitle:before{
+    display:block!important;position:relative!important;
+    font-family:Georgia,"Times New Roman",serif!important;
+    font-size:clamp(17px,4.3vw,21px)!important;
+    line-height:1.1!important;font-weight:400!important;
+    font-style:normal!important;letter-spacing:-.025em!important;
+    color:#fff!important;-webkit-text-fill-color:#fff!important;
+    white-space:nowrap!important;text-shadow:0 2px 9px rgba(0,0,0,.7)!important;
+  }
+  .villaHomeCarousel[data-current-slide="1"] #villaSlideTitle{
+    top:43%!important;left:auto!important;right:6%!important;
+    text-align:right!important;
+  }
+  .villaHomeCarousel[data-current-slide="1"] #villaSlideTitle:before{
+    content:"PRENEZ LA ROUTE"!important;
+  }
+  .villaHomeCarousel[data-current-slide="2"] #villaSlideTitle{
+    top:32%!important;left:auto!important;right:5%!important;
+    text-align:right!important;
+  }
+  .villaHomeCarousel[data-current-slide="2"] #villaSlideTitle:before{
+    content:"PRENEZ LE LARGE"!important;
+  }
+  .villaHomeCarousel[data-current-slide="3"] #villaSlideTitle{
+    top:13%!important;left:20px!important;right:20px!important;
+    text-align:left!important;
+  }
+  .villaHomeCarousel[data-current-slide="3"] #villaSlideTitle:before{
+    content:"CHANGEZ DE SENTIER"!important;
+  }
+}
+</style>
+
 </body>
 </html>
