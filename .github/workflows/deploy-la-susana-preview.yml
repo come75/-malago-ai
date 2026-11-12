@@ -1,8 +1,10 @@
 name: Deploy La Susana preview
 on:
+  workflow_dispatch:
   push:
     branches:
       - feat/la-susana-site
+      - deploy/villa-la-susana-malago-domain
     paths:
       - public/villa-magos.html
       - public/villa-la-susana.html
@@ -21,7 +23,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-          ref: feat/la-susana-site
+          ref: ${{ github.ref }}
       - name: Copy uploaded DJ photo into public assets
         run: cp 4C2C83BE-F311-497B-80E1-B1B28A9F5040.png public/4C2C83BE-F311-497B-80E1-B1B28A9F5040.png
       - uses: cloudflare/wrangler-action@v3
