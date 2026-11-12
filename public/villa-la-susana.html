@@ -284,7 +284,7 @@ body.villa-home-pool .villaHomeCarousel .villaCarouselScroll{display:none!import
   .villaHomeCarousel .villaStoryFrames{
     position:absolute!important;
     inset:0 0 auto 0!important;
-    height:47%!important;
+    height:54.75vw!important;
     background:#0b0b0b!important;
     overflow:hidden!important;
   }
@@ -300,13 +300,13 @@ body.villa-home-pool .villaHomeCarousel .villaCarouselScroll{display:none!import
   .villaHomeCarousel .villaStoryVignette{
     position:absolute!important;
     inset:0!important;
-    height:51%!important;
+    height:54.75vw!important;
     background:linear-gradient(180deg,rgba(0,0,0,.03) 35%,rgba(11,11,11,.35) 72%,#0b0b0b 100%)!important;
     opacity:1!important;
   }
   .villaHomeCarousel .villaStoryCopy{
     position:absolute!important;
-    top:calc(47% + 14px)!important;
+    top:calc(54.75vw + 14px)!important;
     bottom:94px!important;
     left:22px!important;
     right:22px!important;
@@ -1305,8 +1305,9 @@ body.villa-home-pool .villaHomeCarousel .villaCarouselScroll{display:none!import
   .villaHomeCarousel .villaStoryFrame{
     height:100%!important;
     width:100%!important;
-    object-fit:cover!important;
-    object-position:center 42%!important;
+    object-fit:contain!important;
+    object-position:center center!important;
+    background:#0b0b0b!important;
     transform:none!important;
   }
   .villaHomeCarousel .villaStoryFrame[data-slide="0"]{object-position:center 50%!important}
