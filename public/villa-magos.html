@@ -2026,7 +2026,7 @@ body.malago-intro-open{overflow:hidden!important}
   </div>
   <div class="malagoIntroShade" aria-hidden="true"></div>
   <div class="malagoIntroContent">
-    <h1 id="malagoIntroTitle">Your private concierge for everything beyond the villa.</h1>
+    <h1 id="malagoIntroTitle">Your private concierge on the Costa del Sol.</h1>
     <button id="malagoIntroContinue" class="malagoIntroContinue" type="button">DISCOVER YOUR EXPERIENCE</button>
   </div>
 </div>
@@ -3426,8 +3426,8 @@ const langSelect=document.getElementById('malagoLanguageSwitcher');if(langSelect
  const button=document.getElementById('malagoIntroContinue');
  if(!select||!title||!button)return;
  const translations={
-  'Your private concierge for everything beyond the villa.':{
-   en:'Your private concierge for everything beyond the villa.',
+  'Your private concierge on the Costa del Sol.':{
+   en:'Your private concierge on the Costa del Sol.',
    fr:'Votre concierge privé sur la Costa del Sol.',
    es:'Tu conserje privado en la Costa del Sol.',
    de:'Ihr privater Concierge an der Costa del Sol.',
@@ -3453,7 +3453,7 @@ const langSelect=document.getElementById('malagoLanguageSwitcher');if(langSelect
  };
  function applyIntroLanguage(){
   const lang=select.value||'en';
-  title.textContent=translations['Your private concierge for everything beyond the villa.'][lang]||translations['Your private concierge for everything beyond the villa.'].en;
+  title.textContent=translations['Your private concierge on the Costa del Sol.'][lang]||translations['Your private concierge on the Costa del Sol.'].en;
   button.textContent=translations['DISCOVER YOUR EXPERIENCE'][lang]||translations['DISCOVER YOUR EXPERIENCE'].en;
  }
  select.addEventListener('change',applyIntroLanguage);
