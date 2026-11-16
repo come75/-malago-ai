@@ -1,7 +1,7 @@
 {
   "$schema": "./node_modules/wrangler/config-schema.json",
   "name": "malago-villa-la-susana",
-  // Dedicated partner route; does not overlap Villa Magos path. Deployment trigger.
+  // Dedicated partner route; isolated assets and D1 database. Production deployment trigger.
   "main": "worker.js",
   "compatibility_date": "2026-09-25",
   "observability": {
