@@ -1,4 +1,5 @@
 name: Deploy Rendez-Vous Immo preview
+# Keep the isolated preview in sync with every partner-catalogue revision
 on:
   push:
     branches:
