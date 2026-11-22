@@ -2889,7 +2889,7 @@ const WHATSAPP_MESSAGE_TRANSLATIONS={en:{'Bonjour Malago':'Hello Malago','Je sou
 function flowText(value){const raw=String(value??''),lang=document.getElementById('malagoLanguageSwitcher')?.value||'en';const whatsappText=WHATSAPP_MESSAGE_TRANSLATIONS[lang]?.[raw];if(whatsappText)return whatsappText;if(raw==='Découvrir'){const labels={en:'Discover',fr:'Découvrir',es:'Descubrir',de:'Entdecken',it:'Scopri',nl:'Ontdek',ru:'Открыть',pt:'Descobrir',ar:'اكتشف',zh:'探索'};return labels[lang]||labels.en;}if(raw==='Retour aux catégories'){const labels={en:'Back to categories',fr:'Retour aux catégories',es:'Volver a las categorías',de:'Zurück zu den Kategorien',it:'Torna alle categorie',nl:'Terug naar categorieën',ru:'Назад к категориям',pt:'Voltar às categorias',ar:'العودة إلى الفئات',zh:'返回分类'};return labels[lang]||labels.en;}return RENDEZVOUS_OPTION_TRANSLATIONS[lang]?.[raw]||CHEF_FORM_TRANSLATIONS[lang]?.[raw]||CHEF_SUBCATEGORY_TRANSLATIONS[lang]?.[raw]||CATEGORY_TRANSLATIONS[lang]?.[raw]||CATEGORY_EXTRA_TRANSLATIONS[lang]?.[raw]||window.MALAGO_T?.(raw,lang)||raw;}
 function titleCaseCategoryLabel(value,lang){
  const conjunctions={
-  en:['and','or','nor','but'],fr:['et','ou','ni','mais'],es:['y','e','o','u','ni','pero'],
+  en:['and','or','nor','but','the','a','an'],fr:['et','ou','ni','mais'],es:['y','e','o','u','ni','pero'],
   de:['und','oder','aber'],it:['e','o','ed','oppure','ma'],nl:['en','of','maar'],
   ru:['и','или','но'],pt:['e','ou','nem','mas'],ar:['و','أو','لكن'],zh:[]
  };
