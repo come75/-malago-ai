@@ -1013,77 +1013,22 @@ body.malago-intro-open{overflow:hidden!important}
 .topbar .brandVillaName{font-size:clamp(12px,1.55vw,18px)!important;letter-spacing:.045em!important;line-height:.96!important}
 @media(max-width:650px){.topbar .brandVillaName{font-size:11px!important;letter-spacing:.015em!important}}
 </style>
-<style id="RENDEZVOUS-RDV-IMMO-HEADER-FIX-2026">
-/* Lockup RDV.IMMO × Malago : logo original, transparent, lisible et proportionné */
-.topbar .brandFeaturing{
-  display:flex!important;
-  align-items:center!important;
-  gap:9px!important;
-  flex:0 1 auto!important;
-  min-width:0!important;
-  white-space:nowrap!important;
-}
-.topbar .brandVillaMark{
-  display:flex!important;
-  align-items:center!important;
-  justify-content:center!important;
-  width:88px!important;
-  height:82px!important;
-  flex:0 0 88px!important;
-  padding:0!important;
-  margin:0!important;
-  overflow:visible!important;
-  background:transparent!important;
-  border:0!important;
-  border-radius:0!important;
-}
-.topbar .brandVillaMarkImage{
-  display:block!important;
-  width:100%!important;
-  height:100%!important;
-  max-width:none!important;
-  max-height:none!important;
-  object-fit:contain!important;
-  object-position:center!important;
-  padding:0!important;
-  margin:0!important;
-  border:0!important;
-  border-radius:0!important;
-  background:transparent!important;
-}
-.topbar .brandFeaturingX{
-  display:block!important;
-  flex:0 0 auto!important;
-  margin:0!important;
-  font-size:22px!important;
-  line-height:1!important;
-}
-.topbar .brandMalagoLogo{
-  display:block!important;
-  width:108px!important;
-  height:39px!important;
-  max-width:108px!important;
-  max-height:39px!important;
-  flex:0 0 108px!important;
-  object-fit:contain!important;
-  object-position:center!important;
-  padding:0!important;
-  margin:0!important;
-  border:0!important;
-  border-radius:0!important;
-  background:transparent!important;
-}
+<style id="RENDEZVOUS-RDV-IMMO-LOCKUP-FINAL">
+.topbar .brandFeaturing>.brandVillaMark{display:flex!important;align-items:center!important;justify-content:center!important;width:78px!important;height:73px!important;min-width:78px!important;max-width:78px!important;flex:0 0 78px!important;margin:0!important;padding:0!important;overflow:visible!important;background:transparent!important;border:0!important;border-radius:0!important}
+.topbar .brandFeaturing>.brandVillaMark>.brandVillaMarkImage{display:block!important;width:78px!important;height:73px!important;min-width:78px!important;max-width:78px!important;min-height:73px!important;max-height:73px!important;flex:0 0 78px!important;object-fit:contain!important;object-position:center!important;margin:0!important;padding:0!important;border:0!important;background:transparent!important}
+.topbar .brandFeaturing>.brandFeaturingX{display:block!important;flex:0 0 auto!important;margin:0 2px!important;line-height:1!important}
+.topbar .brandFeaturing>.brandMalagoLogo{display:block!important;width:108px!important;height:39px!important;max-width:108px!important;max-height:39px!important;flex:0 0 108px!important;object-fit:contain!important;object-position:center!important}
 @media(max-width:850px){
-  .topbar .brandFeaturing{gap:6px!important}
-  .topbar .brandVillaMark{width:78px!important;height:74px!important;flex-basis:78px!important}
-  .topbar .brandFeaturingX{font-size:18px!important}
-  .topbar .brandMalagoLogo{width:78px!important;height:30px!important;max-width:78px!important;max-height:30px!important;flex-basis:78px!important}
+.topbar .brandFeaturing>.brandVillaMark{width:68px!important;height:64px!important;min-width:68px!important;max-width:68px!important;flex-basis:68px!important}
+.topbar .brandFeaturing>.brandVillaMark>.brandVillaMarkImage{width:68px!important;height:64px!important;min-width:68px!important;max-width:68px!important;min-height:64px!important;max-height:64px!important;flex-basis:68px!important}
+.topbar .brandFeaturing>.brandMalagoLogo{width:78px!important;height:30px!important;max-width:78px!important;max-height:30px!important;flex-basis:78px!important}
 }
 @media(max-width:650px){
-  .topbar .brandFeaturing{gap:4px!important;flex:0 1 auto!important}
-  .topbar .brandVillaMark{width:70px!important;height:67px!important;flex-basis:70px!important}
-  .topbar .brandFeaturingX{font-size:15px!important}
-  .topbar .brandMalagoLogo{width:58px!important;height:25px!important;max-width:58px!important;max-height:25px!important;flex-basis:58px!important}
+.topbar .brandFeaturing{gap:3px!important;min-width:0!important;white-space:nowrap!important}
+.topbar .brandFeaturing>.brandVillaMark{width:60px!important;height:56px!important;min-width:60px!important;max-width:60px!important;flex-basis:60px!important}
+.topbar .brandFeaturing>.brandVillaMark>.brandVillaMarkImage{width:60px!important;height:56px!important;min-width:60px!important;max-width:60px!important;min-height:56px!important;max-height:56px!important;flex-basis:60px!important}
+.topbar .brandFeaturing>.brandFeaturingX{font-size:15px!important;margin:0 1px!important}
+.topbar .brandFeaturing>.brandMalagoLogo{width:58px!important;height:25px!important;max-width:58px!important;max-height:25px!important;flex-basis:58px!important}
 }
 </style>
 </head>
@@ -2108,7 +2053,7 @@ body.malago-intro-open{overflow:hidden!important}
     <button id="malagoIntroContinue" class="malagoIntroContinue" type="button">DISCOVER YOUR EXPERIENCE</button>
   </div>
 </div>
-<header class="topbar"><div class="wrap"><a class="brand brandFeaturing" href="#top" aria-label="Accueil — Rendez-Vous Immo × Malago" title="Accueil"><span class="brandVillaMark" role="img" aria-label="RDV.IMMO"><img class="brandVillaMarkImage" src="/img/rdv-immo-logo.png" alt="RDV.IMMO" width="280" height="266" loading="eager" decoding="async"></span><span class="brandFeaturingX" aria-hidden="true">×</span><img class="brandMalagoLogo" src="/img/malago-logo.webp" alt="Malago" width="260" height="93" loading="eager" decoding="async"></a><nav class="nav"><a href="#experiences">Expériences</a><a href="#experiences">Expériences</a><a href="#villa">Votre séjour</a><a href="#experiences">Nos services</a></nav><div class="headerActions"><div class="languageControl"><button type="button" id="malagoLanguageButton" aria-label="Choose language" aria-expanded="false" aria-controls="malagoLanguageSwitcher">🌐</button><label class="languageLabel" for="malagoLanguageSwitcher">Language</label><select id="malagoLanguageSwitcher" aria-label="Choose language"><option value="en">English</option><option value="fr">Français</option><option value="es">Español</option><option value="de">Deutsch</option><option value="it">Italiano</option><option value="nl">Nederlands</option><option value="ru">Русский</option><option value="pt">Português</option><option value="ar">العربية</option><option value="zh">中文</option></select></div><a class="navcta" href="https://wa.me/34613384566?text=Hello%20Malago%2C%20I%20would%20like%20to%20discover%20your%20services."><span class="navctaFull">Contact Malago </span><span class="navctaMobile">Contact Malago </span></a></div></div></header>
+<header class="topbar"><div class="wrap"><a class="brand brandFeaturing" href="#top" aria-label="Accueil — Rendez-Vous Immo × Malago" title="Accueil"><span class="brandVillaMark" role="img" aria-label="RDV.IMMO"><img class="brandVillaMarkImage" src="/img/rdv-immo-logo-white.svg" alt="RDV.IMMO" width="78" height="73" loading="eager" decoding="async"></span><span class="brandFeaturingX" aria-hidden="true">×</span><img class="brandMalagoLogo" src="/img/malago-logo.webp" alt="Malago" width="260" height="93" loading="eager" decoding="async"></a><nav class="nav"><a href="#experiences">Expériences</a><a href="#experiences">Expériences</a><a href="#villa">Votre séjour</a><a href="#experiences">Nos services</a></nav><div class="headerActions"><div class="languageControl"><button type="button" id="malagoLanguageButton" aria-label="Choose language" aria-expanded="false" aria-controls="malagoLanguageSwitcher">🌐</button><label class="languageLabel" for="malagoLanguageSwitcher">Language</label><select id="malagoLanguageSwitcher" aria-label="Choose language"><option value="en">English</option><option value="fr">Français</option><option value="es">Español</option><option value="de">Deutsch</option><option value="it">Italiano</option><option value="nl">Nederlands</option><option value="ru">Русский</option><option value="pt">Português</option><option value="ar">العربية</option><option value="zh">中文</option></select></div><a class="navcta" href="https://wa.me/34613384566?text=Hello%20Malago%2C%20I%20would%20like%20to%20discover%20your%20services."><span class="navctaFull">Contact Malago </span><span class="navctaMobile">Contact Malago </span></a></div></div></header>
 <main id="top">
 
 <section class="malagoExperienceHero" id="experiences" aria-label="Choisissez votre expérience">
