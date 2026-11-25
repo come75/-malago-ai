@@ -3043,6 +3043,8 @@ function renderCategoryTiles(){
  });
 }
 renderCategoryTiles();
+/* MALAGO-GRID-CLICK-RECOVERY-2026: delegation de secours pour les cartes recréées. */
+grid.addEventListener('click',e=>{const b=e.target&&e.target.closest?e.target.closest('[data-flip-category],[data-new-item]'):null;if(!b||!grid.contains(b))return;const handler=b.onclick;if(typeof handler!=='function')return;e.preventDefault();e.stopImmediatePropagation();handler.call(b,e);},true);
 document.getElementById('malagoLanguageSwitcher')?.addEventListener('change',()=>{document.querySelectorAll('.malagoExperienceUnflipLabel').forEach(el=>{el.textContent=flowText('Retour aux catégories');});document.querySelectorAll('.malagoExperienceBackTitle').forEach((el)=>{const card=el.closest('[data-category-card]');const category=C.find(x=>x.key===card?.dataset.categoryCard);if(category)el.textContent=categoryText(category.title);});});
 const old=$('#malagoExperienceFlow');if(old)old.hidden=true;
 const root=document.createElement('section');root.id='malagoNewFlow';root.setAttribute('aria-live','polite');root.innerHTML='<div class="mnf-head"><div><div class="mnf-kicker" id="mnfKicker"></div><div class="mnf-note" id="mnfStep"></div></div><button class="mnf-secondary" type="button" id="mnfClose">'+esc(flowText('Fermer ×'))+'</button></div><div id="mnfContent"></div>';grid.after(root);
