@@ -1,0 +1,27 @@
+name: Deploy Villa Magos isolated domain route
+on:
+  push:
+    branches:
+      - deploy/villa-magos-isolated-route
+    paths:
+      - wrangler.villa-magos-route.jsonc
+      - worker.villa-magos-route.js
+      - .github/workflows/deploy-villa-magos-route.yml
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: villa-magos-domain-route
+  cancel-in-progress: false
+jobs:
+  deploy-route:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: deploy/villa-magos-isolated-route
+      - uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_DEPLOY_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          command: deploy --config wrangler.villa-magos-route.jsonc
