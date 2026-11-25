@@ -1,0 +1,20 @@
+name: Deploy Hermosa Beach production path
+on:
+  push:
+    branches:
+      - deploy/hermosabeach-domain
+    paths:
+      - 'public/**'
+      - 'worker.hermosabeach.js'
+      - 'wrangler.hermosabeach.jsonc'
+      - '.github/workflows/deploy-hermosabeach-domain.yml'
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_DEPLOY_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          command: deploy --config wrangler.hermosabeach.jsonc
