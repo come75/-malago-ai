@@ -6,9 +6,5 @@
   "workers_dev": true,
   "routes": [
     { "pattern": "malago-agency.com/partner/hermosabeach*", "zone_name": "malago-agency.com" }
-  ],
-  "assets": {
-    "directory": "./public",
-    "binding": "ASSETS"
-  }
+  ]
 }
