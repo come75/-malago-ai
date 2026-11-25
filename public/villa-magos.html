@@ -3863,7 +3863,7 @@ html.malago-card-expanded,body.malago-card-expanded{overflow:hidden!important}
  link.addEventListener('click',function(event){
   event.preventDefault();
   const lang=select.value||'en';
-  const url='https://wa.me/34613384566?text='+encodeURIComponent(messages[lang]||messages.en);
+  const url='https://wa.me/34613384566?text='+encodeURIComponent('Villa Magos\\n'+(messages[lang]||messages.en));
   window.open(url,'_blank','noopener');
  });
  select.addEventListener('change',refresh);
