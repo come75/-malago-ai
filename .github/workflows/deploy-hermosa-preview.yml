@@ -1,0 +1,27 @@
+name: Deploy Hermosa Beach preview
+on:
+  push:
+    branches:
+      - feat/hermosa-beach-preview
+    paths:
+      - public/rendezvous.html
+      - worker.rendezvous-preview.js
+      - wrangler.rendezvous-preview.jsonc
+      - .github/workflows/deploy-hermosa-preview.yml
+permissions:
+  contents: read
+concurrency:
+  group: hermosa-beach-preview
+  cancel-in-progress: true
+jobs:
+  deploy-preview:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: feat/hermosa-beach-preview
+      - uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_DEPLOY_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          command: deploy --config wrangler.rendezvous-preview.jsonc
