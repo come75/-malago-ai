@@ -2102,7 +2102,7 @@ const activityInfo={
 };
 const modal=document.getElementById('activityModal');
 function closeActivity(){modal.classList.remove('open');document.body.style.overflow=''}
-function openActivity(name){const d=activityInfo[name];if(!d)return;document.getElementById('activityEyebrow').textContent=d.eyebrow;document.getElementById('activityTitle').textContent=d.title;document.getElementById('activityDescription').textContent=d.desc;document.getElementById('activityGallery').replaceChildren(...d.images.map((src,i)=>{const im=document.createElement('img');im.src=src;im.alt=d.title+' — photo '+(i+1);im.loading='lazy';return im}));document.getElementById('activityDetails').replaceChildren(...d.details.map(pair=>{const box=document.createElement('div');box.className='activityDetail';const strong=document.createElement('strong');strong.textContent=pair[0];const span=document.createElement('span');span.textContent=pair[1];box.append(strong,span);return box}));document.getElementById('activityWhatsapp').href=waBase+encodeURIComponent('Villa Magos\\nBonjour Malago, je souhaite des informations sur : '+name+' pour un séjour à La Villa Magos. Pouvez-vous me préciser les formules, tarifs et disponibilités ?');modal.classList.add('open');document.body.style.overflow='hidden'}
+function openActivity(name){const d=activityInfo[name];if(!d)return;document.getElementById('activityEyebrow').textContent=d.eyebrow;document.getElementById('activityTitle').textContent=d.title;document.getElementById('activityDescription').textContent=d.desc;document.getElementById('activityGallery').replaceChildren(...d.images.map((src,i)=>{const im=document.createElement('img');im.src=src;im.alt=d.title+' — photo '+(i+1);im.loading='lazy';return im}));document.getElementById('activityDetails').replaceChildren(...d.details.map(pair=>{const box=document.createElement('div');box.className='activityDetail';const strong=document.createElement('strong');strong.textContent=pair[0];const span=document.createElement('span');span.textContent=pair[1];box.append(strong,span);return box}));document.getElementById('activityWhatsapp').href=waBase+encodeURIComponent('Villa Magos\nBonjour Malago, je souhaite des informations sur : '+name+' pour un séjour à La Villa Magos. Pouvez-vous me préciser les formules, tarifs et disponibilités ?');modal.classList.add('open');document.body.style.overflow='hidden'}
 document.querySelectorAll('[data-service]').forEach(card=>{card.removeAttribute('href');card.setAttribute('role','button');card.setAttribute('tabindex','0');card.setAttribute('aria-haspopup','dialog');card.addEventListener('click',e=>{e.preventDefault();openActivity(card.dataset.service)});card.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();openActivity(card.dataset.service)}})});
 document.getElementById('activityClose').addEventListener('click',closeActivity);document.getElementById('activityBack').addEventListener('click',closeActivity);modal.addEventListener('click',e=>{if(e.target===modal)closeActivity()});document.addEventListener('keydown',e=>{if(e.key==='Escape')closeActivity()});
 
@@ -3858,12 +3858,12 @@ html.malago-card-expanded,body.malago-card-expanded{overflow:hidden!important}
   const label=labels[lang]||labels.en;
   link.querySelectorAll('.navctaFull,.navctaMobile').forEach(el=>{el.textContent=label;});
   link.setAttribute('aria-label',label.replace(' ',''));
-  link.href='https://wa.me/34613384566?text='+encodeURIComponent('Villa Magos\\n'+(messages[lang]||messages.en));
+  link.href='https://wa.me/34613384566?text='+encodeURIComponent('Villa Magos\n'+(messages[lang]||messages.en));
  }
  link.addEventListener('click',function(event){
   event.preventDefault();
   const lang=select.value||'en';
-  const url='https://wa.me/34613384566?text='+encodeURIComponent('Villa Magos\\n'+(messages[lang]||messages.en));
+  const url='https://wa.me/34613384566?text='+encodeURIComponent('Villa Magos\n'+(messages[lang]||messages.en));
   window.open(url,'_blank','noopener');
  });
  select.addEventListener('change',refresh);
