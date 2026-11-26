@@ -4875,6 +4875,29 @@ body.malago-card-expanded .whatsappFloat{
 .whatsappFloat.px-compact{min-width:0!important;justify-content:center!important}
 .whatsappFloat:active{transform:scale(.95)}
 
+
+/* 6. Bouton de la vidéo d'accueil : halo doré qui respire, reflet qui balaie, étincelles. */
+#malagoWelcomeIntro .malagoIntroContinue{overflow:hidden!important;isolation:isolate;
+ background:linear-gradient(135deg,rgba(228,206,158,.16),rgba(228,206,158,.04) 45%,rgba(255,240,205,.14))!important;
+ border-color:#e4ce9e!important;color:#fff6e2!important;text-shadow:0 0 12px rgba(255,226,160,.35);
+ animation:pxIntroGlow 2.8s ease-in-out infinite}
+#malagoWelcomeIntro .malagoIntroContinue::before{content:"";position:absolute;top:-30%;bottom:-30%;left:-60%;width:45%;z-index:-1;pointer-events:none;
+ background:linear-gradient(100deg,transparent 0%,rgba(255,246,220,0) 20%,rgba(255,246,220,.75) 50%,rgba(255,246,220,0) 80%,transparent 100%);
+ transform:skewX(-20deg);animation:pxIntroSweep 3.2s cubic-bezier(.45,0,.2,1) infinite .6s}
+#malagoWelcomeIntro .malagoIntroContinue::after{content:"";position:absolute;inset:0;z-index:-1;pointer-events:none;
+ background:
+  radial-gradient(circle at 12% 30%,#fff 0 1px,rgba(255,236,190,.8) 1.5px,transparent 3px),
+  radial-gradient(circle at 34% 78%,#fff 0 .8px,rgba(255,236,190,.7) 1.2px,transparent 2.6px),
+  radial-gradient(circle at 58% 22%,#fff 0 1px,rgba(255,236,190,.8) 1.6px,transparent 3.2px),
+  radial-gradient(circle at 79% 70%,#fff 0 .8px,rgba(255,236,190,.7) 1.3px,transparent 2.8px),
+  radial-gradient(circle at 92% 34%,#fff 0 1px,rgba(255,236,190,.8) 1.5px,transparent 3px);
+ animation:pxIntroTwinkle 2.4s ease-in-out infinite}
+#malagoWelcomeIntro .malagoIntroContinue:active{transform:translateX(-50%) scale(.97)!important}
+@keyframes pxIntroSweep{0%{left:-60%}55%,100%{left:130%}}
+@keyframes pxIntroGlow{0%,100%{box-shadow:0 8px 28px rgba(0,0,0,.22),0 0 0 0 rgba(228,206,158,0),0 0 14px rgba(228,206,158,.18)}
+ 50%{box-shadow:0 8px 28px rgba(0,0,0,.22),0 0 0 5px rgba(228,206,158,.1),0 0 30px rgba(240,214,150,.5)}}
+@keyframes pxIntroTwinkle{0%,100%{opacity:.15;transform:scale(.96)}25%{opacity:1}50%{opacity:.35;transform:scale(1.03)}75%{opacity:.9}}
+@media (prefers-reduced-motion:reduce){#malagoWelcomeIntro .malagoIntroContinue,#malagoWelcomeIntro .malagoIntroContinue::before,#malagoWelcomeIntro .malagoIntroContinue::after{animation:none!important}}
 @media (prefers-reduced-motion:reduce){
  #malagoExperienceCategories .malagoExperienceTile.px-wait:not(.is-expanding){opacity:1;transform:none}
  #malagoExperienceCategories .malagoExperienceTile.px-wait .malagoExperienceFront:before{transform:none}
