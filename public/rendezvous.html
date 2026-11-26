@@ -1042,7 +1042,6 @@ body.malago-intro-open{overflow:hidden!important}
 </head>
 <body class="villa-home-pool">
 
-type html>
 <html lang="en">
 <head>
 <meta charset="utf-8">
@@ -3022,51 +3021,68 @@ function setCategoryFace(card,flipped){
  if(flipped){front?.setAttribute('inert','');front?.setAttribute('aria-hidden','true');back?.removeAttribute('inert');back?.setAttribute('aria-hidden','false');}
  else{front?.removeAttribute('inert');front?.setAttribute('aria-hidden','false');back?.setAttribute('inert','');back?.setAttribute('aria-hidden','true');}
 }
+/* MALAGO-MOTION-2026 : ouverture en « container transform » (clip-path), sans animer la géométrie. */
+let mxRect=null;
+function mxClipFromRect(r,top){
+ const vw=document.documentElement.clientWidth,vh=window.innerHeight;
+ const t=Math.max(0,r.top-top),l=Math.max(0,r.left),rt=Math.max(0,vw-r.right),b=Math.max(0,vh-r.bottom);
+ return 'inset('+t+'px '+rt+'px '+b+'px '+l+'px round 16px)';
+}
+function mxPreload(card){card?.querySelectorAll('img[loading="lazy"]').forEach(img=>{img.loading='eager';});}
+function mxWaitClip(card,ms,done){
+ let finished=false;
+ const end=()=>{if(finished)return;finished=true;card.removeEventListener('transitionend',onEnd);clearTimeout(timer);done();};
+ const onEnd=e=>{if(e.target===card&&/clip-path|opacity/.test(e.propertyName))end();};
+ card.addEventListener('transitionend',onEnd);
+ const timer=setTimeout(end,ms);
+}
 function expandCategoryCard(card){
- if(!card||card.classList.contains('is-expanded'))return;
+ if(!card||card.classList.contains('is-expanding'))return;
+ mxPreload(card);
  const rect=card.getBoundingClientRect();
  const fixedHeader=document.querySelector('.topbar');
  const expandedTop=fixedHeader?Math.max(0,Math.ceil(fixedHeader.getBoundingClientRect().bottom)):0;
+ mxRect={top:rect.top,left:rect.left,right:rect.right,bottom:rect.bottom,expandedTop};
+ card.style.animation='none';
  card.style.setProperty('--expanded-top',expandedTop+'px');
- lockExpandedPage();
  card.style.setProperty('--card-top',rect.top+'px');
  card.style.setProperty('--card-left',rect.left+'px');
  card.style.setProperty('--card-width',rect.width+'px');
  card.style.setProperty('--card-height',rect.height+'px');
- card.classList.add('is-expanding');
+ card.style.setProperty('--mx-clip',mxClipFromRect(rect,expandedTop));
+ if(!card._mxPh){const ph=document.createElement('div');ph.className='mx-placeholder';ph.setAttribute('aria-hidden','true');ph.style.cssText='height:'+rect.height+'px;visibility:hidden;pointer-events:none';card.after(ph);card._mxPh=ph;}
+ lockExpandedPage();
+ card.classList.add('mx-from','is-expanding','is-expanded','is-flipped');
+ setCategoryFace(card,true);
+ const back=card.querySelector('.malagoExperienceBack');if(back)back.scrollTop=0;
  void card.offsetWidth;
- requestAnimationFrame(()=>{card.classList.add('is-expanded','is-flipped');setCategoryFace(card,true);});
+ card.classList.add('mx-anim');
+ requestAnimationFrame(()=>requestAnimationFrame(()=>{
+  card.classList.remove('mx-from');
+  mxWaitClip(card,560,()=>{if(!card.classList.contains('mx-closing'))card.classList.remove('mx-anim');});
+ }));
 }
 function collapseCategoryCard(card,onDone){
  if(!card||!card.classList.contains('is-expanding')){if(card){card.classList.remove('is-flipped');setCategoryFace(card,false);}if(onDone)onDone();return;}
- card.classList.remove('is-expanded','is-flipped');
+ if(card.classList.contains('mx-closing'))return;
+ const r=mxRect||{top:parseFloat(card.style.getPropertyValue('--card-top'))||0,left:parseFloat(card.style.getPropertyValue('--card-left'))||0,right:(parseFloat(card.style.getPropertyValue('--card-left'))||0)+(parseFloat(card.style.getPropertyValue('--card-width'))||0),bottom:(parseFloat(card.style.getPropertyValue('--card-top'))||0)+(parseFloat(card.style.getPropertyValue('--card-height'))||0),expandedTop:parseFloat(card.style.getPropertyValue('--expanded-top'))||0};
+ card.style.setProperty('--mx-clip',mxClipFromRect(r,r.expandedTop));
+ card.classList.add('mx-anim','mx-closing');
+ void card.offsetWidth;
+ card.classList.add('mx-from');
  setCategoryFace(card,false);
- /* Attendre la fin de TOUTES les transitions de géométrie avant de libérer
-    le scroll du document : Safari/iOS émettait plusieurs transitionend et
-    le premier déclenchait auparavant un déverrouillage trop précoce. */
- const pendingTransitions=new Set(['top','width','height']);
- let cleaned=false;
- const onEnd=e=>{
-  if(e.target!==card||!pendingTransitions.has(e.propertyName))return;
-  pendingTransitions.delete(e.propertyName);
-  if(pendingTransitions.size===0)cleanup();
- };
- const cleanup=()=>{
-  if(cleaned||card.classList.contains('is-expanded'))return;
-  cleaned=true;
-  card.removeEventListener('transitionend',onEnd);
-  if(cardCleanupTimer){clearTimeout(cardCleanupTimer);cardCleanupTimer=null;}
-  card.style.animation='none'; /* MALAGO-KEEP-SCROLL-ON-CLOSE-2026 : ne pas rejouer malagoTileIn (opacité 0) à la fermeture */
-  card.classList.remove('is-expanding');
-  ['--card-top','--card-left','--card-width','--card-height','--expanded-top'].forEach(k=>card.style.removeProperty(k));
+ if(cardCleanupTimer){clearTimeout(cardCleanupTimer);cardCleanupTimer=null;}
+ mxWaitClip(card,420,()=>{
+  card.style.animation='none';
+  card.classList.remove('mx-anim','mx-closing','mx-from','is-expanded','is-flipped','is-expanding','is-details');
+  ['--card-top','--card-left','--card-width','--card-height','--expanded-top','--mx-clip'].forEach(k=>card.style.removeProperty(k));
+  mxRect=null;
+  if(card._mxPh){card._mxPh.remove();card._mxPh=null;}
+  card.style.transform='';card.style.opacity='';card.style.transition='';card.style.borderRadius='';
+  if(card._pxDismissed){card._pxDismissed=false;if(card.animate)card.animate([{opacity:0,transform:'scale(.96)'},{opacity:1,transform:'none'}],{duration:300,easing:'cubic-bezier(.2,.8,.2,1)'});}
   unlockExpandedPage();
   if(onDone)onDone();
- };
- if(cardCleanupTimer)clearTimeout(cardCleanupTimer);
- card.addEventListener('transitionend',onEnd);
- /* Filet de sécurité si Safari interrompt une transition (changement d’onglet,
-    réduction des animations ou geste système). */
- cardCleanupTimer=setTimeout(cleanup,1050);
+ });
 }
 const subcategoryPhotoSets={villa:{'Un chef':'https://d2ol7oe51mr4n9.cloudfront.net/user_3LIbHMwUoEDn4cQX1aW4M05gMa6/0b08dc62-7337-4a4a-8af9-d4fbdeef71f3.jpg','Des courses':'https://d2ol7oe51mr4n9.cloudfront.net/user_3LIbHMwUoEDn4cQX1aW4M05gMa6/7fc77d81-3a9e-4af0-b033-9ef4ade9f4cc.jpg','Un traiteur':'https://d2ol7oe51mr4n9.cloudfront.net/user_3LIbHMwUoEDn4cQX1aW4M05gMa6/8d6bd7af-d895-4223-ac84-a67583ae3bc7.jpg','Un DJ':'https://d2ol7oe51mr4n9.cloudfront.net/user_3LIbHMwUoEDn4cQX1aW4M05gMa6/005c7558-43c4-458f-8afc-14eeb2eef565.jpg','Un événement':'https://d2ol7oe51mr4n9.cloudfront.net/user_3LIbHMwUoEDn4cQX1aW4M05gMa6/4e844e41-04f1-420f-bcd4-190d9e19b250.jpg','Une décoration':'https://d2ol7oe51mr4n9.cloudfront.net/user_3LIbHMwUoEDn4cQX1aW4M05gMa6/1d9f76cd-d75b-47c4-a2dc-efd3f10f180f.jpg'},transport:{'Louer une voiture':'https://d2ol7oe51mr4n9.cloudfront.net/user_3LIbHMwUoEDn4cQX1aW4M05gMa6/c0c63850-aefd-4cb7-981a-86f5972c6b98.jpg','Taxi / VTC':'https://d2ol7oe51mr4n9.cloudfront.net/user_3LIbHMwUoEDn4cQX1aW4M05gMa6/f72eb5f6-c5ca-4fc5-8ee3-9f1c32b4fd3f.jpg','Chauffeur privé':'https://d2ol7oe51mr4n9.cloudfront.net/user_3LIbHMwUoEDn4cQX1aW4M05gMa6/2a4155d8-1671-4e2f-ae77-6e333503d464.jpg'},activities:{'Flamenco':'https://d2ol7oe51mr4n9.cloudfront.net/user_3LIbHMwUoEDn4cQX1aW4M05gMa6/6ea18c61-cef7-4097-8348-aece9acecba2.jpg','Bachata':'https://d2ol7oe51mr4n9.cloudfront.net/user_3LIbHMwUoEDn4cQX1aW4M05gMa6/a1b11a3e-14d2-4064-8bfa-e2e0c93f3a73.webp','Salsa':'https://d2ol7oe51mr4n9.cloudfront.net/user_3LIbHMwUoEDn4cQX1aW4M05gMa6/adb1e7d7-8abe-4b11-ba5f-aa2f17a398fc.jpg','Autres danses':'https://d2ol7oe51mr4n9.cloudfront.net/user_3LIbHMwUoEDn4cQX1aW4M05gMa6/781e5511-3ff0-48ac-91e1-c4b5b32a1608.jpg','Quad et buggy':'https://d2ol7oe51mr4n9.cloudfront.net/user_3LIbHMwUoEDn4cQX1aW4M05gMa6/0fb761a7-d9ab-491a-8f5f-490188905b1f.jpg','Musée':'https://d2ol7oe51mr4n9.cloudfront.net/user_3LIbHMwUoEDn4cQX1aW4M05gMa6/a244a11a-efab-433f-ac65-b85124b8f88b.jpg','Visite historique':'https://d2ol7oe51mr4n9.cloudfront.net/user_3LIbHMwUoEDn4cQX1aW4M05gMa6/8dbb49a8-009a-49bd-91e5-157db05ff966.jpg','Visites gourmandes':'https://d2ol7oe51mr4n9.cloudfront.net/user_3LIbHMwUoEDn4cQX1aW4M05gMa6/b12bc169-562c-4858-87b8-e5a1fc59e463.webp','Bowling':'https://d2ol7oe51mr4n9.cloudfront.net/user_3LIbHMwUoEDn4cQX1aW4M05gMa6/4f24081e-314e-41aa-b571-245d1e7d46c1.jpg','Karting':'https://d2ol7oe51mr4n9.cloudfront.net/user_3LIbHMwUoEDn4cQX1aW4M05gMa6/565415c7-49d1-4c98-8ca0-2e7b2e65e2f7.jpg'},excursion:{'Caminito del Rey':'https://d2ol7oe51mr4n9.cloudfront.net/user_3LIbHMwUoEDn4cQX1aW4M05gMa6/077d935d-91eb-4380-a258-1ac667fa9df6.jpg','Nerja':'https://d2ol7oe51mr4n9.cloudfront.net/user_3LIbHMwUoEDn4cQX1aW4M05gMa6/d0529683-37ee-464c-988e-f3f5d0f206cf.jpg','Ronda':'https://d2ol7oe51mr4n9.cloudfront.net/user_3LIbHMwUoEDn4cQX1aW4M05gMa6/abb0f90b-effd-4d85-94fe-491066a85eb4.webp','Séville':'https://d2ol7oe51mr4n9.cloudfront.net/user_3LIbHMwUoEDn4cQX1aW4M05gMa6/7abb3f53-5888-486d-873f-5bb4a58a7b3c.webp','Grenade':'https://d2ol7oe51mr4n9.cloudfront.net/user_3LIbHMwUoEDn4cQX1aW4M05gMa6/81bc7d69-005a-4214-8209-06f9a35f8bf9.jpg','Cordoue':'https://d2ol7oe51mr4n9.cloudfront.net/user_3LIbHMwUoEDn4cQX1aW4M05gMa6/966ff9ff-6759-48a6-9e3d-fb71e76680cd.jpg','Cadix':'https://d2ol7oe51mr4n9.cloudfront.net/user_3LIbHMwUoEDn4cQX1aW4M05gMa6/e21746d8-ae88-49f0-8366-df682a7b4d81.jpg','Tarifa':'https://d2ol7oe51mr4n9.cloudfront.net/user_3LIbHMwUoEDn4cQX1aW4M05gMa6/5abcd476-2c3a-4fd8-9702-8ff398d72f58.webp','Gibraltar':'https://d2ol7oe51mr4n9.cloudfront.net/user_3LIbHMwUoEDn4cQX1aW4M05gMa6/d24f1147-d1a2-4c2b-a7ac-ecc2ca21707a.jpg','Marbella':'https://d2ol7oe51mr4n9.cloudfront.net/user_3LIbHMwUoEDn4cQX1aW4M05gMa6/59a79466-e8b0-46e9-b4f0-bbff7add3179.webp','Voyages express':'https://d2ol7oe51mr4n9.cloudfront.net/user_3LIbHMwUoEDn4cQX1aW4M05gMa6/821d0215-ddf2-4c47-978e-f37dd5aa55d6.jpg'},nature:{'Balade à cheval':'https://d2ol7oe51mr4n9.cloudfront.net/user_3LIbHMwUoEDn4cQX1aW4M05gMa6/9d5bf600-39c2-4560-91aa-84543c7d0f98.jpg','Randonnée':'https://d2ol7oe51mr4n9.cloudfront.net/user_3LIbHMwUoEDn4cQX1aW4M05gMa6/ba025e10-e875-4e50-b620-0870283a5197.jpg','Dauphins / baleines':'https://d2ol7oe51mr4n9.cloudfront.net/user_3LIbHMwUoEDn4cQX1aW4M05gMa6/6ee70944-291e-4dfd-80a8-a3898fd64c3e.jpg','Aquarium':'https://d2ol7oe51mr4n9.cloudfront.net/user_3LIbHMwUoEDn4cQX1aW4M05gMa6/4f86ea0d-5a7a-481c-b957-96d2b987abb0.jpg','Zoo':'https://d2ol7oe51mr4n9.cloudfront.net/user_3LIbHMwUoEDn4cQX1aW4M05gMa6/8d4d0a17-59ed-46de-9711-8a71eca339f0.jpg'},beach:{'Conseil plage':'https://d2ol7oe51mr4n9.cloudfront.net/user_3LIbHMwUoEDn4cQX1aW4M05gMa6/1c3ec8ce-8981-4a01-82c4-b19ea2c9bfdd.webp','Beach club':'https://d2ol7oe51mr4n9.cloudfront.net/user_3LIbHMwUoEDn4cQX1aW4M05gMa6/50df13f8-836b-4500-b5fe-186920c7e701.jpg'},sea:{'Bateau / yacht':'https://d2ol7oe51mr4n9.cloudfront.net/user_3LIbHMwUoEDn4cQX1aW4M05gMa6/c721172a-0b55-44a9-ba71-46d0ebfa9290.webp','Jet-ski':'https://d2ol7oe51mr4n9.cloudfront.net/user_3LIbHMwUoEDn4cQX1aW4M05gMa6/eb70ccd1-5de6-4ee2-a20f-838a96d72f98.jpg','Boat party':'https://d2ol7oe51mr4n9.cloudfront.net/user_3LIbHMwUoEDn4cQX1aW4M05gMa6/b8b470e4-21e9-4d19-9730-7b3a3c71e0d5.jpg','Pêche':'https://d2ol7oe51mr4n9.cloudfront.net/user_3LIbHMwUoEDn4cQX1aW4M05gMa6/36585a6b-f527-431d-be5a-5cf48d624cbc.png','Activités nautiques':'https://d2ol7oe51mr4n9.cloudfront.net/user_3LIbHMwUoEDn4cQX1aW4M05gMa6/c34d59ae-366d-4307-95e5-8666520e0aa0.jpg','Dauphins / baleines':'https://d2ol7oe51mr4n9.cloudfront.net/user_3LIbHMwUoEDn4cQX1aW4M05gMa6/f482ccf6-743c-4c26-9edc-02ebf03207be.jpg'},food:{'Tapas':'https://d2ol7oe51mr4n9.cloudfront.net/user_3LIbHMwUoEDn4cQX1aW4M05gMa6/0500151f-eb3f-4d5e-ae0d-023a1687fd59.jpg','Restaurant':'https://d2ol7oe51mr4n9.cloudfront.net/user_3LIbHMwUoEDn4cQX1aW4M05gMa6/0fc01b41-aa54-4218-b340-9208e6b7b670.jpg','Fine dining':'https://d2ol7oe51mr4n9.cloudfront.net/user_3LIbHMwUoEDn4cQX1aW4M05gMa6/08d3d2fc-72d6-41b9-b244-9015769e8558.jpg','Brunch':'https://d2ol7oe51mr4n9.cloudfront.net/user_3LIbHMwUoEDn4cQX1aW4M05gMa6/4c11898a-89e9-4627-99e9-e3a910b51db4.jpg','Desserts & pastries':'https://d2ol7oe51mr4n9.cloudfront.net/user_3LIbHMwUoEDn4cQX1aW4M05gMa6/5502c79f-67fa-4846-ad15-94c8e44170e0.jpg'},drinks:{'Bar à vin':'https://d2ol7oe51mr4n9.cloudfront.net/user_3LIbHMwUoEDn4cQX1aW4M05gMa6/f8340398-5b4a-48cc-92eb-3f8c5beb7aa3.png','Bar à cocktails':'https://images.unsplash.com/photo-1514362545857-3bc16c4c7d1b?auto=format&fit=crop&w=900&q=80','Un rooftop':'https://d2ol7oe51mr4n9.cloudfront.net/user_3LIbHMwUoEDn4cQX1aW4M05gMa6/611ada38-b9aa-4370-8af8-88b3403a1012.png','Karaoké':'https://images.unsplash.com/photo-1516280440614-37939bbacd81?auto=format&fit=crop&w=900&q=80','Irish pub':'https://d2ol7oe51mr4n9.cloudfront.net/user_3LIbHMwUoEDn4cQX1aW4M05gMa6/ac955a04-b0f4-4929-a2d3-6263dfad8d50.png','Live music':'https://d2ol7oe51mr4n9.cloudfront.net/user_3LIbHMwUoEDn4cQX1aW4M05gMa6/363e9375-d0d8-4c64-a2fd-52a0152a1da3.png','Au bord de l’eau':'https://d2ol7oe51mr4n9.cloudfront.net/user_3LIbHMwUoEDn4cQX1aW4M05gMa6/13da1e2f-45aa-4ad7-8333-c18726870d16.png'},wellness:{'Massage à la maison':'https://d2ol7oe51mr4n9.cloudfront.net/user_3LIbHMwUoEDn4cQX1aW4M05gMa6/ba011200-3a34-4b0d-8e50-c75b75d10389.webp','Coiffure':'https://d2ol7oe51mr4n9.cloudfront.net/user_3LIbHMwUoEDn4cQX1aW4M05gMa6/d040adf5-0aa6-4dde-9f20-4d59cddf5dab.jpg','Les ongles':'https://d2ol7oe51mr4n9.cloudfront.net/user_3LIbHMwUoEDn4cQX1aW4M05gMa6/d3635d3a-602c-42c4-9608-655f19aef614.jpg','Esthétique personnalisée':'https://d2ol7oe51mr4n9.cloudfront.net/user_3LIbHMwUoEDn4cQX1aW4M05gMa6/68a00849-c704-48d7-a21a-458c477545ed.jpg'},sport:{'Golf':'https://d2ol7oe51mr4n9.cloudfront.net/user_3LIbHMwUoEDn4cQX1aW4M05gMa6/f2537bb1-e775-4cea-b90f-99e8ecebd414.jpg','Padel':'https://d2ol7oe51mr4n9.cloudfront.net/user_3LIbHMwUoEDn4cQX1aW4M05gMa6/e794c9a2-8a88-491f-ba96-8aa376117dfa.jpg','Coach privé':'https://d2ol7oe51mr4n9.cloudfront.net/user_3LIbHMwUoEDn4cQX1aW4M05gMa6/37330292-75d6-4e87-9e1e-d8f50d1fc718.jpg','Tennis':'https://d2ol7oe51mr4n9.cloudfront.net/user_3LIbHMwUoEDn4cQX1aW4M05gMa6/775db709-e2b9-4a65-b200-adc5f976e8f5.jpg','Futsal':'https://d2ol7oe51mr4n9.cloudfront.net/user_3LIbHMwUoEDn4cQX1aW4M05gMa6/be865c40-a9ab-4e12-9981-0e221905d913.jpg','Volley':'https://d2ol7oe51mr4n9.cloudfront.net/user_3LIbHMwUoEDn4cQX1aW4M05gMa6/79758e19-ba4a-40d1-843f-74d4a7659300.jpg'}};
 subcategoryPhotoSets.transfer={ 'Chauffeur privé':subcategoryPhotoSets.transport['Chauffeur privé'],'Taxi / VTC':subcategoryPhotoSets.transport['Taxi / VTC'] };
@@ -4752,6 +4768,170 @@ body.malago-card-expanded .whatsappFloat{
   }
 }
 </style>
+
+<style id="malago-motion-2026">
+/* MALAGO-MOTION-2026 — ouverture/fermeture des catégories en « container transform ».
+   La carte est posée directement à sa taille finale ; seul clip-path (découpe) et
+   l'opacité des faces sont animés : aucun recalcul de mise en page pendant le mouvement. */
+#malagoExperienceCategories .malagoExperienceTile{perspective:none!important;-webkit-perspective:none!important}
+#malagoExperienceCategories .malagoExperienceTile .malagoExperienceCardInner{transform:none!important;-webkit-transform:none!important;transform-style:flat!important;-webkit-transform-style:flat!important;transition:none!important}
+#malagoExperienceCategories .malagoExperienceTile .malagoExperienceFront,
+#malagoExperienceCategories .malagoExperienceTile .malagoExperienceBack,
+#malagoExperienceCategories .malagoExperienceTile .malagoExperienceDetailsFace{transform:none!important;-webkit-transform:none!important;backface-visibility:visible!important;-webkit-backface-visibility:visible!important}
+#malagoExperienceCategories .malagoExperienceTile:not(.is-flipped) .malagoExperienceBack,
+#malagoExperienceCategories .malagoExperienceTile:not(.is-details) .malagoExperienceDetailsFace{visibility:hidden!important;pointer-events:none!important}
+#malagoExperienceCategories .malagoExperienceTile.is-flipped:not(.is-details) .malagoExperienceBack{visibility:visible!important;pointer-events:auto!important}
+#malagoExperienceCategories .malagoExperienceTile.is-flipped:not(.is-details):not(.mx-anim) .malagoExperienceFront,
+#malagoExperienceCategories .malagoExperienceTile.is-details .malagoExperienceFront,
+#malagoExperienceCategories .malagoExperienceTile.is-details .malagoExperienceBack{visibility:hidden!important;pointer-events:none!important}
+#malagoExperienceCategories .malagoExperienceTile.is-expanding.is-details .malagoExperienceDetailsFace{visibility:visible!important;pointer-events:auto!important}
+
+/* Géométrie : plus de transition sur top/left/width/height. */
+#malagoExperienceCategories .malagoExperienceTile.is-expanding{transition:none!important;clip-path:inset(0 round 22px);-webkit-clip-path:inset(0 round 22px)}
+#malagoExperienceCategories .malagoExperienceTile.mx-anim{transition:clip-path .44s cubic-bezier(.2,.8,.2,1),-webkit-clip-path .44s cubic-bezier(.2,.8,.2,1)!important;will-change:clip-path}
+#malagoExperienceCategories .malagoExperienceTile.mx-anim.mx-closing{transition-duration:.32s!important;transition-timing-function:cubic-bezier(.4,0,.2,1)!important}
+#malagoExperienceCategories .malagoExperienceTile.mx-from{clip-path:var(--mx-clip)!important;-webkit-clip-path:var(--mx-clip)!important}
+
+/* Pendant le mouvement : la face photo s'efface, le contenu apparaît (et l'inverse à la fermeture). */
+#malagoExperienceCategories .malagoExperienceTile.mx-anim .malagoExperienceFront{visibility:visible!important;opacity:0;transition:opacity .2s ease .05s!important;pointer-events:none!important}
+#malagoExperienceCategories .malagoExperienceTile.mx-anim.mx-from .malagoExperienceFront{opacity:1}
+#malagoExperienceCategories .malagoExperienceTile.mx-anim .malagoExperienceBack{opacity:1;transition:opacity .24s ease .14s!important}
+#malagoExperienceCategories .malagoExperienceTile.mx-anim.mx-closing .malagoExperienceBack{transition-delay:0s!important;transition-duration:.16s!important}
+#malagoExperienceCategories .malagoExperienceTile.mx-anim.mx-from .malagoExperienceBack{opacity:0}
+#malagoExperienceCategories .malagoExperienceTile.mx-anim *{backdrop-filter:none!important;-webkit-backdrop-filter:none!important}
+
+/* Sous-catégories : apparition en cascade légère. */
+#malagoExperienceCategories .malagoExperienceTile.is-expanding .malagoExperienceSubcategory{transition:opacity .3s ease,transform .38s cubic-bezier(.2,.8,.2,1)}
+#malagoExperienceCategories .malagoExperienceTile.mx-anim.mx-from:not(.mx-closing) .malagoExperienceSubcategory{opacity:0;transform:translateY(12px)}
+#malagoExperienceCategories .malagoExperienceTile.mx-anim:not(.mx-closing) .malagoExperienceSubcategory:nth-child(1){transition-delay:.12s}
+#malagoExperienceCategories .malagoExperienceTile.mx-anim:not(.mx-closing) .malagoExperienceSubcategory:nth-child(2){transition-delay:.16s}
+#malagoExperienceCategories .malagoExperienceTile.mx-anim:not(.mx-closing) .malagoExperienceSubcategory:nth-child(3){transition-delay:.2s}
+#malagoExperienceCategories .malagoExperienceTile.mx-anim:not(.mx-closing) .malagoExperienceSubcategory:nth-child(4){transition-delay:.24s}
+#malagoExperienceCategories .malagoExperienceTile.mx-anim:not(.mx-closing) .malagoExperienceSubcategory:nth-child(n+5){transition-delay:.28s}
+
+/* Sous-catégories plus compactes : on voit plus de choix d'un coup. */
+#malagoExperienceCategories .malagoExperienceTile.is-expanding .malagoExperienceSubcategories{display:grid!important;grid-template-columns:minmax(0,1fr)!important;gap:10px!important}
+#malagoExperienceCategories .malagoExperienceTile.is-expanding .malagoExperienceSubcategory{min-height:138px!important;height:138px}
+@media (min-width:761px){
+ #malagoExperienceCategories .malagoExperienceTile.is-expanding .malagoExperienceSubcategories{grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:14px!important}
+ #malagoExperienceCategories .malagoExperienceTile.is-expanding .malagoExperienceSubcategory{min-height:200px!important;height:auto}
+}
+@media (min-width:1200px){
+ #malagoExperienceCategories .malagoExperienceTile.is-expanding .malagoExperienceSubcategories{grid-template-columns:repeat(4,minmax(0,1fr))!important}
+}
+
+@media (prefers-reduced-motion:reduce){
+ #malagoExperienceCategories .malagoExperienceTile.mx-anim{transition:opacity .2s ease!important}
+ #malagoExperienceCategories .malagoExperienceTile.mx-from{clip-path:inset(0 round 22px)!important;opacity:0}
+ #malagoExperienceCategories .malagoExperienceTile.mx-anim .malagoExperienceSubcategory{transition:none!important;transform:none!important;opacity:1!important}
+}
+</style>
+
+<script>/* MALAGO-MOTION-2026 : précharger les photos d'une catégorie dès que le doigt la touche */document.addEventListener('pointerdown',function(e){var t=e.target&&e.target.closest&&e.target.closest('[data-category-card]');if(t)t.querySelectorAll('img[loading="lazy"]').forEach(function(i){i.loading='eager'});},{passive:true,capture:true});</script>
+<style id="malago-premium-2026">
+/* MALAGO-PREMIUM-2026 — couche « premium » : en-tête photo des catégories, apparition au défilement,
+   retour tactile, photos en fondu, WhatsApp discret, fermeture par glissement (mobile). */
+
+/* 1. Catégorie ouverte : grande photo d'en-tête (continuité avec la tuile). */
+#malagoExperienceCategories .malagoExperienceTile.is-expanding .malagoExperienceBackHead{
+ position:relative!important;min-height:168px!important;display:flex!important;align-items:flex-end!important;justify-content:flex-start!important;
+ padding:0 22px 18px!important;margin:0 0 14px!important;border-radius:18px!important;overflow:hidden!important;isolation:isolate;
+ background:linear-gradient(to top,rgba(8,8,8,.9) 0%,rgba(8,8,8,.35) 55%,rgba(8,8,8,.08) 100%),var(--tile-image) center/cover no-repeat!important;
+ box-shadow:inset 0 0 0 1px rgba(228,206,158,.18)!important}
+#malagoExperienceCategories .malagoExperienceTile.is-expanding .malagoExperienceBackTitle{
+ text-align:left!important;font:400 clamp(28px,7vw,44px)/1.04 Georgia,"Times New Roman",serif!important;color:#f4e8cc!important;letter-spacing:-.01em;
+ text-shadow:0 2px 18px rgba(0,0,0,.45)}
+#malagoExperienceCategories .malagoExperienceTile.is-expanding .malagoExperienceUnflip{
+ position:absolute!important;top:12px!important;right:12px!important;left:auto!important;bottom:auto!important;transform:none!important;
+ width:40px!important;height:40px!important;border-radius:50%!important;display:grid!important;place-items:center!important;
+ background:rgba(10,10,10,.42)!important;border:1px solid rgba(255,255,255,.28)!important;color:#fff!important;font-size:22px!important;line-height:1!important;
+ -webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);transition:transform .15s ease,background .2s ease}
+#malagoExperienceCategories .malagoExperienceTile.is-expanding .malagoExperienceUnflip:active{transform:scale(.92)!important}
+@media (min-width:761px){#malagoExperienceCategories .malagoExperienceTile.is-expanding .malagoExperienceBackHead{min-height:230px!important;padding:0 32px 26px!important}}
+/* Petite poignée qui suggère le glissement vers le bas (écrans tactiles). */
+@media (hover:none){#malagoExperienceCategories .malagoExperienceTile.is-expanding .malagoExperienceBackHead::before{
+ content:"";position:absolute;top:9px;left:50%;width:38px;height:4px;margin-left:-19px;border-radius:4px;background:rgba(255,255,255,.55)}}
+
+/* 2. Tuiles : apparition au défilement (une seule fois), la photo « se pose ». */
+#malagoExperienceCategories .malagoExperienceTile{animation:none!important}
+#malagoExperienceCategories .malagoExperienceTile.px-wait:not(.is-expanding){opacity:0;transform:translateY(22px)}
+#malagoExperienceCategories .malagoExperienceTile.px-wait .malagoExperienceFront:before{transform:scale(1.08)}
+#malagoExperienceCategories .malagoExperienceTile.px-in:not(.is-expanding){transition:opacity .7s cubic-bezier(.2,.8,.2,1) var(--px-delay,0s),transform .8s cubic-bezier(.2,.8,.2,1) var(--px-delay,0s)}
+#malagoExperienceCategories .malagoExperienceTile.px-in .malagoExperienceFront:before{transition:transform 1.4s cubic-bezier(.2,.8,.2,1) var(--px-delay,0s),opacity .35s}
+
+/* 3. Retour au toucher. */
+#malagoExperienceCategories .malagoExperienceTile:not(.is-expanding) .malagoExperienceFront{transition:transform .18s cubic-bezier(.2,.8,.2,1)}
+#malagoExperienceCategories .malagoExperienceTile:not(.is-expanding) .malagoExperienceFront:active{transform:scale(.975)!important}
+#malagoExperienceCategories .malagoExperienceTile.is-expanding .malagoExperienceSubcategory:active{transform:scale(.97)!important;transition-duration:.12s!important}
+
+/* 4. Photos des sous-catégories : fondu à l'arrivée sur un fond doré discret (pas de « pop »). */
+#malagoExperienceCategories .malagoExperienceSubcategory.has-image{background:linear-gradient(110deg,#151310 30%,#211d16 50%,#151310 70%) 0 0/250% 100%;animation:pxShimmer 1.6s linear infinite}
+#malagoExperienceCategories .malagoExperienceSubcategory.has-image.px-img-ok{animation:none}
+#malagoExperienceCategories .malagoExperienceSubcategoryImage{opacity:0;transition:opacity .5s ease,transform .35s ease!important}
+#malagoExperienceCategories .malagoExperienceSubcategoryImage.px-loaded{opacity:1}
+@keyframes pxShimmer{to{background-position:-250% 0}}
+
+/* 5. Bouton WhatsApp : se réduit en pastille pendant le défilement. */
+.whatsappFloat{transition:padding .35s cubic-bezier(.2,.8,.2,1),gap .35s,transform .2s ease,box-shadow .3s!important}
+.whatsappFloat > :not(svg){display:inline-block;max-width:120px;overflow:hidden;white-space:nowrap;transition:max-width .35s cubic-bezier(.2,.8,.2,1),padding .35s,margin .35s,opacity .2s ease}
+.whatsappFloat.px-compact{padding:15px!important;gap:0!important}
+.whatsappFloat.px-compact > :not(svg){max-width:0!important;opacity:0;padding-left:0!important;padding-right:0!important;margin:0!important;border-width:0!important;min-width:0!important}
+.whatsappFloat.px-compact{min-width:0!important;justify-content:center!important}
+.whatsappFloat:active{transform:scale(.95)}
+
+
+/* 6. Bouton de la vidéo d'accueil : halo doré qui respire, reflet qui balaie, étincelles. */
+#malagoWelcomeIntro .malagoIntroContinue{overflow:hidden!important;isolation:isolate;
+ background:linear-gradient(135deg,rgba(228,206,158,.16),rgba(228,206,158,.04) 45%,rgba(255,240,205,.14))!important;
+ border-color:#e4ce9e!important;color:#fff6e2!important;text-shadow:0 0 12px rgba(255,226,160,.35);
+ animation:pxIntroGlow 2.8s ease-in-out infinite}
+#malagoWelcomeIntro .malagoIntroContinue::before{content:"";position:absolute;top:-30%;bottom:-30%;left:-60%;width:45%;z-index:-1;pointer-events:none;
+ background:linear-gradient(100deg,transparent 0%,rgba(255,246,220,0) 20%,rgba(255,246,220,.75) 50%,rgba(255,246,220,0) 80%,transparent 100%);
+ transform:skewX(-20deg);animation:pxIntroSweep 3.2s cubic-bezier(.45,0,.2,1) infinite .6s}
+#malagoWelcomeIntro .malagoIntroContinue::after{content:"";position:absolute;inset:0;z-index:-1;pointer-events:none;
+ background:
+  radial-gradient(circle at 12% 30%,#fff 0 1px,rgba(255,236,190,.8) 1.5px,transparent 3px),
+  radial-gradient(circle at 34% 78%,#fff 0 .8px,rgba(255,236,190,.7) 1.2px,transparent 2.6px),
+  radial-gradient(circle at 58% 22%,#fff 0 1px,rgba(255,236,190,.8) 1.6px,transparent 3.2px),
+  radial-gradient(circle at 79% 70%,#fff 0 .8px,rgba(255,236,190,.7) 1.3px,transparent 2.8px),
+  radial-gradient(circle at 92% 34%,#fff 0 1px,rgba(255,236,190,.8) 1.5px,transparent 3px);
+ animation:pxIntroTwinkle 2.4s ease-in-out infinite}
+#malagoWelcomeIntro .malagoIntroContinue:active{transform:translateX(-50%) scale(.97)!important}
+@keyframes pxIntroSweep{0%{left:-60%}55%,100%{left:130%}}
+@keyframes pxIntroGlow{0%,100%{box-shadow:0 8px 28px rgba(0,0,0,.22),0 0 0 0 rgba(228,206,158,0),0 0 14px rgba(228,206,158,.18)}
+ 50%{box-shadow:0 8px 28px rgba(0,0,0,.22),0 0 0 5px rgba(228,206,158,.1),0 0 30px rgba(240,214,150,.5)}}
+@keyframes pxIntroTwinkle{0%,100%{opacity:.15;transform:scale(.96)}25%{opacity:1}50%{opacity:.35;transform:scale(1.03)}75%{opacity:.9}}
+@media (prefers-reduced-motion:reduce){#malagoWelcomeIntro .malagoIntroContinue,#malagoWelcomeIntro .malagoIntroContinue::before,#malagoWelcomeIntro .malagoIntroContinue::after{animation:none!important}}
+@media (prefers-reduced-motion:reduce){
+ #malagoExperienceCategories .malagoExperienceTile.px-wait:not(.is-expanding){opacity:1;transform:none}
+ #malagoExperienceCategories .malagoExperienceTile.px-wait .malagoExperienceFront:before{transform:none}
+ #malagoExperienceCategories .malagoExperienceSubcategory.has-image{animation:none}
+}
+</style>
+<script>/* MALAGO-PREMIUM-2026 */(function(){
+var reduce=window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches;
+var grid=document.getElementById('malagoExperienceCategories');
+/* Apparition des tuiles au défilement */
+var io='IntersectionObserver' in window?new IntersectionObserver(function(es){var n=0;es.forEach(function(e){if(e.isIntersecting){var t=e.target;t.style.setProperty('--px-delay',(n++*0.07)+'s');t.classList.add('px-in');requestAnimationFrame(function(){t.classList.remove('px-wait')});io.unobserve(t);}});},{rootMargin:'0px 0px -8% 0px',threshold:.12}):null;
+function prep(){if(!grid||!io||reduce)return;grid.querySelectorAll('.malagoExperienceTile:not(.px-in):not(.px-wait)').forEach(function(t){var r=t.getBoundingClientRect();if(r.top<innerHeight*0.92&&r.bottom>0){t.classList.add('px-in');return;}t.classList.add('px-wait');io.observe(t);});}
+prep();if(grid&&'MutationObserver' in window)new MutationObserver(prep).observe(grid,{childList:true});
+/* Photos des sous-catégories en fondu */
+function ok(img){img.classList.add('px-loaded');var b=img.closest('.malagoExperienceSubcategory');if(b)b.classList.add('px-img-ok');}
+document.addEventListener('load',function(e){var t=e.target;if(t&&t.classList&&t.classList.contains('malagoExperienceSubcategoryImage'))ok(t);},true);
+document.addEventListener('error',function(e){var t=e.target;if(t&&t.classList&&t.classList.contains('malagoExperienceSubcategoryImage')){var b=t.closest('.malagoExperienceSubcategory');if(b)b.classList.add('px-img-ok');}},true);
+function sweep(){document.querySelectorAll('.malagoExperienceSubcategoryImage:not(.px-loaded)').forEach(function(i){if(i.complete&&i.naturalWidth)ok(i);});}
+sweep();document.addEventListener('click',function(){setTimeout(sweep,60);},true);
+/* WhatsApp discret pendant le défilement */
+var wa=document.querySelector('.whatsappFloat'),idle=null,lastY=scrollY;
+if(wa)addEventListener('scroll',function(){var y=scrollY;if(y>240&&y>lastY+2){wa.classList.add('px-compact');}else if(y<lastY-6){wa.classList.remove('px-compact');}lastY=y;clearTimeout(idle);idle=setTimeout(function(){if(scrollY<240)wa.classList.remove('px-compact');},700);if(y<240)wa.classList.remove('px-compact');},{passive:true});
+/* Fermeture par glissement vers le bas (mobile) */
+var drag=null;
+function cardOf(t){var c=t&&t.closest&&t.closest('.malagoExperienceTile.is-expanding');return c&&!c.classList.contains('mx-anim')&&!c.classList.contains('is-details')?c:null;}
+document.addEventListener('touchstart',function(e){var c=cardOf(e.target);if(!c||e.touches.length!==1)return;var back=c.querySelector('.malagoExperienceBack');var onHead=!!e.target.closest('.malagoExperienceBackHead');if(!onHead&&back&&back.scrollTop>0)return;if(e.target.closest('.malagoExperienceUnflip'))return;drag={c:c,y0:e.touches[0].clientY,dy:0,on:false};},{passive:true});
+document.addEventListener('touchmove',function(e){if(!drag)return;var dy=e.touches[0].clientY-drag.y0;if(!drag.on){if(dy>10)drag.on=true;else if(dy<-4){drag=null;return;}else return;}e.preventDefault();drag.dy=Math.max(0,dy);var k=drag.dy;drag.c.style.transition='none';drag.c.style.transform='translateY('+(k*0.85)+'px) scale('+(1-Math.min(k,400)/4000)+')';drag.c.style.borderRadius='22px';},{passive:false});
+function end(){if(!drag)return;var d=drag;drag=null;if(!d.on)return;var c=d.c;if(d.dy>110){c._pxDismissed=true;c.style.transition='transform .26s cubic-bezier(.4,0,.2,1),opacity .26s ease';c.style.transform='translateY(46vh) scale(.94)';c.style.opacity='0';setTimeout(function(){var b=c.querySelector('[data-unflip]');if(b)b.click();},230);}else{c.style.transition='transform .3s cubic-bezier(.2,.8,.2,1)';c.style.transform='';setTimeout(function(){if(!c._pxDismissed)c.style.transition='';},320);}}
+document.addEventListener('touchend',end,{passive:true});document.addEventListener('touchcancel',end,{passive:true});
+})();</script>
 
 </body>
 </html>
