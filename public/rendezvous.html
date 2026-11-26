@@ -3921,13 +3921,15 @@ html.malago-card-expanded,body.malago-card-expanded{overflow:hidden!important}
 
 
 <script id="malago-header-contact-language-2026">
+// Header "Contact Malago" + floating WhatsApp button: message in the language shown on the page.
 (function(){
+ const PROPERTY='PROPERTY: HERMOSA BEACH';
  const select=document.getElementById('malagoLanguageSwitcher');
- const link=document.querySelector('.headerActions .navcta');
- if(!select||!link)return;
+ const header=document.querySelector('.headerActions .navcta');
+ const floating=document.querySelector('.whatsappFloat');
  const labels={
   en:'Contact Malago ',fr:'Contacter Malago ',es:'Contactar Malago ',de:'Malago kontaktieren ',
-  it:'Contatta Malago ',nl:'Contact Malaga ',ru:'Связаться с Malago ',pt:'Contactar Malago ',
+  it:'Contatta Malago ',nl:'Contact Malago ',ru:'Связаться с Malago ',pt:'Contactar Malago ',
   ar:'تواصل مع Malago ',zh:'联系 Malago '
  };
  const messages={
@@ -3942,20 +3944,34 @@ html.malago-card-expanded,body.malago-card-expanded{overflow:hidden!important}
   ar:'مرحبًا Malago، أود التعرّف على خدماتكم.',
   zh:'你好，Malago！我想了解你们的服务。'
  };
- function refresh(){
-  const lang=select.value||'en';
-  const label=labels[lang]||labels.en;
-  link.querySelectorAll('.navctaFull,.navctaMobile').forEach(el=>{el.textContent=label;});
-  link.setAttribute('aria-label',label.replace(' ',''));
-  link.href='https://wa.me/34613384566?text='+encodeURIComponent('PROPERTY: HERMOSA BEACH\n'+(messages[lang]||messages.en));
+ function currentLang(){
+  let lang=select&&select.value;
+  if(!messages[lang])lang=document.documentElement.lang;
+  if(!messages[lang]){try{lang=localStorage.getItem('malago-language')}catch(e){}}
+  return messages[lang]?lang:'en';
  }
- link.addEventListener('click',function(event){
-  event.preventDefault();
-  const lang=select.value||'en';
-  const url='https://wa.me/34613384566?text='+encodeURIComponent('PROPERTY: HERMOSA BEACH\n'+(messages[lang]||messages.en));
-  window.open(url,'_blank','noopener');
+ function whatsappUrl(lang){
+  return 'https://wa.me/34613384566?text='+encodeURIComponent(PROPERTY+'\n'+messages[lang]);
+ }
+ function refresh(){
+  const lang=currentLang();
+  if(header){
+   const label=labels[lang];
+   header.querySelectorAll('.navctaFull,.navctaMobile').forEach(el=>{el.textContent=label;});
+   header.setAttribute('aria-label',label.trim());
+   header.href=whatsappUrl(lang);
+   header.target='_blank';
+   header.rel='noopener';
+  }
+  if(floating)floating.href=whatsappUrl(lang);
+ }
+ // Recompute right before the link is followed, so it always matches the language on screen.
+ [header,floating].forEach(link=>{
+  if(!link)return;
+  ['pointerdown','touchstart','focus','click'].forEach(type=>link.addEventListener(type,refresh,{capture:true,passive:true}));
  });
- select.addEventListener('change',refresh);
+ if(select)select.addEventListener('change',refresh);
+ new MutationObserver(refresh).observe(document.documentElement,{attributes:true,attributeFilter:['lang']});
  refresh();
 })();
 </script>
