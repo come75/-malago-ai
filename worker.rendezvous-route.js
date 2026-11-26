@@ -15,7 +15,9 @@ export default {
     if (!contentType.includes("text/html")) return response;
     let html = await response.text();
     html = html.replaceAll(UPSTREAM + "/rendezvous", "https://malago-agency.com" + PREFIX)
-               .replaceAll(UPSTREAM + "/", "https://malago-agency.com" + PREFIX + "/");
+               .replaceAll(UPSTREAM + "/", "https://malago-agency.com" + PREFIX + "/")
+               // Assets that only exist on the Rendez-Vous Worker (not on the shared `test` site).
+               .replaceAll('"/img/rdv-immo-', '"' + PREFIX + '/img/rdv-immo-');
     const headers = new Headers(response.headers);
     headers.delete("content-length");
     headers.delete("content-encoding");
