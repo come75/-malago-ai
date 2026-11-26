@@ -1,0 +1,10 @@
+{
+  "$schema": "./node_modules/wrangler/config-schema.json",
+  "name": "malago-rendezvous-route",
+  // Path-only Worker: serves the Rendez-Vous Immo preview under the public partner path.
+  "main": "worker.rendezvous-route.js",
+  "compatibility_date": "2026-11-25",
+  "routes": [
+    { "pattern": "malago-agency.com/partner/rendezvous*", "zone_name": "malago-agency.com" }
+  ]
+}
