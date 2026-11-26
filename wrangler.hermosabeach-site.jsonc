@@ -1,6 +1,8 @@
 {
   "$schema": "./node_modules/wrangler/config-schema.json",
-  "name": "malago-rendezvous-preview",
+  // Hermosa Beach static site. Own Worker name: it used to deploy as
+  // malago-rendezvous-preview and overwrite the Rendez-Vous Immo site.
+  "name": "malago-hermosabeach-site",
   "main": "worker.rendezvous-preview.js",
   "compatibility_date": "2026-09-25",
   "workers_dev": true,
