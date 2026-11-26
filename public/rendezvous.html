@@ -3074,6 +3074,8 @@ function collapseCategoryCard(card,onDone){
   ['--card-top','--card-left','--card-width','--card-height','--expanded-top','--mx-clip'].forEach(k=>card.style.removeProperty(k));
   mxRect=null;
   if(card._mxPh){card._mxPh.remove();card._mxPh=null;}
+  card.style.transform='';card.style.opacity='';card.style.transition='';card.style.borderRadius='';
+  if(card._pxDismissed){card._pxDismissed=false;if(card.animate)card.animate([{opacity:0,transform:'scale(.96)'},{opacity:1,transform:'none'}],{duration:300,easing:'cubic-bezier(.2,.8,.2,1)'});}
   unlockExpandedPage();
   if(onDone)onDone();
  });
@@ -4822,6 +4824,88 @@ body.malago-card-expanded .whatsappFloat{
 </style>
 
 <script>/* MALAGO-MOTION-2026 : précharger les photos d'une catégorie dès que le doigt la touche */document.addEventListener('pointerdown',function(e){var t=e.target&&e.target.closest&&e.target.closest('[data-category-card]');if(t)t.querySelectorAll('img[loading="lazy"]').forEach(function(i){i.loading='eager'});},{passive:true,capture:true});</script>
+<style id="malago-premium-2026">
+/* MALAGO-PREMIUM-2026 — couche « premium » : en-tête photo des catégories, apparition au défilement,
+   retour tactile, photos en fondu, WhatsApp discret, fermeture par glissement (mobile). */
+
+/* 1. Catégorie ouverte : grande photo d'en-tête (continuité avec la tuile). */
+#malagoExperienceCategories .malagoExperienceTile.is-expanding .malagoExperienceBackHead{
+ position:relative!important;min-height:168px!important;display:flex!important;align-items:flex-end!important;justify-content:flex-start!important;
+ padding:0 22px 18px!important;margin:0 0 14px!important;border-radius:18px!important;overflow:hidden!important;isolation:isolate;
+ background:linear-gradient(to top,rgba(8,8,8,.9) 0%,rgba(8,8,8,.35) 55%,rgba(8,8,8,.08) 100%),var(--tile-image) center/cover no-repeat!important;
+ box-shadow:inset 0 0 0 1px rgba(228,206,158,.18)!important}
+#malagoExperienceCategories .malagoExperienceTile.is-expanding .malagoExperienceBackTitle{
+ text-align:left!important;font:400 clamp(28px,7vw,44px)/1.04 Georgia,"Times New Roman",serif!important;color:#f4e8cc!important;letter-spacing:-.01em;
+ text-shadow:0 2px 18px rgba(0,0,0,.45)}
+#malagoExperienceCategories .malagoExperienceTile.is-expanding .malagoExperienceUnflip{
+ position:absolute!important;top:12px!important;right:12px!important;left:auto!important;bottom:auto!important;transform:none!important;
+ width:40px!important;height:40px!important;border-radius:50%!important;display:grid!important;place-items:center!important;
+ background:rgba(10,10,10,.42)!important;border:1px solid rgba(255,255,255,.28)!important;color:#fff!important;font-size:22px!important;line-height:1!important;
+ -webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);transition:transform .15s ease,background .2s ease}
+#malagoExperienceCategories .malagoExperienceTile.is-expanding .malagoExperienceUnflip:active{transform:scale(.92)!important}
+@media (min-width:761px){#malagoExperienceCategories .malagoExperienceTile.is-expanding .malagoExperienceBackHead{min-height:230px!important;padding:0 32px 26px!important}}
+/* Petite poignée qui suggère le glissement vers le bas (écrans tactiles). */
+@media (hover:none){#malagoExperienceCategories .malagoExperienceTile.is-expanding .malagoExperienceBackHead::before{
+ content:"";position:absolute;top:9px;left:50%;width:38px;height:4px;margin-left:-19px;border-radius:4px;background:rgba(255,255,255,.55)}}
+
+/* 2. Tuiles : apparition au défilement (une seule fois), la photo « se pose ». */
+#malagoExperienceCategories .malagoExperienceTile{animation:none!important}
+#malagoExperienceCategories .malagoExperienceTile.px-wait:not(.is-expanding){opacity:0;transform:translateY(22px)}
+#malagoExperienceCategories .malagoExperienceTile.px-wait .malagoExperienceFront:before{transform:scale(1.08)}
+#malagoExperienceCategories .malagoExperienceTile.px-in:not(.is-expanding){transition:opacity .7s cubic-bezier(.2,.8,.2,1) var(--px-delay,0s),transform .8s cubic-bezier(.2,.8,.2,1) var(--px-delay,0s)}
+#malagoExperienceCategories .malagoExperienceTile.px-in .malagoExperienceFront:before{transition:transform 1.4s cubic-bezier(.2,.8,.2,1) var(--px-delay,0s),opacity .35s}
+
+/* 3. Retour au toucher. */
+#malagoExperienceCategories .malagoExperienceTile:not(.is-expanding) .malagoExperienceFront{transition:transform .18s cubic-bezier(.2,.8,.2,1)}
+#malagoExperienceCategories .malagoExperienceTile:not(.is-expanding) .malagoExperienceFront:active{transform:scale(.975)!important}
+#malagoExperienceCategories .malagoExperienceTile.is-expanding .malagoExperienceSubcategory:active{transform:scale(.97)!important;transition-duration:.12s!important}
+
+/* 4. Photos des sous-catégories : fondu à l'arrivée sur un fond doré discret (pas de « pop »). */
+#malagoExperienceCategories .malagoExperienceSubcategory.has-image{background:linear-gradient(110deg,#151310 30%,#211d16 50%,#151310 70%) 0 0/250% 100%;animation:pxShimmer 1.6s linear infinite}
+#malagoExperienceCategories .malagoExperienceSubcategory.has-image.px-img-ok{animation:none}
+#malagoExperienceCategories .malagoExperienceSubcategoryImage{opacity:0;transition:opacity .5s ease,transform .35s ease!important}
+#malagoExperienceCategories .malagoExperienceSubcategoryImage.px-loaded{opacity:1}
+@keyframes pxShimmer{to{background-position:-250% 0}}
+
+/* 5. Bouton WhatsApp : se réduit en pastille pendant le défilement. */
+.whatsappFloat{transition:padding .35s cubic-bezier(.2,.8,.2,1),gap .35s,transform .2s ease,box-shadow .3s!important}
+.whatsappFloat > :not(svg){display:inline-block;max-width:120px;overflow:hidden;white-space:nowrap;transition:max-width .35s cubic-bezier(.2,.8,.2,1),padding .35s,margin .35s,opacity .2s ease}
+.whatsappFloat.px-compact{padding:15px!important;gap:0!important}
+.whatsappFloat.px-compact > :not(svg){max-width:0!important;opacity:0;padding-left:0!important;padding-right:0!important;margin:0!important;border-width:0!important;min-width:0!important}
+.whatsappFloat.px-compact{min-width:0!important;justify-content:center!important}
+.whatsappFloat:active{transform:scale(.95)}
+
+@media (prefers-reduced-motion:reduce){
+ #malagoExperienceCategories .malagoExperienceTile.px-wait:not(.is-expanding){opacity:1;transform:none}
+ #malagoExperienceCategories .malagoExperienceTile.px-wait .malagoExperienceFront:before{transform:none}
+ #malagoExperienceCategories .malagoExperienceSubcategory.has-image{animation:none}
+}
+</style>
+<script>/* MALAGO-PREMIUM-2026 */(function(){
+var reduce=window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches;
+var grid=document.getElementById('malagoExperienceCategories');
+/* Apparition des tuiles au défilement */
+var io='IntersectionObserver' in window?new IntersectionObserver(function(es){var n=0;es.forEach(function(e){if(e.isIntersecting){var t=e.target;t.style.setProperty('--px-delay',(n++*0.07)+'s');t.classList.add('px-in');requestAnimationFrame(function(){t.classList.remove('px-wait')});io.unobserve(t);}});},{rootMargin:'0px 0px -8% 0px',threshold:.12}):null;
+function prep(){if(!grid||!io||reduce)return;grid.querySelectorAll('.malagoExperienceTile:not(.px-in):not(.px-wait)').forEach(function(t){var r=t.getBoundingClientRect();if(r.top<innerHeight*0.92&&r.bottom>0){t.classList.add('px-in');return;}t.classList.add('px-wait');io.observe(t);});}
+prep();if(grid&&'MutationObserver' in window)new MutationObserver(prep).observe(grid,{childList:true});
+/* Photos des sous-catégories en fondu */
+function ok(img){img.classList.add('px-loaded');var b=img.closest('.malagoExperienceSubcategory');if(b)b.classList.add('px-img-ok');}
+document.addEventListener('load',function(e){var t=e.target;if(t&&t.classList&&t.classList.contains('malagoExperienceSubcategoryImage'))ok(t);},true);
+document.addEventListener('error',function(e){var t=e.target;if(t&&t.classList&&t.classList.contains('malagoExperienceSubcategoryImage')){var b=t.closest('.malagoExperienceSubcategory');if(b)b.classList.add('px-img-ok');}},true);
+function sweep(){document.querySelectorAll('.malagoExperienceSubcategoryImage:not(.px-loaded)').forEach(function(i){if(i.complete&&i.naturalWidth)ok(i);});}
+sweep();document.addEventListener('click',function(){setTimeout(sweep,60);},true);
+/* WhatsApp discret pendant le défilement */
+var wa=document.querySelector('.whatsappFloat'),idle=null,lastY=scrollY;
+if(wa)addEventListener('scroll',function(){var y=scrollY;if(y>240&&y>lastY+2){wa.classList.add('px-compact');}else if(y<lastY-6){wa.classList.remove('px-compact');}lastY=y;clearTimeout(idle);idle=setTimeout(function(){if(scrollY<240)wa.classList.remove('px-compact');},700);if(y<240)wa.classList.remove('px-compact');},{passive:true});
+/* Fermeture par glissement vers le bas (mobile) */
+var drag=null;
+function cardOf(t){var c=t&&t.closest&&t.closest('.malagoExperienceTile.is-expanding');return c&&!c.classList.contains('mx-anim')&&!c.classList.contains('is-details')?c:null;}
+document.addEventListener('touchstart',function(e){var c=cardOf(e.target);if(!c||e.touches.length!==1)return;var back=c.querySelector('.malagoExperienceBack');var onHead=!!e.target.closest('.malagoExperienceBackHead');if(!onHead&&back&&back.scrollTop>0)return;if(e.target.closest('.malagoExperienceUnflip'))return;drag={c:c,y0:e.touches[0].clientY,dy:0,on:false};},{passive:true});
+document.addEventListener('touchmove',function(e){if(!drag)return;var dy=e.touches[0].clientY-drag.y0;if(!drag.on){if(dy>10)drag.on=true;else if(dy<-4){drag=null;return;}else return;}e.preventDefault();drag.dy=Math.max(0,dy);var k=drag.dy;drag.c.style.transition='none';drag.c.style.transform='translateY('+(k*0.85)+'px) scale('+(1-Math.min(k,400)/4000)+')';drag.c.style.borderRadius='22px';},{passive:false});
+function end(){if(!drag)return;var d=drag;drag=null;if(!d.on)return;var c=d.c;if(d.dy>110){c._pxDismissed=true;c.style.transition='transform .26s cubic-bezier(.4,0,.2,1),opacity .26s ease';c.style.transform='translateY(46vh) scale(.94)';c.style.opacity='0';setTimeout(function(){var b=c.querySelector('[data-unflip]');if(b)b.click();},230);}else{c.style.transition='transform .3s cubic-bezier(.2,.8,.2,1)';c.style.transform='';setTimeout(function(){if(!c._pxDismissed)c.style.transition='';},320);}}
+document.addEventListener('touchend',end,{passive:true});document.addEventListener('touchcancel',end,{passive:true});
+})();</script>
+
 </body>
 </html>
 
