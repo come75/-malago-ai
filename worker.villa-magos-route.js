@@ -6,7 +6,9 @@ export default {
     target.hostname = "malago-villamagos.malago.workers.dev";
     target.port = "";
     if (source.pathname === "/partner/villamagos" || source.pathname === "/partner/villamagos/") {
-      target.pathname = "/villa-magos.html";
+      // Static assets serve the page at /villa-magos; /villa-magos.html answers with a
+      // relative redirect that would land on malago-agency.com/villa-magos (Worker `test`).
+      target.pathname = "/villa-magos";
     }
     return fetch(new Request(target.toString(), request));
   }
