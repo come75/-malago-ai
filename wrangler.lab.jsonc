@@ -1,0 +1,11 @@
+{
+  "$schema": "./node_modules/wrangler/config-schema.json",
+  // Environnement de TEST Malago : jamais relié à malago-agency.com.
+  // Sert à valider les changements (animations, gabarit) avant mise en ligne.
+  "name": "malago-lab",
+  "main": "worker.rendezvous-preview.js",
+  "compatibility_date": "2026-09-25",
+  "workers_dev": true,
+  "observability": { "enabled": true },
+  "assets": { "directory": "./public", "binding": "ASSETS" }
+}
